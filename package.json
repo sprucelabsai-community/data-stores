@@ -1,10 +1,10 @@
 {
-  "name": "data-stores",
+  "name": "@sprucelabs/data-stores",
   "description": "A way to store data",
-  "version": "0.0.1",
-  "homepage": "https://github.com/[YOUR REPO PATH]",
+  "version": "1.0.0",
+  "homepage": "https://github.com/sprucelabsai/data-stores",
   "bugs": {
-    "url": "https://github.com/[YOUR REPO PATH]/issues"
+    "url": "https://github.com/sprucelabsai/data-stores/issues"
   },
   "keywords": [],
   "scripts": {
@@ -24,6 +24,7 @@
     "health.local": "yarn boot.local --health",
     "lint": "eslint '**/*.ts'",
     "rebuild": "yarn clean.all && yarn && yarn build",
+    "release": "semantic-release",
     "resolve-paths.lint": "yarn build.resolve-paths && yarn lint",
     "test": "jest",
     "upgrade.packages": "yarn-upgrade-all && rm yarn.lock ; yarn ; yarn fix.lint | true",
@@ -46,6 +47,7 @@
   },
   "devDependencies": {
     "@sprucelabs/babel-plugin-schema": "^4.0.1",
+    "@sprucelabs/semantic-release": "^4.0.6",
     "@types/node": "^14.14.31",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.0.0",
@@ -62,16 +64,16 @@
     "yarn": "1.x"
   },
   "yarn-upgrade-all": {
-		"ignore": [
-			"@sprucelabs/error",
-			"@sprucelabs/schema",
-			"@sprucelabs/babel-plugin-schema",
-			"@sprucelabs/jest-json-reporter",
-			"@sprucelabs/semantic-release",
-			"@sprucelabs/test",
-			"@sprucelabs/test-utils",
-			"conventional-changelog-sprucelabs",
-			"eslint-config-spruce"
-		]
-	}
+    "ignore": [
+      "@sprucelabs/error",
+      "@sprucelabs/schema",
+      "@sprucelabs/babel-plugin-schema",
+      "@sprucelabs/jest-json-reporter",
+      "@sprucelabs/semantic-release",
+      "@sprucelabs/test",
+      "@sprucelabs/test-utils",
+      "conventional-changelog-sprucelabs",
+      "eslint-config-spruce"
+    ]
+  }
 }
