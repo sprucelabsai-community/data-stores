@@ -1,0 +1,61 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"request": "attach",
+			"name": "attach.tests",
+			"port": 5200,
+			"restart": true,
+			"timeout": 10000
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "test.file",
+			"runtimeExecutable": "${env:NVM_BIN}/node",
+			"runtimeArgs": [
+				"--inspect-brk",
+				"--trace-warnings",
+				"${workspaceFolder}/node_modules/.bin/jest",
+				"${fileBasenameNoExtension}",
+				"--detectOpenHandles"
+			],
+			"port": 9229,
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "test.all",
+			"runtimeExecutable": "${env:NVM_BIN}/node",
+			"runtimeArgs": [
+				"--inspect-brk",
+				"--trace-warnings",
+				"${workspaceFolder}/node_modules/.bin/jest"
+			],
+			"port": 9229,
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "boot.local",
+			"runtimeExecutable": "yarn",
+			"runtimeArgs": [
+				"run",
+				"--inspect-brk",
+				"--trace-warnings",
+				"boot.local"
+			],
+			"port": 9229,
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		}
+	]
+}

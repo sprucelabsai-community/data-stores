@@ -1,0 +1,62 @@
+{
+  "name": "data-stores",
+  "description": "A way to store data",
+  "version": "0.0.1",
+  "homepage": "https://github.com/[YOUR REPO PATH]",
+  "bugs": {
+    "url": "https://github.com/[YOUR REPO PATH]/issues"
+  },
+  "keywords": [],
+  "scripts": {
+    "boot": "node build/index",
+    "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",
+    "boot.sender": "ACTION=sender node build/index",
+    "boot.sender.local": "ACTION=sender yarn boot.local",
+    "build": "yarn build.tsc && yarn resolve-paths.lint",
+    "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
+    "build.resolve-paths": "resolve-path-aliases --target build --patterns **/*.js,**/*.d.ts",
+    "build.tsc": "yarn build.copy-files && tsc",
+    "clean": "rm -rf build/",
+    "clean.all": "yarn clean && rm -f yarn.lock package-lock.json && rm -rf node_modules/",
+    "fix.lint": "eslint --fix '**/*.ts'",
+    "health": "yarn boot --health",
+    "health.local": "yarn boot.local --health",
+    "lint": "eslint '**/*.ts'",
+    "rebuild": "yarn clean.all && yarn && yarn build",
+    "resolve-paths.lint": "yarn build.resolve-paths && yarn lint",
+    "test": "jest",
+    "upgrade.packages": "yarn-upgrade-all && rm yarn.lock ; yarn ; yarn fix.lint | true",
+    "upgrade.packages.all": "yarn install && yarn upgrade.packages",
+    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build && yarn test",
+    "watch.build": "concurrently 'yarn build' \"chokidar 'src/**/*' --ignore '.*/tmp/.*' -c 'yarn build'\"",
+    "watch.lint": "concurrently 'yarn lint' \"chokidar 'src/**/*' -c 'yarn lint.tsc'\"",
+    "watch.rebuild": "yarn clean.all && yarn && yarn watch.build"
+  },
+  "dependencies": {
+    "@sprucelabs/error": "^4.1.4",
+    "@sprucelabs/mercury-types": "^15.4.32",
+    "@sprucelabs/spruce-core-schemas": "^22.2.32",
+    "@sprucelabs/spruce-event-plugin": "^1.11.44",
+    "@sprucelabs/spruce-event-utils": "^11.0.27",
+    "@sprucelabs/spruce-skill-booter": "^1.11.44",
+    "@sprucelabs/spruce-skill-utils": "^18.2.9",
+    "dotenv": "^8.2.0",
+    "globby": "^11.0.2"
+  },
+  "devDependencies": {
+    "@sprucelabs/babel-plugin-schema": "^4.0.1",
+    "@types/node": "^14.14.31",
+    "chokidar-cli": "^2.1.0",
+    "concurrently": "^6.0.0",
+    "eslint": "^7.21.0",
+    "eslint-config-spruce": "^10.9.135",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.2.2"
+  },
+  "engines": {
+    "node": "12.x",
+    "yarn": "1.x"
+  }
+}
