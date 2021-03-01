@@ -6,7 +6,10 @@
   "bugs": {
     "url": "https://github.com/sprucelabsai/data-stores/issues"
   },
-  "keywords": [],
+	"keywords": [
+		"node",
+		"sprucelabs"
+	],
   "scripts": {
     "boot": "node build/index",
     "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",
