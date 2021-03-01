@@ -14,6 +14,7 @@
     "boot.sender.local": "ACTION=sender yarn boot.local",
     "build": "yarn build.tsc && yarn resolve-paths.lint",
     "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
+    "build.dist": "tsc --project tsconfig.dist.json",
     "build.resolve-paths": "resolve-path-aliases --target build --patterns **/*.js,**/*.d.ts",
     "build.tsc": "yarn build.copy-files && tsc",
     "clean": "rm -rf build/",
@@ -33,13 +34,13 @@
     "watch.rebuild": "yarn clean.all && yarn && yarn watch.build"
   },
   "dependencies": {
-    "@sprucelabs/error": "^4.1.4",
-    "@sprucelabs/mercury-types": "^15.4.32",
-    "@sprucelabs/spruce-core-schemas": "^22.2.32",
-    "@sprucelabs/spruce-event-plugin": "^1.11.44",
-    "@sprucelabs/spruce-event-utils": "^11.0.27",
-    "@sprucelabs/spruce-skill-booter": "^1.11.44",
-    "@sprucelabs/spruce-skill-utils": "^18.2.9",
+    "@sprucelabs/error": "latest",
+    "@sprucelabs/mercury-types": "latest",
+    "@sprucelabs/spruce-core-schemas": "latest",
+    "@sprucelabs/spruce-event-plugin": "latest",
+    "@sprucelabs/spruce-event-utils": "latest",
+    "@sprucelabs/spruce-skill-booter": "latest",
+    "@sprucelabs/spruce-skill-utils": "latest",
     "dotenv": "^8.2.0",
     "globby": "^11.0.2"
   },
@@ -49,14 +50,28 @@
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.0.0",
     "eslint": "^7.21.0",
-    "eslint-config-spruce": "^10.9.135",
+    "eslint-config-spruce": "latest",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.2.2"
+    "typescript": "^4.2.2",
+    "yarn-upgrade-all": "^0.5.4"
   },
   "engines": {
     "node": "12.x",
     "yarn": "1.x"
-  }
+  },
+  "yarn-upgrade-all": {
+		"ignore": [
+			"@sprucelabs/error",
+			"@sprucelabs/schema",
+			"@sprucelabs/babel-plugin-schema",
+			"@sprucelabs/jest-json-reporter",
+			"@sprucelabs/semantic-release",
+			"@sprucelabs/test",
+			"@sprucelabs/test-utils",
+			"conventional-changelog-sprucelabs",
+			"eslint-config-spruce"
+		]
+	}
 }
