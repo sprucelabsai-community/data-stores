@@ -1,12 +1,15 @@
 {
-  "name": "data-stores",
+  "name": "@sprucelabs/data-stores",
   "description": "A way to store data",
-  "version": "0.0.1",
-  "homepage": "https://github.com/[YOUR REPO PATH]",
+  "version": "1.0.1",
+  "homepage": "https://github.com/sprucelabsai/data-stores",
   "bugs": {
-    "url": "https://github.com/[YOUR REPO PATH]/issues"
+    "url": "https://github.com/sprucelabsai/data-stores/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "node",
+    "sprucelabs"
+  ],
   "scripts": {
     "boot": "node build/index",
     "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",
@@ -14,6 +17,7 @@
     "boot.sender.local": "ACTION=sender yarn boot.local",
     "build": "yarn build.tsc && yarn resolve-paths.lint",
     "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
+    "build.dist": "tsc --project tsconfig.dist.json",
     "build.resolve-paths": "resolve-path-aliases --target build --patterns **/*.js,**/*.d.ts",
     "build.tsc": "yarn build.copy-files && tsc",
     "clean": "rm -rf build/",
@@ -23,6 +27,7 @@
     "health.local": "yarn boot.local --health",
     "lint": "eslint '**/*.ts'",
     "rebuild": "yarn clean.all && yarn && yarn build",
+    "release": "semantic-release",
     "resolve-paths.lint": "yarn build.resolve-paths && yarn lint",
     "test": "jest",
     "upgrade.packages": "yarn-upgrade-all && rm yarn.lock ; yarn ; yarn fix.lint | true",
@@ -33,37 +38,39 @@
     "watch.rebuild": "yarn clean.all && yarn && yarn watch.build"
   },
   "dependencies": {
-    "@sprucelabs/error": "^4.1.4",
-    "@sprucelabs/mercury-types": "^15.4.32",
-    "@sprucelabs/schema": "^19.4.5",
-    "@sprucelabs/spruce-core-schemas": "^22.2.32",
-    "@sprucelabs/spruce-event-plugin": "^1.11.44",
-    "@sprucelabs/spruce-event-utils": "^11.0.27",
-    "@sprucelabs/spruce-skill-booter": "^1.11.44",
-    "@sprucelabs/spruce-skill-utils": "^18.2.9",
+    "@sprucelabs/schema": "latest",
+    "@sprucelabs/error": "latest",
+    "@sprucelabs/mercury-types": "latest",
+    "@sprucelabs/spruce-core-schemas": "latest",
+    "@sprucelabs/spruce-event-plugin": "latest",
+    "@sprucelabs/spruce-event-utils": "latest",
+    "@sprucelabs/spruce-skill-booter": "latest",
+    "@sprucelabs/spruce-skill-utils": "latest",
     "dotenv": "^8.2.0",
     "globby": "^11.0.2",
     "mongodb": "^3.6.4",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/babel-plugin-schema": "^4.0.1",
-    "@sprucelabs/jest-json-reporter": "^5.1.14",
-    "@sprucelabs/test": "^7.6.22",
-    "@sprucelabs/test-utils": "^3.0.39",
+    "@sprucelabs/babel-plugin-schema": "latest",
+    "@sprucelabs/jest-json-reporter": "latest",
+    "@sprucelabs/test": "latest",
+    "@sprucelabs/test-utils": "latest",
     "@types/mongodb": "^3.6.8",
     "@types/nedb": "^1.8.11",
+    "@sprucelabs/semantic-release": "latest",
     "@types/node": "^14.14.31",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.0.0",
     "eslint": "^7.21.0",
-    "eslint-config-spruce": "^10.9.135",
     "jest": "^26.6.3",
     "jest-circus": "^26.6.3",
+    "eslint-config-spruce": "latest",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.2.2"
+    "typescript": "^4.2.2",
+    "yarn-upgrade-all": "^0.5.4"
   },
   "engines": {
     "node": "12.x",
@@ -86,5 +93,23 @@
     "moduleNameMapper": {
       "^#spruce/(.*)$": "<rootDir>/build/.spruce/$1"
     }
+  },
+  "yarn-upgrade-all": {
+    "ignore": [
+      "@sprucelabs/schema",
+      "@sprucelabs/error",
+      "@sprucelabs/mercury-types",
+      "@sprucelabs/spruce-core-schemas",
+      "@sprucelabs/spruce-event-plugin",
+      "@sprucelabs/spruce-event-utils",
+      "@sprucelabs/spruce-skill-booter",
+      "@sprucelabs/spruce-skill-utils",
+      "@sprucelabs/babel-plugin-schema",
+      "@sprucelabs/jest-json-reporter",
+      "@sprucelabs/test",
+      "@sprucelabs/test-utils",
+      "@sprucelabs/semantic-release",
+      "eslint-config-spruce",
+    ]
   }
 }
