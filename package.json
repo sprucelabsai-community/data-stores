@@ -35,21 +35,31 @@
   "dependencies": {
     "@sprucelabs/error": "^4.1.4",
     "@sprucelabs/mercury-types": "^15.4.32",
+    "@sprucelabs/schema": "^19.4.5",
     "@sprucelabs/spruce-core-schemas": "^22.2.32",
     "@sprucelabs/spruce-event-plugin": "^1.11.44",
     "@sprucelabs/spruce-event-utils": "^11.0.27",
     "@sprucelabs/spruce-skill-booter": "^1.11.44",
     "@sprucelabs/spruce-skill-utils": "^18.2.9",
     "dotenv": "^8.2.0",
-    "globby": "^11.0.2"
+    "globby": "^11.0.2",
+    "mongodb": "^3.6.4",
+    "nedb": "^1.8.0"
   },
   "devDependencies": {
     "@sprucelabs/babel-plugin-schema": "^4.0.1",
+    "@sprucelabs/jest-json-reporter": "^5.1.14",
+    "@sprucelabs/test": "^7.6.22",
+    "@sprucelabs/test-utils": "^3.0.39",
+    "@types/mongodb": "^3.6.8",
+    "@types/nedb": "^1.8.11",
     "@types/node": "^14.14.31",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.0.0",
     "eslint": "^7.21.0",
     "eslint-config-spruce": "^10.9.135",
+    "jest": "^26.6.3",
+    "jest-circus": "^26.6.3",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
@@ -58,5 +68,23 @@
   "engines": {
     "node": "12.x",
     "yarn": "1.x"
+  },
+  "jest": {
+    "testRunner": "jest-circus/runner",
+    "maxWorkers": 4,
+    "testTimeout": 120000,
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "<rootDir>/tmp/",
+      "<rootDir>/src/",
+      "<rootDir>/node_modules/",
+      "<rootDir>/build/__tests__/testDirsAndFiles/"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.test.js?(x)"
+    ],
+    "moduleNameMapper": {
+      "^#spruce/(.*)$": "<rootDir>/build/.spruce/$1"
+    }
   }
 }
