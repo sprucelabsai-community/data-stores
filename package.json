@@ -109,7 +109,7 @@
       "@sprucelabs/test",
       "@sprucelabs/test-utils",
       "@sprucelabs/semantic-release",
-      "eslint-config-spruce",
+      "eslint-config-spruce"
     ]
   }
 }
