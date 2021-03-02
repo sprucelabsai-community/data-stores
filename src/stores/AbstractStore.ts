@@ -53,27 +53,25 @@ export default abstract class AbstractStore<
 	protected db: Database
 
 	// place to set any indexes, run once after instantiation
-	public abstract initialize?(): Promise<void>
+	public initialize?(): Promise<void>
 
 	// run on each record before it's returned by the store
-	protected abstract prepareRecord?<IncludePrivateFields extends boolean>(
+	protected prepareRecord?<IncludePrivateFields extends boolean>(
 		record: Partial<FullRecord> & { [key: string]: any },
 		options?: PrepareOptions<IncludePrivateFields>
 	): Promise<PrepareResults<FullSchema, IncludePrivateFields>>
 
-	protected abstract willCreate?(
+	protected willCreate?(
 		values: CreateRecord
 	): Promise<Omit<DatabaseRecord, 'id'>>
 
-	protected abstract willUpdate?(
-		values: UpdateRecord
-	): Promise<Partial<DatabaseRecord>>
+	protected willUpdate?(values: UpdateRecord): Promise<Partial<DatabaseRecord>>
 
-	protected abstract willScramble?(
+	protected willScramble?(
 		values: Partial<DatabaseRecord> & { _isScrambled: true }
 	): Promise<any>
 
-	public constructor(db: Database, collectionName?: string) {
+	protected constructor(db: Database, collectionName?: string) {
 		super()
 
 		this.db = db

@@ -11,103 +11,6 @@ import * as SpruceSchema from '@sprucelabs/schema'
 export declare namespace SpruceErrors.DataStores {
 
 	
-	export interface DuplicateRecord {
-		
-			
-			'duplicateFields': string[]
-			
-			'duplicateValues': string[]
-			
-			'collectionName': string
-			/** Action. e.g. create, update, etc. */
-			'action': string
-	}
-
-	export interface DuplicateRecordSchema extends SpruceSchema.Schema {
-		id: 'duplicateRecord',
-		namespace: 'DataStores',
-		name: 'Duplicate record',
-		    fields: {
-		            /** . */
-		            'duplicateFields': {
-		                type: 'text',
-		                isRequired: true,
-		                isArray: true,
-		                options: undefined
-		            },
-		            /** . */
-		            'duplicateValues': {
-		                type: 'text',
-		                isRequired: true,
-		                isArray: true,
-		                options: undefined
-		            },
-		            /** . */
-		            'collectionName': {
-		                type: 'text',
-		                isRequired: true,
-		                options: undefined
-		            },
-		            /** Action. e.g. create, update, etc. */
-		            'action': {
-		                label: 'Action',
-		                type: 'text',
-		                isRequired: true,
-		                hint: 'e.g. create, update, etc.',
-		                options: undefined
-		            },
-		    }
-	}
-
-	export type DuplicateRecordEntity = SchemaEntity<SpruceErrors.DataStores.DuplicateRecordSchema>
-
-}
-
-
-
-export declare namespace SpruceErrors.DataStores {
-
-	
-	export interface UnknownStoreError {
-		
-			/** Action. e.g. createPerson, updateLocation, etc */
-			'action': string
-			/** Store name. */
-			'storeName': string
-	}
-
-	export interface UnknownStoreErrorSchema extends SpruceSchema.Schema {
-		id: 'unknownStoreError',
-		namespace: 'DataStores',
-		name: 'Unknown store error',
-		    fields: {
-		            /** Action. e.g. createPerson, updateLocation, etc */
-		            'action': {
-		                label: 'Action',
-		                type: 'text',
-		                isRequired: true,
-		                hint: 'e.g. createPerson, updateLocation, etc',
-		                options: undefined
-		            },
-		            /** Store name. */
-		            'storeName': {
-		                label: 'Store name',
-		                type: 'text',
-		                isRequired: true,
-		                options: undefined
-		            },
-		    }
-	}
-
-	export type UnknownStoreErrorEntity = SchemaEntity<SpruceErrors.DataStores.UnknownStoreErrorSchema>
-
-}
-
-
-
-export declare namespace SpruceErrors.DataStores {
-
-	
 	export interface RecordNotFoundQuery {
 			/** . */
 			[field:string]: (any)| undefined | null
@@ -171,20 +74,30 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
-	export interface DatabaseNotConnected {
+	export interface UnknownStoreError {
 		
-			/** Operation Attempted. */
-			'operationAttempted': string
+			/** Action. e.g. createPerson, updateLocation, etc */
+			'action': string
+			/** Store name. */
+			'storeName': string
 	}
 
-	export interface DatabaseNotConnectedSchema extends SpruceSchema.Schema {
-		id: 'databaseNotConnected',
+	export interface UnknownStoreErrorSchema extends SpruceSchema.Schema {
+		id: 'unknownStoreError',
 		namespace: 'DataStores',
-		name: 'Database not connected',
+		name: 'Unknown store error',
 		    fields: {
-		            /** Operation Attempted. */
-		            'operationAttempted': {
-		                label: 'Operation Attempted',
+		            /** Action. e.g. createPerson, updateLocation, etc */
+		            'action': {
+		                label: 'Action',
+		                type: 'text',
+		                isRequired: true,
+		                hint: 'e.g. createPerson, updateLocation, etc',
+		                options: undefined
+		            },
+		            /** Store name. */
+		            'storeName': {
+		                label: 'Store name',
 		                type: 'text',
 		                isRequired: true,
 		                options: undefined
@@ -192,7 +105,144 @@ export declare namespace SpruceErrors.DataStores {
 		    }
 	}
 
-	export type DatabaseNotConnectedEntity = SchemaEntity<SpruceErrors.DataStores.DatabaseNotConnectedSchema>
+	export type UnknownStoreErrorEntity = SchemaEntity<SpruceErrors.DataStores.UnknownStoreErrorSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface ScrambleNotConfigured {
+		
+	}
+
+	export interface ScrambleNotConfiguredSchema extends SpruceSchema.Schema {
+		id: 'scrambleNotConfigured',
+		namespace: 'DataStores',
+		name: 'Scramble not configured',
+		    fields: {
+		    }
+	}
+
+	export type ScrambleNotConfiguredEntity = SchemaEntity<SpruceErrors.DataStores.ScrambleNotConfiguredSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface InvalidStoreName {
+		
+			
+			'suppliedName': string
+			
+			'validNames': string[]
+	}
+
+	export interface InvalidStoreNameSchema extends SpruceSchema.Schema {
+		id: 'invalidStoreName',
+		namespace: 'DataStores',
+		name: 'Invalid store',
+		    fields: {
+		            /** . */
+		            'suppliedName': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		            /** . */
+		            'validNames': {
+		                type: 'text',
+		                isRequired: true,
+		                isArray: true,
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type InvalidStoreNameEntity = SchemaEntity<SpruceErrors.DataStores.InvalidStoreNameSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface DuplicateRecord {
+		
+			
+			'duplicateFields': string[]
+			
+			'duplicateValues': string[]
+			
+			'collectionName': string
+			/** Action. e.g. create, update, etc. */
+			'action': string
+	}
+
+	export interface DuplicateRecordSchema extends SpruceSchema.Schema {
+		id: 'duplicateRecord',
+		namespace: 'DataStores',
+		name: 'Duplicate record',
+		    fields: {
+		            /** . */
+		            'duplicateFields': {
+		                type: 'text',
+		                isRequired: true,
+		                isArray: true,
+		                options: undefined
+		            },
+		            /** . */
+		            'duplicateValues': {
+		                type: 'text',
+		                isRequired: true,
+		                isArray: true,
+		                options: undefined
+		            },
+		            /** . */
+		            'collectionName': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		            /** Action. e.g. create, update, etc. */
+		            'action': {
+		                label: 'Action',
+		                type: 'text',
+		                isRequired: true,
+		                hint: 'e.g. create, update, etc.',
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type DuplicateRecordEntity = SchemaEntity<SpruceErrors.DataStores.DuplicateRecordSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface InvalidStore {
+		
+	}
+
+	export interface InvalidStoreSchema extends SpruceSchema.Schema {
+		id: 'invalidStore',
+		namespace: 'DataStores',
+		name: 'Invalid store',
+		    fields: {
+		    }
+	}
+
+	export type InvalidStoreEntity = SchemaEntity<SpruceErrors.DataStores.InvalidStoreSchema>
 
 }
 
@@ -222,19 +272,28 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
-	export interface ScrambleNotConfigured {
+	export interface DatabaseNotConnected {
 		
+			/** Operation Attempted. */
+			'operationAttempted': string
 	}
 
-	export interface ScrambleNotConfiguredSchema extends SpruceSchema.Schema {
-		id: 'scrambleNotConfigured',
+	export interface DatabaseNotConnectedSchema extends SpruceSchema.Schema {
+		id: 'databaseNotConnected',
 		namespace: 'DataStores',
-		name: 'Scramble not configured',
+		name: 'Database not connected',
 		    fields: {
+		            /** Operation Attempted. */
+		            'operationAttempted': {
+		                label: 'Operation Attempted',
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
 		    }
 	}
 
-	export type ScrambleNotConfiguredEntity = SchemaEntity<SpruceErrors.DataStores.ScrambleNotConfiguredSchema>
+	export type DatabaseNotConnectedEntity = SchemaEntity<SpruceErrors.DataStores.DatabaseNotConnectedSchema>
 
 }
 

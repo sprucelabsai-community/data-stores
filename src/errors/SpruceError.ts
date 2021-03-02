@@ -31,6 +31,14 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				message = 'A Scramble not configured just happened!'
 				break
 
+			case 'INVALID_STORE':
+				message = 'A Invalid store just happened!'
+				break
+
+			case 'INVALID_STORE_NAME':
+				message = 'A Invalid store just happened!'
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}

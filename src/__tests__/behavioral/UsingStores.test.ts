@@ -7,12 +7,14 @@ import {
 import { test, assert } from '@sprucelabs/test'
 import { errorAssertUtil } from '@sprucelabs/test-utils'
 import SpruceError from '../../errors/SpruceError'
+import StoreFactory from '../../factories/StoreFactory'
 import AbstractStore, {
 	PrepareOptions,
 	PrepareResults,
 	SCRAMBLE_VALUE,
 } from '../../stores/AbstractStore'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
+import { StoreOptions } from '../../types/stores.types'
 
 export const DEMO_PHONE = '555-555-5555'
 export const DEMO_PHONE_FORMATTED = '+1 555-555-5555'
@@ -153,6 +155,10 @@ class TestStore extends AbstractStore<
 		//@ts-ignore
 		return values
 	}
+
+	public static Store(options: StoreOptions) {
+		return new this(options.db)
+	}
 }
 
 type RelatedSchemaType =
@@ -169,7 +175,9 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 	protected static async beforeEach() {
 		await super.beforeEach()
 		await this.connectToDatabase()
-		this.store = new TestStore(this.db)
+		const factory = StoreFactory.Factory(this.db)
+		factory.setStore('test', TestStore)
+		this.store = await factory.Store('test')
 	}
 
 	@test()
