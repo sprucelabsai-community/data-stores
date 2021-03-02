@@ -38,9 +38,9 @@
     "watch.rebuild": "yarn clean.all && yarn && yarn watch.build"
   },
   "dependencies": {
-    "@sprucelabs/schema": "latest",
     "@sprucelabs/error": "latest",
     "@sprucelabs/mercury-types": "latest",
+    "@sprucelabs/schema": "latest",
     "@sprucelabs/spruce-core-schemas": "latest",
     "@sprucelabs/spruce-event-plugin": "latest",
     "@sprucelabs/spruce-event-utils": "latest",
@@ -54,18 +54,19 @@
   "devDependencies": {
     "@sprucelabs/babel-plugin-schema": "latest",
     "@sprucelabs/jest-json-reporter": "latest",
+    "@sprucelabs/jest-sheets-reporter": "latest",
+    "@sprucelabs/semantic-release": "latest",
     "@sprucelabs/test": "latest",
     "@sprucelabs/test-utils": "latest",
     "@types/mongodb": "^3.6.8",
     "@types/nedb": "^1.8.11",
-    "@sprucelabs/semantic-release": "latest",
     "@types/node": "^14.14.31",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.0.0",
     "eslint": "^7.21.0",
+    "eslint-config-spruce": "latest",
     "jest": "^26.6.3",
     "jest-circus": "^26.6.3",
-    "eslint-config-spruce": "latest",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
@@ -92,7 +93,20 @@
     ],
     "moduleNameMapper": {
       "^#spruce/(.*)$": "<rootDir>/build/.spruce/$1"
-    }
+    },
+    "reporters": [
+      "default",
+      [
+        "@sprucelabs/jest-sheets-reporter",
+        {
+          "sheetId": "1DoWM7mYgGDa-PJXptLomrZmbIBZiuxS1YiAsRXU2Gm0",
+          "worksheetId": 843037832,
+          "testMap": {
+            "canCountRecords": "I35"
+          }
+        }
+      ]
+    ]
   },
   "yarn-upgrade-all": {
     "ignore": [
@@ -109,7 +123,8 @@
       "@sprucelabs/test",
       "@sprucelabs/test-utils",
       "@sprucelabs/semantic-release",
-      "eslint-config-spruce"
+      "eslint-config-spruce",
+      "@sprucelabs/jest-sheets-reporter"
     ]
   }
 }
