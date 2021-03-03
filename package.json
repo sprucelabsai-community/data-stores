@@ -61,6 +61,7 @@
     "@sprucelabs/semantic-release": "latest",
     "@sprucelabs/test": "latest",
     "@sprucelabs/test-utils": "latest",
+    "@types/lodash": "^4.14.168",
     "@types/mongodb": "^3.6.8",
     "@types/nedb": "^1.8.11",
     "@types/node": "^14.14.31",
