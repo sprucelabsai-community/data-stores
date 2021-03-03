@@ -55,7 +55,7 @@
     "globby": "^11.0.2",
     "mongodb": "^3.6.4",
     "nedb": "^1.8.0",
-    "@types/mongodb": "^3.6.8",
+    "@types/mongodb": "^3.6.8"
   },
   "devDependencies": {
     "@sprucelabs/babel-plugin-schema": "latest",
