@@ -1,7 +1,7 @@
 {
   "name": "@sprucelabs/data-stores",
   "description": "A way to store data",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "homepage": "https://github.com/sprucelabsai/data-stores",
   "bugs": {
     "url": "https://github.com/sprucelabsai/data-stores/issues"
@@ -14,7 +14,7 @@
     "build"
   ],
   "main": "./build/index.js",
-	"types": "./build/index.d.ts",
+  "types": "./build/index.d.ts",
   "scripts": {
     "boot": "node build/index",
     "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",

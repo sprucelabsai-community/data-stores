@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/sprucelabsai/data-stores/compare/v1.2.1...v1.2.2) (2021-03-03)
+
+
+### Bug Fixes
+
+* set main/types ([c1542fd](https://github.com/sprucelabsai/data-stores/commit/c1542fd))
+
 ## [1.2.1](https://github.com/sprucelabsai/data-stores/compare/v1.2.0...v1.2.1) (2021-03-03)
 
 
