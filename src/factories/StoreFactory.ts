@@ -33,7 +33,7 @@ export default class StoreFactory {
 				throw new SpruceError({
 					code: 'INVALID_STORE',
 					friendlyMessage:
-						'You have to have a Store() factory method on your store that returns `new this()`.',
+						'You have to have a Store(options: StoreOptions) factory method on your store that returns `new this(options)`.',
 				})
 			}
 			const instance = Store.Store({
