@@ -51,11 +51,11 @@
     "@sprucelabs/spruce-event-utils": "latest",
     "@sprucelabs/spruce-skill-booter": "latest",
     "@sprucelabs/spruce-skill-utils": "latest",
+    "@types/mongodb": "^3.6.8",
     "dotenv": "^8.2.0",
     "globby": "^11.0.2",
     "mongodb": "^3.6.4",
-    "nedb": "^1.8.0",
-    "@types/mongodb": "^3.6.8"
+    "nedb": "^1.8.0"
   },
   "devDependencies": {
     "@sprucelabs/babel-plugin-schema": "latest",
