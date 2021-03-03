@@ -1,5 +1,4 @@
-import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
-import NeDbDatabase from '../../databases/NeDbDatabase'
+import { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import DatabaseFactory from '../../factories/DatabaseFactory'
 import { Database } from '../../types/database.types'
 
