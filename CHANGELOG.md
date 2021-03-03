@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/sprucelabsai/data-stores/compare/v1.2.0...v1.2.1) (2021-03-03)
+
+
+### Bug Fixes
+
+* include correct files in npm package ([20c4e43](https://github.com/sprucelabsai/data-stores/commit/20c4e43))
+
 # [1.2.0](https://github.com/sprucelabsai/data-stores/compare/v1.1.0...v1.2.0) (2021-03-02)
 
 
