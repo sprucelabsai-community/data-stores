@@ -1,5 +1,6 @@
 import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import NeDbDatabase from '../../databases/NeDbDatabase'
+import DatabaseFactory from '../../factories/DatabaseFactory'
 import { Database } from '../../types/database.types'
 
 export interface DatabaseFixtureOptions {
@@ -17,14 +18,15 @@ export default class DatabaseFixture {
 	}
 
 	public async connectToDatabase() {
-		let database
-
+		const options: any = {}
 		if (this.useInMemoryDatabase) {
-			database = new NeDbDatabase()
+			options.dbConnectionString = 'memory://'
 		} else {
-			this.dbName = DatabaseFixture.generateDbName()
-			database = new MongoDatabase(MONGO_TEST_URI, { dbName: this.dbName })
+			options.dbName = this.dbName = DatabaseFixture.generateDbName()
+			options.dbConnectionString = MONGO_TEST_URI
 		}
+
+		const database = DatabaseFactory.Database(options)
 
 		await database.connect()
 
