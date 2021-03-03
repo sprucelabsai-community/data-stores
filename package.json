@@ -10,6 +10,9 @@
     "node",
     "sprucelabs"
   ],
+  "files": [
+    "build"
+  ],
   "scripts": {
     "boot": "node build/index",
     "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",
