@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/sprucelabsai/data-stores/compare/v1.2.3...v1.3.0) (2021-03-03)
+
+
+### Features
+
+* missing exports and better error messaging ([8046e49](https://github.com/sprucelabsai/data-stores/commit/8046e49))
+
 ## [1.2.3](https://github.com/sprucelabsai/data-stores/compare/v1.2.2...v1.2.3) (2021-03-03)
 
 ## [1.2.2](https://github.com/sprucelabsai/data-stores/compare/v1.2.1...v1.2.2) (2021-03-03)
