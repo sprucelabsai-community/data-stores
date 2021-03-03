@@ -54,7 +54,8 @@
     "dotenv": "^8.2.0",
     "globby": "^11.0.2",
     "mongodb": "^3.6.4",
-    "nedb": "^1.8.0"
+    "nedb": "^1.8.0",
+    "@types/mongodb": "^3.6.8",
   },
   "devDependencies": {
     "@sprucelabs/babel-plugin-schema": "latest",
@@ -64,7 +65,6 @@
     "@sprucelabs/test": "latest",
     "@sprucelabs/test-utils": "latest",
     "@types/lodash": "^4.14.168",
-    "@types/mongodb": "^3.6.8",
     "@types/nedb": "^1.8.11",
     "@types/node": "^14.14.31",
     "chokidar-cli": "^2.1.0",
