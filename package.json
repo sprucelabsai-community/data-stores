@@ -51,7 +51,7 @@
     "@sprucelabs/spruce-event-utils": "latest",
     "@sprucelabs/spruce-skill-booter": "latest",
     "@sprucelabs/spruce-skill-utils": "latest",
-    "@types/mongodb": "^3.6.8",
+    "@types/mongodb": "^3.6.9",
     "dotenv": "^8.2.0",
     "globby": "^11.0.2",
     "mongodb": "^3.6.4",
