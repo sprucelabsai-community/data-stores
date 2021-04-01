@@ -32,11 +32,12 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'INVALID_STORE':
-				message = 'A Invalid store just happened!'
+				message = `The store you passed does not extend AbstractStore!`
 				break
 
 			case 'INVALID_STORE_NAME':
-				message = 'A Invalid store just happened!'
+				message = `I couldn't find a store named '${options.suppliedName}'. Valid names are:\n\n`
+				message += options.validNames.join('\n')
 				break
 
 			default:

@@ -26,7 +26,7 @@ export default class StoreFactory {
 	public async Store<
 		Name extends StoreName,
 		Options extends StoreOptions<Name>
-	>(name: Name, options?: Options): Promise<any> {
+	>(name: Name, options?: Options): Promise<StoreMap[Name]> {
 		const Store = this.storeMap[name]
 		if (Store) {
 			if (!Store.Store) {
@@ -41,13 +41,14 @@ export default class StoreFactory {
 				storeFactory: this,
 				...options,
 			})
-			return instance
+
+			return instance as any
 		}
 
 		throw new SpruceError({
 			code: 'INVALID_STORE_NAME',
 			suppliedName: name,
-			validNames: [],
+			validNames: Object.keys(this.storeMap),
 		})
 	}
 

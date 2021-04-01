@@ -1,4 +1,4 @@
-import { test } from '@sprucelabs/test'
+import { assert, test } from '@sprucelabs/test'
 import StoreFactory from '../../factories/StoreFactory'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import TestStore from '../support/TestStore'
@@ -29,5 +29,11 @@ export default class TypingStoresTest extends AbstractDatabaseTest {
 	@test('Types options (will always pass, fails lint)')
 	protected static async typesOptions() {
 		await this.factory.Store('test', { testOption: true })
+	}
+
+	@test('Types returned store (will always pass, fails lint)')
+	protected static async typesStore() {
+		const store = await this.factory.Store('test', { testOption: true })
+		assert.isExactType<TestStore, typeof store>(true)
 	}
 }

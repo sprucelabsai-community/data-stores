@@ -20,13 +20,15 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 	@test()
 	protected static async throwsWithBadStore() {
+		this.factory.setStore('test', TestStore)
+
 		const err = await assert.doesThrowAsync(() =>
 			//@ts-ignore
 			this.factory.Store('not-found')
 		)
 		errorAssertUtil.assertError(err, 'INVALID_STORE_NAME', {
 			suppliedName: 'not-found',
-			validNames: [],
+			validNames: ['test'],
 		})
 	}
 

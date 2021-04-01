@@ -103,6 +103,16 @@ const databaseRecordSchema = buildSchema({
 
 const TEST_COLLECTION_NAME = 'test_collection'
 
+declare module '../../types/stores.types' {
+	interface StoreMap {
+		testing: TestStore
+	}
+
+	interface StoreOptionsMap {
+		testing: { testOption: boolean }
+	}
+}
+
 class TestStore extends AbstractStore<
 	typeof fullRecordSchema,
 	typeof createRecordSchema,
@@ -110,7 +120,6 @@ class TestStore extends AbstractStore<
 	typeof databaseRecordSchema
 > {
 	public name = 'Test'
-	public initialize = undefined
 
 	protected scrambleFields = [
 		'requiredForCreate',
@@ -176,8 +185,8 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		await super.beforeEach()
 		await this.connectToDatabase()
 		const factory = StoreFactory.Factory(this.db)
-		factory.setStore('test', TestStore)
-		this.store = await factory.Store('test')
+		factory.setStore('testing', TestStore)
+		this.store = await factory.Store('testing')
 	}
 
 	@test()
