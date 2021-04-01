@@ -41,7 +41,10 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'FAILED_TO_LOAD_STORE':
-				message = 'A Failed to load store just happened!'
+				message = `Dang it, I couldn't load your ${options.name} store!`
+				if (options.originalError) {
+					message += '\n\nOriginal error:\n\n' + options.originalError.message
+				}
 				break
 
 			default:
