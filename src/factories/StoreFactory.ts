@@ -48,8 +48,12 @@ export default class StoreFactory {
 		throw new SpruceError({
 			code: 'INVALID_STORE_NAME',
 			suppliedName: name,
-			validNames: Object.keys(this.storeMap),
+			validNames: this.getStoreNames(),
 		})
+	}
+
+	public getStoreNames(): StoreName[] {
+		return Object.keys(this.storeMap) as any
 	}
 
 	public setStore(name: string, TestStore: StoreContructor) {

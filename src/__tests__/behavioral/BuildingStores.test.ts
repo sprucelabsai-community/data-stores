@@ -63,4 +63,20 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 		const store = await this.factory.Store('test', { testOption: true })
 		assert.isTrue(store.options.testOption)
 	}
+
+	@test()
+	protected static async factoryReturnsAllStoreNames() {
+		let names = this.factory.getStoreNames()
+
+		assert.isLength(names, 0)
+
+		this.factory.setStore('test', TestStore)
+
+		names = this.factory.getStoreNames()
+
+		assert.isLength(names, 1)
+		assert.isEqualDeep(names, ['test'])
+
+		assert.isExactType<typeof names, ('test' | 'testing')[]>(true)
+	}
 }
