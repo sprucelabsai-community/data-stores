@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/sprucelabsai/data-stores/compare/v1.4.0...v1.5.0) (2021-04-01)
+
+
+### Features
+
+* store fixtures and loaders ([2e809a7](https://github.com/sprucelabsai/data-stores/commit/2e809a7))
+
 # [1.4.0](https://github.com/sprucelabsai/data-stores/compare/v1.3.17...v1.4.0) (2021-04-01)
 
 
