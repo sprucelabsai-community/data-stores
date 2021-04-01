@@ -1,9 +1,9 @@
 import { SchemaRegistry } from '@sprucelabs/schema'
 import AbstractSpruceTest from '@sprucelabs/test'
-import { Database } from '../types/database.types'
 import DatabaseFixture, {
 	DatabaseFixtureOptions,
-} from './fixtures/DatabaseFixture'
+} from '../fixtures/DatabaseFixture'
+import { Database } from '../types/database.types'
 
 export default class AbstractDatabaseTest extends AbstractSpruceTest {
 	protected static db: Database

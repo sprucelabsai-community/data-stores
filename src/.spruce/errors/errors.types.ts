@@ -11,6 +11,67 @@ import * as SpruceSchema from '@sprucelabs/schema'
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface UnknownStoreError {
+		
+			/** Action. e.g. createPerson, updateLocation, etc */
+			'action': string
+			/** Store name. */
+			'storeName': string
+	}
+
+	export interface UnknownStoreErrorSchema extends SpruceSchema.Schema {
+		id: 'unknownStoreError',
+		namespace: 'DataStores',
+		name: 'Unknown store error',
+		    fields: {
+		            /** Action. e.g. createPerson, updateLocation, etc */
+		            'action': {
+		                label: 'Action',
+		                type: 'text',
+		                isRequired: true,
+		                hint: 'e.g. createPerson, updateLocation, etc',
+		                options: undefined
+		            },
+		            /** Store name. */
+		            'storeName': {
+		                label: 'Store name',
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type UnknownStoreErrorEntity = SchemaEntity<SpruceErrors.DataStores.UnknownStoreErrorSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface ScrambleNotConfigured {
+		
+	}
+
+	export interface ScrambleNotConfiguredSchema extends SpruceSchema.Schema {
+		id: 'scrambleNotConfigured',
+		namespace: 'DataStores',
+		name: 'Scramble not configured',
+		    fields: {
+		    }
+	}
+
+	export type ScrambleNotConfiguredEntity = SchemaEntity<SpruceErrors.DataStores.ScrambleNotConfiguredSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface RecordNotFoundQuery {
 			/** . */
 			[field:string]: (any)| undefined | null
@@ -74,59 +135,19 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
-	export interface UnknownStoreError {
-		
-			/** Action. e.g. createPerson, updateLocation, etc */
-			'action': string
-			/** Store name. */
-			'storeName': string
-	}
-
-	export interface UnknownStoreErrorSchema extends SpruceSchema.Schema {
-		id: 'unknownStoreError',
-		namespace: 'DataStores',
-		name: 'Unknown store error',
-		    fields: {
-		            /** Action. e.g. createPerson, updateLocation, etc */
-		            'action': {
-		                label: 'Action',
-		                type: 'text',
-		                isRequired: true,
-		                hint: 'e.g. createPerson, updateLocation, etc',
-		                options: undefined
-		            },
-		            /** Store name. */
-		            'storeName': {
-		                label: 'Store name',
-		                type: 'text',
-		                isRequired: true,
-		                options: undefined
-		            },
-		    }
-	}
-
-	export type UnknownStoreErrorEntity = SchemaEntity<SpruceErrors.DataStores.UnknownStoreErrorSchema>
-
-}
-
-
-
-export declare namespace SpruceErrors.DataStores {
-
-	
-	export interface ScrambleNotConfigured {
+	export interface MongoIdMappingError {
 		
 	}
 
-	export interface ScrambleNotConfiguredSchema extends SpruceSchema.Schema {
-		id: 'scrambleNotConfigured',
+	export interface MongoIdMappingErrorSchema extends SpruceSchema.Schema {
+		id: 'mongoIdMappingError',
 		namespace: 'DataStores',
-		name: 'Scramble not configured',
+		name: 'Mongo id mapping error',
 		    fields: {
 		    }
 	}
 
-	export type ScrambleNotConfiguredEntity = SchemaEntity<SpruceErrors.DataStores.ScrambleNotConfiguredSchema>
+	export type MongoIdMappingErrorEntity = SchemaEntity<SpruceErrors.DataStores.MongoIdMappingErrorSchema>
 
 }
 
@@ -165,6 +186,56 @@ export declare namespace SpruceErrors.DataStores {
 	}
 
 	export type InvalidStoreNameEntity = SchemaEntity<SpruceErrors.DataStores.InvalidStoreNameSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface InvalidStore {
+		
+	}
+
+	export interface InvalidStoreSchema extends SpruceSchema.Schema {
+		id: 'invalidStore',
+		namespace: 'DataStores',
+		name: 'Invalid store',
+		    fields: {
+		    }
+	}
+
+	export type InvalidStoreEntity = SchemaEntity<SpruceErrors.DataStores.InvalidStoreSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface FailedToLoadStore {
+		
+			
+			'name': string
+	}
+
+	export interface FailedToLoadStoreSchema extends SpruceSchema.Schema {
+		id: 'failedToLoadStore',
+		namespace: 'DataStores',
+		name: 'Failed to load store',
+		    fields: {
+		            /** . */
+		            'name': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type FailedToLoadStoreEntity = SchemaEntity<SpruceErrors.DataStores.FailedToLoadStoreSchema>
 
 }
 
@@ -222,48 +293,6 @@ export declare namespace SpruceErrors.DataStores {
 	}
 
 	export type DuplicateRecordEntity = SchemaEntity<SpruceErrors.DataStores.DuplicateRecordSchema>
-
-}
-
-
-
-export declare namespace SpruceErrors.DataStores {
-
-	
-	export interface InvalidStore {
-		
-	}
-
-	export interface InvalidStoreSchema extends SpruceSchema.Schema {
-		id: 'invalidStore',
-		namespace: 'DataStores',
-		name: 'Invalid store',
-		    fields: {
-		    }
-	}
-
-	export type InvalidStoreEntity = SchemaEntity<SpruceErrors.DataStores.InvalidStoreSchema>
-
-}
-
-
-
-export declare namespace SpruceErrors.DataStores {
-
-	
-	export interface MongoIdMappingError {
-		
-	}
-
-	export interface MongoIdMappingErrorSchema extends SpruceSchema.Schema {
-		id: 'mongoIdMappingError',
-		namespace: 'DataStores',
-		name: 'Mongo id mapping error',
-		    fields: {
-		    }
-	}
-
-	export type MongoIdMappingErrorEntity = SchemaEntity<SpruceErrors.DataStores.MongoIdMappingErrorSchema>
 
 }
 

@@ -40,6 +40,10 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				message += options.validNames.join('\n')
 				break
 
+			case 'FAILED_TO_LOAD_STORE':
+				message = 'A Failed to load store just happened!'
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}

@@ -1,6 +1,6 @@
-import { MONGO_TEST_URI } from '../../databases/MongoDatabase'
-import DatabaseFactory from '../../factories/DatabaseFactory'
-import { Database } from '../../types/database.types'
+import { MONGO_TEST_URI } from '../databases/MongoDatabase'
+import DatabaseFactory from '../factories/DatabaseFactory'
+import { Database } from '../types/database.types'
 
 export interface DatabaseFixtureOptions {
 	useInMemoryDatabase?: boolean
