@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/sprucelabsai/data-stores/compare/v1.3.17...v1.4.0) (2021-04-01)
+
+
+### Features
+
+* get store typed store names on store factory ([a5d05dd](https://github.com/sprucelabsai/data-stores/commit/a5d05dd))
+
 ## [1.3.17](https://github.com/sprucelabsai/data-stores/compare/v1.3.16...v1.3.17) (2021-04-01)
 
 ## [1.3.16](https://github.com/sprucelabsai/data-stores/compare/v1.3.15...v1.3.16) (2021-03-31)
