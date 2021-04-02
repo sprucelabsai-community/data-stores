@@ -1,3 +1,10 @@
+# [2.0.0](https://github.com/sprucelabsai/data-stores/compare/v1.5.8...v2.0.0) (2021-04-02)
+
+
+### Breaking Changes
+
+* validation errors ([c32d6cd](https://github.com/sprucelabsai/data-stores/commit/c32d6cd))
+
 ## [1.5.8](https://github.com/sprucelabsai/data-stores/compare/v1.5.7...v1.5.8) (2021-04-02)
 
 ## [1.5.7](https://github.com/sprucelabsai/data-stores/compare/v1.5.6...v1.5.7) (2021-04-02)
