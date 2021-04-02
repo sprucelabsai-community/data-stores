@@ -1,3 +1,4 @@
+import { namesUtil } from '@sprucelabs/spruce-skill-utils'
 import SpruceError from '../errors/SpruceError'
 import { Database } from '../types/database.types'
 import {
@@ -35,8 +36,9 @@ export default class StoreFactory {
 			if (!Store.Store) {
 				throw new SpruceError({
 					code: 'INVALID_STORE',
-					friendlyMessage:
-						'You have to have a Store(options: StoreOptions) factory method on your store that returns `new this(options)`.',
+					friendlyMessage: `You have to have ${namesUtil.toPascal(
+						name
+					)}.Store(options: StoreOptions) factory method on your store that returns \`new this(options)\`.`,
 				})
 			}
 			const instance = Store.Store({
