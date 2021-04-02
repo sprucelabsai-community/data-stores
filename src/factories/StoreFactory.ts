@@ -47,6 +47,8 @@ export default class StoreFactory {
 				...options,
 			})
 
+			await instance.initialize?.()
+
 			return instance as any
 		}
 

@@ -36,8 +36,13 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'INVALID_STORE_NAME':
-				message = `I couldn't find a store named '${options.suppliedName}'. Valid names are:\n\n`
-				message += options.validNames.join('\n')
+				message = `I couldn't find a store named '${options.suppliedName}'. `
+				if (options.validNames.length === 0) {
+					message += 'There are actually no stores available.'
+				} else {
+					message += `Valid names are:\n\n`
+					message += options.validNames.join('\n')
+				}
 				break
 
 			case 'FAILED_TO_LOAD_STORE':

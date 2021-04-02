@@ -79,4 +79,11 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 		assert.isExactType<typeof names, ('test' | 'testing')[]>(true)
 	}
+
+	@test()
+	protected static async initializesStore() {
+		this.factory.setStore('test', TestStore)
+		const store = await this.factory.Store('test')
+		assert.isTrue(store.wasInitializedInvoked)
+	}
 }

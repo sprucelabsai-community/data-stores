@@ -25,6 +25,7 @@ export default class TestStore extends AbstractStore<TestSchema> {
 	protected updateSchema = testSchema
 	protected fullSchema = testSchema
 	protected databaseSchema = testSchema
+	public wasInitializedInvoked = false
 
 	public static Store(options: StoreOptions) {
 		const store = new this(options.db)
@@ -32,5 +33,9 @@ export default class TestStore extends AbstractStore<TestSchema> {
 		store.storeFactory = options.storeFactory
 		store.options = options
 		return store
+	}
+
+	public async initialize() {
+		this.wasInitializedInvoked = true
 	}
 }
