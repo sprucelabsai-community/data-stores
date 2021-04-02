@@ -6,9 +6,10 @@ import {
 } from '@sprucelabs/schema'
 import { test, assert } from '@sprucelabs/test'
 import { errorAssertUtil } from '@sprucelabs/test-utils'
+import { SCRAMBLE_VALUE } from '../../constants'
 import SpruceError from '../../errors/SpruceError'
 import StoreFactory from '../../factories/StoreFactory'
-import AbstractStore, { SCRAMBLE_VALUE } from '../../stores/AbstractStore'
+import AbstractStore from '../../stores/AbstractStore'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import {
 	StoreOptions,

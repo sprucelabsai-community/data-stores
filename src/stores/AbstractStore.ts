@@ -12,14 +12,13 @@ import SchemaEntity, {
 	SchemaValues,
 	validateSchemaValues,
 } from '@sprucelabs/schema'
+import { SCRAMBLE_VALUE } from '../constants'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
 import { QueryBuilder, QueryOptions } from '../types/query.types'
 import { PrepareOptions, PrepareResults } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
-
-export const SCRAMBLE_VALUE = '***///scrambled///***'
 
 export default abstract class AbstractStore<
 	FullSchema extends Schema,
