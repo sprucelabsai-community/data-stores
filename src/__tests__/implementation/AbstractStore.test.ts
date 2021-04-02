@@ -672,8 +672,8 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			})
 		)) as SpruceError
 
-		//@ts-ignore
 		errorAssertUtil.assertError(
+			//@ts-ignore
 			err.options.errors?.[0],
 			'UNEXPECTED_PARAMETERS',
 			{
