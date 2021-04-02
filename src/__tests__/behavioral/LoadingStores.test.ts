@@ -26,10 +26,11 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		assert.isLength(factory.getStoreNames(), 0)
 	}
 
-	@test()
-	protected static async loadsStoresWithGoodDir() {
-		this.setCwd()
-		const loader = await this.Loader(this.resolvePath())
+	@test('loads good stores without trailing slash')
+	@test('loads good stores with trailing slash', '/')
+	protected static async loadsStoresWithGoodDir(pathSuffix = '') {
+		this.setCwd(pathSuffix)
+		const loader = await this.Loader(this.resolvePath(this.cwd))
 
 		const factory = await loader.loadStores()
 
@@ -37,14 +38,15 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		assert.isEqualDeep(factory.getStoreNames(), ['good'])
 	}
 
-	protected static setCwd() {
-		this.cwd = this.resolvePath(
-			__dirname,
-			'..',
-			'/testDirsAndFiles/',
-			'one-good-store-skill',
-			'src'
-		)
+	protected static setCwd(suffix = '') {
+		this.cwd =
+			this.resolvePath(
+				__dirname,
+				'..',
+				'/testDirsAndFiles/',
+				'one-good-store-skill',
+				'src'
+			) + suffix
 
 		return this.cwd
 	}

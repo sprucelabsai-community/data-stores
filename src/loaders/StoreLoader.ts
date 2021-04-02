@@ -1,6 +1,6 @@
 import pathUtil from 'path'
 import AbstractSpruceError from '@sprucelabs/error'
-import { namesUtil } from '@sprucelabs/spruce-skill-utils'
+import { diskUtil, namesUtil } from '@sprucelabs/spruce-skill-utils'
 import globby from 'globby'
 import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
 import SpruceError from '../errors/SpruceError'
@@ -42,7 +42,9 @@ export default class StoreLoader {
 		stores: { namePascal: string; Class: any }[]
 		errors: StoreLoadError[]
 	}> {
-		const matches = await globby(`${this.activeDir}/**/*.store.[j|t]s`)
+		const pattern = diskUtil.resolvePath(this.activeDir, '**', '*.store.[j|t]s')
+
+		const matches = await globby(pattern)
 		const errors: StoreLoadError[] = []
 		const Stores: any[] = []
 
