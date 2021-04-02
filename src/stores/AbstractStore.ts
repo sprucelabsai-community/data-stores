@@ -16,18 +16,10 @@ import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
 import { QueryBuilder, QueryOptions } from '../types/query.types'
+import { PrepareOptions, PrepareResults } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
 
 export const SCRAMBLE_VALUE = '***///scrambled///***'
-
-export interface PrepareOptions<IncludePrivateFields extends boolean> {
-	includePrivateFields?: IncludePrivateFields
-}
-
-export type PrepareResults<
-	S extends Schema,
-	IncludePrivateFields extends boolean
-> = IncludePrivateFields extends true ? SchemaPublicValues<S> : SchemaValues<S>
 
 export default abstract class AbstractStore<
 	FullSchema extends Schema,
