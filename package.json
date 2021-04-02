@@ -1,7 +1,7 @@
 {
   "name": "@sprucelabs/data-stores",
   "description": "A way to store data",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "homepage": "https://github.com/sprucelabsai/data-stores",
   "bugs": {
     "url": "https://github.com/sprucelabsai/data-stores/issues"
