@@ -27,7 +27,7 @@ export default class TestStore extends AbstractStore<TestSchema> {
 	protected databaseSchema = testSchema
 	public wasInitializedInvoked = false
 
-	public static Store(options: StoreOptions) {
+	public static async Store(options: StoreOptions) {
 		const store = new this(options.db)
 		store.db = options.db
 		store.storeFactory = options.storeFactory

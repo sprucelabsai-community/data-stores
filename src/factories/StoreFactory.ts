@@ -9,7 +9,7 @@ import {
 } from '../types/stores.types'
 
 interface StoreContructor {
-	Store(o: any): Store
+	Store(o: any): Promise<Store> | Store
 }
 
 type StoreOptions<Name extends StoreName> = Name extends keyof StoreOptionsMap
@@ -41,7 +41,7 @@ export default class StoreFactory {
 					)}.Store(options: StoreOptions) factory method on your store that returns \`new this(options)\`.`,
 				})
 			}
-			const instance = Store.Store({
+			const instance = await Store.Store({
 				db: this.db,
 				storeFactory: this,
 				...options,
