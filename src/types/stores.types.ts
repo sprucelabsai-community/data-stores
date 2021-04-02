@@ -22,3 +22,5 @@ export type PrepareResults<
 	S extends Schema,
 	IncludePrivateFields extends boolean
 > = IncludePrivateFields extends true ? SchemaPublicValues<S> : SchemaValues<S>
+
+export type StoreName = keyof StoreMap

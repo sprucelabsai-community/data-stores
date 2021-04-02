@@ -1,16 +1,19 @@
 import SpruceError from '../errors/SpruceError'
 import { Database } from '../types/database.types'
-import { Store, StoreMap, StoreOptionsMap } from '../types/stores.types'
+import {
+	Store,
+	StoreMap,
+	StoreName,
+	StoreOptionsMap,
+} from '../types/stores.types'
 
 interface StoreContructor {
 	Store(o: any): Store
 }
 
-type StoreName = keyof StoreMap
 type StoreOptions<Name extends StoreName> = Name extends keyof StoreOptionsMap
 	? StoreOptionsMap[Name]
 	: Record<string, never>
-
 export default class StoreFactory {
 	private storeMap: Record<string, StoreContructor> = {}
 	private db: Database
