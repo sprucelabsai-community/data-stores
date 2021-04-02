@@ -8,16 +8,11 @@ import { test, assert } from '@sprucelabs/test'
 import { errorAssertUtil } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../constants'
 import SpruceError from '../../errors/SpruceError'
-import StoreFactory from '../../factories/StoreFactory'
 import AbstractStore from '../../stores/AbstractStore'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
-import {
-	StoreOptions,
-	PrepareOptions,
-	PrepareResults,
-} from '../../types/stores.types'
+import { Database } from '../../types/database.types'
+import { PrepareOptions, PrepareResults } from '../../types/stores.types'
 
-export const DEMO_PHONE = '555-555-5555'
 export const DEMO_PHONE_FORMATTED = '+1 555-555-5555'
 export const DEMO_PHONE2_FORMATTED = '+1 555-555-1234'
 export const DEMO_PHONE3_FORMATTED = '+1 555-555-1235'
@@ -104,16 +99,6 @@ const databaseRecordSchema = buildSchema({
 
 const TEST_COLLECTION_NAME = 'test_collection'
 
-declare module '../../types/stores.types' {
-	interface StoreMap {
-		testing: TestStore
-	}
-
-	interface StoreOptionsMap {
-		testing: { testOption: boolean }
-	}
-}
-
 class TestStore extends AbstractStore<
 	typeof fullRecordSchema,
 	typeof createRecordSchema,
@@ -121,6 +106,7 @@ class TestStore extends AbstractStore<
 	typeof databaseRecordSchema
 > {
 	public name = 'Test'
+	public initialize = undefined
 
 	protected scrambleFields = [
 		'requiredForCreate',
@@ -137,6 +123,10 @@ class TestStore extends AbstractStore<
 
 	protected willUpdate = undefined
 	protected willScramble = undefined
+
+	public static Store(db: Database) {
+		return new this(db)
+	}
 
 	protected async willCreate(values: SchemaValues<typeof createRecordSchema>) {
 		return {
@@ -165,10 +155,6 @@ class TestStore extends AbstractStore<
 		//@ts-ignore
 		return values
 	}
-
-	public static Store(options: StoreOptions) {
-		return new this(options.db)
-	}
 }
 
 type RelatedSchemaType =
@@ -185,9 +171,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 	protected static async beforeEach() {
 		await super.beforeEach()
 		await this.connectToDatabase()
-		const factory = StoreFactory.Factory(this.db)
-		factory.setStore('testing', TestStore)
-		this.store = await factory.Store('testing')
+		this.store = TestStore.Store(this.db)
 	}
 
 	@test()
@@ -202,10 +186,8 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			() => this.store.createOne({})
 		)) as SpruceError
 
-		errorAssertUtil.assertError(err, 'VALIDATION_FAILED')
-
 		//@ts-ignore
-		errorAssertUtil.assertError(err.options.errors[0], 'MISSING_PARAMETERS', {
+		errorAssertUtil.assertError(err.options.errors?.[0], 'MISSING_PARAMETERS', {
 			parameters: ['requiredForCreate', 'phoneNumber'],
 		})
 	}
@@ -305,7 +287,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		)) as SpruceError
 
 		//@ts-ignore
-		errorAssertUtil.assertError(err.options.errors[0], 'MISSING_PARAMETERS', {
+		errorAssertUtil.assertError(err.options.errors?.[0], 'MISSING_PARAMETERS', {
 			parameters: ['requiredForUpdate'],
 		})
 	}
@@ -690,8 +672,8 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			})
 		)) as SpruceError
 
+		//@ts-ignore
 		errorAssertUtil.assertError(
-			//@ts-ignore
 			err.options.errors?.[0],
 			'UNEXPECTED_PARAMETERS',
 			{
