@@ -1,7 +1,7 @@
 {
   "name": "@sprucelabs/data-stores",
   "description": "A way to store data",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "homepage": "https://github.com/sprucelabsai/data-stores",
   "bugs": {
     "url": "https://github.com/sprucelabsai/data-stores/issues"
@@ -51,7 +51,7 @@
     "@sprucelabs/spruce-event-utils": "latest",
     "@sprucelabs/spruce-skill-booter": "latest",
     "@sprucelabs/spruce-skill-utils": "latest",
-    "@types/mongodb": "^3.6.11",
+    "@types/mongodb": "^3.6.12",
     "dotenv": "^8.2.0",
     "globby": "^11.0.3",
     "mongodb": "^3.6.5",
@@ -68,7 +68,7 @@
     "@types/nedb": "^1.8.11",
     "@types/node": "^14.14.37",
     "chokidar-cli": "^2.1.0",
-    "concurrently": "^6.0.0",
+    "concurrently": "^6.0.1",
     "eslint": "^7.23.0",
     "eslint-config-spruce": "latest",
     "jest": "^26.6.3",
