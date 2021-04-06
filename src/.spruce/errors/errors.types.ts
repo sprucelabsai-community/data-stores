@@ -51,6 +51,48 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface UnknownDatabaseError {
+		
+	}
+
+	export interface UnknownDatabaseErrorSchema extends SpruceSchema.Schema {
+		id: 'unknownDatabaseError',
+		namespace: 'DataStores',
+		name: 'unknown database error',
+		    fields: {
+		    }
+	}
+
+	export type UnknownDatabaseErrorEntity = SchemaEntity<SpruceErrors.DataStores.UnknownDatabaseErrorSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface UnableToConnectToDb {
+		
+	}
+
+	export interface UnableToConnectToDbSchema extends SpruceSchema.Schema {
+		id: 'unableToConnectToDb',
+		namespace: 'DataStores',
+		name: 'Unable to connect to db',
+		    fields: {
+		    }
+	}
+
+	export type UnableToConnectToDbEntity = SchemaEntity<SpruceErrors.DataStores.UnableToConnectToDbSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface ScrambleNotConfigured {
 		
 	}
@@ -207,6 +249,27 @@ export declare namespace SpruceErrors.DataStores {
 	}
 
 	export type InvalidStoreEntity = SchemaEntity<SpruceErrors.DataStores.InvalidStoreSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface InvalidDbConnectionString {
+		
+	}
+
+	export interface InvalidDbConnectionStringSchema extends SpruceSchema.Schema {
+		id: 'invalidDbConnectionString',
+		namespace: 'DataStores',
+		name: 'Invalid db connection string',
+		    fields: {
+		    }
+	}
+
+	export type InvalidDbConnectionStringEntity = SchemaEntity<SpruceErrors.DataStores.InvalidDbConnectionStringSchema>
 
 }
 

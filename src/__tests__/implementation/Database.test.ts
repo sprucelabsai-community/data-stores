@@ -7,9 +7,9 @@ import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import { Database } from '../../types/database.types'
 
 let dbCount = 0
-async function mongo() {
+async function mongo(dbConnectionString = MONGO_TEST_URI) {
 	const dbName = `mercury_${new Date().getTime()}-${dbCount++}`
-	const database = new MongoDatabase(MONGO_TEST_URI, { dbName })
+	const database = new MongoDatabase(dbConnectionString, { dbName })
 
 	await database.connect()
 
@@ -24,7 +24,7 @@ async function neDb() {
 	return database
 }
 
-type Connect = () => Promise<Database>
+type Connect = (connectionString?: string) => Promise<Database>
 
 export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	private static collectionName = 'test_collection'
@@ -940,5 +940,19 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		assert.isEqual(secondMatch.name, 'second')
 
 		await this.shutdown(db)
+	}
+
+	@test('throws invalid connection string (mongo)', mongo)
+	protected static async throwsInvalidConnectionString(connect: Connect) {
+		const err = await assert.doesThrowAsync(() => connect('astnoehusantoheun'))
+		errorAssertUtil.assertError(err, 'INVALID_DB_CONNECTION_STRING')
+	}
+
+	@test('throws unable to connect to db (mongo)', mongo)
+	protected static async throwsWhenCantConnectToDb(connect: Connect) {
+		const err = await assert.doesThrowAsync(() =>
+			connect('mongodb://localhost:9999')
+		)
+		errorAssertUtil.assertError(err, 'UNABLE_TO_CONNECT_TO_DB')
 	}
 }

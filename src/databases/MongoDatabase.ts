@@ -204,7 +204,20 @@ export default class MongoDatabase implements Database {
 
 	public async connect() {
 		if (!this.mongo.isConnected()) {
-			await this.mongo.connect()
+			try {
+				await this.mongo.connect()
+			} catch (err) {
+				if (err.name === 'MongoParseError') {
+					throw new SpruceError({ code: 'INVALID_DB_CONNECTION_STRING' })
+				} else if (err.message.includes('ECONNREFUSED')) {
+					throw new SpruceError({ code: 'UNABLE_TO_CONNECT_TO_DB' })
+				} else {
+					throw new SpruceError({
+						code: 'UNKNOWN_DATABASE_ERROR',
+						originalError: err,
+					})
+				}
+			}
 		}
 
 		this.db = this.mongo.db(this.dbName)

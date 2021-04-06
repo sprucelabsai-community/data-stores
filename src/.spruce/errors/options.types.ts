@@ -5,6 +5,12 @@ import { SchemaErrorOptions } from '@sprucelabs/schema'
 export interface UnknownStoreErrorErrorOptions extends SpruceErrors.DataStores.UnknownStoreError, ISpruceErrorOptions {
 	code: 'UNKNOWN_STORE_ERROR'
 }
+export interface UnknownDatabaseErrorErrorOptions extends SpruceErrors.DataStores.UnknownDatabaseError, ISpruceErrorOptions {
+	code: 'UNKNOWN_DATABASE_ERROR'
+}
+export interface UnableToConnectToDbErrorOptions extends SpruceErrors.DataStores.UnableToConnectToDb, ISpruceErrorOptions {
+	code: 'UNABLE_TO_CONNECT_TO_DB'
+}
 export interface ScrambleNotConfiguredErrorOptions extends SpruceErrors.DataStores.ScrambleNotConfigured, ISpruceErrorOptions {
 	code: 'SCRAMBLE_NOT_CONFIGURED'
 }
@@ -20,6 +26,9 @@ export interface InvalidStoreNameErrorOptions extends SpruceErrors.DataStores.In
 export interface InvalidStoreErrorOptions extends SpruceErrors.DataStores.InvalidStore, ISpruceErrorOptions {
 	code: 'INVALID_STORE'
 }
+export interface InvalidDbConnectionStringErrorOptions extends SpruceErrors.DataStores.InvalidDbConnectionString, ISpruceErrorOptions {
+	code: 'INVALID_DB_CONNECTION_STRING'
+}
 export interface FailedToLoadStoreErrorOptions extends SpruceErrors.DataStores.FailedToLoadStore, ISpruceErrorOptions {
 	code: 'FAILED_TO_LOAD_STORE'
 }
@@ -30,6 +39,6 @@ export interface DatabaseNotConnectedErrorOptions extends SpruceErrors.DataStore
 	code: 'DATABASE_NOT_CONNECTED'
 }
 
-type ErrorOptions = SchemaErrorOptions | SpruceErrorOptions | UnknownStoreErrorErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DatabaseNotConnectedErrorOptions 
+type ErrorOptions = SchemaErrorOptions | SpruceErrorOptions | UnknownStoreErrorErrorOptions  | UnknownDatabaseErrorErrorOptions  | UnableToConnectToDbErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | InvalidDbConnectionStringErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DatabaseNotConnectedErrorOptions 
 
 export default ErrorOptions
