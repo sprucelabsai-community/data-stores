@@ -116,19 +116,19 @@
   },
   "yarn-upgrade-all": {
     "ignore": [
-      "@sprucelabs/schema",
       "@sprucelabs/error",
+      "@sprucelabs/jest-json-reporter",
       "@sprucelabs/mercury-types",
+      "@sprucelabs/resolve-path-aliases",
+      "@sprucelabs/schema",
+      "@sprucelabs/semantic-release",
       "@sprucelabs/spruce-core-schemas",
       "@sprucelabs/spruce-event-plugin",
       "@sprucelabs/spruce-event-utils",
       "@sprucelabs/spruce-skill-booter",
       "@sprucelabs/spruce-skill-utils",
-      "@sprucelabs/babel-plugin-schema",
-      "@sprucelabs/jest-json-reporter",
       "@sprucelabs/test",
       "@sprucelabs/test-utils",
-      "@sprucelabs/semantic-release",
       "eslint-config-spruce",
       "@sprucelabs/jest-sheets-reporter"
     ]
