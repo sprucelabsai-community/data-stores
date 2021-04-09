@@ -20,7 +20,7 @@
     "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",
     "boot.sender": "ACTION=sender node build/index",
     "boot.sender.local": "ACTION=sender yarn boot.local",
-    "build": "yarn build.tsc && yarn resolve-paths.lint",
+    "build.dev": "yarn build.tsc && yarn resolve-paths.lint",
     "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
     "build.dist": "tsc --project tsconfig.dist.json",
     "build.resolve-paths": "resolve-path-aliases --target build --patterns **/*.js,**/*.d.ts",
@@ -31,16 +31,16 @@
     "health": "yarn boot --health",
     "health.local": "yarn boot.local --health",
     "lint": "eslint '**/*.ts'",
-    "rebuild": "yarn clean.all && yarn && yarn build",
+    "rebuild": "yarn clean.all && yarn && yarn build.dev",
     "release": "semantic-release",
     "resolve-paths.lint": "yarn build.resolve-paths && yarn lint",
     "test": "jest",
     "upgrade.packages": "yarn-upgrade-all && rm yarn.lock ; yarn ; yarn fix.lint | true",
     "upgrade.packages.all": "yarn install && yarn upgrade.packages",
-    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build && yarn test",
-    "watch.build": "concurrently 'yarn build' \"chokidar 'src/**/*' --ignore '.*/tmp/.*' -c 'yarn build'\"",
+    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test",
+    "watch.build.dev": "concurrently 'yarn build.dev' \"chokidar 'src/**/*' --ignore '.*/tmp/.*' -c 'yarn build.dev'\"",
     "watch.lint": "concurrently 'yarn lint' \"chokidar 'src/**/*' -c 'yarn lint.tsc'\"",
-    "watch.rebuild": "yarn clean.all && yarn && yarn watch.build"
+    "watch.rebuild": "yarn clean.all && yarn && yarn watch.build.dev"
   },
   "dependencies": {
     "@sprucelabs/error": "latest",
@@ -58,9 +58,9 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/babel-plugin-schema": "latest",
     "@sprucelabs/jest-json-reporter": "latest",
     "@sprucelabs/jest-sheets-reporter": "latest",
+    "@sprucelabs/resolve-path-aliases": "latest",
     "@sprucelabs/semantic-release": "latest",
     "@sprucelabs/test": "latest",
     "@sprucelabs/test-utils": "latest",
