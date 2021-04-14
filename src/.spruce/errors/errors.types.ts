@@ -53,6 +53,8 @@ export declare namespace SpruceErrors.DataStores {
 	
 	export interface UnknownDatabaseError {
 		
+			
+			'databaseErrorMessage': string
 	}
 
 	export interface UnknownDatabaseErrorSchema extends SpruceSchema.Schema {
@@ -60,6 +62,12 @@ export declare namespace SpruceErrors.DataStores {
 		namespace: 'DataStores',
 		name: 'unknown database error',
 		    fields: {
+		            /** . */
+		            'databaseErrorMessage': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
 		    }
 	}
 

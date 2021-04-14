@@ -57,7 +57,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'UNKNOWN_DATABASE_ERROR':
-				message = 'A unknown database error just happened!'
+				message = `Something went wrong with the database, the message is:\n\n"${options.databaseErrorMessage}"`
 				break
 
 			case 'UNABLE_TO_CONNECT_TO_DB':

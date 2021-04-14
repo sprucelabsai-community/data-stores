@@ -8,6 +8,12 @@ const unknownDatabaseErrorSchema: SpruceErrors.DataStores.UnknownDatabaseErrorSc
 	namespace: 'DataStores',
 	name: 'unknown database error',
 	    fields: {
+	            /** . */
+	            'databaseErrorMessage': {
+	                type: 'text',
+	                isRequired: true,
+	                options: undefined
+	            },
 	    }
 }
 

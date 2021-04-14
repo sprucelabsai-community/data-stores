@@ -215,6 +215,7 @@ export default class MongoDatabase implements Database {
 					throw new SpruceError({
 						code: 'UNKNOWN_DATABASE_ERROR',
 						originalError: err,
+						databaseErrorMessage: err.message,
 					})
 				}
 			}

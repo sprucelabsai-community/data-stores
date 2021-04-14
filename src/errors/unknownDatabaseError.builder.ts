@@ -4,5 +4,10 @@ export default buildErrorSchema({
 	id: 'unknownDatabaseError',
 	name: 'unknown database error',
 	description: '',
-	fields: {},
+	fields: {
+		databaseErrorMessage: {
+			type: 'text',
+			isRequired: true,
+		},
+	},
 })
