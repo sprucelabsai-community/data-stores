@@ -1,20 +1,20 @@
 {
   "name": "@sprucelabs/data-stores",
   "publishConfig": {
-		"access": "public"
-	},
-  "version": "2.0.13",
+    "access": "public"
+  },
+  "version": "2.0.14",
   "files": [
-		"build/**/*",
-		"!build/__tests__",
-		"!build/esm/__tests__",
-		"tsconfig.json"
-	],
+    "build/**/*",
+    "!build/__tests__",
+    "!build/esm/__tests__",
+    "tsconfig.json"
+  ],
   "main": "./build/index.js",
-	"types": "./build/index.d.ts",
-	"module": "./build/esm/index.js",
-	"sideEffects": false,
-	"license": "MIT",
+  "types": "./build/index.d.ts",
+  "module": "./build/esm/index.js",
+  "sideEffects": false,
+  "license": "MIT",
   "description": "A way to store data",
   "keywords": [
     "node",
@@ -29,7 +29,7 @@
     "boot.sender": "ACTION=sender node build/index",
     "build.dev": "yarn build.tsc && yarn resolve-paths.lint",
     "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
-		"build.dist": "yarn build.tsc && tsc --project tsconfig.dist.json && yarn build.resolve-paths && yarn build.esm-postbuild",
+    "build.dist": "yarn build.tsc && tsc --project tsconfig.dist.json && yarn build.resolve-paths && yarn build.esm-postbuild",
     "build.esm-postbuild": "esm-postbuild --target build/esm --patterns '**/*.js'",
     "build.resolve-paths": "resolve-path-aliases --target build --patterns **/*.js,**/*.d.ts",
     "build.tsc": "yarn build.copy-files && tsc",
