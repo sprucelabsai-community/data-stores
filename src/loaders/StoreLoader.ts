@@ -12,6 +12,7 @@ type StoreLoadError = AbstractSpruceError<FailedToLoadStoreErrorOptions>
 export default class StoreLoader {
 	private activeDir: string
 	private db: Database
+	private static instance: Record<string, Promise<StoreLoader>> = {}
 
 	private constructor(activeDir: string, db: Database) {
 		this.activeDir = activeDir
@@ -20,6 +21,13 @@ export default class StoreLoader {
 
 	public static async Loader(activeDir: string, db: Database) {
 		return new this(activeDir, db)
+	}
+
+	public static async getInstance(cwd: string, db: Database) {
+		if (!this.instance[cwd]) {
+			this.instance[cwd] = this.Loader(cwd, db)
+		}
+		return this.instance[cwd]
 	}
 
 	public async loadStores() {

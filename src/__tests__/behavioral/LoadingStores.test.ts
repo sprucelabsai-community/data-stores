@@ -51,6 +51,34 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		assert.isLength(err.options.errors, 1)
 	}
 
+	@test()
+	protected static async canGetSharedInstance() {
+		const fixture = new DatabaseFixture()
+		const db = await fixture.connectToDatabase()
+
+		const loader = await StoreLoader.getInstance(this.cwd, db)
+		//@ts-ignore
+		loader._monkeyPatched = true
+
+		const loader2 = await StoreLoader.getInstance(this.cwd, db)
+		//@ts-ignore
+		assert.isTrue(loader2._monkeyPatched)
+	}
+
+	@test()
+	protected static async getsNewInstanceWithDifferentCwd() {
+		const fixture = new DatabaseFixture()
+		const db = await fixture.connectToDatabase()
+
+		const loader = await StoreLoader.getInstance(this.cwd, db)
+		//@ts-ignore
+		loader._monkeyPatched = true
+
+		const loader2 = await StoreLoader.getInstance(this.cwd + '/testing', db)
+		//@ts-ignore
+		assert.isUndefined(loader2._monkeyPatched)
+	}
+
 	protected static setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {
 		this.cwd =
 			this.resolvePath(
