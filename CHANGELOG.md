@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/sprucelabsai/data-stores/compare/v2.1.0...v2.2.0) (2021-04-14)
+
+
+### Features
+
+* is connected checks ([40545f2](https://github.com/sprucelabsai/data-stores/commit/40545f2))
+
 # [2.1.0](https://github.com/sprucelabsai/data-stores/compare/v2.0.17...v2.1.0) (2021-04-14)
 
 
