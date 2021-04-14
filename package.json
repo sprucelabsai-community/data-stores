@@ -26,9 +26,7 @@
   },
   "scripts": {
     "boot": "node build/index",
-    "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",
     "boot.sender": "ACTION=sender node build/index",
-    "boot.sender.local": "ACTION=sender yarn boot.local",
     "build.dev": "yarn build.tsc && yarn resolve-paths.lint",
     "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
 		"build.dist": "yarn build.tsc && tsc --project tsconfig.dist.json && yarn build.resolve-paths && yarn build.esm-postbuild",
@@ -39,7 +37,6 @@
     "clean.all": "yarn clean && rm -f yarn.lock package-lock.json && rm -rf node_modules/",
     "fix.lint": "eslint --fix '**/*.ts'",
     "health": "yarn boot --health",
-    "health.local": "yarn boot.local --health",
     "lint": "eslint '**/*.ts'",
     "rebuild": "yarn clean.all && yarn && yarn build.dev",
     "release": "semantic-release",
@@ -85,7 +82,6 @@
     "jest": "^26.6.3",
     "jest-circus": "^26.6.3",
     "prettier": "^2.2.1",
-    "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.4",
     "yarn-upgrade-all": "^0.5.4"
