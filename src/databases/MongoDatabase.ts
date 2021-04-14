@@ -37,7 +37,7 @@ export default class MongoDatabase implements Database {
 		collection: string,
 		query?: Record<string, any>
 	): Promise<number> {
-		const col = this.assertDb('create').collection(collection)
+		const col = this.assertDb('count').collection(collection)
 
 		return col.countDocuments(
 			query ? this.toMongoIdAndNull(collection, query) : {}
@@ -224,8 +224,6 @@ export default class MongoDatabase implements Database {
 	}
 
 	public async dropCollection(name: string) {
-		this.assertDb('dropCollection')
-
 		const collections = await this.assertDb('dropCollection')
 			.listCollections()
 			.toArray()
