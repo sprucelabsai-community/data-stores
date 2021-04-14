@@ -197,13 +197,13 @@ export default class MongoDatabase implements Database {
 	}
 
 	public async close(): Promise<void> {
-		if (this.mongo.isConnected()) {
+		if (this.isConnected()) {
 			await this.mongo.close(true)
 		}
 	}
 
 	public async connect() {
-		if (!this.mongo.isConnected()) {
+		if (!this.isConnected()) {
 			try {
 				await this.mongo.connect()
 			} catch (err) {
@@ -222,6 +222,10 @@ export default class MongoDatabase implements Database {
 		}
 
 		this.db = this.mongo.db(this.dbName)
+	}
+
+	public isConnected() {
+		return this.mongo.isConnected()
 	}
 
 	public async dropCollection(name: string) {

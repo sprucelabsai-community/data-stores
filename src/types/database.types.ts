@@ -1,6 +1,7 @@
 import { QueryOptions } from './query.types'
 
 export interface Database {
+	isConnected(): boolean
 	generateId(): string
 	connect(): Promise<void>
 	close(): Promise<void>

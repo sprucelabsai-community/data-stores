@@ -16,7 +16,7 @@ export default class DatabaseFixture {
 		this.useInMemoryDatabase = options?.useInMemoryDatabase ?? true
 	}
 
-	public async connectToDatabase() {
+	public async connectToDatabase(): Promise<Database> {
 		const options: any = {}
 		if (this.useInMemoryDatabase) {
 			options.dbConnectionString = 'memory://'

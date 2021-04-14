@@ -66,6 +66,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		col.indexes._id.unique = shouldAutoGenerateIds
 	}
 
+	public isConnected(): boolean {
+		return true
+	}
+
 	private normalizeRecord(record: Record<string, any>) {
 		const { _id, ...rest } = record
 
