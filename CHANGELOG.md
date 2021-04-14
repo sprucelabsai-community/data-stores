@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/sprucelabsai/data-stores/compare/v2.0.17...v2.1.0) (2021-04-14)
+
+
+### Features
+
+* store get instance ([29971d6](https://github.com/sprucelabsai/data-stores/commit/29971d6))
+
 ## [2.0.17](https://github.com/sprucelabsai/data-stores/compare/v2.0.16...v2.0.17) (2021-04-14)
 
 ## [2.0.16](https://github.com/sprucelabsai/data-stores/compare/v2.0.15...v2.0.16) (2021-04-14)
