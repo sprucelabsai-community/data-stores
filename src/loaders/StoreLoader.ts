@@ -23,7 +23,12 @@ export default class StoreLoader {
 	}
 
 	public async loadStores() {
-		const { factory } = await this.loadStoresAndErrors()
+		const { factory, errors } = await this.loadStoresAndErrors()
+
+		if (errors.length > 0) {
+			throw new SpruceError({ code: 'FAILED_TO_LOAD_STORES', errors })
+		}
+
 		return factory
 	}
 
@@ -46,6 +51,7 @@ export default class StoreLoader {
 
 		const matches = await globby(pattern)
 		const errors: StoreLoadError[] = []
+
 		const Stores: any[] = []
 
 		for (const match of matches) {

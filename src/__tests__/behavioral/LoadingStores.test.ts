@@ -1,5 +1,6 @@
 import { diskUtil } from '@sprucelabs/spruce-skill-utils'
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
+import { errorAssertUtil } from '@sprucelabs/test-utils'
 import StoreFactory from '../../factories/StoreFactory'
 import DatabaseFixture from '../../fixtures/DatabaseFixture'
 import StoreLoader from '../../loaders/StoreLoader'
@@ -30,21 +31,33 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 	@test('loads good stores with trailing slash', '/')
 	protected static async loadsStoresWithGoodDir(pathSuffix = '') {
 		this.setCwd(pathSuffix)
-		const loader = await this.Loader(this.resolvePath(this.cwd))
 
+		const loader = await this.Loader(this.resolvePath(this.cwd))
 		const factory = await loader.loadStores()
 
 		assert.isLength(factory.getStoreNames(), 1)
 		assert.isEqualDeep(factory.getStoreNames(), ['good'])
 	}
 
-	protected static setCwd(suffix = '') {
+	@test()
+	protected static async throwsWithBadStore() {
+		this.setCwd(undefined, 'bad')
+
+		const loader = await this.Loader(this.resolvePath(this.cwd))
+		const err = await assert.doesThrowAsync(() => loader.loadStores())
+
+		errorAssertUtil.assertError(err, 'FAILED_TO_LOAD_STORES')
+		//@ts-ignore
+		assert.isLength(err.options.errors, 1)
+	}
+
+	protected static setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {
 		this.cwd =
 			this.resolvePath(
 				__dirname,
 				'..',
 				'/testDirsAndFiles/',
-				'one-good-store-skill',
+				`one-${goodOrBad}-store-skill`,
 				'src'
 			) + suffix
 

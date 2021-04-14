@@ -282,6 +282,38 @@ export declare namespace SpruceErrors.DataStores {
 }
 
 
+import AbstractSpruceError from '@sprucelabs/error'
+import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface FailedToLoadStores {
+		
+			
+			'errors': (AbstractSpruceError<FailedToLoadStoreErrorOptions>)[]
+	}
+
+	export interface FailedToLoadStoresSchema extends SpruceSchema.Schema {
+		id: 'failedToLoadStores',
+		namespace: 'DataStores',
+		name: 'failed to load stores',
+		    fields: {
+		            /** . */
+		            'errors': {
+		                type: 'raw',
+		                isRequired: true,
+		                isArray: true,
+		                options: {valueType: `AbstractSpruceError<FailedToLoadStoreErrorOptions>`,}
+		            },
+		    }
+	}
+
+	export type FailedToLoadStoresEntity = SchemaEntity<SpruceErrors.DataStores.FailedToLoadStoresSchema>
+
+}
+
+
 
 export declare namespace SpruceErrors.DataStores {
 
