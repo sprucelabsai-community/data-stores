@@ -943,6 +943,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	}
 
 	@test('knows if connected (mongo)', mongo)
+	@test('always connected (nedb)', neDb)
 	protected static async knowsIfConnected(connect: Connect) {
 		const db = await connect()
 		assert.isTrue(db.isConnected())
@@ -950,16 +951,6 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await db.close()
 
 		assert.isFalse(db.isConnected())
-	}
-
-	@test('always connected (nedb)', neDb)
-	protected static async neDbAlwaysConnected(connect: Connect) {
-		const db = await connect()
-		assert.isTrue(db.isConnected())
-
-		await db.close()
-
-		assert.isTrue(db.isConnected())
 	}
 
 	@test('throws invalid connection string (mongo)', mongo)

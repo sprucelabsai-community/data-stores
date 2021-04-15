@@ -14,6 +14,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	private collections: {
 		[name: string]: Datastore
 	} = {}
+	private _isConnected = false
 
 	public generateId(): string {
 		const o = new ObjectID()
@@ -21,10 +22,12 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	}
 
 	public connect(): Promise<void> {
+		this._isConnected = true
 		return Promise.resolve()
 	}
 
 	public close(): Promise<void> {
+		this._isConnected = false
 		return Promise.resolve()
 	}
 
@@ -67,7 +70,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	}
 
 	public isConnected(): boolean {
-		return true
+		return this._isConnected
 	}
 
 	private normalizeRecord(record: Record<string, any>) {
