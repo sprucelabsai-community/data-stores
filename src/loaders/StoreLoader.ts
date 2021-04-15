@@ -13,21 +13,33 @@ export default class StoreLoader {
 	private activeDir: string
 	private db: Database
 	private static instance: Record<string, Promise<StoreLoader>> = {}
+	private static defaultStoreDir: string
+	private static defaultDb: Database
 
 	private constructor(activeDir: string, db: Database) {
 		this.activeDir = activeDir
 		this.db = db
 	}
 
+	public static setCwd(dir: string) {
+		this.defaultStoreDir = dir
+	}
+
+	public static setDb(db: Database) {
+		this.defaultDb = db
+	}
+
 	public static async Loader(activeDir: string, db: Database) {
 		return new this(activeDir, db)
 	}
 
-	public static async getInstance(cwd: string, db: Database) {
-		if (!this.instance[cwd]) {
-			this.instance[cwd] = this.Loader(cwd, db)
+	public static async getInstance(cwd?: string, db?: Database) {
+		const dir = cwd ?? this.defaultStoreDir
+
+		if (!this.instance[dir]) {
+			this.instance[dir] = this.Loader(dir, db ?? this.defaultDb)
 		}
-		return this.instance[cwd]
+		return this.instance[dir]
 	}
 
 	public async loadStores() {

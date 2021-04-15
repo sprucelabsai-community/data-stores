@@ -79,6 +79,39 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		assert.isUndefined(loader2._monkeyPatched)
 	}
 
+	@test()
+	protected static async canSetStoreDirForInstance() {
+		this.setCwd(undefined, 'good')
+		const fixture = new DatabaseFixture()
+		const db = await fixture.connectToDatabase()
+
+		StoreLoader.setCwd(this.cwd)
+
+		const loader = await StoreLoader.getInstance(undefined, db)
+
+		const factory = await loader.loadStores()
+		const names = factory.getStoreNames()
+		assert.isLength(names, 1)
+		assert.isEqual(names[0], 'good')
+	}
+
+	@test()
+	protected static async canSetDbForInstance() {
+		this.setCwd(undefined, 'good')
+		const fixture = new DatabaseFixture()
+		const db = await fixture.connectToDatabase()
+
+		StoreLoader.setCwd(this.cwd)
+		StoreLoader.setDb(db)
+
+		const loader = await StoreLoader.getInstance(undefined, undefined)
+
+		const factory = await loader.loadStores()
+		const names = factory.getStoreNames()
+		assert.isLength(names, 1)
+		assert.isEqual(names[0], 'good')
+	}
+
 	protected static setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {
 		this.cwd =
 			this.resolvePath(
