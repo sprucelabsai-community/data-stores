@@ -80,8 +80,17 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 	}
 
 	@test()
+	protected static async instanceThrowsIfCwdAndDbNotSet() {
+		const err = await assert.doesThrowAsync(() => StoreLoader.getInstance())
+		errorAssertUtil.assertError(err, 'MISSING_PARAMETERS', {
+			parameters: ['cwd', 'database'],
+		})
+	}
+
+	@test()
 	protected static async canSetStoreDirForInstance() {
 		this.setCwd(undefined, 'good')
+
 		const fixture = new DatabaseFixture()
 		const db = await fixture.connectToDatabase()
 
@@ -98,16 +107,18 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 	@test()
 	protected static async canSetDbForInstance() {
 		this.setCwd(undefined, 'good')
+
 		const fixture = new DatabaseFixture()
 		const db = await fixture.connectToDatabase()
 
 		StoreLoader.setCwd(this.cwd)
-		StoreLoader.setDb(db)
+		StoreLoader.setDatabase(db)
 
 		const loader = await StoreLoader.getInstance(undefined, undefined)
 
 		const factory = await loader.loadStores()
 		const names = factory.getStoreNames()
+
 		assert.isLength(names, 1)
 		assert.isEqual(names[0], 'good')
 	}

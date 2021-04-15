@@ -25,7 +25,7 @@ export default class StoreLoader {
 		this.defaultStoreDir = dir
 	}
 
-	public static setDb(db: Database) {
+	public static setDatabase(db: Database) {
 		this.defaultDb = db
 	}
 
@@ -33,11 +33,31 @@ export default class StoreLoader {
 		return new this(activeDir, db)
 	}
 
-	public static async getInstance(cwd?: string, db?: Database) {
+	public static async getInstance(cwd?: string, database?: Database) {
 		const dir = cwd ?? this.defaultStoreDir
+		const db = database ?? this.defaultDb
+
+		const missing: string[] = []
+
+		if (!dir) {
+			missing.push('cwd')
+		}
+
+		if (!db) {
+			missing.push('database')
+		}
+
+		if (missing.length > 0) {
+			throw new SpruceError({
+				code: 'MISSING_PARAMETERS',
+				parameters: missing,
+				friendlyMessage:
+					'Loading data stores failed because a cwd or database have not been set.',
+			})
+		}
 
 		if (!this.instance[dir]) {
-			this.instance[dir] = this.Loader(dir, db ?? this.defaultDb)
+			this.instance[dir] = this.Loader(dir, db)
 		}
 		return this.instance[dir]
 	}
