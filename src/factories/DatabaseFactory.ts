@@ -16,6 +16,7 @@ export default class DatabaseFactory {
 			throw new SpruceError({
 				code: 'MISSING_PARAMETERS',
 				parameters: ['dbConnectionString'],
+				friendlyMessage: "DatabaseFactory can't connect to the database!",
 			})
 		}
 

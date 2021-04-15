@@ -32,7 +32,9 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'INVALID_STORE':
-				message = `The store you passed does not extend AbstractStore!`
+				message =
+					options.friendlyMessage ??
+					`The store you passed does not extend AbstractStore!`
 				break
 
 			case 'INVALID_STORE_NAME':
@@ -68,13 +70,19 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				message = `Shoot! I couldn't load your data stores. Found ${options.errors.length} errors.`
 				break
 
+			case 'MISSING_PARAMETERS':
+				message = `${
+					options.friendlyMessage ? options.friendlyMessage + ' ' : ''
+				}You are missing the following parameter${
+					options.parameters.length === 1 ? '' : 's'
+				}:\n\n${options.parameters.join('\n')}`
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}
 
-		const fullMessage = options.friendlyMessage
-			? options.friendlyMessage
-			: message
+		const fullMessage = message ?? options.friendlyMessage
 
 		return fullMessage
 	}

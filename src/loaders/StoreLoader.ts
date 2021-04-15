@@ -51,8 +51,7 @@ export default class StoreLoader {
 			throw new SpruceError({
 				code: 'MISSING_PARAMETERS',
 				parameters: missing,
-				friendlyMessage:
-					'Loading data stores failed because a cwd or database have not been set.',
+				friendlyMessage: 'Loading data stores failed!',
 			})
 		}
 
