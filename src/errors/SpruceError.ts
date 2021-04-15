@@ -10,7 +10,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 			case 'DATABASE_NOT_CONNECTED':
 				message = `Oh no! I could not ${options.operationAttempted}${
 					options.collectionName
-						? ` I tried this the '${options.collectionName}' collection.`
+						? ` I tried this on the '${options.collectionName}' collection.`
 						: ''
 				}`
 				break
