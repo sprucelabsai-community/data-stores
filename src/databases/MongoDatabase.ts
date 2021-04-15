@@ -37,7 +37,10 @@ export default class MongoDatabase implements Database {
 		collection: string,
 		query?: Record<string, any>
 	): Promise<number> {
-		const col = this.assertDb('count').collection(collection)
+		const col = this.assertDbWhileAttempingTo(
+			'count records',
+			collection
+		).collection(collection)
 
 		return col.countDocuments(
 			query ? this.toMongoIdAndNull(collection, query) : {}
@@ -53,7 +56,10 @@ export default class MongoDatabase implements Database {
 		collection: string,
 		query: Record<string, any>
 	): Promise<number> {
-		const results = await this.assertDb('delete')
+		const results = await this.assertDbWhileAttempingTo(
+			'delete many records',
+			collection
+		)
 			.collection(collection)
 			.deleteMany(this.toMongoIdAndNull(collection, query))
 
@@ -64,18 +70,22 @@ export default class MongoDatabase implements Database {
 		collection: string,
 		query: Record<string, any>
 	): Promise<number> {
-		const results = await this.assertDb('delete')
+		const results = await this.assertDbWhileAttempingTo(
+			'delete one record',
+			collection
+		)
 			.collection(collection)
 			.deleteOne(this.toMongoIdAndNull(collection, query))
 
 		return results.deletedCount ?? 0
 	}
 
-	private assertDb(operationAttempted: string) {
+	private assertDbWhileAttempingTo(attempt: string, collectionName?: string) {
 		if (!this.mongo.isConnected() || !this.db) {
 			throw new SpruceError({
 				code: 'DATABASE_NOT_CONNECTED',
-				operationAttempted,
+				operationAttempted: attempt,
+				collectionName,
 			})
 		}
 
@@ -89,7 +99,10 @@ export default class MongoDatabase implements Database {
 	): Promise<Record<string, any> | null> {
 		const q = query ? this.toMongoIdAndNull(collection, query) : {}
 
-		const match = await this.assertDb('findOne')
+		const match = await this.assertDbWhileAttempingTo(
+			'found one record.',
+			collection
+		)
 			.collection(collection)
 			//@ts-ignore
 			.findOne(q, mongoUtil.queryOptionsToMongoFindOptions(options))
@@ -105,7 +118,10 @@ export default class MongoDatabase implements Database {
 	): Promise<Record<string, any>[]> {
 		const q = this.toMongoIdAndNull(collection, query || {})
 
-		const matches = await this.assertDb('findOne')
+		const matches = await this.assertDbWhileAttempingTo(
+			'find many records.',
+			collection
+		)
 			.collection(collection)
 			//@ts-ignore
 			.find(q, mongoUtil.queryOptionsToMongoFindOptions(options))
@@ -134,7 +150,10 @@ export default class MongoDatabase implements Database {
 		const record = this.toMongoIdAndNull(collection, values)
 
 		try {
-			const created = await this.assertDb('create')
+			const created = await this.assertDbWhileAttempingTo(
+				'create a new record.',
+				collection
+			)
 				.collection(collection)
 				.insertOne(record)
 
@@ -163,7 +182,10 @@ export default class MongoDatabase implements Database {
 		const records = values.map((v) => this.toMongoIdAndNull(collection, v))
 
 		try {
-			const created = await this.assertDb('create')
+			const created = await this.assertDbWhileAttempingTo(
+				'create many records.',
+				collection
+			)
 				.collection(collection)
 				.insertMany(records)
 
@@ -229,7 +251,10 @@ export default class MongoDatabase implements Database {
 	}
 
 	public async dropCollection(name: string) {
-		const collections = await this.assertDb('dropCollection')
+		const collections = await this.assertDbWhileAttempingTo(
+			'drop an entire collection.',
+			''
+		)
 			.listCollections()
 			.toArray()
 
@@ -238,13 +263,18 @@ export default class MongoDatabase implements Database {
 		)
 
 		if (doesExist) {
-			const collection = this.assertDb('dropCollection').collection(name)
+			const collection = this.assertDbWhileAttempingTo(
+				'drop the collection.',
+				''
+			).collection(name)
 			await collection.drop()
 		}
 	}
 
 	public async dropDatabase(): Promise<void> {
-		await this.assertDb('dropDatabase').dropDatabase()
+		await this.assertDbWhileAttempingTo(
+			'drop the entire database.'
+		).dropDatabase()
 	}
 
 	public async createUniqueIndex(
@@ -255,7 +285,7 @@ export default class MongoDatabase implements Database {
 		fields.forEach((name) => {
 			index[name] = 1
 		})
-		await this.assertDb('createUniqueIndex')
+		await this.assertDbWhileAttempingTo('create a unique index.', collection)
 			.collection(collection)
 			.createIndex(index, { unique: true })
 	}
@@ -269,7 +299,10 @@ export default class MongoDatabase implements Database {
 
 		const values = mongoUtil.prepareUpdates(updates)
 
-		const results = await this.assertDb('update')
+		const results = await this.assertDbWhileAttempingTo(
+			'update many records.',
+			collection
+		)
 			.collection(collection)
 			.updateMany(q, values)
 
@@ -286,7 +319,10 @@ export default class MongoDatabase implements Database {
 		const values = mongoUtil.prepareUpdates(updates)
 
 		try {
-			const results = await this.assertDb('updateOne')
+			const results = await this.assertDbWhileAttempingTo(
+				'update one record.',
+				collection
+			)
 				.collection(collection)
 				.findOneAndUpdate(q, values, { returnOriginal: false })
 
@@ -327,7 +363,10 @@ export default class MongoDatabase implements Database {
 		const values = this.toMongoIdAndNull(collection, updates)
 
 		try {
-			const results = await this.assertDb('update')
+			const results = await this.assertDbWhileAttempingTo(
+				'upsert one record.',
+				collection
+			)
 				.collection(collection)
 				.findOneAndUpdate(
 					q,

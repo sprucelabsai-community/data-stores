@@ -7,8 +7,10 @@ export default buildErrorSchema({
 	fields: {
 		operationAttempted: {
 			type: 'text',
-			label: 'Operation Attempted',
 			isRequired: true,
+		},
+		collectionName: {
+			type: 'text',
 		},
 	},
 })

@@ -406,8 +406,10 @@ export declare namespace SpruceErrors.DataStores {
 	
 	export interface DatabaseNotConnected {
 		
-			/** Operation Attempted. */
+			
 			'operationAttempted': string
+			
+			'collectionName'?: string| undefined | null
 	}
 
 	export interface DatabaseNotConnectedSchema extends SpruceSchema.Schema {
@@ -415,11 +417,15 @@ export declare namespace SpruceErrors.DataStores {
 		namespace: 'DataStores',
 		name: 'Database not connected',
 		    fields: {
-		            /** Operation Attempted. */
+		            /** . */
 		            'operationAttempted': {
-		                label: 'Operation Attempted',
 		                type: 'text',
 		                isRequired: true,
+		                options: undefined
+		            },
+		            /** . */
+		            'collectionName': {
+		                type: 'text',
 		                options: undefined
 		            },
 		    }
