@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/sprucelabsai/data-stores/compare/v2.3.0...v2.4.0) (2021-04-19)
+
+
+### Features
+
+* database fixture uses env by default ([e7a0c00](https://github.com/sprucelabsai/data-stores/commit/e7a0c00))
+
 # [2.3.0](https://github.com/sprucelabsai/data-stores/compare/v2.2.10...v2.3.0) (2021-04-19)
 
 
