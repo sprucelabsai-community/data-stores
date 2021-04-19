@@ -18,7 +18,10 @@ export default class DatabaseFixture {
 
 	public async connectToDatabase(): Promise<Database> {
 		const options: any = {}
-		if (this.useInMemoryDatabase) {
+		if (process.env.DB_CONNECTION_STRING && process.env.DB_NAME) {
+			options.dbConnectionString = process.env.DB_CONNECTION_STRING
+			options.dbName = process.env.DB_NAME
+		} else if (this.useInMemoryDatabase) {
 			options.dbConnectionString = 'memory://'
 		} else {
 			options.dbName = this.dbName = DatabaseFixture.generateDbName()
