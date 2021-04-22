@@ -7,9 +7,9 @@ import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import { Database } from '../../types/database.types'
 
 let dbCount = 0
-async function mongo(dbConnectionString = MONGO_TEST_URI) {
-	const dbName = `mercury_${new Date().getTime()}-${dbCount++}`
-	const database = new MongoDatabase(dbConnectionString, { dbName })
+async function mongo(dbConnectionString = MONGO_TEST_URI, dbName?: string) {
+	const name = dbName ?? `mercury_${new Date().getTime()}-${dbCount++}`
+	const database = new MongoDatabase(dbConnectionString, { dbName: name })
 
 	await database.connect()
 
@@ -18,13 +18,11 @@ async function mongo(dbConnectionString = MONGO_TEST_URI) {
 
 async function neDb() {
 	const database = new NeDbDatabase()
-
 	await database.connect()
-
 	return database
 }
 
-type Connect = (connectionString?: string) => Promise<Database>
+type Connect = (connectionString?: string, dbName?: string) => Promise<Database>
 
 export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	private static collectionName = 'test_collection'
@@ -965,5 +963,15 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 			connect('mongodb://localhost:9999')
 		)
 		errorAssertUtil.assertError(err, 'UNABLE_TO_CONNECT_TO_DB')
+	}
+
+	@test("can't name a database undefined (mongo)", mongo)
+	protected static async cantUndefinedADbName(connect: Connect) {
+		const err = await assert.doesThrowAsync(() =>
+			connect(undefined, 'undefined')
+		)
+		errorAssertUtil.assertError(err, 'INVALID_DATABASE_NAME', {
+			suppliedName: 'undefined',
+		})
 	}
 }

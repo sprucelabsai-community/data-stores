@@ -24,6 +24,13 @@ export default class MongoDatabase implements Database {
 	) {
 		const { dbName, ...rest } = options ?? {}
 
+		if (dbName === 'undefined') {
+			throw new SpruceError({
+				code: 'INVALID_DATABASE_NAME',
+				suppliedName: dbName,
+			})
+		}
+
 		this.mongo = new MongoClient(url, {
 			...(rest || {}),
 			serverSelectionTimeoutMS: 5000,

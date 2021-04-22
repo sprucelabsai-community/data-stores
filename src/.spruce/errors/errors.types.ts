@@ -282,6 +282,35 @@ export declare namespace SpruceErrors.DataStores {
 }
 
 
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface InvalidDatabaseName {
+		
+			
+			'suppliedName': string
+	}
+
+	export interface InvalidDatabaseNameSchema extends SpruceSchema.Schema {
+		id: 'invalidDatabaseName',
+		namespace: 'DataStores',
+		name: 'Invalid database name',
+		    fields: {
+		            /** . */
+		            'suppliedName': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type InvalidDatabaseNameEntity = SchemaEntity<SpruceErrors.DataStores.InvalidDatabaseNameSchema>
+
+}
+
+
 import AbstractSpruceError from '@sprucelabs/error'
 import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
 

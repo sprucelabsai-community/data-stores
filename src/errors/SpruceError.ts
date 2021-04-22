@@ -89,6 +89,10 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				}:\n\n${options.parameters.join('\n')}`
 				break
 
+			case 'INVALID_DATABASE_NAME':
+				message = `Halt! '${options.suppliedName}' is not a valid name for a database!`
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}
