@@ -89,7 +89,7 @@
     "yarn-upgrade-all": "^0.5.4"
   },
   "engines": {
-    "node": ">=12.x",
+    "node": ">=12",
     "yarn": "1.x"
   },
   "jest": {
