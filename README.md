@@ -16,7 +16,7 @@ Spruce XP Documentation
 
 <br />
 <p align="center">
-<a href="https://master.spruce.ai/#/"><img width="250" src="https://raw.githubusercontent.com/sprucelabsai/data-stores/master/docs/images/read-full-docs.png" /></a>
+<a href="https://developer.spruce.ai/#/"><img width="250" src="https://raw.githubusercontent.com/sprucelabsai/data-stores/master/docs/images/read-full-docs.png" /></a>
 </p>
 
 ### Dependencies
