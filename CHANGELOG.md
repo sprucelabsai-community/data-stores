@@ -1,3 +1,19 @@
+## [2.4.8](https://github.com/sprucelabsai/data-stores/compare/v2.4.7...v2.4.8) (2021-04-30)
+
+## [2.4.7](https://github.com/sprucelabsai/data-stores/compare/v2.4.6...v2.4.7) (2021-04-29)
+
+## [2.4.6](https://github.com/sprucelabsai/data-stores/compare/v2.4.5...v2.4.6) (2021-04-29)
+
+## [2.4.5](https://github.com/sprucelabsai/data-stores/compare/v2.4.4...v2.4.5) (2021-04-27)
+
+## [2.4.4](https://github.com/sprucelabsai/data-stores/compare/v2.4.3...v2.4.4) (2021-04-26)
+
+## [2.4.3](https://github.com/sprucelabsai/data-stores/compare/v2.4.2...v2.4.3) (2021-04-23)
+
+## [2.4.2](https://github.com/sprucelabsai/data-stores/compare/v2.4.1...v2.4.2) (2021-04-22)
+
+## [2.4.1](https://github.com/sprucelabsai/data-stores/compare/v2.4.0...v2.4.1) (2021-04-22)
+
 # [2.4.0](https://github.com/sprucelabsai/data-stores/compare/v2.3.0...v2.4.0) (2021-04-19)
 
 
