@@ -94,7 +94,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		const fixture = new DatabaseFixture()
 		const db = await fixture.connectToDatabase()
 
-		StoreLoader.setCwd(this.cwd)
+		StoreLoader.setStoreDir(this.cwd)
 
 		const loader = await StoreLoader.getInstance(undefined, db)
 
@@ -111,7 +111,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		const fixture = new DatabaseFixture()
 		const db = await fixture.connectToDatabase()
 
-		StoreLoader.setCwd(this.cwd)
+		StoreLoader.setStoreDir(this.cwd)
 		StoreLoader.setDatabase(db)
 
 		const loader = await StoreLoader.getInstance(undefined, undefined)

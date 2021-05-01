@@ -21,7 +21,7 @@ export default class StoreLoader {
 		this.db = db
 	}
 
-	public static setCwd(dir: string) {
+	public static setStoreDir(dir: string) {
 		this.defaultStoreDir = dir
 	}
 
