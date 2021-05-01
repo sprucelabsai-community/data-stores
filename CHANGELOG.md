@@ -1,3 +1,10 @@
+# [3.0.0](https://github.com/sprucelabsai/data-stores/compare/v2.4.8...v3.0.0) (2021-05-01)
+
+
+### Breaking Changes
+
+* loader setCwd -> setStoreDir ([0da9321](https://github.com/sprucelabsai/data-stores/commit/0da9321))
+
 ## [2.4.8](https://github.com/sprucelabsai/data-stores/compare/v2.4.7...v2.4.8) (2021-04-30)
 
 ## [2.4.7](https://github.com/sprucelabsai/data-stores/compare/v2.4.6...v2.4.7) (2021-04-29)
