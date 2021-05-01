@@ -66,7 +66,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'INVALID_DB_CONNECTION_STRING':
-				message = 'A Invalid db connection string just happened!'
+				message = 'The database connection string you sent is no good!'
 				break
 
 			case 'UNKNOWN_DATABASE_ERROR':
