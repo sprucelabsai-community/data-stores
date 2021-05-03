@@ -1,3 +1,10 @@
+# [4.0.0](https://github.com/sprucelabsai/data-stores/compare/v3.0.1...v4.0.0) (2021-05-03)
+
+
+### Breaking Changes
+
+* in memory flag name c hange ([72e1792](https://github.com/sprucelabsai/data-stores/commit/72e1792))
+
 ## [3.0.1](https://github.com/sprucelabsai/data-stores/compare/v3.0.0...v3.0.1) (2021-05-01)
 
 # [3.0.0](https://github.com/sprucelabsai/data-stores/compare/v2.4.8...v3.0.0) (2021-05-01)
