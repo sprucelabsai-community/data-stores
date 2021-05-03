@@ -7,7 +7,7 @@ import { Database } from '../types/database.types'
 
 export default class AbstractDatabaseTest extends AbstractSpruceTest {
 	protected static db: Database
-	protected static useInMemoryDatabase = true
+	protected static shouldUseInMemoryDatabase = true
 	protected static DB_NAME: string
 
 	protected static async beforeEach() {
@@ -29,7 +29,7 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
 
 	protected static async DatabaseFixture(options?: DatabaseFixtureOptions) {
 		const d = new DatabaseFixture({
-			useInMemoryDatabase: this.useInMemoryDatabase,
+			shouldUseInMemoryDatabase: this.shouldUseInMemoryDatabase,
 			...options,
 		})
 
@@ -41,7 +41,7 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
 			const dbFixture = await this.DatabaseFixture()
 			const db = await dbFixture.connectToDatabase()
 
-			this.DB_NAME = this.useInMemoryDatabase ? '' : dbFixture.getDbName()
+			this.DB_NAME = this.shouldUseInMemoryDatabase ? '' : dbFixture.getDbName()
 			this.db = db
 		}
 

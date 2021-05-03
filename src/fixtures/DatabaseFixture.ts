@@ -3,17 +3,17 @@ import DatabaseFactory from '../factories/DatabaseFactory'
 import { Database } from '../types/database.types'
 
 export interface DatabaseFixtureOptions {
-	useInMemoryDatabase?: boolean
+	shouldUseInMemoryDatabase?: boolean
 }
 
 export default class DatabaseFixture {
-	private useInMemoryDatabase: boolean
+	private shouldUseInMemoryDatabase: boolean
 	private static dbCount = 0
 	private dbName?: string
 	private static activeDatabases: Database[] = []
 
 	public constructor(options?: DatabaseFixtureOptions) {
-		this.useInMemoryDatabase = options?.useInMemoryDatabase ?? true
+		this.shouldUseInMemoryDatabase = options?.shouldUseInMemoryDatabase ?? true
 	}
 
 	public async connectToDatabase(): Promise<Database> {
@@ -21,7 +21,7 @@ export default class DatabaseFixture {
 		if (process.env.DB_CONNECTION_STRING && process.env.DB_NAME) {
 			options.dbConnectionString = process.env.DB_CONNECTION_STRING
 			options.dbName = process.env.DB_NAME
-		} else if (this.useInMemoryDatabase) {
+		} else if (this.shouldUseInMemoryDatabase) {
 			options.dbConnectionString = 'memory://'
 		} else {
 			options.dbName = this.dbName = DatabaseFixture.generateDbName()
@@ -44,7 +44,7 @@ export default class DatabaseFixture {
 	public getDbName() {
 		if (!this.dbName) {
 			throw new Error(
-				'You need to connect to the database using `useInMemoryDatabase=false` before accessing dbName.'
+				'You need to connect to the database using `shouldUseInMemoryDatabase=false` before accessing dbName.'
 			)
 		}
 		return this.dbName
