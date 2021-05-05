@@ -60,7 +60,7 @@
     "@sprucelabs/spruce-skill-booter": "latest",
     "@sprucelabs/spruce-skill-utils": "latest",
     "@types/mongodb": "^3.6.12",
-    "dotenv": "^8.4.0",
+    "dotenv": "^8.5.1",
     "globby": "^11.0.3",
     "mongodb": "^3.6.6",
     "nedb": "^1.8.0"
