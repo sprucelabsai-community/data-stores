@@ -1,3 +1,20 @@
+## [4.0.5](https://github.com/sprucelabsai/data-stores/compare/v4.0.4...v4.0.5) (2021-05-05)
+
+## [4.0.4](https://github.com/sprucelabsai/data-stores/compare/v4.0.3...v4.0.4) (2021-05-05)
+
+## [4.0.3](https://github.com/sprucelabsai/data-stores/compare/v4.0.2...v4.0.3) (2021-05-05)
+
+## [4.0.2](https://github.com/sprucelabsai/data-stores/compare/v4.0.1...v4.0.2) (2021-05-05)
+
+## [4.0.1](https://github.com/sprucelabsai/data-stores/compare/v4.0.0...v4.0.1) (2021-05-04)
+
+# [4.0.0](https://github.com/sprucelabsai/data-stores/compare/v3.0.1...v4.0.0) (2021-05-03)
+
+
+### Breaking Changes
+
+* in memory flag name c hange ([72e1792](https://github.com/sprucelabsai/data-stores/commit/72e1792))
+
 ## [3.0.1](https://github.com/sprucelabsai/data-stores/compare/v3.0.0...v3.0.1) (2021-05-01)
 
 # [3.0.0](https://github.com/sprucelabsai/data-stores/compare/v2.4.8...v3.0.0) (2021-05-01)
