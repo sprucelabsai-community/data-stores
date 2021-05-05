@@ -58,4 +58,9 @@ export default class DatabaseFixture {
 
 		this.activeDatabases = []
 	}
+
+	public static beforeAll() {
+		process.env.DB_CONNECTION_STRING = 'memory://'
+		process.env.DB_NAME = 'skill'
+	}
 }
