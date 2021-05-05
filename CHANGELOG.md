@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/sprucelabsai/data-stores/compare/v4.0.5...v4.1.0) (2021-05-05)
+
+
+### Features
+
+* database fixture sets up inmemory database in beforeAll ([d6da95c](https://github.com/sprucelabsai/data-stores/commit/d6da95c))
+
 ## [4.0.5](https://github.com/sprucelabsai/data-stores/compare/v4.0.4...v4.0.5) (2021-05-05)
 
 ## [4.0.4](https://github.com/sprucelabsai/data-stores/compare/v4.0.3...v4.0.4) (2021-05-05)
