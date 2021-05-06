@@ -48,7 +48,7 @@ export default abstract class AbstractStore<
 
 	// run on each record before it's returned by the store
 	protected prepareRecord?<IncludePrivateFields extends boolean>(
-		record: Partial<FullRecord> & { [key: string]: any },
+		record: DatabaseRecord,
 		options?: PrepareOptions<IncludePrivateFields>
 	): Promise<PrepareResults<FullSchema, IncludePrivateFields>>
 
@@ -91,7 +91,7 @@ export default abstract class AbstractStore<
 			: Pick<SchemaAllValues<FullSchema, CreateEntityInstances>, F>
 	> {
 		const preparedRecord = this.prepareRecord
-			? await this.prepareRecord(record as Partial<FullRecord>, options)
+			? await this.prepareRecord(record, options)
 			: record
 
 		const isScrambled = this.isScrambled(preparedRecord)
