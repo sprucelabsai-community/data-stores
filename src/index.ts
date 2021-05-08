@@ -1,7 +1,6 @@
 export { default as AbstractDatabaseTest } from './tests/AbstractDatabaseTest'
 export { default as DatabaseFixture } from './fixtures/DatabaseFixture'
 export * from './fixtures/DatabaseFixture'
-export { default as StoreFixture } from './fixtures/StoreFixture'
 export { default as AbstractStore } from './stores/AbstractStore'
 export { default as StoreFactory } from './factories/StoreFactory'
 export { default as DatabaseFactory } from './factories/DatabaseFactory'
