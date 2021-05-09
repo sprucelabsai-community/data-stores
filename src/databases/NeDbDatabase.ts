@@ -267,7 +267,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			'update'
 		)
 
-		return (results as unknown) as number
+		return results as unknown as number
 	}
 
 	public async updateOne(
