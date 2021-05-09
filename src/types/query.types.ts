@@ -21,10 +21,8 @@ export interface QueryOptions {
 	sort?: { field: string; direction: 'asc' | 'desc' }[]
 }
 
-export type FlattenAndPathKeys<
-	O extends Obj,
-	T extends Obj = PathKeys<O>
-> = Flatten<T>
+export type FlattenAndPathKeys<O extends Obj, T extends Obj = PathKeys<O>> =
+	Flatten<T>
 
 export type Flatten<T extends Obj> = Pick<T, NonObjectKeysOf<T>> &
 	UnionToIntersection<ObjectValuesOf<T>>
