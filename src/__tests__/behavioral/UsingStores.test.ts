@@ -11,7 +11,11 @@ import SpruceError from '../../errors/SpruceError'
 import StoreFactory from '../../factories/StoreFactory'
 import AbstractStore from '../../stores/AbstractStore'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
-import { StoreOptions } from '../../types/stores.types'
+import {
+	PrepareOptions,
+	PrepareResults,
+	StoreOptions,
+} from '../../types/stores.types'
 
 export const DEMO_PHONE = '555-555-5555'
 export const DEMO_PHONE_FORMATTED = '+1 555-555-5555'
@@ -145,11 +149,10 @@ class TestStore extends AbstractStore<
 		}
 	}
 
-	protected async prepareRecord(
-		record: Partial<SchemaValues<typeof fullRecordSchema>> & {
-			[key: string]: any
-		}
-	): Promise<SchemaValues<typeof fullRecordSchema>> {
+	protected async prepareRecord<IncludePrivateFields extends boolean>(
+		record: SchemaValues<typeof createRecordSchema>,
+		_options?: PrepareOptions<IncludePrivateFields>
+	) {
 		const values: Record<string, any> = {
 			...record,
 			requiredForCreate: record.requiredForCreate || 'added here',
@@ -157,8 +160,10 @@ class TestStore extends AbstractStore<
 			requiredForFull: record.requiredForFull || 'here it is!',
 		}
 
-		//@ts-ignore
-		return values
+		return values as PrepareResults<
+			typeof fullRecordSchema,
+			IncludePrivateFields
+		>
 	}
 
 	public static Store(options: StoreOptions) {

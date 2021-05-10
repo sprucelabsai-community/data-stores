@@ -17,7 +17,7 @@ import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
 import { QueryBuilder, QueryOptions } from '../types/query.types'
-import { PrepareOptions } from '../types/stores.types'
+import { PrepareOptions, PrepareResults } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
 
 export default abstract class AbstractStore<
@@ -50,7 +50,7 @@ export default abstract class AbstractStore<
 	protected prepareRecord?<IncludePrivateFields extends boolean>(
 		record: DatabaseRecord,
 		options?: PrepareOptions<IncludePrivateFields>
-	): Promise<FullRecord>
+	): Promise<PrepareResults<FullSchema, IncludePrivateFields>>
 
 	protected willCreate?(
 		values: CreateRecord
