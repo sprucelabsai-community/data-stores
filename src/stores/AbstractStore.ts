@@ -100,11 +100,11 @@ export default abstract class AbstractStore<
 			return preparedRecord
 		}
 
-		return normalizeSchemaValues(this.fullSchema, preparedRecord, {
+		return normalizeSchemaValues(this.fullSchema, preparedRecord, ({
 			...options,
 			includePrivateFields: options.includePrivateFields === true,
 			createEntityInstances: false as CreateEntityInstances,
-		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields>)
+		} as unknown) as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields>)
 	}
 
 	public async create<CreateEntityInstances extends boolean>(
