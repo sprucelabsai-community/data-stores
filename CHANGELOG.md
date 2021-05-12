@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/sprucelabsai/data-stores/compare/v4.1.12...v4.2.0) (2021-05-12)
+
+
+### Features
+
+* current record passed to will Update ([9c324e1](https://github.com/sprucelabsai/data-stores/commit/9c324e1))
+
 ## [4.1.12](https://github.com/sprucelabsai/data-stores/compare/v4.1.11...v4.1.12) (2021-05-12)
 
 ## [4.1.11](https://github.com/sprucelabsai/data-stores/compare/v4.1.10...v4.1.11) (2021-05-10)
