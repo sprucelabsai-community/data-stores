@@ -27,7 +27,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 			}
 
 			case 'UNKNOWN_STORE_ERROR':
-				message = 'A Unknown store error just happened!'
+				message = `An unknown error occurred in the ${options.storeName} store. The original error is: \n\n${options.originalError?.stack}`
 				break
 
 			case 'RECORD_NOT_FOUND':
