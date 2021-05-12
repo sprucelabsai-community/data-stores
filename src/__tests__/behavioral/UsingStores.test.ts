@@ -135,8 +135,9 @@ class TestStore extends AbstractStore<
 	protected updateSchema = updateRecordSchema
 	protected databaseSchema = databaseRecordSchema
 
-	protected willUpdate = undefined
 	protected willScramble = undefined
+	public willUpdateUpdates?: any
+	public willUpdateValues?: any
 
 	protected async willCreate(values: SchemaValues<typeof createRecordSchema>) {
 		return {
@@ -147,6 +148,16 @@ class TestStore extends AbstractStore<
 			requiredForUpdate: values.requiredForUpdate ?? 'generated for update',
 			privateField: values.privateField ?? 'generated for privateField',
 		}
+	}
+
+	protected async willUpdate(
+		updates: SchemaValues<typeof updateRecordSchema>,
+		values: SchemaValues<typeof databaseRecordSchema>
+	) {
+		this.willUpdateUpdates = updates
+		this.willUpdateValues = values
+
+		return updates as any
 	}
 
 	protected async prepareRecord<IncludePrivateFields extends boolean>(
@@ -836,5 +847,28 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 
 		count = await this.store.count({ phoneNumber: DEMO_PHONE_FORMATTED })
 		assert.isEqual(count, 3)
+	}
+
+	@test()
+	protected static async willUpdatePassesOriginalValues() {
+		const created = await this.store.createOne({
+			requiredForUpdate: 'created',
+			requiredForCreate: 'created!',
+			privateField: 'private!',
+			phoneNumber: DEMO_PHONE_FORMATTED,
+		})
+
+		await this.store.updateOne(
+			{ id: created.id },
+			{ requiredForUpdate: 'yes!' }
+		)
+
+		assert.isTruthy(this.store.willUpdateValues)
+		assert.isTruthy(this.store.willUpdateUpdates)
+		assert.isEqualDeep(this.store.willUpdateUpdates, {
+			requiredForUpdate: 'yes!',
+		})
+
+		assert.isEqualDeep(this.store.willUpdateValues, created)
 	}
 }

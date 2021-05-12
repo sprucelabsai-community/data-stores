@@ -56,7 +56,10 @@ export default abstract class AbstractStore<
 		values: CreateRecord
 	): Promise<Omit<DatabaseRecord, 'id'>>
 
-	protected willUpdate?(values: UpdateRecord): Promise<Partial<DatabaseRecord>>
+	protected willUpdate?(
+		updates: UpdateRecord,
+		values: DatabaseRecord
+	): Promise<Partial<DatabaseRecord>>
 
 	protected willScramble?(
 		values: Partial<DatabaseRecord> & { _isScrambled: true }
@@ -340,7 +343,7 @@ export default abstract class AbstractStore<
 
 			const cleanedUpdates =
 				!isScrambled && this.willUpdate
-					? await this.willUpdate(updates)
+					? await this.willUpdate(updates, current)
 					: updates
 
 			const databaseRecord = {
