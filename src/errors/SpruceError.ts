@@ -35,7 +35,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'MONGO_ID_MAPPING_ERROR':
-				message = 'A Mongo id mapping error just happened!'
+				message = `A query was run where the id was not a string: \n\n${options.friendlyMessage}`
 				break
 
 			case 'SCRAMBLE_NOT_CONFIGURED':

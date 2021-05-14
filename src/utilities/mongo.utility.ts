@@ -82,7 +82,7 @@ function mapNestedIdValues(
 					} catch (err) {
 						throw new SpruceError({
 							code: 'MONGO_ID_MAPPING_ERROR',
-							friendlyMessage: `Invalid id '${value}', it must be 12 byte string or 24 hex characters.`,
+							friendlyMessage: `Could not map '${value}' to an id.`,
 						})
 					}
 				} else {
