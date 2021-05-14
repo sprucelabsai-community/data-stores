@@ -25,7 +25,12 @@ jobs:
             [ -n "$BASE64_ENV" ] && echo $BASE64_ENV | base64 --decode > .env
       - run: which rsync || ( sudo apt-get update -y && sudo apt-get install rsync -y )
       - run: yarn install
-      - run: yarn lint
+      - run:
+          name: "@sprucelabs installed versions"
+          command: |
+            cd node_modules
+            grep version @sprucelabs/*/package.json |sed s_/pack.\*:_:_ |sed s/,//
+            cd ..
       - run: yarn build.dev
       - run: yarn test
       - run:
