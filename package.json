@@ -75,7 +75,7 @@
     "@sprucelabs/test-utils": "latest",
     "@types/lodash": "^4.14.169",
     "@types/nedb": "^1.8.11",
-    "@types/node": "^15.0.3",
+    "@types/node": "^15.3.0",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.1.0",
     "eslint": "^7.26.0",
