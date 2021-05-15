@@ -1,5 +1,5 @@
-import { errorAssertUtil } from '@sprucelabs/test-utils'
 import { test, assert } from '@sprucelabs/test'
+import { errorAssertUtil } from '@sprucelabs/test-utils'
 import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import NeDbDatabase from '../../databases/NeDbDatabase'
 import SpruceError from '../../errors/SpruceError'

@@ -4,8 +4,8 @@ import {
 	makeFieldsOptional,
 	SchemaValues,
 } from '@sprucelabs/schema'
-import { errorAssertUtil } from '@sprucelabs/test-utils'
 import { test, assert } from '@sprucelabs/test'
+import { errorAssertUtil } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../constants'
 import SpruceError from '../../errors/SpruceError'
 import AbstractStore from '../../stores/AbstractStore'
