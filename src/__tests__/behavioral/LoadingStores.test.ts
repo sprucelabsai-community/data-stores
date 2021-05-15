@@ -1,6 +1,6 @@
 import { diskUtil } from '@sprucelabs/spruce-skill-utils'
-import { errorAssertUtil } from '@sprucelabs/test-utils'
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
+import { errorAssertUtil } from '@sprucelabs/test-utils'
 import StoreFactory from '../../factories/StoreFactory'
 import DatabaseFixture from '../../fixtures/DatabaseFixture'
 import StoreLoader from '../../loaders/StoreLoader'

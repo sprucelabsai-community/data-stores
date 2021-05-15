@@ -1,5 +1,5 @@
-import { errorAssertUtil } from '@sprucelabs/test-utils'
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
+import { errorAssertUtil } from '@sprucelabs/test-utils'
 import { ObjectID } from 'mongodb'
 import SpruceError from '../../errors/SpruceError'
 import mongoUtil from '../../utilities/mongo.utility'
