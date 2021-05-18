@@ -62,7 +62,7 @@
     "@types/mongodb": "^3.6.13",
     "dotenv": "^9.0.2",
     "globby": "^11.0.3",
-    "mongodb": "^3.6.6",
+    "mongodb": "^3.6.7",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
