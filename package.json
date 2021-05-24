@@ -77,7 +77,7 @@
     "@types/nedb": "^1.8.11",
     "@types/node": "^15.6.0",
     "chokidar-cli": "^2.1.0",
-    "concurrently": "^6.1.0",
+    "concurrently": "^6.2.0",
     "eslint": "^7.27.0",
     "eslint-config-spruce": "latest",
     "jest": "^26.6.3",
