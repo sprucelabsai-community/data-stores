@@ -31,7 +31,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'RECORD_NOT_FOUND':
-				message = 'A Record not found just happened!'
+				message = `I looked through all ${options.storeName} and couldn't find what you're looking for.`
 				break
 
 			case 'MONGO_ID_MAPPING_ERROR':
