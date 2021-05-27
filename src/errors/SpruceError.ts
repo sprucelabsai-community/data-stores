@@ -1,10 +1,6 @@
 import AbstractSpruceError from '@sprucelabs/error'
 import ErrorOptions from '#spruce/errors/options.types'
 
-function isAre(count: number) {
-	return count === 1 ? 'is' : 'are'
-}
-
 export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 	public friendlyMessage(): string {
 		const { options } = this
@@ -21,9 +17,9 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 
 			case 'DUPLICATE_RECORD': {
 				const fields = options.duplicateFields.filter((f) => f !== 'id')
-				return `The ${fields.join(' and ')} you provided ${isAre(
-					fields.length
-				)} already taken for ${options.collectionName}.`
+				return `One or more ${
+					options.collectionName
+				} already have the ${fields.join(' and ')} you provided.`
 			}
 
 			case 'UNKNOWN_STORE_ERROR':
