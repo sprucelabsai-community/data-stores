@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "4.2.21",
+  "version": "4.2.24",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -62,7 +62,7 @@
     "@types/mongodb": "^3.6.16",
     "dotenv": "^10.0.0",
     "globby": "^11.0.3",
-    "mongodb": "^3.6.8",
+    "mongodb": "^3.6.9",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
@@ -85,7 +85,7 @@
     "prettier": "^2.3.0",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.2.4",
+    "typescript": "^4.3.2",
     "yarn-upgrade-all": "^0.5.4"
   },
   "engines": {
