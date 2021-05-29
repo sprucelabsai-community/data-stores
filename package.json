@@ -80,7 +80,7 @@
     "concurrently": "^6.2.0",
     "eslint": "^7.27.0",
     "eslint-config-spruce": "latest",
-    "jest": "^27.0.2",
+    "jest": "^27.0.3",
     "jest-circus": "^27.0.3",
     "prettier": "^2.3.0",
     "ts-node": "^10.0.0",
