@@ -37,7 +37,7 @@
     "clean.all": "yarn clean && rm -f yarn.lock package-lock.json && rm -rf node_modules/",
     "fix.lint": "eslint --fix '**/*.ts'",
     "health": "yarn boot --health",
-    "lint": "eslint '**/*.ts'",
+    "lint": "eslint --cache '**/*.ts'",
     "rebuild": "yarn clean.all && yarn && yarn build.dev",
     "release": "semantic-release",
     "resolve-paths.lint": "yarn build.resolve-paths ; yarn lint",
