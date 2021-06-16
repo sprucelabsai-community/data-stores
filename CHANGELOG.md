@@ -1,3 +1,5 @@
+## [4.2.44](https://github.com/sprucelabsai/data-stores/compare/v4.2.43...v4.2.44) (2021-06-16)
+
 ## [4.2.43](https://github.com/sprucelabsai/data-stores/compare/v4.2.42...v4.2.43) (2021-06-14)
 
 ## [4.2.42](https://github.com/sprucelabsai/data-stores/compare/v4.2.41...v4.2.42) (2021-06-13)
