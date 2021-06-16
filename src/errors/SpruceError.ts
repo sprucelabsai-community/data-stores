@@ -73,9 +73,18 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				message = 'A Unable to connect to db just happened!'
 				break
 
-			case 'FAILED_TO_LOAD_STORES':
-				message = `Shoot! I couldn't load your data stores. Found ${options.errors.length} errors.`
+			case 'FAILED_TO_LOAD_STORES': {
+				const totalErrors = options.errors.length
+				message = `Shoot! I couldn't load your data stores. Found ${totalErrors} error${
+					totalErrors === 1 ? '' : 's'
+				}:\n\n`
+
+				for (const err of options.errors) {
+					message += `${err.message}\n`
+				}
+
 				break
+			}
 
 			case 'MISSING_PARAMETERS':
 				message = `${
