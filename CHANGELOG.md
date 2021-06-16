@@ -1,3 +1,43 @@
+## [4.2.44](https://github.com/sprucelabsai/data-stores/compare/v4.2.43...v4.2.44) (2021-06-16)
+
+## [4.2.43](https://github.com/sprucelabsai/data-stores/compare/v4.2.42...v4.2.43) (2021-06-14)
+
+## [4.2.42](https://github.com/sprucelabsai/data-stores/compare/v4.2.41...v4.2.42) (2021-06-13)
+
+## [4.2.41](https://github.com/sprucelabsai/data-stores/compare/v4.2.40...v4.2.41) (2021-06-11)
+
+## [4.2.40](https://github.com/sprucelabsai/data-stores/compare/v4.2.39...v4.2.40) (2021-06-07)
+
+## [4.2.39](https://github.com/sprucelabsai/data-stores/compare/v4.2.38...v4.2.39) (2021-06-07)
+
+## [4.2.38](https://github.com/sprucelabsai/data-stores/compare/v4.2.37...v4.2.38) (2021-06-07)
+
+## [4.2.37](https://github.com/sprucelabsai/data-stores/compare/v4.2.36...v4.2.37) (2021-06-05)
+
+## [4.2.36](https://github.com/sprucelabsai/data-stores/compare/v4.2.35...v4.2.36) (2021-06-04)
+
+## [4.2.35](https://github.com/sprucelabsai/data-stores/compare/v4.2.34...v4.2.35) (2021-06-04)
+
+## [4.2.34](https://github.com/sprucelabsai/data-stores/compare/v4.2.33...v4.2.34) (2021-06-04)
+
+## [4.2.33](https://github.com/sprucelabsai/data-stores/compare/v4.2.32...v4.2.33) (2021-06-03)
+
+## [4.2.32](https://github.com/sprucelabsai/data-stores/compare/v4.2.31...v4.2.32) (2021-06-03)
+
+## [4.2.31](https://github.com/sprucelabsai/data-stores/compare/v4.2.30...v4.2.31) (2021-06-02)
+
+## [4.2.30](https://github.com/sprucelabsai/data-stores/compare/v4.2.29...v4.2.30) (2021-06-02)
+
+## [4.2.29](https://github.com/sprucelabsai/data-stores/compare/v4.2.28...v4.2.29) (2021-05-29)
+
+## [4.2.28](https://github.com/sprucelabsai/data-stores/compare/v4.2.27...v4.2.28) (2021-05-29)
+
+## [4.2.27](https://github.com/sprucelabsai/data-stores/compare/v4.2.26...v4.2.27) (2021-05-29)
+
+## [4.2.26](https://github.com/sprucelabsai/data-stores/compare/v4.2.25...v4.2.26) (2021-05-28)
+
+## [4.2.25](https://github.com/sprucelabsai/data-stores/compare/v4.2.24...v4.2.25) (2021-05-27)
+
 ## [4.2.24](https://github.com/sprucelabsai/data-stores/compare/v4.2.23...v4.2.24) (2021-05-26)
 
 ## [4.2.23](https://github.com/sprucelabsai/data-stores/compare/v4.2.22...v4.2.23) (2021-05-26)

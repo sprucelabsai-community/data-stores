@@ -31,7 +31,7 @@ jobs:
             cd node_modules
             grep version @sprucelabs/*/package.json |sed s_/pack.\*:_:_ |sed s/,//
             cd ..
-      - run: yarn build.dev
+      - run: yarn build.ci
       - run: yarn test
       - run:
           name: Check branch for auto-upgrade
