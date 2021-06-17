@@ -2,7 +2,7 @@ import { buildSchema } from '@sprucelabs/schema'
 import StoreFactory from '../../factories/StoreFactory'
 import AbstractStore from '../../stores/AbstractStore'
 import { Database } from '../../types/database.types'
-import { StoreOptions } from '../../types/stores.types'
+import { UniversalStoreOptions } from '../../types/stores.types'
 
 const testSchema = buildSchema({
 	id: 'test',
@@ -27,7 +27,7 @@ export default class TestStore extends AbstractStore<TestSchema> {
 	protected databaseSchema = testSchema
 	public wasInitializedInvoked = false
 
-	public static async Store(options: StoreOptions) {
+	public static async Store(options: UniversalStoreOptions) {
 		const store = new this(options.db)
 		store.db = options.db
 		store.storeFactory = options.storeFactory

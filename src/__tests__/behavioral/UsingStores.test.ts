@@ -14,7 +14,7 @@ import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import {
 	PrepareOptions,
 	PrepareResults,
-	StoreOptions,
+	UniversalStoreOptions,
 } from '../../types/stores.types'
 
 export const DEMO_PHONE = '555-555-5555'
@@ -177,7 +177,7 @@ class TestStore extends AbstractStore<
 		>
 	}
 
-	public static Store(options: StoreOptions) {
+	public static Store(options: UniversalStoreOptions) {
 		return new this(options.db)
 	}
 }

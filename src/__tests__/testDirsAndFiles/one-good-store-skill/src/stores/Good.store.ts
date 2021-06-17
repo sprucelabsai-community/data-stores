@@ -1,6 +1,6 @@
 import { buildSchema } from '@sprucelabs/schema'
 import AbstractStore from '../../../../../stores/AbstractStore'
-import { StoreOptions } from '../../../../../types/stores.types'
+import { UniversalStoreOptions } from '../../../../../types/stores.types'
 
 const fullSchema = buildSchema({
 	id: 'goodFull',
@@ -17,7 +17,7 @@ export default class GoodStore extends AbstractStore<FullSchema> {
 	protected fullSchema = fullSchema
 	protected databaseSchema = fullSchema
 
-	public static Store(options: StoreOptions) {
+	public static Store(options: UniversalStoreOptions) {
 		return new this(options.db)
 	}
 }

@@ -2,7 +2,7 @@ import { Schema, SchemaPublicValues, SchemaValues } from '@sprucelabs/schema'
 import StoreFactory from '../factories/StoreFactory'
 import { Database } from './database.types'
 
-export interface StoreOptions {
+export interface UniversalStoreOptions {
 	db: Database
 	storeFactory: StoreFactory
 }
@@ -24,3 +24,8 @@ export type PrepareResults<
 > = IncludePrivateFields extends true ? SchemaPublicValues<S> : SchemaValues<S>
 
 export type StoreName = keyof StoreMap
+
+export type StoreOptions<Name extends StoreName> =
+	Name extends keyof StoreOptionsMap
+		? StoreOptionsMap[Name]
+		: Record<string, never>

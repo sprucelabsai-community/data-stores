@@ -1,20 +1,12 @@
 import { namesUtil } from '@sprucelabs/spruce-skill-utils'
 import SpruceError from '../errors/SpruceError'
 import { Database } from '../types/database.types'
-import {
-	Store,
-	StoreMap,
-	StoreName,
-	StoreOptionsMap,
-} from '../types/stores.types'
+import { Store, StoreMap, StoreName, StoreOptions } from '../types/stores.types'
 
 interface StoreContructor {
 	Store(o: any): Promise<Store> | Store
 }
 
-type StoreOptions<Name extends StoreName> = Name extends keyof StoreOptionsMap
-	? StoreOptionsMap[Name]
-	: Record<string, never>
 export default class StoreFactory {
 	private storeMap: Record<string, StoreContructor> = {}
 	private db: Database
