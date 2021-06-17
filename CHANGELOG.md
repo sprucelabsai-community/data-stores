@@ -1,3 +1,10 @@
+# [5.0.0](https://github.com/sprucelabsai/data-stores/compare/v4.2.46...v5.0.0) (2021-06-17)
+
+
+### Breaking Changes
+
+* StoreOptions interface -> UniversalStoreOptions and new StoreOptions generic ([d1ebb95](https://github.com/sprucelabsai/data-stores/commit/d1ebb95))
+
 ## [4.2.46](https://github.com/sprucelabsai/data-stores/compare/v4.2.45...v4.2.46) (2021-06-16)
 
 ## [4.2.45](https://github.com/sprucelabsai/data-stores/compare/v4.2.44...v4.2.45) (2021-06-16)
