@@ -1,3 +1,4 @@
+import { differenceWith, isEqual } from 'lodash'
 import isObject from 'lodash/isObject'
 import { ObjectID } from 'mongodb'
 import Datastore from 'nedb'
@@ -400,10 +401,51 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		}
 	}
 
-	public createUniqueIndex(
+	public async getUniqueIndexes(collection: string) {
+		const col = this.loadCollection(collection)
+
+		return col._uniqueIndexes ?? []
+	}
+
+	public async dropIndex(collection: string, fields: string[]) {
+		const col = this.loadCollection(collection)
+
+		let found = false
+		const newIndexes = []
+
+		for (const uniq of col._uniqueIndexes ?? []) {
+			if (!isEqual(uniq, fields)) {
+				newIndexes.push(uniq)
+			} else {
+				found = true
+			}
+		}
+
+		if (!found) {
+			throw new SpruceError({ code: 'INDEX_NOT_FOUND', missingIndex: fields })
+		}
+
+		col._uniqueIndexes = newIndexes
+	}
+
+	private async assertUniqueIndexDoesNotExist(
+		collection: string,
+		fields: string[]
+	) {
+		const col = this.loadCollection(collection)
+
+		for (const uniq of col._uniqueIndexes ?? []) {
+			if (isEqual(uniq, fields)) {
+				throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+			}
+		}
+	}
+
+	public async createUniqueIndex(
 		collection: string,
 		fields: string[]
 	): Promise<void> {
+		await this.assertUniqueIndexDoesNotExist(collection, fields)
 		return new Promise((resolve) => {
 			const col = this.loadCollection(collection)
 			if (!col._uniqueIndexes) {
@@ -413,5 +455,25 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 			resolve()
 		})
+	}
+
+	public async syncUniqueIndexes(
+		collectionName: string,
+		indexes: string[][]
+	): Promise<void> {
+		const currentIndexes = await this.getUniqueIndexes(collectionName)
+		const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
+
+		for (const index of indexes) {
+			try {
+				await this.assertUniqueIndexDoesNotExist(collectionName, index)
+				await this.createUniqueIndex(collectionName, index)
+			} catch (err) {
+				//@ts-ignore
+			}
+		}
+		for (const extra of extraIndexes) {
+			await this.dropIndex(collectionName, extra)
+		}
 	}
 }

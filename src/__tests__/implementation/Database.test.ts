@@ -451,9 +451,226 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await this.shutdown(db)
 	}
 
-	@test('can create a unique index (mongo)', mongo)
-	@test('can create a unique index (neDb)', neDb)
+	@test('has no index to start (mongo)', mongo)
+	@test('has no index to start (neDb)', neDb)
+	protected static async hasNoIndexToStart(connect: Connect) {
+		const db = await connect()
+		const indexes = await db.getUniqueIndexes(this.collectionName)
+
+		assert.isLength(indexes, 0)
+	}
+
+	@test('can create multiple unique indexes (mongo)', mongo)
+	@test('can create multiple unique indexes (neDb)', neDb)
 	protected static async canCreateUniqueIndex(connect: Connect) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
+		let indexes = await db.getUniqueIndexes(this.collectionName)
+
+		assert.isLength(indexes, 1)
+		assert.isLength(indexes[0], 1)
+		assert.isEqual(indexes[0][0], 'uniqueField')
+
+		await db.createUniqueIndex(this.collectionName, ['uniqueField2'])
+		indexes = await db.getUniqueIndexes(this.collectionName)
+
+		assert.isLength(indexes, 2)
+		assert.isEqual(indexes[1][0], 'uniqueField2')
+
+		await db.createUniqueIndex(this.collectionName, [
+			'uniqueField3',
+			'uniqueField4',
+		])
+		indexes = await db.getUniqueIndexes(this.collectionName)
+
+		assert.isLength(indexes, 3)
+		assert.isEqual(indexes[2][0], 'uniqueField3')
+		assert.isEqual(indexes[2][1], 'uniqueField4')
+	}
+
+	@test("can't create the same unique indexes twice (mongo)", mongo)
+	@test("can't create the same unique indexes twice (neDb)", neDb)
+	protected static async cantCreateSameUniqueIndexTwice(connect: Connect) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
+		let indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 1)
+
+		const err = await assert.doesThrowAsync(() =>
+			db.createUniqueIndex(this.collectionName, ['uniqueField'])
+		)
+		errorAssertUtil.assertError(err, 'INDEX_EXISTS')
+	}
+
+	@test('can drop index (mongo)', mongo)
+	@test('can drop index (neDb)', neDb)
+	protected static async canDropIndex(connect: Connect) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, ['someField'])
+		await db.dropIndex(this.collectionName, ['someField'])
+
+		let indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 0)
+
+		await db.createUniqueIndex(this.collectionName, ['someField2'])
+		await db.createUniqueIndex(this.collectionName, ['someField3'])
+		await db.dropIndex(this.collectionName, ['someField3'])
+		indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 1)
+	}
+
+	@test('can drop compound index (mongo)', mongo)
+	@test('can drop compound index (neDb)', neDb)
+	protected static async canDropCompoundIndex(connect: Connect) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, ['someField', 'otherField'])
+		await db.dropIndex(this.collectionName, ['someField', 'otherField'])
+
+		let indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 0)
+
+		await db.createUniqueIndex(this.collectionName, ['someField', 'someField2'])
+		await db.createUniqueIndex(this.collectionName, ['someField', 'someField3'])
+		await db.dropIndex(this.collectionName, ['someField', 'someField3'])
+		indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 1)
+	}
+
+	@test("can't drop index that doesn't exist (mongo)", mongo)
+	@test("can't drop index that doesn't exist (neDb)", neDb)
+	protected static async cantDropIndexThatDoesntExist(connect: Connect) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, ['someField'])
+
+		const err = await assert.doesThrowAsync(() =>
+			db.dropIndex(this.collectionName, ['someOtherField'])
+		)
+		errorAssertUtil.assertError(err, 'INDEX_NOT_FOUND')
+	}
+
+	@test("can't drop index when no indexes exist (mongo)", mongo)
+	@test("can't drop index when no indexes exist (neDb)", neDb)
+	protected static async cantDropIndexWhenNoIndexExist(connect: Connect) {
+		const db = await connect()
+
+		const err = await assert.doesThrowAsync(() =>
+			db.dropIndex(this.collectionName, ['someOtherField'])
+		)
+		errorAssertUtil.assertError(err, 'INDEX_NOT_FOUND')
+	}
+
+	@test("can't drop compound index that doesn't exist (mongo)", mongo)
+	@test("can't drop compound index that doesn't exist (neDb)", neDb)
+	protected static async cantDropCompoundIndexThatDoesntExist(
+		connect: Connect
+	) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, [
+			'someField',
+			'someOtherField',
+		])
+
+		const err = await assert.doesThrowAsync(() =>
+			db.dropIndex(this.collectionName, ['uniqueField', 'someOtherField'])
+		)
+		errorAssertUtil.assertError(err, 'INDEX_NOT_FOUND')
+	}
+
+	@test('syncUniqueIndexes adds missing indexes (mongo)', mongo)
+	@test('syncUniqueIndexes adds missing indexes (neDb)', neDb)
+	protected static async syncIndexesAddsMissingIndexes(connect: Connect) {
+		const db = await connect()
+		await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
+
+		let indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 1)
+
+		await db.syncUniqueIndexes(this.collectionName, [['someField']])
+
+		indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 1)
+
+		await db.syncUniqueIndexes(this.collectionName, [
+			['uniqueField'],
+			['someField'],
+		])
+
+		indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 2)
+	}
+
+	@test('syncUniqueIndexes skips existing indexes (mongo)', mongo)
+	@test('syncUniqueIndexes skips existing indexes (neDb)', neDb)
+	protected static async syncIndexesSkipsExistingIndexes(connect: Connect) {
+		const db = await connect()
+		await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
+
+		let indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 1)
+
+		await db.syncUniqueIndexes(this.collectionName, [
+			['uniqueField'],
+			['someField'],
+			['otherField', 'otherField2'],
+		])
+
+		indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 3)
+	}
+
+	@test('syncUniqueIndexes removes extra indexes (mongo)', mongo)
+	@test('syncUniqueIndexes removes extra indexes (neDb)', neDb)
+	protected static async syncIndexesRemovesExtraIndexes(connect: Connect) {
+		const db = await connect()
+		await db.syncUniqueIndexes(this.collectionName, [
+			['uniqueField'],
+			['someField'],
+			['otherField', 'otherField2'],
+		])
+		let indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 3)
+
+		await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
+
+		indexes = await db.getUniqueIndexes(this.collectionName)
+		assert.isLength(indexes, 1)
+		assert.isEqual(indexes[0][0], 'uniqueField')
+	}
+
+	@test(
+		'syncUniqueIndexes does not remove and add existing indexes (mongo)',
+		mongo
+	)
+	@test(
+		'syncUniqueIndexes does not remove and add existing indexes (neDb)',
+		neDb
+	)
+	protected static async syncIndexesDoesNotRemoveAndAddExistingIndexes(
+		connect: Connect
+	) {
+		const db = await connect()
+
+		await db.createUniqueIndex(this.collectionName, ['otherField'])
+		await db.createUniqueIndex(this.collectionName, ['someField'])
+
+		db.createUniqueIndex = () => {
+			throw new Error('Should not have been called')
+		}
+		db.dropIndex = () => {
+			throw new Error('Should not have been called')
+		}
+
+		await db.syncUniqueIndexes(this.collectionName, [
+			['someField'],
+			['otherField'],
+		])
+	}
+
+	@test('can create a unique index that blocks duplicates (mongo)', mongo)
+	@test('can create a unique index that blocks duplicates (neDb)', neDb)
+	protected static async canCreateUniqueIndexBlocksDuplicates(
+		connect: Connect
+	) {
 		const db = await connect()
 		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
 

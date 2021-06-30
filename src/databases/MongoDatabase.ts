@@ -1,3 +1,4 @@
+import { differenceWith, isEqual } from 'lodash'
 import {
 	MongoClientOptions,
 	MongoClient,
@@ -284,17 +285,100 @@ export default class MongoDatabase implements Database {
 		).dropDatabase()
 	}
 
+	public async getUniqueIndexes(collection: string) {
+		try {
+			const indexes = await this.listIndexes(collection)
+
+			const uniqueIndexes: string[][] = []
+
+			for (const index of indexes) {
+				if (index.unique) {
+					uniqueIndexes.push(Object.keys(index.key))
+				}
+			}
+
+			return uniqueIndexes
+		} catch (err) {
+			return []
+		}
+	}
+
+	private async listIndexes(collection: string) {
+		try {
+			return await this.assertDbWhileAttempingTo('get indexes.', collection)
+				.collection(collection)
+				.listIndexes()
+				.toArray()
+		} catch (err) {
+			return []
+		}
+	}
+
+	public async dropIndex(collection: string, fields: string[]) {
+		const indexes = await this.listIndexes(collection)
+
+		let found = false
+
+		for (const index of indexes) {
+			if (isEqual(Object.keys(index.key), fields)) {
+				await this.assertDbWhileAttempingTo('drop a index.', collection)
+					.collection(collection)
+					.dropIndex(index.name)
+				found = true
+			}
+		}
+		if (!found) {
+			throw new SpruceError({ code: 'INDEX_NOT_FOUND', missingIndex: fields })
+		}
+	}
+
+	private async assertUniqueIndexDoesNotExist(
+		collection: string,
+		fields: string[]
+	) {
+		const indexes = await this.listIndexes(collection)
+
+		for (const index of indexes) {
+			if (isEqual(Object.keys(index.key), fields)) {
+				throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+			}
+		}
+	}
+
 	public async createUniqueIndex(
 		collection: string,
 		fields: string[]
 	): Promise<void> {
+		await this.assertUniqueIndexDoesNotExist(collection, fields)
+
 		const index: Record<string, any> = {}
 		fields.forEach((name) => {
 			index[name] = 1
 		})
+
 		await this.assertDbWhileAttempingTo('create a unique index.', collection)
 			.collection(collection)
 			.createIndex(index, { unique: true })
+	}
+
+	public async syncUniqueIndexes(
+		collectionName: string,
+		indexes: string[][]
+	): Promise<void> {
+		const currentIndexes = await this.getUniqueIndexes(collectionName)
+		const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
+
+		for (const index of indexes) {
+			try {
+				await this.assertUniqueIndexDoesNotExist(collectionName, index)
+				await this.createUniqueIndex(collectionName, index)
+			} catch (err) {
+				//@ts-ignore
+			}
+		}
+		for (const extra of extraIndexes) {
+			await this.dropIndex(collectionName, extra)
+		}
 	}
 
 	public async update(

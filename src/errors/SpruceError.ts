@@ -98,6 +98,14 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				message = `Halt! '${options.suppliedName}' is not a valid name for a database!`
 				break
 
+			case 'INDEX_NOT_FOUND':
+				message = 'A Index not found just happened!'
+				break
+
+			case 'INDEX_EXISTS':
+				message = 'A Index Exists just happened!'
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}

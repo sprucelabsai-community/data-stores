@@ -311,6 +311,68 @@ export declare namespace SpruceErrors.DataStores {
 }
 
 
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface IndexNotFound {
+		
+			/** Missing Index. */
+			'missingIndex': string[]
+	}
+
+	export interface IndexNotFoundSchema extends SpruceSchema.Schema {
+		id: 'indexNotFound',
+		namespace: 'DataStores',
+		name: 'Index not found',
+		    fields: {
+		            /** Missing Index. */
+		            'missingIndex': {
+		                label: 'Missing Index',
+		                type: 'text',
+		                isRequired: true,
+		                isArray: true,
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type IndexNotFoundEntity = SchemaEntity<SpruceErrors.DataStores.IndexNotFoundSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
+	export interface IndexExists {
+		
+			/** Index Exists. */
+			'index': string[]
+	}
+
+	export interface IndexExistsSchema extends SpruceSchema.Schema {
+		id: 'indexExists',
+		namespace: 'DataStores',
+		name: 'Index Exists',
+		    fields: {
+		            /** Index Exists. */
+		            'index': {
+		                label: 'Index Exists',
+		                type: 'text',
+		                isRequired: true,
+		                isArray: true,
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type IndexExistsEntity = SchemaEntity<SpruceErrors.DataStores.IndexExistsSchema>
+
+}
+
+
 import AbstractSpruceError from '@sprucelabs/error'
 import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
 
