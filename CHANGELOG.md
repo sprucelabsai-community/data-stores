@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/sprucelabsai/data-stores/compare/v5.0.9...v5.1.0) (2021-06-30)
+
+
+### Features
+
+* added syncUniqueIndexes, dropIndex, getUniqueIndexes ([b6f23ac](https://github.com/sprucelabsai/data-stores/commit/b6f23ac))
+
 ## [5.0.9](https://github.com/sprucelabsai/data-stores/compare/v5.0.8...v5.0.9) (2021-06-28)
 
 ## [5.0.8](https://github.com/sprucelabsai/data-stores/compare/v5.0.7...v5.0.8) (2021-06-27)
