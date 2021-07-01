@@ -7,7 +7,7 @@ import {
 	MongoError,
 } from 'mongodb'
 import SpruceError from '../errors/SpruceError'
-import { Database } from '../types/database.types'
+import { Database, UniqueIndex } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import mongoUtil from '../utilities/mongo.utility'
 
@@ -332,24 +332,34 @@ export default class MongoDatabase implements Database {
 		}
 	}
 
-	private async assertUniqueIndexDoesNotExist(
-		collection: string,
+	private assertUniqueIndexDoesNotExist(
+		currentIndexes: UniqueIndex[],
 		fields: string[]
 	) {
-		const indexes = await this.listIndexes(collection)
+		if (this.doesUniqueIndexExist(currentIndexes, fields)) {
+			throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+		}
+	}
 
-		for (const index of indexes) {
-			if (isEqual(Object.keys(index.key), fields)) {
-				throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+	private doesUniqueIndexExist(
+		currentIndexes: UniqueIndex[],
+		fields: string[]
+	) {
+		for (const uniq of currentIndexes ?? []) {
+			if (isEqual(uniq, fields)) {
+				return true
 			}
 		}
+
+		return false
 	}
 
 	public async createUniqueIndex(
 		collection: string,
 		fields: string[]
 	): Promise<void> {
-		await this.assertUniqueIndexDoesNotExist(collection, fields)
+		const currentIndexes = await this.getUniqueIndexes(collection)
+		await this.assertUniqueIndexDoesNotExist(currentIndexes, fields)
 
 		const index: Record<string, any> = {}
 		fields.forEach((name) => {
@@ -369,11 +379,8 @@ export default class MongoDatabase implements Database {
 		const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
 
 		for (const index of indexes) {
-			try {
-				await this.assertUniqueIndexDoesNotExist(collectionName, index)
+			if (!this.doesUniqueIndexExist(currentIndexes, index)) {
 				await this.createUniqueIndex(collectionName, index)
-			} catch (err) {
-				//@ts-ignore
 			}
 		}
 		for (const extra of extraIndexes) {

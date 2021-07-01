@@ -1,11 +1,14 @@
 import { QueryOptions } from './query.types'
 
-type Index = string[]
+export type UniqueIndex = string[]
 
 export interface Database {
-	syncUniqueIndexes(collectionName: string, indexes: Index[]): Promise<void>
-	dropIndex(collectionName: string, fields: Index): Promise<void>
-	getUniqueIndexes(collectionName: string): Promise<Index[]>
+	syncUniqueIndexes(
+		collectionName: string,
+		indexes: UniqueIndex[]
+	): Promise<void>
+	dropIndex(collectionName: string, fields: UniqueIndex): Promise<void>
+	getUniqueIndexes(collectionName: string): Promise<UniqueIndex[]>
 	isConnected(): boolean
 	generateId(): string
 	connect(): Promise<void>
@@ -48,5 +51,5 @@ export interface Database {
 	delete(collection: string, query: Record<string, any>): Promise<number>
 	deleteOne(collection: string, query: Record<string, any>): Promise<number>
 	count(collection: string, query?: Record<string, any>): Promise<number>
-	createUniqueIndex(collection: string, fields: Index): Promise<void>
+	createUniqueIndex(collection: string, fields: UniqueIndex): Promise<void>
 }

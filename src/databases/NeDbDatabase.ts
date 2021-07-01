@@ -4,7 +4,7 @@ import { ObjectID } from 'mongodb'
 import Datastore from 'nedb'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
-import { Database } from '../types/database.types'
+import { Database, UniqueIndex } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import mongoUtil from '../utilities/mongo.utility'
 
@@ -428,33 +428,40 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		col._uniqueIndexes = newIndexes
 	}
 
-	private async assertUniqueIndexDoesNotExist(
-		collection: string,
+	private assertUniqueIndexDoesNotExist(
+		currentIndexes: UniqueIndex[],
 		fields: string[]
 	) {
-		const col = this.loadCollection(collection)
+		if (this.doesUniqueIndexExist(currentIndexes, fields)) {
+			throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+		}
+	}
 
-		for (const uniq of col._uniqueIndexes ?? []) {
+	private doesUniqueIndexExist(
+		currentIndexes: UniqueIndex[],
+		fields: string[]
+	) {
+		for (const uniq of currentIndexes ?? []) {
 			if (isEqual(uniq, fields)) {
-				throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+				return true
 			}
 		}
+
+		return false
 	}
 
 	public async createUniqueIndex(
 		collection: string,
 		fields: string[]
 	): Promise<void> {
-		await this.assertUniqueIndexDoesNotExist(collection, fields)
-		return new Promise((resolve) => {
-			const col = this.loadCollection(collection)
-			if (!col._uniqueIndexes) {
-				col._uniqueIndexes = []
-			}
-			col._uniqueIndexes.push(fields)
+		const col = this.loadCollection(collection)
+		if (!col._uniqueIndexes) {
+			col._uniqueIndexes = []
+		}
 
-			resolve()
-		})
+		this.assertUniqueIndexDoesNotExist(col._uniqueIndexes, fields)
+
+		col._uniqueIndexes.push(fields)
 	}
 
 	public async syncUniqueIndexes(
@@ -465,11 +472,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
 
 		for (const index of indexes) {
-			try {
-				await this.assertUniqueIndexDoesNotExist(collectionName, index)
+			if (!this.doesUniqueIndexExist(currentIndexes, index)) {
 				await this.createUniqueIndex(collectionName, index)
-			} catch (err) {
-				//@ts-ignore
 			}
 		}
 		for (const extra of extraIndexes) {
