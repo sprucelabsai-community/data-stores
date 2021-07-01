@@ -637,6 +637,45 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		assert.isEqual(indexes[0][0], 'uniqueField')
 	}
 
+	@test('syncUniqueIndexes multiple times with different keys (mongo)', mongo)
+	@test('syncUniqueIndexes multiple times with different keys (neDb)', neDb)
+	protected static async syncIndexesMultipleUpdates(connect: Connect) {
+		const db = await connect()
+		const syncs = [
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+			db.syncUniqueIndexes(this.collectionName, [
+				['otherField', 'otherField2'],
+			]),
+		]
+		await Promise.all(syncs)
+	}
+
 	@test(
 		'syncUniqueIndexes does not remove and add existing indexes (mongo)',
 		mongo

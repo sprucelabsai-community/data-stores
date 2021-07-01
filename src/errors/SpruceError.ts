@@ -99,11 +99,15 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'INDEX_NOT_FOUND':
-				message = `The unique index ${options.missingIndex} you tried to remove does not exist!`
+				message = `The unique index ${options.missingIndex.join(
+					', '
+				)} you tried to remove does not exist!`
 				break
 
 			case 'INDEX_EXISTS':
-				message = `The unique index ${options.index} you attempted to create already exists!`
+				message = `The unique index ${options.index.join(
+					', '
+				)} you attempted to create already exists!`
 				break
 
 			default:
