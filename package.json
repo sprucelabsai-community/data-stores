@@ -85,7 +85,7 @@
     "@types/node": "^15.14.0",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.2.0",
-    "eslint": "^7.29.0",
+    "eslint": "^7.30.0",
     "eslint-config-spruce": "latest",
     "jest": "^27.0.6",
     "jest-circus": "^27.0.6",
