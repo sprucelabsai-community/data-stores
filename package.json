@@ -81,7 +81,7 @@
     "@sprucelabs/test": "latest",
     "@sprucelabs/test-utils": "latest",
     "@types/lodash": "^4.14.171",
-    "@types/nedb": "^1.8.11",
+    "@types/nedb": "^1.8.12",
     "@types/node": "^16.0.1",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^6.2.0",
