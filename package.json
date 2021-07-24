@@ -147,7 +147,9 @@
       "@sprucelabs/test",
       "@sprucelabs/test-utils",
       "eslint-config-spruce",
-      "@sprucelabs/jest-sheets-reporter"
+      "@sprucelabs/jest-sheets-reporter",
+      "globby",
+      "mongodb"
     ]
   }
 }
