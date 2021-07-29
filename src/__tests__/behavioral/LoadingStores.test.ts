@@ -34,9 +34,28 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 
 		const loader = await this.Loader(this.resolvePath(this.cwd))
 		const factory = await loader.loadStores()
-
 		assert.isLength(factory.getStoreNames(), 1)
 		assert.isEqualDeep(factory.getStoreNames(), ['good'])
+	}
+
+	@test()
+	protected static async loadsSameStoreWithAndWithoutTrailingSlash() {
+		const fixture = new DatabaseFixture()
+		const db = await fixture.connectToDatabase()
+
+		this.setCwd('')
+
+		const loader1 = await StoreLoader.getInstance(
+			this.resolvePath(this.cwd),
+			db
+		)
+
+		const loader2 = await StoreLoader.getInstance(
+			this.resolvePath(this.cwd) + '/',
+			db
+		)
+
+		assert.isEqual(loader1, loader2)
 	}
 
 	@test()

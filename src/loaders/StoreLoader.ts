@@ -55,10 +55,12 @@ export default class StoreLoader {
 			})
 		}
 
-		if (!this.instance[dir]) {
-			this.instance[dir] = this.Loader(dir, db)
+		const normalizedDir = dir.replace(/\/$/, '')
+
+		if (!this.instance[normalizedDir]) {
+			this.instance[normalizedDir] = this.Loader(normalizedDir, db)
 		}
-		return this.instance[dir]
+		return this.instance[normalizedDir]
 	}
 
 	public async loadStores() {
