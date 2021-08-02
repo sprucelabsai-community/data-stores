@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/sprucelabsai/data-stores/compare/v5.1.26...v5.2.0) (2021-08-02)
+
+
+### Features
+
+* generate id export ([5e7b040](https://github.com/sprucelabsai/data-stores/commit/5e7b040))
+
 ## [5.1.26](https://github.com/sprucelabsai/data-stores/compare/v5.1.25...v5.1.26) (2021-08-02)
 
 ## [5.1.25](https://github.com/sprucelabsai/data-stores/compare/v5.1.24...v5.1.25) (2021-08-02)
