@@ -1,16 +1,16 @@
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
 import { errorAssertUtil } from '@sprucelabs/test-utils'
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import SpruceError from '../../errors/SpruceError'
 import mongoUtil from '../../utilities/mongo.utility'
 
-const id1 = new ObjectID()
-const id2 = new ObjectID()
+const id1 = new ObjectId()
+const id2 = new ObjectId()
 
 export default class MappingMongoIdsTest extends AbstractSpruceTest {
 	@test()
 	protected static async mapsSimpleQuery() {
-		const id = new ObjectID()
+		const id = new ObjectId()
 		const results = mongoUtil.mapQuery({ id: id.toHexString() })
 		assert.isEqualDeep(results, { _id: id })
 	}

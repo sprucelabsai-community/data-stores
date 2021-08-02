@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { QuerySelector } from 'mongodb'
+
+import { QuerySelector } from '../databases/mongo.types'
 
 type QueryPredicate<Query, K extends keyof Query> =
 	| Query[K]

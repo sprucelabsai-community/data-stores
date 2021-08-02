@@ -1,4 +1,5 @@
-import { FindOneOptions, ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
+import { FindOneOptions } from '../databases/mongo.types'
 import SpruceError from '../errors/SpruceError'
 import { QueryOptions } from '../types/query.types'
 
@@ -21,7 +22,7 @@ const mongoUtil = {
 
 		if (typeof id === 'string') {
 			normalizedValues._id =
-				opts.shouldTransformToObjectId === false ? id : new ObjectID(id)
+				opts.shouldTransformToObjectId === false ? id : new ObjectId(id)
 		} else if (id) {
 			normalizedValues._id = mapNestedIdValues(id, options)
 		}
@@ -65,7 +66,7 @@ function mapNestedIdValues(
 			mapped[key] =
 				options.shouldTransformToObjectId === false
 					? id[key]
-					: new ObjectID(id[key])
+					: new ObjectId(id[key])
 		} else {
 			if (!id[key] || !id[key].map) {
 				throw new SpruceError({
@@ -78,7 +79,7 @@ function mapNestedIdValues(
 					try {
 						return options.shouldTransformToObjectId === false
 							? value
-							: new ObjectID(value)
+							: new ObjectId(value)
 					} catch (err) {
 						throw new SpruceError({
 							code: 'MONGO_ID_MAPPING_ERROR',

@@ -262,6 +262,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 			{ first: 'bill' },
 			{ first: 'bob' },
 		]
+
 		const results = await db.create(this.collectionName, values)
 
 		assert.isLength(results, values.length)
