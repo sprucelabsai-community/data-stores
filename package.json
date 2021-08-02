@@ -82,10 +82,10 @@
     "@sprucelabs/test-utils": "latest",
     "@types/lodash": "^4.14.171",
     "@types/nedb": "^1.8.12",
-    "@types/node": "^16.4.3",
-    "chokidar-cli": "^2.1.0",
+    "@types/node": "^16.4.10",
+    "chokidar-cli": "^3.0.0",
     "concurrently": "^6.2.0",
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-spruce": "latest",
     "jest": "^27.0.6",
     "jest-circus": "^27.0.6",
@@ -149,7 +149,8 @@
       "eslint-config-spruce",
       "@sprucelabs/jest-sheets-reporter",
       "globby",
-      "mongodb"
+      "mongodb",
+      "@types/mongodb"
     ]
   }
 }
