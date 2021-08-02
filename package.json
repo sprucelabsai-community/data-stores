@@ -30,7 +30,7 @@
   "scripts": {
     "boot": "node build/index",
     "boot.sender": "ACTION=sender node build/index",
-    "build.dev": "yarn build.tsc ; yarn resolve-paths.lint",
+    "build.dev": "yarn build.tsc --sourceMap ; yarn resolve-paths.lint",
     "build.ci": "yarn build.tsc && yarn build.resolve-paths && yarn lint",
     "build.copy-files": "mkdir -p build && rsync -avzq --exclude='*.ts' ./src/ ./build/",
     "build.dist": "yarn build.tsc && tsc --project tsconfig.dist.json && yarn build.resolve-paths && yarn build.esm-postbuild",
