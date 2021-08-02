@@ -1,11 +1,11 @@
 import { differenceWith, isEqual } from 'lodash'
 import isObject from 'lodash/isObject'
-import { ObjectID } from 'mongodb'
 import Datastore from 'nedb'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database, UniqueIndex } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
+import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
 
 const NULL_PLACEHOLDER = '_____NULL_____'
@@ -18,8 +18,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	private _isConnected = false
 
 	public generateId(): string {
-		const o = new ObjectID()
-		return o.toHexString()
+		return generateId()
 	}
 
 	public connect(): Promise<void> {

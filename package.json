@@ -66,10 +66,10 @@
     "@sprucelabs/spruce-event-utils": "latest",
     "@sprucelabs/spruce-skill-booter": "latest",
     "@sprucelabs/spruce-skill-utils": "latest",
-    "@types/mongodb": "^3.6.20",
+    "@types/mongodb": "^4.0.7",
     "dotenv": "^10.0.0",
     "globby": "^11.0.4",
-    "mongodb": "^3.6.10",
+    "mongodb": "^4.0.1",
     "nedb": "^1.8.0"
   },
   "devDependencies": {

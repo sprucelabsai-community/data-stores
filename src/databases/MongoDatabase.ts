@@ -1,14 +1,9 @@
 import { differenceWith, isEqual } from 'lodash'
-import {
-	MongoClientOptions,
-	MongoClient,
-	Db,
-	ObjectID,
-	MongoError,
-} from 'mongodb'
+import { MongoClientOptions, MongoClient, Db, MongoError } from 'mongodb'
 import SpruceError from '../errors/SpruceError'
 import { Database, UniqueIndex } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
+import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
 
 export const MONGO_TEST_URI = 'mongodb://localhost:27017'
@@ -56,8 +51,7 @@ export default class MongoDatabase implements Database {
 	}
 
 	public generateId(): string {
-		const o = new ObjectID()
-		return o.toHexString()
+		return generateId()
 	}
 
 	public async delete(
