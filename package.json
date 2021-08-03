@@ -79,7 +79,7 @@
     "@sprucelabs/semantic-release": "latest",
     "@sprucelabs/test": "latest",
     "@sprucelabs/test-utils": "latest",
-    "@types/lodash": "^4.14.171",
+    "@types/lodash": "^4.14.172",
     "@types/nedb": "^1.8.12",
     "@types/node": "^16.4.10",
     "chokidar-cli": "^3.0.0",
