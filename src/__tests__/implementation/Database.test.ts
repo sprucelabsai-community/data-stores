@@ -854,6 +854,39 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await this.shutdown(db)
 	}
 
+	@test('can create index based on nested field (mongo)', mongo)
+	@test('can create index based on nested field (neBd)', neDb)
+	protected static async nestedFieldIndex(connect: Connect) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, [
+			'target.organizationId',
+			'slug',
+		])
+
+		await db.createOne(this.collectionName, {
+			target: {
+				organizationId: 'go!',
+			},
+			slug: 'a slug',
+		})
+
+		const err = await assert.doesThrowAsync(() =>
+			db.createOne(this.collectionName, {
+				target: {
+					organizationId: 'go!',
+				},
+				slug: 'a slug',
+			})
+		)
+
+		errorAssertUtil.assertError(err, 'DUPLICATE_RECORD', {
+			collectionName: this.collectionName,
+			duplicateFields: ['target.organizationId', 'slug'],
+			duplicateValues: ['go!', 'a slug'],
+			action: 'create',
+		})
+	}
+
 	@test(
 		'can save, get back, update, and search against null+undefined undefined -> null (mongo)',
 		mongo

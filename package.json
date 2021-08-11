@@ -68,6 +68,7 @@
     "@sprucelabs/spruce-skill-utils": "latest",
     "dotenv": "^10.0.0",
     "globby": "^11.0.4",
+    "lodash": "^4.17.21",
     "mongodb": "^4.0.1",
     "nedb": "^1.8.0"
   },

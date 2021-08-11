@@ -1,4 +1,5 @@
 import { differenceWith, isEqual } from 'lodash'
+import get from 'lodash/get'
 import isObject from 'lodash/isObject'
 import Datastore from 'nedb'
 import SpruceError from '../errors/SpruceError'
@@ -380,9 +381,9 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				const duplicateValues: string[] = []
 
 				fields.forEach((f) => {
-					q[f] = values[f]
+					q[f] = get(values, f)
 					duplicateFields.push(f)
-					duplicateValues.push(values[f])
+					duplicateValues.push(q[f])
 				})
 
 				const destination = await this.findOne(collection, q)
