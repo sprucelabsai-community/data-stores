@@ -82,7 +82,7 @@
     "@sprucelabs/test-utils": "latest",
     "@types/lodash": "^4.14.172",
     "@types/nedb": "^1.8.12",
-    "@types/node": "^16.4.14",
+    "@types/node": "^16.6.0",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^6.2.1",
     "eslint": "^7.32.0",
