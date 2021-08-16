@@ -86,13 +86,19 @@ jobs:
             TARGETBRANCH=upgrade-$(date '+%Y-%m-%d')
             echo "export TARGETBRANCH=$TARGETBRANCH" >> $BASH_ENV
       - run:
+          name: "Install Spruce CLI"
+          command: |
+            yarn global add @sprucelabs/spruce-cli
+      - run:
           name: "Try to upgrade"
           command: |
             git checkout -b $TARGETBRANCH || git checkout $TARGETBRANCH
             git reset --hard master
             git config --global user.email "$GIT_AUTHOR_EMAIL"
             git config --global user.name "$GIT_AUTHOR_NAME"
-            yarn run upgrade.packages.all
+
+            ~/.yarn/bin/spruce upgrade
+
             if [[ $(git status) != *"modified"* ]]; then 
               echo "No modifications detected.  No push/PR necessary 👊"
               circleci-agent step halt

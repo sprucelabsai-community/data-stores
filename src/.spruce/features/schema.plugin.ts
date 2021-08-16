@@ -1,6 +1,7 @@
 import fs from "fs";
 import globby from "globby";
 import pathUtil from "path";
+import SpruceError from '../../errors/SpruceError'
 import {
 	SchemaHealthCheckItem,
 	SkillFeature,
@@ -64,13 +65,25 @@ class SchemaFeature implements SkillFeature {
 		);
 
 		return schemaFiles
-			.map((file) => require(file).default).map(schema => ({
-				id: schema.id,
-				name: schema.name,
-				version: schema.version,
-				namespace: schema.namespace ?? '***MISSING***',
-				description: schema.description,
-			}));
+			.map(file => {
+				try {
+
+					const schema = require(file).default
+					return {
+						id: schema.id,
+						name: schema.name,
+						version: schema.version,
+						namespace: schema.namespace ?? '***MISSING***',
+						description: schema.description,
+					}
+				} catch (err) {
+					throw new SpruceError({ 
+						//@ts-ignore
+						code: 'FAILED_LOADING_SCHEMA', 
+						originalError: err, 
+						friendlyMessage: `Error importing schema from: ${file}.` })
+				}
+			});
 	}
 }
 

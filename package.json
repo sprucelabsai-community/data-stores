@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "5.2.7",
+  "version": "5.2.12",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -25,7 +25,10 @@
     "url": "https://github.com/sprucelabsai/data-stores/issues"
   },
   "skill": {
-    "namespace": "data-stores"
+    "namespace": "data-stores",
+    "upgradeIgnoreList": [
+      "globby"
+    ]
   },
   "scripts": {
     "boot": "node build/index",
@@ -41,7 +44,7 @@
     "clean.all": "yarn clean.dependencies && yarn clean.build",
     "clean.build": "rm -rf build/",
     "clean.dependencies": "rm -rf node_modules/ package-lock.json yarn.lock",
-    "fix.lint": "eslint --fix '**/*.ts'",
+    "fix.lint": "eslint --fix --cache '**/*.ts'",
     "health": "yarn boot --health",
     "lint": "eslint --cache '**/*.ts'",
     "rebuild": "yarn clean.all && yarn && yarn build.dev",
@@ -49,44 +52,48 @@
     "resolve-paths.lint": "yarn build.resolve-paths ; yarn lint",
     "test": "jest",
     "update.dependencies": "yarn clean.dependencies && yarn",
-    "upgrade.packages": "yarn-upgrade-all && rm -f yarn.lock ; yarn ; yarn fix.lint | true",
+    "upgrade.packages": "yarn-upgrade-all && rm -f yarn.lock ; yarn ; yarn fix.lint ; true",
     "upgrade.packages.all": "yarn install && yarn upgrade.packages",
     "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test",
-    "watch.build.dev": "concurrently 'yarn build.dev' 'yarn watch.tsc' \"chokidar 'src/**/*' --ignore '.*/tmp/.*' -c 'yarn build.copy-files && yarn build.resolve-paths'\"",
+    "watch.build.dev": "concurrently 'yarn build.dev' 'yarn watch.tsc --sourceMap' \"chokidar 'src/**/*' --ignore '.*/tmp/.*' -c 'yarn build.copy-files && yarn build.resolve-paths'\"",
     "watch.lint": "concurrently 'yarn lint' \"chokidar 'src/**/*' -c 'yarn lint.tsc'\"",
     "watch.rebuild": "yarn clean.all && yarn && yarn watch.build.dev",
-    "watch.tsc": "tsc -w --sourceMap"
+    "watch.tsc": "tsc -w",
+    "boot.local": "node -r ts-node/register -r tsconfig-paths/register ./src/index",
+    "build": "yarn build.dev",
+    "health.local": "yarn boot.local --health"
   },
   "dependencies": {
-    "@sprucelabs/error": "latest",
-    "@sprucelabs/mercury-types": "latest",
-    "@sprucelabs/schema": "latest",
-    "@sprucelabs/spruce-core-schemas": "latest",
-    "@sprucelabs/spruce-event-plugin": "latest",
-    "@sprucelabs/spruce-event-utils": "latest",
-    "@sprucelabs/spruce-skill-booter": "latest",
-    "@sprucelabs/spruce-skill-utils": "latest",
+    "@sprucelabs/error": "^4.1.16",
+    "@sprucelabs/mercury-types": "^25.0.0",
+    "@sprucelabs/schema": "^21.4.8",
+    "@sprucelabs/spruce-core-schemas": "^22.5.22",
+    "@sprucelabs/spruce-event-plugin": "^5.4.15",
+    "@sprucelabs/spruce-event-utils": "^15.2.7",
+    "@sprucelabs/spruce-skill-booter": "^5.4.15",
+    "@sprucelabs/spruce-skill-utils": "^20.5.4",
     "dotenv": "^10.0.0",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
-    "mongodb": "^4.0.1",
+    "mongodb": "^4.1.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "latest",
-    "@sprucelabs/jest-json-reporter": "latest",
+    "@sprucelabs/jest-json-reporter": "^6.0.25",
     "@sprucelabs/jest-sheets-reporter": "latest",
-    "@sprucelabs/resolve-path-aliases": "latest",
+    "@sprucelabs/resolve-path-aliases": "^1.0.60",
     "@sprucelabs/semantic-release": "latest",
-    "@sprucelabs/test": "latest",
-    "@sprucelabs/test-utils": "latest",
+    "@sprucelabs/spruce-test-fixtures": "^5.4.15",
+    "@sprucelabs/test": "^7.7.53",
+    "@sprucelabs/test-utils": "^3.0.53",
     "@types/lodash": "^4.14.172",
     "@types/nedb": "^1.8.12",
-    "@types/node": "^16.4.14",
+    "@types/node": "^16.6.1",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^6.2.1",
     "eslint": "^7.32.0",
-    "eslint-config-spruce": "latest",
+    "eslint-config-spruce": "^10.10.10",
     "jest": "^27.0.6",
     "jest-circus": "^27.0.6",
     "prettier": "^2.3.2",
