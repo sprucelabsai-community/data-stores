@@ -116,4 +116,8 @@ export default class StoreLoader {
 
 		return { stores: Stores, errors }
 	}
+
+	public static clearInstance() {
+		this.instance = {}
+	}
 }
