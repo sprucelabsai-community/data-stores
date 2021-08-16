@@ -60,7 +60,6 @@ export default class DatabaseFixture {
 		this.activeDatabases = []
 
 		DatabaseFactory.reset()
-		StoreLoader.clearInstance()
 	}
 
 	public static beforeAll() {
