@@ -1,6 +1,5 @@
 import { MONGO_TEST_URI } from '../databases/MongoDatabase'
 import DatabaseFactory from '../factories/DatabaseFactory'
-import StoreLoader from '../loaders/StoreLoader'
 import { Database } from '../types/database.types'
 
 export interface DatabaseFixtureOptions {
