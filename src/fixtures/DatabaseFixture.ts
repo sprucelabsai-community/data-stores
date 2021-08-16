@@ -57,6 +57,8 @@ export default class DatabaseFixture {
 		}
 
 		this.activeDatabases = []
+
+		DatabaseFactory.reset()
 	}
 
 	public static beforeAll() {

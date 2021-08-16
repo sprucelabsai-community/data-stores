@@ -37,4 +37,8 @@ export default class DatabaseFactory {
 
 		return this.cache[cacheKey]
 	}
+
+	public static reset() {
+		this.cache = {}
+	}
 }
