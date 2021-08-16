@@ -96,8 +96,9 @@ jobs:
             git reset --hard master
             git config --global user.email "$GIT_AUTHOR_EMAIL"
             git config --global user.name "$GIT_AUTHOR_NAME"
-            yarn run upgrade.packages.all
+
             ~/.yarn/bin/spruce upgrade
+
             if [[ $(git status) != *"modified"* ]]; then 
               echo "No modifications detected.  No push/PR necessary 👊"
               circleci-agent step halt
