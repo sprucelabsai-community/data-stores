@@ -888,6 +888,44 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	}
 
 	@test(
+		'can update record with unique index based on nested field (mongo)',
+		mongo
+	)
+	@test(
+		'can update record with unique index based on nested field (neBd)',
+		neDb
+	)
+	protected static async nestedFieldIndexUpdate(connect: Connect) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, [
+			'target.organizationId',
+			'slug',
+		])
+
+		const results = await db.createOne(this.collectionName, {
+			target: {
+				organizationId: 'go!',
+			},
+			aNonIndexedField: true,
+			slug: 'a slug',
+		})
+
+		const updated = await db.updateOne(
+			this.collectionName,
+			{ id: results.id },
+			{
+				target: {
+					organizationId: 'go!',
+				},
+				aNonIndexedField: false,
+				slug: 'a slug',
+			}
+		)
+
+		assert.isEqual(updated.aNonIndexedField, false)
+	}
+
+	@test(
 		'can save, get back, update, and search against null+undefined undefined -> null (mongo)',
 		mongo
 	)

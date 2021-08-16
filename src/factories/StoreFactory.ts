@@ -10,6 +10,7 @@ interface StoreContructor {
 export default class StoreFactory {
 	private storeMap: Record<string, StoreContructor> = {}
 	private db: Database
+	private static initializations: Record<string, boolean> = {}
 
 	private constructor(db: Database) {
 		this.db = db
@@ -39,7 +40,10 @@ export default class StoreFactory {
 				...options,
 			})
 
-			await instance.initialize?.()
+			if (!StoreFactory.initializations[name]) {
+				StoreFactory.initializations[name] = true
+				await instance.initialize?.()
+			}
 
 			return instance as any
 		}
@@ -57,5 +61,9 @@ export default class StoreFactory {
 
 	public setStore(name: string, TestStore: StoreContructor) {
 		this.storeMap[name] = TestStore
+	}
+
+	public static reset() {
+		this.initializations = {}
 	}
 }
