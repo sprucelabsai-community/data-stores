@@ -888,6 +888,46 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	}
 
 	@test(
+		'can upsert record updating only changed field with unique index (mongo)',
+		mongo
+	)
+	@test(
+		'can upsert record updating only changed field with unique index (neDb)',
+		neDb
+	)
+	protected static async upsertWithUniqueIndex(connect: Connect) {
+		const db = await connect()
+
+		await db.syncUniqueIndexes(this.collectionName, [
+			['name', 'target.organizationId'],
+			['slug', 'target.organizationId'],
+		])
+
+		const results = await db.createOne(this.collectionName, {
+			target: {
+				organizationId: 'go!',
+			},
+			name: 'squirrel',
+			slug: 'a slug',
+		})
+
+		const updated = await db.upsertOne(
+			this.collectionName,
+			{ target: { organizationId: 'go!' }, slug: 'a slug' },
+			{
+				target: {
+					organizationId: 'go!',
+				},
+				name: 'notsquirrel',
+				slug: 'a slug',
+			}
+		)
+
+		assert.isEqual(results.id, updated.id)
+		assert.isEqual(updated.name, 'notsquirrel')
+	}
+
+	@test(
 		'can update record with unique index based on nested field (mongo)',
 		mongo
 	)
