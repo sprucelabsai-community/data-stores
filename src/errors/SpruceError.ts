@@ -16,10 +16,17 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'DUPLICATE_RECORD': {
-				const fields = options.duplicateFields.filter((f) => f !== 'id')
+				const duplicates: string[] = []
+
+				for (let c = 0; c < options.duplicateFields.length; c++) {
+					const field = options.duplicateFields[c]
+					const value = options.duplicateValues[c]
+					duplicates.push(`${field} (${value})`)
+				}
+
 				return `One or more ${
 					options.collectionName
-				} already have the ${fields.join(' and ')} you provided.`
+				} already have the ${duplicates.join(' and ')} you provided.`
 			}
 
 			case 'UNKNOWN_STORE_ERROR':
