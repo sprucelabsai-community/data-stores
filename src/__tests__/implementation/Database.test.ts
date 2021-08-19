@@ -761,7 +761,10 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 			Promise.all(promises)
 		)) as SpruceError
 
-		errorAssertUtil.assertError(err, 'DUPLICATE_RECORD')
+		errorAssertUtil.assertError(err, 'DUPLICATE_RECORD', {
+			duplicateFields: ['uniqueField'],
+			duplicateValues: ['fast'],
+		})
 
 		promises = []
 		for (let c = 0; c <= 10; c++) {

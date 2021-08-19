@@ -21,7 +21,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				for (let c = 0; c < options.duplicateFields.length; c++) {
 					const field = options.duplicateFields[c]
 					const value = options.duplicateValues[c]
-					duplicates.push(`${field} (${value})`)
+					duplicates.push(`${field} (${JSON.stringify(value)})`)
 				}
 
 				return `One or more ${
