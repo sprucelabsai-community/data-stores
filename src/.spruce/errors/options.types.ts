@@ -1,5 +1,5 @@
 import { SpruceErrors } from "#spruce/errors/errors.types"
-import { SpruceErrorOptions, ErrorOptions as ISpruceErrorOptions} from "@sprucelabs/error"
+import { ErrorOptions as ISpruceErrorOptions} from "@sprucelabs/error"
 import { SchemaErrorOptions } from '@sprucelabs/schema'
 
 export interface UnknownStoreErrorErrorOptions extends SpruceErrors.DataStores.UnknownStoreError, ISpruceErrorOptions {
@@ -51,6 +51,6 @@ export interface DatabaseNotConnectedErrorOptions extends SpruceErrors.DataStore
 	code: 'DATABASE_NOT_CONNECTED'
 }
 
-type ErrorOptions = SchemaErrorOptions | SpruceErrorOptions | UnknownStoreErrorErrorOptions  | UnknownDatabaseErrorErrorOptions  | UnableToConnectToDbErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | InvalidDbConnectionStringErrorOptions  | InvalidDatabaseNameErrorOptions  | IndexNotFoundErrorOptions  | IndexExistsErrorOptions  | FailedToLoadStoresErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DatabaseNotConnectedErrorOptions 
+type ErrorOptions = SchemaErrorOptions | UnknownStoreErrorErrorOptions  | UnknownDatabaseErrorErrorOptions  | UnableToConnectToDbErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | InvalidDbConnectionStringErrorOptions  | InvalidDatabaseNameErrorOptions  | IndexNotFoundErrorOptions  | IndexExistsErrorOptions  | FailedToLoadStoresErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DatabaseNotConnectedErrorOptions 
 
 export default ErrorOptions

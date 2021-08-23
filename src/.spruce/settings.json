@@ -4,5 +4,13 @@
     "test",
     "schema",
     "error"
-  ]
+  ],
+  "writer": {
+    "skips": [
+      "src/index.ts"
+    ]
+  },
+  "scriptUpdater": {
+    "skips": []
+  }
 }

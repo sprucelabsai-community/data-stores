@@ -20,6 +20,7 @@
 		"outDir": "build",
 		"baseUrl": "src",
 		"experimentalDecorators": true,
+		"skipLibCheck": true,
 		"paths": {
 			"#spruce/*": [
 				".spruce/*"
