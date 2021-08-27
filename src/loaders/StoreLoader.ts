@@ -1,5 +1,6 @@
 import pathUtil from 'path'
 import AbstractSpruceError from '@sprucelabs/error'
+import { SchemaError } from '@sprucelabs/schema'
 import { diskUtil, namesUtil } from '@sprucelabs/spruce-skill-utils'
 import globby from 'globby'
 import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
@@ -48,7 +49,7 @@ export default class StoreLoader {
 		}
 
 		if (missing.length > 0) {
-			throw new SpruceError({
+			throw new SchemaError({
 				code: 'MISSING_PARAMETERS',
 				parameters: missing,
 				friendlyMessage: 'Loading data stores failed!',
@@ -102,7 +103,7 @@ export default class StoreLoader {
 			try {
 				const Class = require(match).default
 				Stores.push({ namePascal, Class })
-			} catch (err) {
+			} catch (err: any) {
 				const spruceError = new SpruceError({
 					code: 'FAILED_TO_LOAD_STORE',
 					originalError: err,

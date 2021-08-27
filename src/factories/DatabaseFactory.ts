@@ -1,6 +1,6 @@
+import { SchemaError } from '@sprucelabs/schema'
 import MongoDatabase from '../databases/MongoDatabase'
 import NeDbDatabase from '../databases/NeDbDatabase'
-import SpruceError from '../errors/SpruceError'
 import { Database } from '../types/database.types'
 
 export default class DatabaseFactory {
@@ -16,7 +16,7 @@ export default class DatabaseFactory {
 		let database
 
 		if (!dbConnectionString) {
-			throw new SpruceError({
+			throw new SchemaError({
 				code: 'MISSING_PARAMETERS',
 				parameters: ['dbConnectionString'],
 				friendlyMessage: "DatabaseFactory can't connect to the database!",

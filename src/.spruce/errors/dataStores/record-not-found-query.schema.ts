@@ -11,7 +11,7 @@ const recordNotFoundQuerySchema: SpruceErrors.DataStores.RecordNotFoundQuerySche
 	    type: 'raw',
 	    keyName: 'field',
 	    options: {valueType: `any`,}
-	}}
+	},}
 
 SchemaRegistry.getInstance().trackSchema(recordNotFoundQuerySchema)
 

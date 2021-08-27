@@ -33,7 +33,7 @@ export default class MongoDatabase implements Database {
 				...(rest || {}),
 				serverSelectionTimeoutMS: 5000,
 			})
-		} catch (err) {
+		} catch (err: any) {
 			if (err.message.includes('Invalid connection')) {
 				throw new SpruceError({ code: 'INVALID_DB_CONNECTION_STRING' })
 			}
@@ -245,7 +245,7 @@ export default class MongoDatabase implements Database {
 			try {
 				this._isConnected = true
 				await this.mongo.connect()
-			} catch (err) {
+			} catch (err: any) {
 				if (err.name === 'MongoParseError') {
 					throw new SpruceError({ code: 'INVALID_DB_CONNECTION_STRING' })
 				} else if (err.message.includes('ECONNREFUSED')) {

@@ -869,6 +869,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await db.createOne(this.collectionName, {
 			target: {
 				organizationId: 'go!',
+				locationId: null,
 			},
 			slug: 'a slug',
 		})
@@ -877,6 +878,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 			db.createOne(this.collectionName, {
 				target: {
 					organizationId: 'go!',
+					locationId: null,
 				},
 				slug: 'a slug',
 			})
@@ -888,6 +890,22 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 			duplicateValues: ['go!', 'a slug'],
 			action: 'create',
 		})
+
+		await db.upsertOne(
+			this.collectionName,
+			{
+				target: {
+					organizationId: 'go!',
+				},
+			},
+			{
+				target: {
+					organizationId: 'go 2!',
+					locationId: null,
+				},
+				slug: 'a slug',
+			}
+		)
 	}
 
 	@test(

@@ -133,7 +133,7 @@ export default abstract class AbstractStore<
 					this.databaseSchema,
 					//@ts-ignore
 					r,
-					{ createEntityInstances: false }
+					{ shouldCreateEntityInstances: false }
 				)
 			)
 
@@ -144,7 +144,7 @@ export default abstract class AbstractStore<
 					this.prepareAndNormalizeRecord(record, options)
 				)
 			)
-		} catch (err) {
+		} catch (err: any) {
 			const coded = errorUtil.transformToSpruceErrors(
 				err,
 				new SpruceError({
@@ -180,13 +180,13 @@ export default abstract class AbstractStore<
 				this.databaseSchema,
 				//@ts-ignore
 				databaseRecord,
-				{ createEntityInstances: false }
+				{ shouldCreateEntityInstances: false }
 			)
 
 			const record = await this.db.createOne(this.collectionName, toSave)
 
 			return this.prepareAndNormalizeRecord(record, options)
-		} catch (err) {
+		} catch (err: any) {
 			const coded = errorUtil.transformToSpruceErrors(
 				err,
 				new SpruceError({
@@ -354,7 +354,7 @@ export default abstract class AbstractStore<
 			const toSave = isScrambled
 				? databaseRecord
 				: normalizeSchemaValues(this.databaseSchema, databaseRecord, {
-						createEntityInstances: false,
+						shouldCreateEntityInstances: false,
 						fields: Object.keys(
 							cleanedUpdates
 						) as SchemaFieldNames<DatabaseSchema>[],
@@ -367,7 +367,7 @@ export default abstract class AbstractStore<
 			)
 
 			return this.prepareAndNormalizeRecord(results, options)
-		} catch (err) {
+		} catch (err: any) {
 			const coded = errorUtil.transformToSpruceErrors(
 				err,
 				new SpruceError({

@@ -93,14 +93,6 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 			}
 
-			case 'MISSING_PARAMETERS':
-				message = `${
-					options.friendlyMessage ? options.friendlyMessage + ' ' : ''
-				}You are missing the following parameter${
-					options.parameters.length === 1 ? '' : 's'
-				}:\n\n${options.parameters.join('\n')}`
-				break
-
 			case 'INVALID_DATABASE_NAME':
 				message = `Halt! '${options.suppliedName}' is not a valid name for a database!`
 				break
@@ -115,6 +107,10 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				message = `The unique index ${options.index.join(
 					', '
 				)} you attempted to create already exists!`
+				break
+
+			case 'UNKNOWN_ERROR':
+				message = 'Unknown error!'
 				break
 
 			default:

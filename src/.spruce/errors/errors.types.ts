@@ -51,6 +51,27 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface UnknownError {
+		
+	}
+
+	export interface UnknownErrorSchema extends SpruceSchema.Schema {
+		id: 'unknownError',
+		namespace: 'DataStores',
+		name: 'Unknown Error',
+		    fields: {
+		    }
+	}
+
+	export type UnknownErrorEntity = SchemaEntity<SpruceErrors.DataStores.UnknownErrorSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface UnknownDatabaseError {
 		
 			
@@ -135,7 +156,7 @@ export declare namespace SpruceErrors.DataStores {
 		    type: 'raw',
 		    keyName: 'field',
 		    options: {valueType: `any`,}
-		}	}
+		},	}
 
 	export type RecordNotFoundQueryEntity = SchemaEntity<SpruceErrors.DataStores.RecordNotFoundQuerySchema>
 

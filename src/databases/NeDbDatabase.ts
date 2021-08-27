@@ -475,7 +475,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			if (!this.doesUniqueIndexExist(currentIndexes, index)) {
 				try {
 					await this.createUniqueIndex(collectionName, index)
-				} catch (err) {
+				} catch (err: any) {
 					if (err.options?.code !== 'INDEX_EXISTS') {
 						throw err
 					}
