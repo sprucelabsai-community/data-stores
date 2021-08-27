@@ -15,7 +15,7 @@ export interface StoreMap {}
 export interface StoreOptionsMap {}
 
 export interface PrepareOptions<IncludePrivateFields extends boolean> {
-	includePrivateFields?: IncludePrivateFields
+	shouldIncludePrivateFields?: IncludePrivateFields
 }
 
 export type PrepareResults<

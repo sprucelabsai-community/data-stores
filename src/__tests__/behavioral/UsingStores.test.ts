@@ -3,6 +3,7 @@ import {
 	dropPrivateFields,
 	makeFieldsOptional,
 	SchemaValues,
+	validationErrorAssertUtil,
 } from '@sprucelabs/schema'
 import { test, assert } from '@sprucelabs/test'
 import { errorAssertUtil } from '@sprucelabs/test-utils'
@@ -213,11 +214,8 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			() => this.store.createOne({})
 		)) as SpruceError
 
-		errorAssertUtil.assertError(err, 'VALIDATION_FAILED')
-
-		//@ts-ignore
-		errorAssertUtil.assertError(err.options.errors[0], 'MISSING_PARAMETERS', {
-			parameters: ['requiredForCreate', 'phoneNumber'],
+		validationErrorAssertUtil.assertError(err, {
+			missing: ['requiredForCreate', 'phoneNumber'],
 		})
 	}
 
@@ -263,7 +261,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 				privateField: 'private!',
 				phoneNumber: DEMO_PHONE_FORMATTED,
 			},
-			{ includePrivateFields: true }
+			{ shouldIncludePrivateFields: true }
 		)
 
 		assert.isExactType<
@@ -315,9 +313,8 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			() => this.store.updateOne({ id: created.id }, {})
 		)) as SpruceError
 
-		//@ts-ignore
-		errorAssertUtil.assertError(err.options.errors[0], 'MISSING_PARAMETERS', {
-			parameters: ['requiredForUpdate'],
+		validationErrorAssertUtil.assertError(err, {
+			missing: ['requiredForUpdate'],
 		})
 	}
 
@@ -372,7 +369,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			{
 				requiredForUpdate: 'for update!',
 			},
-			{ includePrivateFields: true }
+			{ shouldIncludePrivateFields: true }
 		)
 
 		assert.isEqualDeep(updated, {
@@ -444,7 +441,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 
 		const match = await this.store.findOne(
 			{ id: created.id },
-			{ includePrivateFields: true }
+			{ shouldIncludePrivateFields: true }
 		)
 
 		assert.isTruthy(match)
@@ -554,7 +551,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		]
 
 		const created = await this.store.create(values, {
-			includePrivateFields: true,
+			shouldIncludePrivateFields: true,
 		})
 
 		assert.isLength(created, values.length)
@@ -606,7 +603,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		const matches = await this.store.find(
 			{},
 			{},
-			{ includePrivateFields: true }
+			{ shouldIncludePrivateFields: true }
 		)
 
 		assert.isTruthy(matches)
@@ -701,14 +698,9 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			})
 		)) as SpruceError
 
-		errorAssertUtil.assertError(
-			//@ts-ignore
-			err.options.errors?.[0],
-			'UNEXPECTED_PARAMETERS',
-			{
-				parameters: ['cheesyBurrito'],
-			}
-		)
+		validationErrorAssertUtil.assertError(err, {
+			unexpected: ['cheesyBurrito'],
+		})
 	}
 
 	@test()
