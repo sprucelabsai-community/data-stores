@@ -6,5 +6,13 @@
   ],
   "skipped": [
     "skill"
-  ]
+  ],
+  "writer": {
+    "skips": [
+      "src/index.ts"
+    ]
+  },
+  "scriptUpdater": {
+    "skips": []
+  }
 }

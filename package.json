@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "5.2.19",
+  "version": "5.2.20",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -27,7 +27,9 @@
   "skill": {
     "namespace": "data-stores",
     "upgradeIgnoreList": [
-      "globby"
+      "globby",
+      "mongodb",
+      "@types/mongodb"
     ]
   },
   "scripts": {
@@ -89,7 +91,7 @@
     "@sprucelabs/test-utils": "latest",
     "@types/lodash": "^4.14.172",
     "@types/nedb": "^1.8.12",
-    "@types/node": "^16.6.1",
+    "@types/node": "^16.7.1",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^6.2.1",
     "eslint": "^7.32.0",
@@ -97,7 +99,7 @@
     "jest": "^27.0.6",
     "jest-circus": "^27.0.6",
     "prettier": "^2.3.2",
-    "ts-node": "^10.2.0",
+    "ts-node": "^10.2.1",
     "tsconfig-paths": "^3.10.1",
     "typescript": "^4.3.5",
     "yarn-upgrade-all": "^0.5.4"
@@ -139,22 +141,6 @@
   },
   "yarn-upgrade-all": {
     "ignore": [
-      "@sprucelabs/error",
-      "@sprucelabs/esm-postbuild",
-      "@sprucelabs/jest-json-reporter",
-      "@sprucelabs/mercury-types",
-      "@sprucelabs/resolve-path-aliases",
-      "@sprucelabs/schema",
-      "@sprucelabs/semantic-release",
-      "@sprucelabs/spruce-core-schemas",
-      "@sprucelabs/spruce-event-plugin",
-      "@sprucelabs/spruce-event-utils",
-      "@sprucelabs/spruce-skill-booter",
-      "@sprucelabs/spruce-skill-utils",
-      "@sprucelabs/test",
-      "@sprucelabs/test-utils",
-      "eslint-config-spruce",
-      "@sprucelabs/jest-sheets-reporter",
       "globby",
       "mongodb",
       "@types/mongodb"

@@ -19,6 +19,7 @@
         "outDir": "./build/esm",
         "baseUrl": "src",
         "experimentalDecorators": true,
+        "skipLibCheck": true,
 		"paths": {
 			"#spruce/*": [".spruce/*"]
 		}
