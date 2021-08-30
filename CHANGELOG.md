@@ -1,3 +1,5 @@
+## [5.2.23](https://github.com/sprucelabsai/data-stores/compare/v5.2.22...v5.2.23) (2021-08-30)
+
 ## [5.2.22](https://github.com/sprucelabsai/data-stores/compare/v5.2.21...v5.2.22) (2021-08-27)
 
 ## [5.2.21](https://github.com/sprucelabsai/data-stores/compare/v5.2.20...v5.2.21) (2021-08-27)
