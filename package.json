@@ -33,7 +33,6 @@
     ]
   },
   "scripts": {
-    "preinstall": "git config core.hooksPath .githooks",
     "boot": "node build/index",
     "boot.sender": "ACTION=sender node build/index",
     "build.dev": "yarn build.tsc --sourceMap ; yarn resolve-paths.lint",
