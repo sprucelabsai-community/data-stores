@@ -13,6 +13,7 @@
     ]
   },
   "scriptUpdater": {
+    "skipped": [],
     "skips": []
   }
 }
