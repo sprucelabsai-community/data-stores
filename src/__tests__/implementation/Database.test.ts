@@ -788,6 +788,51 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await this.shutdown(db)
 	}
 
+	@test('duplicate Keys On Insert Throws SpruceError', mongo)
+	@test('duplicate Keys On Insert Throws SpruceError', neDb)
+	protected static async duplicateKeysOnInsertThrowsSpruceError(
+		connect: Connect
+	) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
+
+		await db.createOne(this.collectionName, {
+			uniqueField: 'hello world',
+		})
+
+		let err = await assert.doesThrowAsync(() =>
+			db.createOne(this.collectionName, { uniqueField: 'hello world' })
+		)
+
+		assert.isTrue(err instanceof SpruceError)
+	}
+
+	@test('syncing Unique Index On Duped Fields Throws SpruceError', mongo)
+	@test('syncing Unique Index On Duped Fields Throws SpruceError', neDb)
+	protected static async settingUniqueIndexOnDupedFieldsThrowsSpruceError(
+		connect: Connect
+	) {
+		const db = await connect()
+		await db.createUniqueIndex(this.collectionName, ['randomUniqueField'])
+
+		await db.createOne(this.collectionName, {
+			uniqueField: 'hello world',
+			randomUniqueField: '1',
+		})
+
+		await db.createOne(this.collectionName, {
+			uniqueField: 'hello world',
+			randomUniqueField: '2',
+		})
+
+		let err = await assert.doesThrowAsync(() =>
+			db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
+		)
+
+		assert.isTrue(err instanceof SpruceError)
+		errorAssertUtil.assertError(err, 'DUPLICATE_KEY')
+	}
+
 	@test('can create a compound field unique index (mongo)', mongo)
 	@test('can create a compound field unique index (neDb)', neDb)
 	protected static async canCreateMultiFieldUniqueIndex(connect: Connect) {

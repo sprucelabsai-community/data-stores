@@ -113,6 +113,10 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				message = 'Unknown error!'
 				break
 
+			case 'DUPLICATE_KEY':
+				message = 'A Duplicate Key just happened!'
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}

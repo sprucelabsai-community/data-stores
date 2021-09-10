@@ -516,6 +516,27 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface DuplicateKey {
+		
+	}
+
+	export interface DuplicateKeySchema extends SpruceSchema.Schema {
+		id: 'duplicateKey',
+		namespace: 'DataStores',
+		name: 'Duplicate Key',
+		    fields: {
+		    }
+	}
+
+	export type DuplicateKeyEntity = SchemaEntity<SpruceErrors.DataStores.DuplicateKeySchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface DatabaseNotConnected {
 		
 			

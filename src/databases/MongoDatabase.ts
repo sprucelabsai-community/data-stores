@@ -375,9 +375,22 @@ export default class MongoDatabase implements Database {
 			index[name] = 1
 		})
 
-		await this.assertDbWhileAttempingTo('create a unique index.', collection)
-			.collection(collection)
-			.createIndex(index, { unique: true })
+		try {
+			await this.assertDbWhileAttempingTo('create a unique index.', collection)
+				.collection(collection)
+				.createIndex(index, { unique: true })
+		} catch (err: any) {
+			if (err?.code === 11000) {
+				throw new SpruceError({
+					code: 'DUPLICATE_KEY',
+					friendlyMessage: `Could not create index! Data has duplicate key for "${fields.join(
+						','
+					)}"`,
+				})
+			} else {
+				throw err
+			}
+		}
 	}
 
 	public async syncUniqueIndexes(

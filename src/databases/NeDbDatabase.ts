@@ -1,4 +1,4 @@
-import { differenceWith, isEqual } from 'lodash'
+import { differenceWith, isEqual, uniqBy } from 'lodash'
 import get from 'lodash/get'
 import isObject from 'lodash/isObject'
 import Datastore from 'nedb'
@@ -460,6 +460,36 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		}
 
 		this.assertUniqueIndexDoesNotExist(col._uniqueIndexes, fields)
+
+		if (col._uniqueIndexes) {
+			const tempUniqueIndexes = [...col._uniqueIndexes]
+			tempUniqueIndexes.push(fields)
+
+			const documents = (await this.find(collection, {})) || []
+
+			for (const uniqueFields of tempUniqueIndexes) {
+				let parsedExisting = []
+
+				for (const doc of documents) {
+					const tempDoc: Record<string, any> = {}
+					uniqueFields.forEach((f) => {
+						tempDoc[f] = doc[f]
+					})
+					parsedExisting.push(tempDoc)
+				}
+
+				const uniqued = uniqBy(parsedExisting, JSON.stringify)
+
+				if (parsedExisting.length != uniqued.length) {
+					throw new SpruceError({
+						code: 'DUPLICATE_KEY',
+						friendlyMessage: `Could not create index! Data has duplicate key for "${fields.join(
+							','
+						)}"`,
+					})
+				}
+			}
+		}
 
 		col._uniqueIndexes.push(fields)
 	}

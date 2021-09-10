@@ -49,10 +49,13 @@ export interface FailedToLoadStoreErrorOptions extends SpruceErrors.DataStores.F
 export interface DuplicateRecordErrorOptions extends SpruceErrors.DataStores.DuplicateRecord, ISpruceErrorOptions {
 	code: 'DUPLICATE_RECORD'
 }
+export interface DuplicateKeyErrorOptions extends SpruceErrors.DataStores.DuplicateKey, ISpruceErrorOptions {
+	code: 'DUPLICATE_KEY'
+}
 export interface DatabaseNotConnectedErrorOptions extends SpruceErrors.DataStores.DatabaseNotConnected, ISpruceErrorOptions {
 	code: 'DATABASE_NOT_CONNECTED'
 }
 
-type ErrorOptions =  | UnknownStoreErrorErrorOptions  | UnknownErrorErrorOptions  | UnknownDatabaseErrorErrorOptions  | UnableToConnectToDbErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | InvalidDbConnectionStringErrorOptions  | InvalidDatabaseNameErrorOptions  | IndexNotFoundErrorOptions  | IndexExistsErrorOptions  | FailedToLoadStoresErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DatabaseNotConnectedErrorOptions 
+type ErrorOptions =  | UnknownStoreErrorErrorOptions  | UnknownErrorErrorOptions  | UnknownDatabaseErrorErrorOptions  | UnableToConnectToDbErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | InvalidDbConnectionStringErrorOptions  | InvalidDatabaseNameErrorOptions  | IndexNotFoundErrorOptions  | IndexExistsErrorOptions  | FailedToLoadStoresErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DuplicateKeyErrorOptions  | DatabaseNotConnectedErrorOptions 
 
 export default ErrorOptions
