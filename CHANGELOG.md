@@ -1,3 +1,10 @@
+## [5.2.42](https://github.com/sprucelabsai/data-stores/compare/v5.2.41...v5.2.42) (2021-09-10)
+
+
+### Bug Fixes
+
+* better error when adding an index to existing data that violates unique index ([23bdb8e](https://github.com/sprucelabsai/data-stores/commit/23bdb8e))
+
 ## [5.2.41](https://github.com/sprucelabsai/data-stores/compare/v5.2.40...v5.2.41) (2021-09-09)
 
 ## [5.2.40](https://github.com/sprucelabsai/data-stores/compare/v5.2.39...v5.2.40) (2021-09-09)
