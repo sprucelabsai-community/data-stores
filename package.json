@@ -136,7 +136,8 @@
           "sheetId": "1DoWM7mYgGDa-PJXptLomrZmbIBZiuxS1YiAsRXU2Gm0",
           "worksheetId": 843037832,
           "testMap": {
-            "canCountRecords": "I35"
+            "canCountRecords": "I35",
+            "syncing Unique Index On Duped Fields Throws SpruceError (mongo)": "Y107"
           }
         }
       ]

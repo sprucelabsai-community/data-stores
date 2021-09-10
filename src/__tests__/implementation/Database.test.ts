@@ -788,8 +788,8 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await this.shutdown(db)
 	}
 
-	@test('duplicate Keys On Insert Throws SpruceError', mongo)
-	@test('duplicate Keys On Insert Throws SpruceError', neDb)
+	@test('duplicate Keys On Insert Throws SpruceError (mongo)', mongo)
+	@test('duplicate Keys On Insert Throws SpruceError (neDb)', neDb)
 	protected static async duplicateKeysOnInsertThrowsSpruceError(
 		connect: Connect
 	) {
@@ -807,8 +807,11 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		assert.isTrue(err instanceof SpruceError)
 	}
 
-	@test('syncing Unique Index On Duped Fields Throws SpruceError', mongo)
-	@test('syncing Unique Index On Duped Fields Throws SpruceError', neDb)
+	@test(
+		'syncing Unique Index On Duped Fields Throws SpruceError (mongo)',
+		mongo
+	)
+	@test('syncing Unique Index On Duped Fields Throws SpruceError (neDb)', neDb)
 	protected static async settingUniqueIndexOnDupedFieldsThrowsSpruceError(
 		connect: Connect
 	) {

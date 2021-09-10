@@ -2201,8 +2201,7 @@ export type SetFields<TSchema> = ({
 	readonly [key in KeysOfAType<TSchema, ReadonlyArray<any> | undefined>]?:
 		| UpdateOptionalId<Unpacked<TSchema[key]>>
 		| AddToSetOperators<Array<UpdateOptionalId<Unpacked<TSchema[key]>>>>
-} &
-	NotAcceptedFields<TSchema, ReadonlyArray<any> | undefined>) & {
+} & NotAcceptedFields<TSchema, ReadonlyArray<any> | undefined>) & {
 	readonly [key: string]: AddToSetOperators<any> | any
 }
 
@@ -2210,8 +2209,7 @@ export type PushOperator<TSchema> = ({
 	readonly [key in KeysOfAType<TSchema, ReadonlyArray<any>>]?:
 		| Unpacked<TSchema[key]>
 		| ArrayOperator<Array<Unpacked<TSchema[key]>>>
-} &
-	NotAcceptedFields<TSchema, ReadonlyArray<any>>) & {
+} & NotAcceptedFields<TSchema, ReadonlyArray<any>>) & {
 	readonly [key: string]: ArrayOperator<any> | any
 }
 
@@ -2219,15 +2217,13 @@ export type PullOperator<TSchema> = ({
 	readonly [key in KeysOfAType<TSchema, ReadonlyArray<any>>]?:
 		| Partial<Unpacked<TSchema[key]>>
 		| ObjectQuerySelector<Unpacked<TSchema[key]>>
-} &
-	NotAcceptedFields<TSchema, ReadonlyArray<any>>) & {
+} & NotAcceptedFields<TSchema, ReadonlyArray<any>>) & {
 	readonly [key: string]: QuerySelector<any> | any
 }
 
 export type PullAllOperator<TSchema> = ({
 	readonly [key in KeysOfAType<TSchema, ReadonlyArray<any>>]?: TSchema[key]
-} &
-	NotAcceptedFields<TSchema, ReadonlyArray<any>>) & {
+} & NotAcceptedFields<TSchema, ReadonlyArray<any>>) & {
 	readonly [key: string]: any[]
 }
 
@@ -2485,8 +2481,7 @@ export type Condition<T> = MongoAltQuery<T> | QuerySelector<MongoAltQuery<T>>
 
 export type FilterQuery<T> = {
 	[P in keyof T]?: Condition<T[P]>
-} &
-	RootQuerySelector<T>
+} & RootQuerySelector<T>
 
 /** @see https://docs.mongodb.com/v3.6/reference/method/db.collection.bulkWrite/#insertone */
 export type BulkWriteInsertOneOperation<TSchema> = {
