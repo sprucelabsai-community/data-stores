@@ -62,15 +62,18 @@
     "post.watch.build": "yarn build.copy-files && yarn build.resolve-paths",
     "watch.build.dev": "tsc-watch --sourceMap --onCompilationComplete 'yarn post.watch.build'",
     "lint.tsc": "tsc -p . --noEmit",
-    "watch.lint": "concurrently 'yarn lint' \"chokidar 'src/**/*' -c 'yarn lint.tsc'\""
+    "watch.lint": "concurrently 'yarn lint' \"chokidar 'src/**/*' -c 'yarn lint.tsc'\"",
+    "upgrade.packages": "yarn-upgrade-all && rm -f yarn.lock ; yarn ; yarn fix.lint ; true",
+    "upgrade.packages.all": "yarn install && yarn upgrade.packages",
+    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.3",
-    "@sprucelabs/mercury-types": "^26.1.1",
+    "@sprucelabs/mercury-types": "^26.1.2",
     "@sprucelabs/schema": "^25.3.1",
-    "@sprucelabs/spruce-core-schemas": "^22.5.48",
+    "@sprucelabs/spruce-core-schemas": "^22.5.49",
     "@sprucelabs/spruce-event-plugin": "^5.4.49",
-    "@sprucelabs/spruce-event-utils": "^16.0.3",
+    "@sprucelabs/spruce-event-utils": "^16.0.4",
     "@sprucelabs/spruce-skill-booter": "^5.4.49",
     "@sprucelabs/spruce-skill-utils": "^20.5.61",
     "dotenv": "^10.0.0",
