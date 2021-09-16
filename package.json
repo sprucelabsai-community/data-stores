@@ -73,7 +73,7 @@
     "@sprucelabs/schema": "^25.3.1",
     "@sprucelabs/spruce-core-schemas": "^22.5.58",
     "@sprucelabs/spruce-event-plugin": "^5.4.52",
-    "@sprucelabs/spruce-event-utils": "^16.0.21",
+    "@sprucelabs/spruce-event-utils": "^16.0.22",
     "@sprucelabs/spruce-skill-booter": "^5.4.52",
     "@sprucelabs/spruce-skill-utils": "^20.5.74",
     "dotenv": "^10.0.0",
