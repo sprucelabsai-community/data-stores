@@ -68,9 +68,9 @@
     "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
-    "@sprucelabs/error": "^5.0.3",
+    "@sprucelabs/error": "^5.0.4",
     "@sprucelabs/mercury-types": "^26.1.4",
-    "@sprucelabs/schema": "^25.3.1",
+    "@sprucelabs/schema": "^25.3.2",
     "@sprucelabs/spruce-core-schemas": "^22.5.58",
     "@sprucelabs/spruce-event-plugin": "^5.4.52",
     "@sprucelabs/spruce-event-utils": "^16.0.22",
