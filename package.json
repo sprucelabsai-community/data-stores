@@ -71,15 +71,15 @@
   "dependencies": {
     "@sprucelabs/error": "^5.0.11",
     "@sprucelabs/schema": "^25.3.11",
-    "@sprucelabs/spruce-core-schemas": "^22.5.70",
-    "@sprucelabs/spruce-skill-utils": "^20.5.86",
+    "@sprucelabs/spruce-core-schemas": "^22.5.71",
+    "@sprucelabs/spruce-skill-utils": "^20.5.87",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^1.0.55",
+    "@sprucelabs/esm-postbuild": "^1.0.56",
     "@sprucelabs/jest-json-reporter": "^6.0.43",
     "@sprucelabs/jest-sheets-reporter": "^1.2.75",
     "@sprucelabs/resolve-path-aliases": "^1.0.80",
