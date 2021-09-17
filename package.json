@@ -29,7 +29,8 @@
     "upgradeIgnoreList": [
       "globby",
       "mongodb",
-      "@types/mongodb"
+      "@types/mongodb",
+      "@sprucelabs/spruce-test-fixtures"
     ]
   },
   "scripts": {
@@ -69,7 +70,7 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.11",
-    "@sprucelabs/schema": "^25.3.10",
+    "@sprucelabs/schema": "^25.3.11",
     "@sprucelabs/spruce-core-schemas": "^22.5.70",
     "@sprucelabs/spruce-skill-utils": "^20.5.86",
     "globby": "^11.0.4",
