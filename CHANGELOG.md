@@ -1,3 +1,10 @@
+# [6.0.0](https://github.com/sprucelabsai/data-stores/compare/v5.2.106...v6.0.0) (2021-09-17)
+
+
+### Breaking Changes
+
+* no more using env for database settings ([631add6](https://github.com/sprucelabsai/data-stores/commit/631add6))
+
 ## [5.2.106](https://github.com/sprucelabsai/data-stores/compare/v5.2.105...v5.2.106) (2021-09-17)
 
 ## [5.2.105](https://github.com/sprucelabsai/data-stores/compare/v5.2.104...v5.2.105) (2021-09-17)
