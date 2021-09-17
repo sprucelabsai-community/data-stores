@@ -68,14 +68,14 @@
     "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
-    "@sprucelabs/error": "^5.0.6",
+    "@sprucelabs/error": "^5.0.7",
     "@sprucelabs/mercury-types": "^26.1.7",
-    "@sprucelabs/schema": "^25.3.4",
-    "@sprucelabs/spruce-core-schemas": "^22.5.63",
+    "@sprucelabs/schema": "^25.3.5",
+    "@sprucelabs/spruce-core-schemas": "^22.5.64",
     "@sprucelabs/spruce-event-plugin": "^5.4.54",
-    "@sprucelabs/spruce-event-utils": "^16.0.29",
+    "@sprucelabs/spruce-event-utils": "^16.0.30",
     "@sprucelabs/spruce-skill-booter": "^5.4.54",
-    "@sprucelabs/spruce-skill-utils": "^20.5.79",
+    "@sprucelabs/spruce-skill-utils": "^20.5.80",
     "dotenv": "^10.0.0",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
@@ -83,7 +83,7 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^1.0.51",
+    "@sprucelabs/esm-postbuild": "^1.0.52",
     "@sprucelabs/jest-json-reporter": "^6.0.42",
     "@sprucelabs/jest-sheets-reporter": "^1.2.74",
     "@sprucelabs/resolve-path-aliases": "^1.0.79",
