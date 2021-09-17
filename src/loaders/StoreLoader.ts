@@ -52,7 +52,6 @@ export default class StoreLoader {
 			throw new SchemaError({
 				code: 'MISSING_PARAMETERS',
 				parameters: missing,
-				friendlyMessage: 'Loading data stores failed!',
 			})
 		}
 

@@ -1,9 +1,12 @@
+import { SchemaError } from '@sprucelabs/schema'
 import { MONGO_TEST_URI } from '../databases/MongoDatabase'
 import DatabaseFactory from '../factories/DatabaseFactory'
 import { Database } from '../types/database.types'
 
 export interface DatabaseFixtureOptions {
 	shouldUseInMemoryDatabase?: boolean
+	dbConnectionString?: string
+	dbName?: string
 }
 
 export default class DatabaseFixture {
@@ -11,18 +14,58 @@ export default class DatabaseFixture {
 	private static dbCount = 0
 	private dbName?: string
 	private static activeDatabases: Database[] = []
+	private dbConnectionString?: string
 
 	public constructor(options?: DatabaseFixtureOptions) {
 		this.shouldUseInMemoryDatabase = options?.shouldUseInMemoryDatabase ?? true
+
+		if (this.shouldUseInMemoryDatabase) {
+			const unexpected: string[] = []
+
+			if (options?.dbName) {
+				unexpected.push('dbName')
+			}
+
+			if (options?.dbConnectionString) {
+				unexpected.push('dbConnectionString')
+			}
+
+			if (unexpected.length > 0) {
+				throw new SchemaError({
+					code: 'UNEXPECTED_PARAMETERS',
+					parameters: unexpected,
+				})
+			}
+		} else {
+			const missing: string[] = []
+
+			if (!options?.dbName) {
+				missing.push('dbName')
+			}
+
+			if (!options?.dbConnectionString) {
+				missing.push('dbConnectionString')
+			}
+
+			if (missing.length > 0) {
+				throw new SchemaError({
+					code: 'MISSING_PARAMETERS',
+					parameters: missing,
+				})
+			}
+
+			this.dbName = options?.dbName
+			this.dbConnectionString = options?.dbConnectionString
+		}
 	}
 
 	public async connectToDatabase(): Promise<Database> {
 		const options: any = {}
-		if (process.env.DB_CONNECTION_STRING && process.env.DB_NAME) {
-			options.dbConnectionString = process.env.DB_CONNECTION_STRING
-			options.dbName = process.env.DB_NAME
-		} else if (this.shouldUseInMemoryDatabase) {
+		if (this.shouldUseInMemoryDatabase) {
 			options.dbConnectionString = 'memory://'
+		} else if (this.dbConnectionString && this.dbName) {
+			options.dbConnectionString = this.dbConnectionString
+			options.dbName = this.dbName
 		} else {
 			options.dbName = this.dbName = DatabaseFixture.generateDbName()
 			options.dbConnectionString = MONGO_TEST_URI
@@ -61,8 +104,5 @@ export default class DatabaseFixture {
 		DatabaseFactory.reset()
 	}
 
-	public static beforeAll() {
-		process.env.DB_CONNECTION_STRING = 'memory://'
-		process.env.DB_NAME = 'skill'
-	}
+	public static beforeAll() {}
 }
