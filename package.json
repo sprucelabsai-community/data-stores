@@ -71,15 +71,15 @@
   "dependencies": {
     "@sprucelabs/error": "^5.0.23",
     "@sprucelabs/schema": "^25.3.31",
-    "@sprucelabs/spruce-core-schemas": "^22.5.93",
-    "@sprucelabs/spruce-skill-utils": "^20.5.109",
+    "@sprucelabs/spruce-core-schemas": "^22.5.94",
+    "@sprucelabs/spruce-skill-utils": "^20.5.110",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^1.0.67",
+    "@sprucelabs/esm-postbuild": "^1.0.68",
     "@sprucelabs/jest-json-reporter": "^6.0.44",
     "@sprucelabs/jest-sheets-reporter": "^1.2.76",
     "@sprucelabs/resolve-path-aliases": "^1.0.80",
@@ -88,7 +88,7 @@
     "@sprucelabs/test-utils": "^3.0.56",
     "@types/lodash": "^4.14.173",
     "@types/nedb": "^1.8.12",
-    "@types/node": "^16.9.3",
+    "@types/node": "^16.9.4",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^6.2.1",
     "eslint": "^7.32.0",
