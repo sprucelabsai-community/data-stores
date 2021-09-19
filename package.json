@@ -79,7 +79,7 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^1.0.63",
+    "@sprucelabs/esm-postbuild": "^1.0.64",
     "@sprucelabs/jest-json-reporter": "^6.0.43",
     "@sprucelabs/jest-sheets-reporter": "^1.2.75",
     "@sprucelabs/resolve-path-aliases": "^1.0.80",
@@ -88,7 +88,7 @@
     "@sprucelabs/test-utils": "^3.0.56",
     "@types/lodash": "^4.14.173",
     "@types/nedb": "^1.8.12",
-    "@types/node": "^16.9.2",
+    "@types/node": "^16.9.3",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^6.2.1",
     "eslint": "^7.32.0",
