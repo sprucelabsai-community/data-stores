@@ -383,7 +383,7 @@ export default class MongoDatabase implements Database {
 			if (err?.code === 11000) {
 				throw new SpruceError({
 					code: 'DUPLICATE_KEY',
-					friendlyMessage: `Could not create index! Data has duplicate key for "${fields.join(
+					friendlyMessage: `Could not create index! Unique index has duplicate key for "${fields.join(
 						','
 					)}"`,
 				})
