@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "6.0.71",
+  "version": "6.0.72",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -71,8 +71,8 @@
   "dependencies": {
     "@sprucelabs/error": "^5.0.41",
     "@sprucelabs/schema": "^25.3.57",
-    "@sprucelabs/spruce-core-schemas": "^22.5.123",
-    "@sprucelabs/spruce-skill-utils": "^20.5.139",
+    "@sprucelabs/spruce-core-schemas": "^22.5.124",
+    "@sprucelabs/spruce-skill-utils": "^20.5.140",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
