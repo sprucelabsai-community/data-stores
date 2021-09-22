@@ -74,12 +74,16 @@ export default class DatabaseFixture {
 			options.dbConnectionString = MONGO_TEST_URI
 		}
 
-		const database = DatabaseFactory.Database(options)
+		const database = await DatabaseFixture.connect(options)
 
+		return database
+	}
+
+	private static async connect(options: any) {
+		const database = DatabaseFactory.Database(options)
 		await database.connect()
 
 		DatabaseFixture.activeDatabases.push(database)
-
 		return database
 	}
 
@@ -101,6 +105,10 @@ export default class DatabaseFixture {
 	}
 
 	public static async destroy() {
+		if (this.defaultOptions && this.activeDatabases.length === 0) {
+			await DatabaseFixture.connect(this.defaultOptions)
+		}
+
 		for (const db of this.activeDatabases) {
 			if (db.isConnected()) {
 				await db.dropDatabase()

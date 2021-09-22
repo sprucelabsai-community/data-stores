@@ -12,13 +12,11 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
 
 	protected static async beforeEach() {
 		await super.beforeEach()
-
 		SchemaRegistry.getInstance().forgetAllSchemas()
 	}
 
 	protected static async afterEach() {
 		await super.afterEach()
-
 		await DatabaseFixture.destroy()
 
 		//@ts-ignore

@@ -1,4 +1,5 @@
 import { test, assert } from '@sprucelabs/test'
+import { MongoClient } from 'mongodb'
 import { MongoDatabase, NeDbDatabase } from '../..'
 import DatabaseFactory from '../../factories/DatabaseFactory'
 import DatabaseFixture from '../../fixtures/DatabaseFixture'
@@ -12,7 +13,6 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 		const databaseFixture = new DatabaseFixture()
 
 		await databaseFixture.connectToDatabase()
-
 		await DatabaseFixture.destroy()
 
 		//@ts-ignore
@@ -46,5 +46,33 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 
 		const db2 = await fixture2.connectToDatabase()
 		assert.isTrue(db2 instanceof NeDbDatabase)
+	}
+
+	@test()
+	protected static async cleansUpDatabaseWithDefaultConnectOptionsEvenWhenNeverConnected() {
+		const dbName = DatabaseFixture.generateDbName()
+		const connectionString =
+			process.env.TEST_DB_CONNECTION_STRING ?? '**missing**'
+
+		DatabaseFixture.setDefaultConnectOptions({
+			shouldUseInMemoryDatabase: false,
+			dbConnectionString: connectionString,
+			dbName,
+		})
+
+		const mongo = new MongoClient(connectionString)
+		await mongo.connect()
+
+		const db = mongo.db(dbName)
+		await db.collection(dbName).insertOne({ go: 'team' })
+
+		await DatabaseFixture.beforeEach()
+
+		//@ts-ignore
+		const { databases } = await db.admin().listDatabases()
+
+		const match = databases.find((db: any) => db.name === dbName)
+
+		assert.isFalsy(match)
 	}
 }
