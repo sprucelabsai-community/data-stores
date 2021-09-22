@@ -102,11 +102,14 @@ export default class DatabaseFixture {
 
 	public static async destroy() {
 		for (const db of this.activeDatabases) {
-			await db.dropDatabase()
-			await db.close()
+			if (db.isConnected()) {
+				await db.dropDatabase()
+				await db.close()
+			}
 		}
 
 		this.activeDatabases = []
+		this.defaultOptions = undefined
 
 		DatabaseFactory.reset()
 	}
@@ -114,6 +117,6 @@ export default class DatabaseFixture {
 	public static beforeAll() {}
 
 	public static async beforeEach() {
-		this.defaultOptions = undefined
+		await this.destroy()
 	}
 }

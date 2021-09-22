@@ -10,6 +10,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 	@test()
 	protected static async fixtureClearsDatabaseCacheOnDestroy() {
 		const databaseFixture = new DatabaseFixture()
+
 		await databaseFixture.connectToDatabase()
 
 		await DatabaseFixture.destroy()
@@ -39,8 +40,8 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 		await DatabaseFixture.beforeEach()
 
 		const fixture2 = new DatabaseFixture()
-		const db2 = await fixture2.connectToDatabase()
 
+		const db2 = await fixture2.connectToDatabase()
 		assert.isTrue(db2 instanceof NeDbDatabase)
 	}
 }
