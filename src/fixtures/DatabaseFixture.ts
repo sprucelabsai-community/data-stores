@@ -15,18 +15,21 @@ export default class DatabaseFixture {
 	private dbName?: string
 	private static activeDatabases: Database[] = []
 	private dbConnectionString?: string
+	private static defaultOptions?: DatabaseFixtureOptions
 
 	public constructor(options?: DatabaseFixtureOptions) {
-		this.shouldUseInMemoryDatabase = options?.shouldUseInMemoryDatabase ?? true
+		const mixed = { ...DatabaseFixture.defaultOptions, ...options }
+
+		this.shouldUseInMemoryDatabase = mixed?.shouldUseInMemoryDatabase ?? true
 
 		if (this.shouldUseInMemoryDatabase) {
 			const unexpected: string[] = []
 
-			if (options?.dbName) {
+			if (mixed?.dbName) {
 				unexpected.push('dbName')
 			}
 
-			if (options?.dbConnectionString) {
+			if (mixed?.dbConnectionString) {
 				unexpected.push('dbConnectionString')
 			}
 
@@ -39,11 +42,11 @@ export default class DatabaseFixture {
 		} else {
 			const missing: string[] = []
 
-			if (!options?.dbName) {
+			if (!mixed?.dbName) {
 				missing.push('dbName')
 			}
 
-			if (!options?.dbConnectionString) {
+			if (!mixed?.dbConnectionString) {
 				missing.push('dbConnectionString')
 			}
 
@@ -54,8 +57,8 @@ export default class DatabaseFixture {
 				})
 			}
 
-			this.dbName = options?.dbName
-			this.dbConnectionString = options?.dbConnectionString
+			this.dbName = mixed?.dbName
+			this.dbConnectionString = mixed?.dbConnectionString
 		}
 	}
 
@@ -78,6 +81,10 @@ export default class DatabaseFixture {
 		DatabaseFixture.activeDatabases.push(database)
 
 		return database
+	}
+
+	public static setDefaultConnectOptions(options: DatabaseFixtureOptions) {
+		this.defaultOptions = options
 	}
 
 	public static generateDbName(): string {
@@ -105,4 +112,8 @@ export default class DatabaseFixture {
 	}
 
 	public static beforeAll() {}
+
+	public static async beforeEach() {
+		this.defaultOptions = undefined
+	}
 }
