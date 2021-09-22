@@ -24,8 +24,11 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 		assert.isFunction(DatabaseFixture.setDefaultConnectOptions)
 	}
 
-	@test()
-	protected static async usesDefaultConnectOptions() {
+	@test('connects and resets with beforeEach', 'beforeEach')
+	@test('connects and resets with afterEach', 'afterEach')
+	protected static async usesDefaultConnectOptions(
+		method: 'beforeEach' | 'afterEach'
+	) {
 		DatabaseFixture.setDefaultConnectOptions({
 			shouldUseInMemoryDatabase: false,
 			dbConnectionString: process.env.TEST_DB_CONNECTION_STRING,
@@ -37,7 +40,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 
 		assert.isTrue(db instanceof MongoDatabase)
 
-		await DatabaseFixture.beforeEach()
+		await DatabaseFixture[method]()
 
 		const fixture2 = new DatabaseFixture()
 

@@ -119,4 +119,8 @@ export default class DatabaseFixture {
 	public static async beforeEach() {
 		await this.destroy()
 	}
+
+	public static async afterEach() {
+		await this.destroy()
+	}
 }
