@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/sprucelabsai/data-stores/compare/v6.0.72...v6.1.0) (2021-09-22)
+
+
+### Features
+
+* default connection options with beforeAll ([0dc337a](https://github.com/sprucelabsai/data-stores/commit/0dc337a))
+
 ## [6.0.72](https://github.com/sprucelabsai/data-stores/compare/v6.0.71...v6.0.72) (2021-09-22)
 
 ## [6.0.71](https://github.com/sprucelabsai/data-stores/compare/v6.0.70...v6.0.71) (2021-09-22)
