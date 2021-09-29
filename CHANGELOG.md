@@ -1,3 +1,286 @@
+## [6.1.111](https://github.com/sprucelabsai/data-stores/compare/v6.1.110...v6.1.111) (2021-09-29)
+
+## [6.1.110](https://github.com/sprucelabsai/data-stores/compare/v6.1.109...v6.1.110) (2021-09-29)
+
+## [6.1.109](https://github.com/sprucelabsai/data-stores/compare/v6.1.108...v6.1.109) (2021-09-29)
+
+## [6.1.108](https://github.com/sprucelabsai/data-stores/compare/v6.1.107...v6.1.108) (2021-09-29)
+
+## [6.1.107](https://github.com/sprucelabsai/data-stores/compare/v6.1.106...v6.1.107) (2021-09-29)
+
+## [6.1.106](https://github.com/sprucelabsai/data-stores/compare/v6.1.105...v6.1.106) (2021-09-29)
+
+## [6.1.105](https://github.com/sprucelabsai/data-stores/compare/v6.1.104...v6.1.105) (2021-09-29)
+
+## [6.1.104](https://github.com/sprucelabsai/data-stores/compare/v6.1.103...v6.1.104) (2021-09-29)
+
+## [6.1.103](https://github.com/sprucelabsai/data-stores/compare/v6.1.102...v6.1.103) (2021-09-29)
+
+## [6.1.102](https://github.com/sprucelabsai/data-stores/compare/v6.1.101...v6.1.102) (2021-09-29)
+
+## [6.1.101](https://github.com/sprucelabsai/data-stores/compare/v6.1.100...v6.1.101) (2021-09-28)
+
+## [6.1.100](https://github.com/sprucelabsai/data-stores/compare/v6.1.99...v6.1.100) (2021-09-28)
+
+## [6.1.99](https://github.com/sprucelabsai/data-stores/compare/v6.1.98...v6.1.99) (2021-09-28)
+
+## [6.1.98](https://github.com/sprucelabsai/data-stores/compare/v6.1.97...v6.1.98) (2021-09-28)
+
+## [6.1.97](https://github.com/sprucelabsai/data-stores/compare/v6.1.96...v6.1.97) (2021-09-28)
+
+## [6.1.96](https://github.com/sprucelabsai/data-stores/compare/v6.1.95...v6.1.96) (2021-09-28)
+
+## [6.1.95](https://github.com/sprucelabsai/data-stores/compare/v6.1.94...v6.1.95) (2021-09-28)
+
+## [6.1.94](https://github.com/sprucelabsai/data-stores/compare/v6.1.93...v6.1.94) (2021-09-28)
+
+## [6.1.93](https://github.com/sprucelabsai/data-stores/compare/v6.1.92...v6.1.93) (2021-09-28)
+
+## [6.1.92](https://github.com/sprucelabsai/data-stores/compare/v6.1.91...v6.1.92) (2021-09-27)
+
+## [6.1.91](https://github.com/sprucelabsai/data-stores/compare/v6.1.90...v6.1.91) (2021-09-27)
+
+## [6.1.90](https://github.com/sprucelabsai/data-stores/compare/v6.1.89...v6.1.90) (2021-09-27)
+
+## [6.1.89](https://github.com/sprucelabsai/data-stores/compare/v6.1.88...v6.1.89) (2021-09-27)
+
+## [6.1.88](https://github.com/sprucelabsai/data-stores/compare/v6.1.87...v6.1.88) (2021-09-27)
+
+## [6.1.87](https://github.com/sprucelabsai/data-stores/compare/v6.1.86...v6.1.87) (2021-09-27)
+
+## [6.1.86](https://github.com/sprucelabsai/data-stores/compare/v6.1.85...v6.1.86) (2021-09-27)
+
+## [6.1.85](https://github.com/sprucelabsai/data-stores/compare/v6.1.84...v6.1.85) (2021-09-27)
+
+## [6.1.84](https://github.com/sprucelabsai/data-stores/compare/v6.1.83...v6.1.84) (2021-09-27)
+
+## [6.1.83](https://github.com/sprucelabsai/data-stores/compare/v6.1.82...v6.1.83) (2021-09-27)
+
+## [6.1.82](https://github.com/sprucelabsai/data-stores/compare/v6.1.81...v6.1.82) (2021-09-27)
+
+## [6.1.81](https://github.com/sprucelabsai/data-stores/compare/v6.1.80...v6.1.81) (2021-09-27)
+
+## [6.1.80](https://github.com/sprucelabsai/data-stores/compare/v6.1.79...v6.1.80) (2021-09-27)
+
+## [6.1.79](https://github.com/sprucelabsai/data-stores/compare/v6.1.78...v6.1.79) (2021-09-26)
+
+## [6.1.78](https://github.com/sprucelabsai/data-stores/compare/v6.1.77...v6.1.78) (2021-09-26)
+
+## [6.1.77](https://github.com/sprucelabsai/data-stores/compare/v6.1.76...v6.1.77) (2021-09-26)
+
+## [6.1.76](https://github.com/sprucelabsai/data-stores/compare/v6.1.75...v6.1.76) (2021-09-26)
+
+## [6.1.75](https://github.com/sprucelabsai/data-stores/compare/v6.1.74...v6.1.75) (2021-09-26)
+
+## [6.1.74](https://github.com/sprucelabsai/data-stores/compare/v6.1.73...v6.1.74) (2021-09-26)
+
+## [6.1.73](https://github.com/sprucelabsai/data-stores/compare/v6.1.72...v6.1.73) (2021-09-26)
+
+## [6.1.72](https://github.com/sprucelabsai/data-stores/compare/v6.1.71...v6.1.72) (2021-09-26)
+
+## [6.1.71](https://github.com/sprucelabsai/data-stores/compare/v6.1.70...v6.1.71) (2021-09-26)
+
+## [6.1.70](https://github.com/sprucelabsai/data-stores/compare/v6.1.69...v6.1.70) (2021-09-26)
+
+## [6.1.69](https://github.com/sprucelabsai/data-stores/compare/v6.1.68...v6.1.69) (2021-09-26)
+
+## [6.1.68](https://github.com/sprucelabsai/data-stores/compare/v6.1.67...v6.1.68) (2021-09-26)
+
+## [6.1.67](https://github.com/sprucelabsai/data-stores/compare/v6.1.66...v6.1.67) (2021-09-26)
+
+## [6.1.66](https://github.com/sprucelabsai/data-stores/compare/v6.1.65...v6.1.66) (2021-09-26)
+
+## [6.1.65](https://github.com/sprucelabsai/data-stores/compare/v6.1.64...v6.1.65) (2021-09-26)
+
+## [6.1.64](https://github.com/sprucelabsai/data-stores/compare/v6.1.63...v6.1.64) (2021-09-26)
+
+## [6.1.63](https://github.com/sprucelabsai/data-stores/compare/v6.1.62...v6.1.63) (2021-09-26)
+
+## [6.1.62](https://github.com/sprucelabsai/data-stores/compare/v6.1.61...v6.1.62) (2021-09-25)
+
+## [6.1.61](https://github.com/sprucelabsai/data-stores/compare/v6.1.60...v6.1.61) (2021-09-25)
+
+## [6.1.60](https://github.com/sprucelabsai/data-stores/compare/v6.1.59...v6.1.60) (2021-09-25)
+
+## [6.1.59](https://github.com/sprucelabsai/data-stores/compare/v6.1.58...v6.1.59) (2021-09-25)
+
+## [6.1.58](https://github.com/sprucelabsai/data-stores/compare/v6.1.57...v6.1.58) (2021-09-25)
+
+## [6.1.57](https://github.com/sprucelabsai/data-stores/compare/v6.1.56...v6.1.57) (2021-09-25)
+
+## [6.1.56](https://github.com/sprucelabsai/data-stores/compare/v6.1.55...v6.1.56) (2021-09-25)
+
+## [6.1.55](https://github.com/sprucelabsai/data-stores/compare/v6.1.54...v6.1.55) (2021-09-25)
+
+## [6.1.54](https://github.com/sprucelabsai/data-stores/compare/v6.1.53...v6.1.54) (2021-09-25)
+
+## [6.1.53](https://github.com/sprucelabsai/data-stores/compare/v6.1.52...v6.1.53) (2021-09-25)
+
+## [6.1.52](https://github.com/sprucelabsai/data-stores/compare/v6.1.51...v6.1.52) (2021-09-25)
+
+## [6.1.51](https://github.com/sprucelabsai/data-stores/compare/v6.1.50...v6.1.51) (2021-09-25)
+
+## [6.1.50](https://github.com/sprucelabsai/data-stores/compare/v6.1.49...v6.1.50) (2021-09-25)
+
+## [6.1.49](https://github.com/sprucelabsai/data-stores/compare/v6.1.48...v6.1.49) (2021-09-25)
+
+## [6.1.48](https://github.com/sprucelabsai/data-stores/compare/v6.1.47...v6.1.48) (2021-09-25)
+
+## [6.1.47](https://github.com/sprucelabsai/data-stores/compare/v6.1.46...v6.1.47) (2021-09-25)
+
+## [6.1.46](https://github.com/sprucelabsai/data-stores/compare/v6.1.45...v6.1.46) (2021-09-25)
+
+## [6.1.45](https://github.com/sprucelabsai/data-stores/compare/v6.1.44...v6.1.45) (2021-09-25)
+
+## [6.1.44](https://github.com/sprucelabsai/data-stores/compare/v6.1.43...v6.1.44) (2021-09-25)
+
+## [6.1.43](https://github.com/sprucelabsai/data-stores/compare/v6.1.42...v6.1.43) (2021-09-25)
+
+## [6.1.42](https://github.com/sprucelabsai/data-stores/compare/v6.1.41...v6.1.42) (2021-09-24)
+
+## [6.1.41](https://github.com/sprucelabsai/data-stores/compare/v6.1.40...v6.1.41) (2021-09-24)
+
+## [6.1.40](https://github.com/sprucelabsai/data-stores/compare/v6.1.39...v6.1.40) (2021-09-24)
+
+## [6.1.39](https://github.com/sprucelabsai/data-stores/compare/v6.1.38...v6.1.39) (2021-09-24)
+
+## [6.1.38](https://github.com/sprucelabsai/data-stores/compare/v6.1.37...v6.1.38) (2021-09-24)
+
+## [6.1.37](https://github.com/sprucelabsai/data-stores/compare/v6.1.36...v6.1.37) (2021-09-24)
+
+## [6.1.36](https://github.com/sprucelabsai/data-stores/compare/v6.1.35...v6.1.36) (2021-09-24)
+
+## [6.1.35](https://github.com/sprucelabsai/data-stores/compare/v6.1.34...v6.1.35) (2021-09-24)
+
+## [6.1.34](https://github.com/sprucelabsai/data-stores/compare/v6.1.33...v6.1.34) (2021-09-24)
+
+## [6.1.33](https://github.com/sprucelabsai/data-stores/compare/v6.1.32...v6.1.33) (2021-09-24)
+
+## [6.1.32](https://github.com/sprucelabsai/data-stores/compare/v6.1.31...v6.1.32) (2021-09-24)
+
+## [6.1.31](https://github.com/sprucelabsai/data-stores/compare/v6.1.30...v6.1.31) (2021-09-24)
+
+## [6.1.30](https://github.com/sprucelabsai/data-stores/compare/v6.1.29...v6.1.30) (2021-09-24)
+
+## [6.1.29](https://github.com/sprucelabsai/data-stores/compare/v6.1.28...v6.1.29) (2021-09-24)
+
+## [6.1.28](https://github.com/sprucelabsai/data-stores/compare/v6.1.27...v6.1.28) (2021-09-24)
+
+## [6.1.27](https://github.com/sprucelabsai/data-stores/compare/v6.1.26...v6.1.27) (2021-09-24)
+
+## [6.1.26](https://github.com/sprucelabsai/data-stores/compare/v6.1.25...v6.1.26) (2021-09-24)
+
+## [6.1.25](https://github.com/sprucelabsai/data-stores/compare/v6.1.24...v6.1.25) (2021-09-24)
+
+## [6.1.24](https://github.com/sprucelabsai/data-stores/compare/v6.1.23...v6.1.24) (2021-09-24)
+
+## [6.1.23](https://github.com/sprucelabsai/data-stores/compare/v6.1.22...v6.1.23) (2021-09-23)
+
+## [6.1.22](https://github.com/sprucelabsai/data-stores/compare/v6.1.21...v6.1.22) (2021-09-23)
+
+## [6.1.21](https://github.com/sprucelabsai/data-stores/compare/v6.1.20...v6.1.21) (2021-09-23)
+
+## [6.1.20](https://github.com/sprucelabsai/data-stores/compare/v6.1.19...v6.1.20) (2021-09-23)
+
+## [6.1.19](https://github.com/sprucelabsai/data-stores/compare/v6.1.18...v6.1.19) (2021-09-23)
+
+## [6.1.18](https://github.com/sprucelabsai/data-stores/compare/v6.1.17...v6.1.18) (2021-09-23)
+
+## [6.1.17](https://github.com/sprucelabsai/data-stores/compare/v6.1.16...v6.1.17) (2021-09-23)
+
+## [6.1.16](https://github.com/sprucelabsai/data-stores/compare/v6.1.15...v6.1.16) (2021-09-23)
+
+## [6.1.15](https://github.com/sprucelabsai/data-stores/compare/v6.1.14...v6.1.15) (2021-09-22)
+
+## [6.1.14](https://github.com/sprucelabsai/data-stores/compare/v6.1.13...v6.1.14) (2021-09-22)
+
+## [6.1.13](https://github.com/sprucelabsai/data-stores/compare/v6.1.12...v6.1.13) (2021-09-22)
+
+## [6.1.12](https://github.com/sprucelabsai/data-stores/compare/v6.1.11...v6.1.12) (2021-09-22)
+
+## [6.1.11](https://github.com/sprucelabsai/data-stores/compare/v6.1.10...v6.1.11) (2021-09-22)
+
+## [6.1.10](https://github.com/sprucelabsai/data-stores/compare/v6.1.9...v6.1.10) (2021-09-22)
+
+## [6.1.9](https://github.com/sprucelabsai/data-stores/compare/v6.1.8...v6.1.9) (2021-09-22)
+
+## [6.1.8](https://github.com/sprucelabsai/data-stores/compare/v6.1.7...v6.1.8) (2021-09-22)
+
+## [6.1.7](https://github.com/sprucelabsai/data-stores/compare/v6.1.6...v6.1.7) (2021-09-22)
+
+## [6.1.6](https://github.com/sprucelabsai/data-stores/compare/v6.1.5...v6.1.6) (2021-09-22)
+
+## [6.1.5](https://github.com/sprucelabsai/data-stores/compare/v6.1.4...v6.1.5) (2021-09-22)
+
+## [6.1.4](https://github.com/sprucelabsai/data-stores/compare/v6.1.3...v6.1.4) (2021-09-22)
+
+## [6.1.3](https://github.com/sprucelabsai/data-stores/compare/v6.1.2...v6.1.3) (2021-09-22)
+
+## [6.1.2](https://github.com/sprucelabsai/data-stores/compare/v6.1.1...v6.1.2) (2021-09-22)
+
+## [6.1.1](https://github.com/sprucelabsai/data-stores/compare/v6.1.0...v6.1.1) (2021-09-22)
+
+# [6.1.0](https://github.com/sprucelabsai/data-stores/compare/v6.0.72...v6.1.0) (2021-09-22)
+
+
+### Features
+
+* default connection options with beforeAll ([0dc337a](https://github.com/sprucelabsai/data-stores/commit/0dc337a))
+
+## [6.0.72](https://github.com/sprucelabsai/data-stores/compare/v6.0.71...v6.0.72) (2021-09-22)
+
+## [6.0.71](https://github.com/sprucelabsai/data-stores/compare/v6.0.70...v6.0.71) (2021-09-22)
+
+## [6.0.70](https://github.com/sprucelabsai/data-stores/compare/v6.0.69...v6.0.70) (2021-09-22)
+
+## [6.0.69](https://github.com/sprucelabsai/data-stores/compare/v6.0.68...v6.0.69) (2021-09-21)
+
+## [6.0.68](https://github.com/sprucelabsai/data-stores/compare/v6.0.67...v6.0.68) (2021-09-21)
+
+## [6.0.67](https://github.com/sprucelabsai/data-stores/compare/v6.0.66...v6.0.67) (2021-09-21)
+
+## [6.0.66](https://github.com/sprucelabsai/data-stores/compare/v6.0.65...v6.0.66) (2021-09-21)
+
+## [6.0.65](https://github.com/sprucelabsai/data-stores/compare/v6.0.64...v6.0.65) (2021-09-21)
+
+## [6.0.64](https://github.com/sprucelabsai/data-stores/compare/v6.0.63...v6.0.64) (2021-09-21)
+
+## [6.0.63](https://github.com/sprucelabsai/data-stores/compare/v6.0.62...v6.0.63) (2021-09-21)
+
+## [6.0.62](https://github.com/sprucelabsai/data-stores/compare/v6.0.61...v6.0.62) (2021-09-21)
+
+## [6.0.61](https://github.com/sprucelabsai/data-stores/compare/v6.0.60...v6.0.61) (2021-09-21)
+
+## [6.0.60](https://github.com/sprucelabsai/data-stores/compare/v6.0.59...v6.0.60) (2021-09-21)
+
+## [6.0.59](https://github.com/sprucelabsai/data-stores/compare/v6.0.58...v6.0.59) (2021-09-21)
+
+## [6.0.58](https://github.com/sprucelabsai/data-stores/compare/v6.0.57...v6.0.58) (2021-09-20)
+
+## [6.0.57](https://github.com/sprucelabsai/data-stores/compare/v6.0.56...v6.0.57) (2021-09-20)
+
+## [6.0.56](https://github.com/sprucelabsai/data-stores/compare/v6.0.55...v6.0.56) (2021-09-20)
+
+## [6.0.55](https://github.com/sprucelabsai/data-stores/compare/v6.0.54...v6.0.55) (2021-09-20)
+
+## [6.0.54](https://github.com/sprucelabsai/data-stores/compare/v6.0.53...v6.0.54) (2021-09-20)
+
+## [6.0.53](https://github.com/sprucelabsai/data-stores/compare/v6.0.52...v6.0.53) (2021-09-20)
+
+## [6.0.52](https://github.com/sprucelabsai/data-stores/compare/v6.0.51...v6.0.52) (2021-09-20)
+
+## [6.0.51](https://github.com/sprucelabsai/data-stores/compare/v6.0.50...v6.0.51) (2021-09-20)
+
+## [6.0.50](https://github.com/sprucelabsai/data-stores/compare/v6.0.49...v6.0.50) (2021-09-20)
+
+## [6.0.49](https://github.com/sprucelabsai/data-stores/compare/v6.0.48...v6.0.49) (2021-09-20)
+
+## [6.0.48](https://github.com/sprucelabsai/data-stores/compare/v6.0.47...v6.0.48) (2021-09-20)
+
+## [6.0.47](https://github.com/sprucelabsai/data-stores/compare/v6.0.46...v6.0.47) (2021-09-20)
+
+## [6.0.46](https://github.com/sprucelabsai/data-stores/compare/v6.0.45...v6.0.46) (2021-09-20)
+
 ## [6.0.45](https://github.com/sprucelabsai/data-stores/compare/v6.0.44...v6.0.45) (2021-09-20)
 
 ## [6.0.44](https://github.com/sprucelabsai/data-stores/compare/v6.0.43...v6.0.44) (2021-09-20)

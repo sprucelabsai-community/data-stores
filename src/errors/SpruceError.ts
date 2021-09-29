@@ -114,7 +114,9 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 				break
 
 			case 'DUPLICATE_KEY':
-				message = 'A Duplicate Key just happened!'
+				message = `An index was trying to be created that exists. Original error is:\n\n${
+					options.friendlyMessage ?? '**missing**'
+				}`
 				break
 
 			default:

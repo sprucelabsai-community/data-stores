@@ -15,18 +15,21 @@ export default class DatabaseFixture {
 	private dbName?: string
 	private static activeDatabases: Database[] = []
 	private dbConnectionString?: string
+	private static defaultOptions?: DatabaseFixtureOptions
 
 	public constructor(options?: DatabaseFixtureOptions) {
-		this.shouldUseInMemoryDatabase = options?.shouldUseInMemoryDatabase ?? true
+		const mixed = { ...DatabaseFixture.defaultOptions, ...options }
+
+		this.shouldUseInMemoryDatabase = mixed?.shouldUseInMemoryDatabase ?? true
 
 		if (this.shouldUseInMemoryDatabase) {
 			const unexpected: string[] = []
 
-			if (options?.dbName) {
+			if (mixed?.dbName) {
 				unexpected.push('dbName')
 			}
 
-			if (options?.dbConnectionString) {
+			if (mixed?.dbConnectionString) {
 				unexpected.push('dbConnectionString')
 			}
 
@@ -39,11 +42,11 @@ export default class DatabaseFixture {
 		} else {
 			const missing: string[] = []
 
-			if (!options?.dbName) {
+			if (!mixed?.dbName) {
 				missing.push('dbName')
 			}
 
-			if (!options?.dbConnectionString) {
+			if (!mixed?.dbConnectionString) {
 				missing.push('dbConnectionString')
 			}
 
@@ -54,8 +57,8 @@ export default class DatabaseFixture {
 				})
 			}
 
-			this.dbName = options?.dbName
-			this.dbConnectionString = options?.dbConnectionString
+			this.dbName = mixed?.dbName
+			this.dbConnectionString = mixed?.dbConnectionString
 		}
 	}
 
@@ -71,13 +74,21 @@ export default class DatabaseFixture {
 			options.dbConnectionString = MONGO_TEST_URI
 		}
 
-		const database = DatabaseFactory.Database(options)
+		const database = await DatabaseFixture.connect(options)
 
+		return database
+	}
+
+	private static async connect(options: any) {
+		const database = DatabaseFactory.Database(options)
 		await database.connect()
 
 		DatabaseFixture.activeDatabases.push(database)
-
 		return database
+	}
+
+	public static setDefaultConnectOptions(options: DatabaseFixtureOptions) {
+		this.defaultOptions = options
 	}
 
 	public static generateDbName(): string {
@@ -94,15 +105,30 @@ export default class DatabaseFixture {
 	}
 
 	public static async destroy() {
+		if (this.defaultOptions && this.activeDatabases.length === 0) {
+			await DatabaseFixture.connect(this.defaultOptions)
+		}
+
 		for (const db of this.activeDatabases) {
-			await db.dropDatabase()
-			await db.close()
+			if (db.isConnected()) {
+				await db.dropDatabase()
+				await db.close()
+			}
 		}
 
 		this.activeDatabases = []
+		this.defaultOptions = undefined
 
 		DatabaseFactory.reset()
 	}
 
 	public static beforeAll() {}
+
+	public static async beforeEach() {
+		await this.destroy()
+	}
+
+	public static async afterEach() {
+		await this.destroy()
+	}
 }

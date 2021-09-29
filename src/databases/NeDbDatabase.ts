@@ -483,7 +483,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				if (parsedExisting.length != uniqued.length) {
 					throw new SpruceError({
 						code: 'DUPLICATE_KEY',
-						friendlyMessage: `Could not create index! Data has duplicate key for "${fields.join(
+						friendlyMessage: `Could not create index! Unique index on '${collection}' has duplicate key for "${fields.join(
 							','
 						)}"`,
 					})
