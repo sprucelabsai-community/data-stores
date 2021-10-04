@@ -1,3 +1,5 @@
+## [6.1.231](https://github.com/sprucelabsai/data-stores/compare/v6.1.230...v6.1.231) (2021-10-04)
+
 ## [6.1.230](https://github.com/sprucelabsai/data-stores/compare/v6.1.229...v6.1.230) (2021-10-04)
 
 ## [6.1.229](https://github.com/sprucelabsai/data-stores/compare/v6.1.228...v6.1.229) (2021-10-04)
