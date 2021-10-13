@@ -131,3 +131,11 @@ workflows:
             branches:
               only:
                 - master
+  upgrade:
+    jobs:
+      - upgrade:
+          context: public_package_publish
+          filters:
+            branches:
+              only:
+                - neverRunOnlyForCron
