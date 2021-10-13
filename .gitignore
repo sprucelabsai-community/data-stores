@@ -45,3 +45,4 @@ tmp/
 
 yarn.lock
 package-lock.json
+.ssh
