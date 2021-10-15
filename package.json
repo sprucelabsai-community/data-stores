@@ -71,8 +71,8 @@
   "dependencies": {
     "@sprucelabs/error": "^5.0.232",
     "@sprucelabs/schema": "^25.3.307",
-    "@sprucelabs/spruce-core-schemas": "^22.5.382",
-    "@sprucelabs/spruce-skill-utils": "^20.6.247",
+    "@sprucelabs/spruce-core-schemas": "^22.5.383",
+    "@sprucelabs/spruce-skill-utils": "^20.6.248",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
