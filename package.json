@@ -79,10 +79,10 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^1.0.265",
+    "@sprucelabs/esm-postbuild": "^1.0.266",
     "@sprucelabs/jest-json-reporter": "^6.0.210",
     "@sprucelabs/jest-sheets-reporter": "^1.2.218",
-    "@sprucelabs/resolve-path-aliases": "^1.0.214",
+    "@sprucelabs/resolve-path-aliases": "^1.0.215",
     "@sprucelabs/semantic-release": "^4.0.7",
     "@sprucelabs/test": "^7.7.198",
     "@sprucelabs/test-utils": "^3.0.210",
@@ -94,8 +94,8 @@
     "dotenv": "^10.0.0",
     "eslint": "^8.0.1",
     "eslint-config-spruce": "^10.10.15",
-    "jest": "^27.3.0",
-    "jest-circus": "^27.3.0",
+    "jest": "^27.3.1",
+    "jest-circus": "^27.3.1",
     "prettier": "^2.4.1",
     "ts-node": "^10.3.0",
     "tsc-watch": "^4.5.0",
