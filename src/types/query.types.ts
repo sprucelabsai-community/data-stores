@@ -20,6 +20,7 @@ export interface QueryOptions {
 	skip?: number
 	limit?: number
 	sort?: { field: string; direction: 'asc' | 'desc' }[]
+	includeFields?: string[]
 }
 
 export type FlattenAndPathKeys<

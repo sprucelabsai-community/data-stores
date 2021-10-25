@@ -38,7 +38,6 @@ export default abstract class AbstractStore<
 	protected abstract updateSchema: UpdateSchema
 	protected abstract fullSchema: FullSchema
 	protected abstract databaseSchema: DatabaseSchema
-
 	protected scrambleFields?: string[]
 
 	protected db: Database
@@ -47,9 +46,12 @@ export default abstract class AbstractStore<
 	public initialize?(): Promise<void>
 
 	// run on each record before it's returned by the store
-	protected prepareRecord?<IncludePrivateFields extends boolean>(
+	protected prepareRecord?<
+		IncludePrivateFields extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+	>(
 		record: DatabaseRecord,
-		options?: PrepareOptions<IncludePrivateFields>
+		options?: PrepareOptions<IncludePrivateFields, FullSchema, F>
 	): Promise<PrepareResults<FullSchema, IncludePrivateFields>>
 
 	protected willCreate?(
@@ -85,7 +87,7 @@ export default abstract class AbstractStore<
 		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
 	>(
 		record: any,
-		options: PrepareOptions<IncludePrivateFields> = {}
+		options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
 	): Promise<
 		IsDynamicSchema<FullSchema> extends true
 			? DynamicSchemaAllValues<FullSchema, CreateEntityInstances>
@@ -105,14 +107,18 @@ export default abstract class AbstractStore<
 
 		return normalizeSchemaValues(this.fullSchema, preparedRecord, {
 			...options,
+			fields: options.includeFields,
 			shouldIncludePrivateFields: options.shouldIncludePrivateFields === true,
 			createEntityInstances: false as CreateEntityInstances,
 		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields>)
 	}
 
-	public async create<CreateEntityInstances extends boolean>(
+	public async create<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+	>(
 		values: CreateRecord[],
-		options?: PrepareOptions<CreateEntityInstances>
+		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
 		try {
 			//@ts-ignore
@@ -158,9 +164,12 @@ export default abstract class AbstractStore<
 		}
 	}
 
-	public async createOne<CreateEntityInstances extends boolean>(
+	public async createOne<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+	>(
 		values: CreateRecord,
-		options?: PrepareOptions<CreateEntityInstances>
+		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
 		try {
 			//@ts-ignore
@@ -200,9 +209,12 @@ export default abstract class AbstractStore<
 		}
 	}
 
-	public async findOne<CreateEntityInstances extends boolean>(
+	public async findOne<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+	>(
 		query: QueryBuilder<QueryRecord>,
-		options: PrepareOptions<CreateEntityInstances> = {}
+		options: PrepareOptions<CreateEntityInstances, FullSchema, F> = {}
 	) {
 		const results = await this.find(query, { limit: 1 }, options)
 
@@ -218,12 +230,18 @@ export default abstract class AbstractStore<
 		return count
 	}
 
-	public async find<CreateEntityInstances extends boolean>(
+	public async find<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+	>(
 		query: QueryBuilder<QueryRecord>,
-		queryOptions?: QueryOptions,
-		options?: PrepareOptions<CreateEntityInstances>
+		queryOptions?: Omit<QueryOptions, 'includeFields'>,
+		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
-		const results = await this.db.find(this.collectionName, query, queryOptions)
+		const results = await this.db.find(this.collectionName, query, {
+			...queryOptions,
+			includeFields: options?.includeFields,
+		})
 
 		if (results) {
 			const all = results.map((result) =>
@@ -239,10 +257,13 @@ export default abstract class AbstractStore<
 		return []
 	}
 
-	public async upsertOne<CreateEntityInstances extends boolean>(
+	public async upsertOne<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord & CreateRecord & { id?: string },
-		options?: PrepareOptions<CreateEntityInstances>
+		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
 		const mutexKey = 'upsertOne'
 
@@ -290,7 +311,7 @@ export default abstract class AbstractStore<
 	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord,
-		options?: PrepareOptions<IncludePrivateFields>
+		options?: PrepareOptions<IncludePrivateFields, FullSchema, F>
 	): Promise<
 		IncludePrivateFields extends false
 			? Pick<SchemaPublicValues<FullSchema, CreateEntityInstances>, PF>
@@ -314,11 +335,14 @@ export default abstract class AbstractStore<
 		return this.db.update(this.collectionName, query, updates)
 	}
 
-	private async findOneAndUpdate<CreateEntityInstances extends boolean>(
+	private async findOneAndUpdate<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord,
 		notFoundHandler: () => Promise<FullRecord>,
-		options?: PrepareOptions<CreateEntityInstances>
+		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
 		try {
 			const isScrambled = this.isScrambled(updates)

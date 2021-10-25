@@ -227,6 +227,11 @@ export default class MongoDatabase implements Database {
 
 	private normalizeRecord(record: Record<string, any>) {
 		const { _id, ...rest } = record
+
+		if (!_id) {
+			return rest
+		}
+
 		return {
 			id: _id.toString(),
 			...rest,

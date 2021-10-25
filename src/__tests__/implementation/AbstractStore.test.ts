@@ -142,7 +142,7 @@ class TestStore extends AbstractStore<
 
 	protected async prepareRecord<IncludePrivateFields extends boolean>(
 		record: SchemaValues<typeof databaseRecordSchema>,
-		_options?: PrepareOptions<IncludePrivateFields>
+		_options?: PrepareOptions<IncludePrivateFields, typeof fullRecordSchema>
 	) {
 		const values: Record<string, any> = {
 			...record,

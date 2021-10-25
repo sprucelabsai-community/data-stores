@@ -1,4 +1,9 @@
-import { Schema, SchemaPublicValues, SchemaValues } from '@sprucelabs/schema'
+import {
+	Schema,
+	SchemaFieldNames,
+	SchemaPublicValues,
+	SchemaValues,
+} from '@sprucelabs/schema'
 import StoreFactory from '../factories/StoreFactory'
 import { Database } from './database.types'
 
@@ -14,8 +19,13 @@ export interface Store {
 export interface StoreMap {}
 export interface StoreOptionsMap {}
 
-export interface PrepareOptions<IncludePrivateFields extends boolean> {
+export interface PrepareOptions<
+	IncludePrivateFields extends boolean,
+	S extends Schema,
+	FieldNames extends SchemaFieldNames<S> = SchemaFieldNames<S>
+> {
 	shouldIncludePrivateFields?: IncludePrivateFields
+	includeFields?: FieldNames[]
 }
 
 export type PrepareResults<

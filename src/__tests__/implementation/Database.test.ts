@@ -1411,4 +1411,60 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 			suppliedName: 'undefined',
 		})
 	}
+
+	@test('can choose which fields to return (mongo)', mongo)
+	@test('can choose which fields to return (neDb)', neDb)
+	protected static async selectFields(connect: Connect) {
+		const db = await connect()
+
+		await db.create(this.collectionName, [
+			{
+				name: 'first',
+				subObject: {
+					score: 1,
+				},
+			},
+			{
+				name: 'second',
+				subObject: {
+					score: 2,
+				},
+			},
+			{
+				name: 'third',
+				subObject: {
+					score: 2,
+				},
+			},
+		])
+
+		const all = await db.find(
+			this.collectionName,
+			{},
+			{ includeFields: ['name'] }
+		)
+		assert.isEqualDeep(all, [
+			{
+				name: 'first',
+			},
+			{
+				name: 'second',
+			},
+			{
+				name: 'third',
+			},
+		])
+
+		const first = await db.findOne(
+			this.collectionName,
+			{},
+			{ includeFields: ['subObject'] }
+		)
+
+		assert.isEqualDeep(first, {
+			subObject: {
+				score: 1,
+			},
+		})
+	}
 }

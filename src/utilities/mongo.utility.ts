@@ -37,8 +37,17 @@ const mongoUtil = {
 	},
 
 	queryOptionsToMongoFindOptions(options?: QueryOptions): FindOneOptions<any> {
-		const { sort, ...rest } = options || {}
+		const { sort, includeFields: fields = [], ...rest } = options || {}
 		const mappedOptions: FindOneOptions<any> = { ...rest }
+
+		if (fields.length > 0) {
+			mappedOptions.projection = {
+				_id: 0,
+			}
+			for (const field of fields) {
+				mappedOptions.projection[field] = 1
+			}
+		}
 
 		if (sort) {
 			let mongoSort: Record<string, number> = {}

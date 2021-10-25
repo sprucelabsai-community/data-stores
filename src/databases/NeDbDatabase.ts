@@ -83,11 +83,9 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			(val: any) => val === null || val === NULL_PLACEHOLDER
 		)
 
-		// values = this.handlePlaceholders(
-		// 	values,
-		// 	undefined,
-		// 	(val: any) => val === undefined || val === UNDEFINED_PLACEHOLDER
-		// )
+		if (!_id) {
+			return values
+		}
 
 		return {
 			id: _id,
@@ -230,7 +228,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			const mapped = mongoUtil.queryOptionsToMongoFindOptions(options)
 
 			const q = this.prepQuery(query ?? {})
-			const cursor = col.find(q)
+			const cursor = col.find(q, mapped.projection)
 
 			if (mapped.sort) {
 				cursor.sort(mapped.sort)

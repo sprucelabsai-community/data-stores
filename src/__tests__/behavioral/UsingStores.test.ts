@@ -163,7 +163,7 @@ class TestStore extends AbstractStore<
 
 	protected async prepareRecord<IncludePrivateFields extends boolean>(
 		record: SchemaValues<typeof createRecordSchema>,
-		_options?: PrepareOptions<IncludePrivateFields>
+		_options?: PrepareOptions<IncludePrivateFields, typeof fullRecordSchema>
 	) {
 		const values: Record<string, any> = {
 			...record,
@@ -862,5 +862,38 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		})
 
 		assert.isEqualDeep(this.store.willUpdateValues, created)
+	}
+
+	@test()
+	protected static async canGetBackSelectedFields() {
+		await this.store.createOne({
+			requiredForUpdate: 'created',
+			requiredForCreate: 'created!',
+			privateField: 'private!',
+			phoneNumber: DEMO_PHONE_FORMATTED,
+		})
+
+		const match = await this.store.findOne(
+			{},
+			{ includeFields: ['requiredForUpdate'] }
+		)
+
+		assert.isEqualDeep(match, {
+			requiredForUpdate: 'created',
+		})
+
+		const matches = await this.store.find(
+			{},
+			{},
+			{
+				includeFields: ['phoneNumber', 'privateField'],
+				shouldIncludePrivateFields: true,
+			}
+		)
+
+		assert.isEqualDeep(matches[0], {
+			phoneNumber: DEMO_PHONE_FORMATTED,
+			privateField: 'private!',
+		})
 	}
 }
