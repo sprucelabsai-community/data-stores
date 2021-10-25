@@ -1,3 +1,10 @@
+# [6.2.0](https://github.com/sprucelabsai/data-stores/compare/v6.1.412...v6.2.0) (2021-10-25)
+
+
+### Features
+
+* include field support ([bb2b18e](https://github.com/sprucelabsai/data-stores/commit/bb2b18e))
+
 ## [6.1.412](https://github.com/sprucelabsai/data-stores/compare/v6.1.411...v6.1.412) (2021-10-24)
 
 ## [6.1.411](https://github.com/sprucelabsai/data-stores/compare/v6.1.410...v6.1.411) (2021-10-24)
