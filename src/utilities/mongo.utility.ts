@@ -45,7 +45,7 @@ const mongoUtil = {
 				_id: 0,
 			}
 			for (const field of fields) {
-				mappedOptions.projection[field] = 1
+				mappedOptions.projection[field === 'id' ? '_id' : field] = 1
 			}
 		}
 
