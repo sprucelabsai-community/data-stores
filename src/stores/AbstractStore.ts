@@ -105,10 +105,13 @@ export default abstract class AbstractStore<
 			return preparedRecord
 		}
 
+		const normalizedOptions = this.db.normalizePrepareOptions(options)
+
 		return normalizeSchemaValues(this.fullSchema, preparedRecord, {
-			...options,
-			fields: options.includeFields,
-			shouldIncludePrivateFields: options.shouldIncludePrivateFields === true,
+			...normalizedOptions,
+			fields: normalizedOptions.includeFields,
+			shouldIncludePrivateFields:
+				normalizedOptions.shouldIncludePrivateFields === true,
 			createEntityInstances: false as CreateEntityInstances,
 		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields>)
 	}

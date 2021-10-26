@@ -886,12 +886,13 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			{},
 			{},
 			{
-				includeFields: ['phoneNumber', 'privateField'],
+				includeFields: ['id', 'phoneNumber', 'privateField'],
 				shouldIncludePrivateFields: true,
 			}
 		)
 
 		assert.isEqualDeep(matches[0], {
+			id: matches[0].id,
 			phoneNumber: DEMO_PHONE_FORMATTED,
 			privateField: 'private!',
 		})

@@ -536,4 +536,15 @@ export default class MongoDatabase implements Database {
 			duplicateValues,
 		}
 	}
+
+	public normalizePrepareOptions<T extends Record<string, any>>(options: T): T {
+		if (options.includeFields) {
+			//@ts-ignore
+			options.includeFields = options.includeFields.map((f) =>
+				f === '_id' ? 'id' : f
+			)
+		}
+
+		return options
+	}
 }

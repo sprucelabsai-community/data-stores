@@ -13,6 +13,7 @@ export interface Database {
 	generateId(): string
 	connect(): Promise<void>
 	close(): Promise<void>
+	normalizePrepareOptions<T extends Record<string, any>>(options: T): T
 	createOne(
 		collection: string,
 		values: Record<string, any>

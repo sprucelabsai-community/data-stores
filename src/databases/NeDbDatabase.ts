@@ -514,4 +514,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			await this.dropIndex(collectionName, extra)
 		}
 	}
+
+	public normalizePrepareOptions<T extends Record<string, any>>(options: T): T {
+		return options
+	}
 }
