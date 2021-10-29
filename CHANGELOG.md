@@ -1,3 +1,10 @@
+# [6.3.0](https://github.com/sprucelabsai/data-stores/compare/v6.2.45...v6.3.0) (2021-10-29)
+
+
+### Features
+
+* memory database has delay to simulate over the wire request latency ([d9a6106](https://github.com/sprucelabsai/data-stores/commit/d9a6106))
+
 ## [6.2.45](https://github.com/sprucelabsai/data-stores/compare/v6.2.44...v6.2.45) (2021-10-29)
 
 ## [6.2.44](https://github.com/sprucelabsai/data-stores/compare/v6.2.43...v6.2.44) (2021-10-29)
