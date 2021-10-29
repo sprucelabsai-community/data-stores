@@ -1,3 +1,12 @@
+## [6.4.1](https://github.com/sprucelabsai/data-stores/compare/v6.4.0...v6.4.1) (2021-10-29)
+
+# [6.4.0](https://github.com/sprucelabsai/data-stores/compare/v6.3.2...v6.4.0) (2021-10-29)
+
+
+### Features
+
+* find and findOne return empty with invalid id (mongodb) ([4596906](https://github.com/sprucelabsai/data-stores/commit/4596906))
+
 ## [6.3.2](https://github.com/sprucelabsai/data-stores/compare/v6.3.1...v6.3.2) (2021-10-29)
 
 ## [6.3.1](https://github.com/sprucelabsai/data-stores/compare/v6.3.0...v6.3.1) (2021-10-29)
