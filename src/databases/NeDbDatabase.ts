@@ -1,3 +1,4 @@
+import dotenv from 'dotenv'
 import { differenceWith, isEqual, uniqBy } from 'lodash'
 import get from 'lodash/get'
 import isObject from 'lodash/isObject'
@@ -8,6 +9,7 @@ import { Database, UniqueIndex } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
+dotenv.config()
 
 const NULL_PLACEHOLDER = '_____NULL_____'
 const UNDEFINED_PLACEHOLDER = '_____UNDEFINED_____'
@@ -81,12 +83,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	}
 
 	private async randomDelay() {
-		await new Promise((resolve) =>
-			setTimeout(
-				resolve,
-				Math.round(Math.random() * NeDbDatabase.maxRandomDelayMs)
-			)
-		)
+		const delay = Math.round(Math.random() * NeDbDatabase.maxRandomDelayMs)
+		await new Promise((resolve) => setTimeout(resolve, delay))
 	}
 
 	public isConnected(): boolean {
