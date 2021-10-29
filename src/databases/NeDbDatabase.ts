@@ -13,6 +13,11 @@ const NULL_PLACEHOLDER = '_____NULL_____'
 const UNDEFINED_PLACEHOLDER = '_____UNDEFINED_____'
 
 export default class NeDbDatabase extends AbstractMutexer implements Database {
+	public static simulatedRequestDelayMs = parseInt(
+		`${process.env.MEMORY_DATABASE_DELAY_MS ?? 10}`,
+		10
+	)
+
 	private collections: {
 		[name: string]: Datastore
 	} = {}
@@ -22,13 +27,16 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return generateId()
 	}
 
-	public connect(): Promise<void> {
+	public async connect(): Promise<void> {
 		this._isConnected = true
+		await this.simulateOverTheWireTime()
+
 		return Promise.resolve()
 	}
 
-	public close(): Promise<void> {
+	public async close(): Promise<void> {
 		this._isConnected = false
+		await this.simulateOverTheWireTime()
 		return Promise.resolve()
 	}
 
@@ -68,6 +76,14 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		const col = this.loadCollection(collection)
 		//@ts-ignore
 		col.indexes._id.unique = shouldAutoGenerateIds
+
+		await this.simulateOverTheWireTime()
+	}
+
+	private async simulateOverTheWireTime() {
+		await new Promise((resolve) =>
+			setTimeout(resolve, NeDbDatabase.simulatedRequestDelayMs)
+		)
 	}
 
 	public isConnected(): boolean {
@@ -122,11 +138,12 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return withPlaceholders
 	}
 
-	public count(
+	public async count(
 		collection: string,
 		query?: Record<string, any>
 	): Promise<number> {
 		const col = this.loadCollection(collection)
+		await this.simulateOverTheWireTime()
 
 		return new Promise((resolve, reject) => {
 			col.count(this.prepQuery(query ?? {}), (err, count) => {
@@ -143,6 +160,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		collection: string,
 		values: Record<string, any>
 	): Promise<Record<string, any>> {
+		await this.simulateOverTheWireTime()
 		const all = await this.create(collection, [values])
 		return all[0]
 	}
@@ -154,6 +172,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		const mutexName = 'createMutex'
 
 		await this.lock(mutexName)
+
+		await this.simulateOverTheWireTime()
 
 		const col = this.loadCollection(collection)
 		const mapped = values
@@ -195,12 +215,14 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return c
 	}
 
-	public dropCollection(name: string): Promise<void> {
+	public async dropCollection(name: string): Promise<void> {
+		await this.simulateOverTheWireTime()
 		delete this.collections[name]
 		return Promise.resolve()
 	}
 
-	public dropDatabase(): Promise<void> {
+	public async dropDatabase(): Promise<void> {
+		await this.simulateOverTheWireTime()
 		this.collections = {}
 		return Promise.resolve()
 	}
@@ -218,11 +240,13 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return results[0]
 	}
 
-	public find(
+	public async find(
 		collection: string,
 		query?: Record<string, any>,
 		options?: QueryOptions
 	): Promise<Record<string, any>[]> {
+		await this.simulateOverTheWireTime()
+
 		return new Promise((resolve, reject) => {
 			const col = this.loadCollection(collection)
 			const mapped = mongoUtil.queryOptionsToMongoFindOptions(options)
@@ -280,6 +304,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		const mutexKey = 'updateMutex'
 		await this.lock(mutexKey)
 
+		await this.simulateOverTheWireTime()
+
 		try {
 			await this.assertPassesUniqueIndexes(collection, query, updates, action)
 		} catch (err) {
@@ -330,10 +356,12 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		)
 	}
 
-	public delete(
+	public async delete(
 		collection: string,
 		query: Record<string, any>
 	): Promise<number> {
+		await this.simulateOverTheWireTime()
+
 		return new Promise((resolve, reject) => {
 			const col = this.loadCollection(collection)
 			col.remove(this.prepQuery(query), { multi: true }, (err, numDeleted) => {
@@ -346,10 +374,12 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		})
 	}
 
-	public deleteOne(
+	public async deleteOne(
 		collection: string,
 		query: Record<string, any>
 	): Promise<number> {
+		await this.simulateOverTheWireTime()
+
 		return new Promise((resolve, reject) => {
 			const col = this.loadCollection(collection)
 
@@ -370,6 +400,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		action: string
 	) {
 		const col = this.loadCollection(collection)
+
+		await this.simulateOverTheWireTime()
 
 		if (col._uniqueIndexes) {
 			for (const fields of col._uniqueIndexes) {
@@ -401,12 +433,14 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 	public async getUniqueIndexes(collection: string) {
 		const col = this.loadCollection(collection)
-
+		await this.simulateOverTheWireTime()
 		return col._uniqueIndexes ?? []
 	}
 
 	public async dropIndex(collection: string, fields: string[]) {
 		const col = this.loadCollection(collection)
+
+		await this.simulateOverTheWireTime()
 
 		let found = false
 		const newIndexes = []
@@ -457,6 +491,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			col._uniqueIndexes = []
 		}
 
+		await this.simulateOverTheWireTime()
 		this.assertUniqueIndexDoesNotExist(col._uniqueIndexes, fields)
 
 		if (col._uniqueIndexes) {
