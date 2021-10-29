@@ -301,6 +301,46 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await this.shutdown(db)
 	}
 
+	@test('can find with valid id, empty with invalid id (mongo)', mongo)
+	@test('can find with valid id, empty with invalid id  (neDb)', neDb)
+	protected static async getEmptyResultFind(connect: Connect) {
+		const db = await connect()
+
+		const generatedId = db.generateId()
+
+		await db.createOne(this.collectionName, {
+			id: generatedId,
+			name: 'first',
+		})
+
+		const results = await db.find(this.collectionName, { id: generatedId })
+		assert.isLength(results, 1)
+		assert.isEqual(results[0].id, generatedId)
+
+		const results2 = await db.find(this.collectionName, { id: '111' })
+		assert.isLength(results2, 0)
+	}
+
+	@test('can findOne with valid id, empty with invalid id (mongo)', mongo)
+	@test('can findOne with valid id, empty with invalid id  (neDb)', neDb)
+	protected static async getEmptyResultsFindOne(connect: Connect) {
+		const db = await connect()
+
+		const generatedId = db.generateId()
+
+		await db.createOne(this.collectionName, {
+			id: generatedId,
+			name: 'first',
+		})
+
+		const results = await db.findOne(this.collectionName, { id: generatedId })
+		assert.isTruthy(results)
+		assert.isEqual(results.id, generatedId)
+
+		const results2 = await db.findOne(this.collectionName, { id: '111' })
+		assert.isFalsy(results2)
+	}
+
 	@test('can limit results (mongo)', mongo)
 	@test('can limit results (neDb)', neDb)
 	protected static async canLimitResults(connect: Connect) {

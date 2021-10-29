@@ -106,7 +106,13 @@ export default class MongoDatabase implements Database {
 		query?: Record<string, any>,
 		options?: QueryOptions
 	): Promise<Record<string, any> | null> {
-		const q = query ? this.toMongoIdAndNull(collection, query) : {}
+		let q
+
+		try {
+			q = this.toMongoIdAndNull(collection, query || {})
+		} catch (err) {
+			return null
+		}
 
 		const match = await this.assertDbWhileAttempingTo(
 			'found one record.',
@@ -125,7 +131,13 @@ export default class MongoDatabase implements Database {
 		query?: Record<string, any>,
 		options?: QueryOptions
 	): Promise<Record<string, any>[]> {
-		const q = this.toMongoIdAndNull(collection, query || {})
+		let q
+
+		try {
+			q = this.toMongoIdAndNull(collection, query || {})
+		} catch (err) {
+			return []
+		}
 
 		const matches = await this.assertDbWhileAttempingTo(
 			'find many records.',
