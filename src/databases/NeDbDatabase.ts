@@ -13,8 +13,8 @@ const NULL_PLACEHOLDER = '_____NULL_____'
 const UNDEFINED_PLACEHOLDER = '_____UNDEFINED_____'
 
 export default class NeDbDatabase extends AbstractMutexer implements Database {
-	public static simulatedRequestDelayMs = parseInt(
-		`${process.env.MEMORY_DATABASE_DELAY_MS ?? 10}`,
+	public static maxRandomDelayMs = parseInt(
+		`${process.env.MEMORY_DATABASE_MAX_RANDOM_DELAY_MS ?? 100}`,
 		10
 	)
 
@@ -29,14 +29,14 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 	public async connect(): Promise<void> {
 		this._isConnected = true
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		return Promise.resolve()
 	}
 
 	public async close(): Promise<void> {
+		await this.randomDelay()
 		this._isConnected = false
-		await this.simulateOverTheWireTime()
 		return Promise.resolve()
 	}
 
@@ -77,12 +77,15 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		//@ts-ignore
 		col.indexes._id.unique = shouldAutoGenerateIds
 
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 	}
 
-	private async simulateOverTheWireTime() {
+	private async randomDelay() {
 		await new Promise((resolve) =>
-			setTimeout(resolve, NeDbDatabase.simulatedRequestDelayMs)
+			setTimeout(
+				resolve,
+				Math.round(Math.random() * NeDbDatabase.maxRandomDelayMs)
+			)
 		)
 	}
 
@@ -143,7 +146,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		query?: Record<string, any>
 	): Promise<number> {
 		const col = this.loadCollection(collection)
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		return new Promise((resolve, reject) => {
 			col.count(this.prepQuery(query ?? {}), (err, count) => {
@@ -160,7 +163,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		collection: string,
 		values: Record<string, any>
 	): Promise<Record<string, any>> {
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 		const all = await this.create(collection, [values])
 		return all[0]
 	}
@@ -173,7 +176,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 		await this.lock(mutexName)
 
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		const col = this.loadCollection(collection)
 		const mapped = values
@@ -216,13 +219,13 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	}
 
 	public async dropCollection(name: string): Promise<void> {
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 		delete this.collections[name]
 		return Promise.resolve()
 	}
 
 	public async dropDatabase(): Promise<void> {
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 		this.collections = {}
 		return Promise.resolve()
 	}
@@ -245,7 +248,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		query?: Record<string, any>,
 		options?: QueryOptions
 	): Promise<Record<string, any>[]> {
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		return new Promise((resolve, reject) => {
 			const col = this.loadCollection(collection)
@@ -304,7 +307,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		const mutexKey = 'updateMutex'
 		await this.lock(mutexKey)
 
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		try {
 			await this.assertPassesUniqueIndexes(collection, query, updates, action)
@@ -360,7 +363,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		collection: string,
 		query: Record<string, any>
 	): Promise<number> {
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		return new Promise((resolve, reject) => {
 			const col = this.loadCollection(collection)
@@ -378,7 +381,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		collection: string,
 		query: Record<string, any>
 	): Promise<number> {
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		return new Promise((resolve, reject) => {
 			const col = this.loadCollection(collection)
@@ -401,7 +404,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	) {
 		const col = this.loadCollection(collection)
 
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		if (col._uniqueIndexes) {
 			for (const fields of col._uniqueIndexes) {
@@ -433,14 +436,14 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 	public async getUniqueIndexes(collection: string) {
 		const col = this.loadCollection(collection)
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 		return col._uniqueIndexes ?? []
 	}
 
 	public async dropIndex(collection: string, fields: string[]) {
 		const col = this.loadCollection(collection)
 
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 
 		let found = false
 		const newIndexes = []
@@ -491,7 +494,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			col._uniqueIndexes = []
 		}
 
-		await this.simulateOverTheWireTime()
+		await this.randomDelay()
 		this.assertUniqueIndexDoesNotExist(col._uniqueIndexes, fields)
 
 		if (col._uniqueIndexes) {
