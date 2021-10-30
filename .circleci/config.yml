@@ -85,6 +85,16 @@ jobs:
               cd ~
               echo $SSH_KEYS | base64 --decode | tar zxf - 
             fi
+      - run:
+          name: "npm cache"
+          command: |
+            if [[ -n "$NPM_ENV" ]]; then
+              HOSTIP=`/sbin/ip route|awk '/default/ { print $3 }'`
+              echo $HOSTIP npmcache.continuoustesting.ai | sudo tee -a /etc/hosts
+              npm config set registry http://npmcache.continuoustesting.ai:28080
+              npm config set @sprucelabs:registry https://registry.npmjs.org
+              npm config set strict-ssl false
+            fi
       - checkout
       - hub/install
       - run:
