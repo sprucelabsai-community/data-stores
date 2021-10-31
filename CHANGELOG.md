@@ -1,3 +1,10 @@
+# [7.0.0](https://github.com/sprucelabsai/data-stores/compare/v6.4.17...v7.0.0) (2021-10-31)
+
+
+### Breaking Changes
+
+* optionally enable slow queries ([2a2eb03](https://github.com/sprucelabsai/data-stores/commit/2a2eb03))
+
 ## [6.4.17](https://github.com/sprucelabsai/data-stores/compare/v6.4.16...v6.4.17) (2021-10-31)
 
 ## [6.4.16](https://github.com/sprucelabsai/data-stores/compare/v6.4.15...v6.4.16) (2021-10-31)
