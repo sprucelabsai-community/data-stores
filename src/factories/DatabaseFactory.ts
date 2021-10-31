@@ -19,7 +19,8 @@ export default class DatabaseFactory {
 			throw new SchemaError({
 				code: 'MISSING_PARAMETERS',
 				parameters: ['dbConnectionString'],
-				friendlyMessage: "DatabaseFactory can't connect to the database!",
+				friendlyMessage:
+					"DatabaseFactory can't connect to the database! Setting env.DB_CONNECTION_STRING may help!",
 			})
 		}
 
