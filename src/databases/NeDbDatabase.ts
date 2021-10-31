@@ -13,13 +13,14 @@ dotenv.config()
 
 const NULL_PLACEHOLDER = '_____NULL_____'
 const UNDEFINED_PLACEHOLDER = '_____UNDEFINED_____'
+const SHOULD_SIMULATE_SLOW_QUERIES =
+	process.env.SHOULD_SIMULATE_SLOW_QUERIES === 'true'
+const SLOW_QUERY_MAX_RANDOM_DELAY_MS = parseInt(
+	`${process.env.SLOW_QUERY_MAX_RANDOM_DELAY_MS ?? 100}`,
+	10
+)
 
 export default class NeDbDatabase extends AbstractMutexer implements Database {
-	public static maxRandomDelayMs = parseInt(
-		`${process.env.MEMORY_DATABASE_MAX_RANDOM_DELAY_MS ?? 100}`,
-		10
-	)
-
 	private collections: {
 		[name: string]: Datastore
 	} = {}
@@ -83,8 +84,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	}
 
 	private async randomDelay() {
-		const delay = Math.round(Math.random() * NeDbDatabase.maxRandomDelayMs)
-		await new Promise((resolve) => setTimeout(resolve, delay))
+		if (SHOULD_SIMULATE_SLOW_QUERIES) {
+			const delay = Math.round(Math.random() * SLOW_QUERY_MAX_RANDOM_DELAY_MS)
+			await new Promise((resolve) => setTimeout(resolve, delay))
+		}
 	}
 
 	public isConnected(): boolean {
