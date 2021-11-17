@@ -70,9 +70,9 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.278",
-    "@sprucelabs/schema": "^25.3.509",
-    "@sprucelabs/spruce-core-schemas": "^22.6.110",
-    "@sprucelabs/spruce-skill-utils": "^22.0.84",
+    "@sprucelabs/schema": "^25.3.511",
+    "@sprucelabs/spruce-core-schemas": "^22.6.111",
+    "@sprucelabs/spruce-skill-utils": "^22.0.85",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
@@ -100,7 +100,7 @@
     "ts-node": "^10.4.0",
     "tsc-watch": "^4.5.0",
     "tsconfig-paths": "^3.11.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.2"
   },
   "engines": {
     "node": ">=12",
