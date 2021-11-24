@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/sprucelabsai/data-stores/compare/v7.0.83...v7.1.0) (2021-11-24)
+
+
+### Features
+
+* you can limit to zero and get back zero rows, great for testing ([17a9dd9](https://github.com/sprucelabsai/data-stores/commit/17a9dd9))
+
 ## [7.0.83](https://github.com/sprucelabsai/data-stores/compare/v7.0.82...v7.0.83) (2021-11-24)
 
 ## [7.0.82](https://github.com/sprucelabsai/data-stores/compare/v7.0.81...v7.0.82) (2021-11-24)
