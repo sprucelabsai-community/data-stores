@@ -349,6 +349,34 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await this.shutdown(db)
 	}
 
+	@test('can limit to zero results (mongo)', mongo)
+	@test('can limit to zero results (neDb)', neDb)
+	protected static async canLimitToZeroResults(connect: Connect) {
+		const db = await connect()
+
+		await db.createOne(this.collectionName, {
+			id: db.generateId(),
+			name: 'first',
+		})
+		await db.createOne(this.collectionName, {
+			id: db.generateId(),
+			name: 'second',
+		})
+		await db.createOne(this.collectionName, {
+			id: db.generateId(),
+			name: 'third',
+		})
+
+		const results = await db.find(this.collectionName, undefined, {
+			limit: 0,
+			sort: [{ field: 'name', direction: 'asc' }],
+		})
+
+		assert.isLength(results, 0)
+
+		await this.shutdown(db)
+	}
+
 	@test('can delete record (mongo)', mongo)
 	@test('can delete record (neDb)', neDb)
 	protected static async canDeleteRecord(connect: Connect) {

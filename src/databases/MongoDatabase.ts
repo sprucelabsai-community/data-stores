@@ -139,6 +139,10 @@ export default class MongoDatabase implements Database {
 			return []
 		}
 
+		if (options?.limit === 0) {
+			return []
+		}
+
 		const matches = await this.assertDbWhileAttempingTo(
 			'find many records.',
 			collection

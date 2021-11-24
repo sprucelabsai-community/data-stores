@@ -251,6 +251,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	): Promise<Record<string, any>[]> {
 		await this.randomDelay()
 
+		if (options?.limit === 0) {
+			return []
+		}
+
 		return new Promise((resolve, reject) => {
 			const col = this.loadCollection(collection)
 			const mapped = mongoUtil.queryOptionsToMongoFindOptions(options)
@@ -262,7 +266,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				cursor.sort(mapped.sort)
 			}
 
-			if (mapped.limit) {
+			if (typeof mapped.limit === 'number') {
 				cursor.limit(mapped.limit)
 			}
 
