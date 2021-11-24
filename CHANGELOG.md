@@ -1,3 +1,5 @@
+## [7.1.1](https://github.com/sprucelabsai/data-stores/compare/v7.1.0...v7.1.1) (2021-11-24)
+
 # [7.1.0](https://github.com/sprucelabsai/data-stores/compare/v7.0.83...v7.1.0) (2021-11-24)
 
 
