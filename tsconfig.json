@@ -4,6 +4,7 @@
 		"esModuleInterop": true,
 		"target": "ES2017",
 		"lib": [
+			"DOM",
 			"es2017",
 			"ES2020"
 		],
@@ -20,7 +21,6 @@
 		"outDir": "build",
 		"baseUrl": "src",
 		"experimentalDecorators": true,
-		"skipLibCheck": true,
 		"paths": {
 			"#spruce/*": [
 				".spruce/*"
