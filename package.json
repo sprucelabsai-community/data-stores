@@ -69,10 +69,10 @@
     "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
-    "@sprucelabs/error": "^5.0.315",
-    "@sprucelabs/schema": "^25.4.60",
-    "@sprucelabs/spruce-core-schemas": "^22.6.238",
-    "@sprucelabs/spruce-skill-utils": "^22.1.42",
+    "@sprucelabs/error": "^5.0.316",
+    "@sprucelabs/schema": "^25.4.62",
+    "@sprucelabs/spruce-core-schemas": "^22.6.240",
+    "@sprucelabs/spruce-skill-utils": "^22.1.44",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
@@ -85,7 +85,7 @@
     "@sprucelabs/resolve-path-aliases": "^1.0.236",
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^7.7.247",
-    "@sprucelabs/test-utils": "^3.0.298",
+    "@sprucelabs/test-utils": "^3.0.299",
     "@types/lodash": "^4.14.177",
     "@types/nedb": "^1.8.12",
     "@types/node": "^16.11.11",
