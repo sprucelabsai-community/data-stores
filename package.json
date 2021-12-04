@@ -96,7 +96,7 @@
     "eslint-config-spruce": "^10.10.16",
     "jest": "^27.4.3",
     "jest-circus": "^27.4.2",
-    "prettier": "^2.5.0",
+    "prettier": "^2.5.1",
     "ts-node": "^10.4.0",
     "tsc-watch": "^4.5.0",
     "tsconfig-paths": "^3.12.0",
