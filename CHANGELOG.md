@@ -1,3 +1,10 @@
+# [7.2.0](https://github.com/sprucelabsai/data-stores/compare/v7.1.52...v7.2.0) (2021-12-05)
+
+
+### Features
+
+* Stores can be loaded from a combined file of all stores vs using globby if it exists ([48808c6](https://github.com/sprucelabsai/data-stores/commit/48808c6))
+
 ## [7.1.52](https://github.com/sprucelabsai/data-stores/compare/v7.1.51...v7.1.52) (2021-12-05)
 
 ## [7.1.51](https://github.com/sprucelabsai/data-stores/compare/v7.1.50...v7.1.51) (2021-12-04)
