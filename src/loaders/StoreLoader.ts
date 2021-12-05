@@ -1,7 +1,11 @@
 import pathUtil from 'path'
 import AbstractSpruceError from '@sprucelabs/error'
 import { SchemaError } from '@sprucelabs/schema'
-import { diskUtil, namesUtil } from '@sprucelabs/spruce-skill-utils'
+import {
+	diskUtil,
+	HASH_SPRUCE_DIR_NAME,
+	namesUtil,
+} from '@sprucelabs/spruce-skill-utils'
 import globby from 'globby'
 import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
 import SpruceError from '../errors/SpruceError'
@@ -9,6 +13,11 @@ import StoreFactory from '../factories/StoreFactory'
 import { Database } from '../types/database.types'
 
 type StoreLoadError = AbstractSpruceError<FailedToLoadStoreErrorOptions>
+
+interface Store {
+	namePascal: string
+	Class: any
+}
 
 export default class StoreLoader {
 	private activeDir: string
@@ -85,32 +94,56 @@ export default class StoreLoader {
 	}
 
 	private async loadStoreClassesWithErrors(): Promise<{
-		stores: { namePascal: string; Class: any }[]
+		stores: Store[]
 		errors: StoreLoadError[]
 	}> {
-		const pattern = diskUtil.resolvePath(this.activeDir, '**', '*.store.[j|t]s')
+		const combinedFile = diskUtil.resolveFile(
+			this.activeDir,
+			HASH_SPRUCE_DIR_NAME,
+			'stores',
+			'stores'
+		)
 
-		const matches = await globby(pattern)
+		if (!combinedFile) {
+			return { stores: [], errors: [] }
+		}
+
 		const errors: StoreLoadError[] = []
+		const Stores: Store[] = []
 
-		const Stores: any[] = []
-
-		for (const match of matches) {
-			const namePascal =
-				match.split(pathUtil.sep).pop()?.split('.store').shift() ?? 'MISSING'
-
-			try {
-				const Class = require(match).default
-				Stores.push({ namePascal, Class })
-			} catch (err: any) {
-				const spruceError = new SpruceError({
-					code: 'FAILED_TO_LOAD_STORE',
-					originalError: err,
-					name: namePascal,
+		try {
+			const map = require(combinedFile).default
+			Object.keys(map).forEach((k) => {
+				Stores.push({
+					Class: map[k],
+					namePascal: k,
 				})
+			})
+		} catch {
+			const pattern = diskUtil.resolvePath(
+				this.activeDir,
+				'**',
+				'*.store.[j|t]s'
+			)
+			const matches = await globby(pattern)
 
-				//@ts-ignore
-				errors.push(spruceError)
+			for (const match of matches) {
+				const namePascal =
+					match.split(pathUtil.sep).pop()?.split('.store').shift() ?? 'MISSING'
+
+				try {
+					const Class = require(match).default
+					Stores.push({ namePascal, Class })
+				} catch (err: any) {
+					const spruceError = new SpruceError({
+						code: 'FAILED_TO_LOAD_STORE',
+						originalError: err,
+						name: namePascal,
+					})
+
+					//@ts-ignore
+					errors.push(spruceError)
+				}
 			}
 		}
 
