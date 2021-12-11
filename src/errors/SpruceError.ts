@@ -59,6 +59,8 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
 					message += `Valid names are:\n\n`
 					message += options.validNames.join('\n')
 				}
+
+				message += `\n\nIf you are testing, you may need to run 'spruce create.store' to fix this.`
 				break
 
 			case 'FAILED_TO_LOAD_STORE':
