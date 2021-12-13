@@ -8,6 +8,9 @@
     "skill"
   ],
   "writer": {
+    "skipped": [
+      "tsconfig.json"
+    ],
     "skips": [
       "src/index.ts"
     ]
