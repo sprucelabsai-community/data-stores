@@ -88,7 +88,7 @@
     "@sprucelabs/test-utils": "^3.0.324",
     "@types/lodash": "^4.14.178",
     "@types/nedb": "^1.8.12",
-    "@types/node": "^16.11.12",
+    "@types/node": "^16.11.13",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^6.4.0",
     "dotenv": "^10.0.0",
