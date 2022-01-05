@@ -40,6 +40,7 @@ node_modules/
 *.rej
 
 build/
+esm/
 
 tmp/
 
