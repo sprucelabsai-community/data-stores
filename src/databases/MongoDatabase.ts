@@ -440,12 +440,14 @@ export default class MongoDatabase implements Database {
 
 		const values = mongoUtil.prepareUpdates(updates)
 
-		const count = this.count(collection, q)
-		await this.assertDbWhileAttempingTo('update many records.', collection)
+		const { modifiedCount } = await this.assertDbWhileAttempingTo(
+			'update many records.',
+			collection
+		)
 			.collection(collection)
 			.updateMany(q, values)
 
-		return count
+		return modifiedCount
 	}
 
 	public async updateOne(
