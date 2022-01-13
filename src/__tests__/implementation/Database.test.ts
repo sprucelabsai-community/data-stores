@@ -1,5 +1,6 @@
 import { test, assert } from '@sprucelabs/test'
 import { errorAssertUtil } from '@sprucelabs/test-utils'
+import { generateId } from '../..'
 import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import NeDbDatabase from '../../databases/NeDbDatabase'
 import SpruceError from '../../errors/SpruceError'
@@ -199,6 +200,30 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		assert.isEqual(updated.name, 'updated')
 
 		await this.shutdown(db)
+	}
+
+	@test('can find with $or', mongo)
+	protected static async canQueryWithOr(connect: Connect) {
+		const db = await connect()
+
+		const id1 = generateId()
+		const id2 = generateId()
+
+		await db.create(this.collectionName, [
+			{
+				isPublic: true,
+				id: id1,
+			},
+			{
+				id: id2,
+			},
+		])
+
+		const matches = await db.find(this.collectionName, {
+			$or: [{ isPublic: true }, { id: id2 }],
+		})
+
+		assert.isLength(matches, 2)
 	}
 
 	@test('update many (mongo)', mongo)

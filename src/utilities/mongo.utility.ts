@@ -17,10 +17,12 @@ const mongoUtil = {
 			})
 		}
 
-		const { id, ...rest } = q
+		const { id, $or, ...rest } = q
 		let normalizedValues = rest
 
-		if (typeof id === 'string') {
+		if (Array.isArray($or)) {
+			normalizedValues.$or = $or.map((o) => this.mapQuery(o, options))
+		} else if (typeof id === 'string') {
 			normalizedValues._id =
 				opts.shouldTransformToObjectId === false ? id : new ObjectId(id)
 		} else if (id) {
@@ -69,7 +71,7 @@ function mapNestedIdValues(
 	options: { shouldTransformToObjectId?: boolean } = {}
 ) {
 	const mapped: Record<string, any> = {}
-
+	debugger
 	Object.keys(id).forEach((key) => {
 		if (['$gt', '$lt', '$gte', '$lte'].indexOf(key) > -1) {
 			mapped[key] =

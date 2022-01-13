@@ -47,6 +47,38 @@ export default class MappingMongoIdsTest extends AbstractSpruceTest {
 			_id: { $or: [{ $nor: [id1] }, id2] },
 		}
 	)
+	@test(
+		'maps query with $or top level ',
+		{
+			$or: [
+				{
+					id: id1.toHexString(),
+				},
+				{
+					isPublic: true,
+				},
+			],
+		},
+		{
+			$or: [{ _id: id1 }, { isPublic: true }],
+		}
+	)
+	@test(
+		'maps query with $or top level and $in lower level',
+		{
+			$or: [
+				{
+					id: { $in: [id1.toHexString(), id2.toHexString()] },
+				},
+				{
+					isPublic: true,
+				},
+			],
+		},
+		{
+			$or: [{ _id: { $in: [id1, id2] } }, { isPublic: true }],
+		}
+	)
 	@test(`Doesn't bomb with undefined`, undefined, {})
 	protected static async mapsAsExpected(
 		query: Record<string, any>,
