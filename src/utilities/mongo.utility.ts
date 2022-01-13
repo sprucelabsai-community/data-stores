@@ -71,7 +71,6 @@ function mapNestedIdValues(
 	options: { shouldTransformToObjectId?: boolean } = {}
 ) {
 	const mapped: Record<string, any> = {}
-	debugger
 	Object.keys(id).forEach((key) => {
 		if (['$gt', '$lt', '$gte', '$lte'].indexOf(key) > -1) {
 			mapped[key] =
