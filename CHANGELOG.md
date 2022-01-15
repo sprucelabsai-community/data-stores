@@ -1,3 +1,5 @@
+## [7.2.186](https://github.com/sprucelabsai/data-stores/compare/v7.2.185...v7.2.186) (2022-01-15)
+
 ## [7.2.185](https://github.com/sprucelabsai/data-stores/compare/v7.2.184...v7.2.185) (2022-01-15)
 
 ## [7.2.184](https://github.com/sprucelabsai/data-stores/compare/v7.2.183...v7.2.184) (2022-01-15)
