@@ -76,9 +76,9 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.373",
-    "@sprucelabs/schema": "^25.6.58",
-    "@sprucelabs/spruce-core-schemas": "^22.8.23",
-    "@sprucelabs/spruce-skill-utils": "^22.2.183",
+    "@sprucelabs/schema": "^25.6.59",
+    "@sprucelabs/spruce-core-schemas": "^22.8.24",
+    "@sprucelabs/spruce-skill-utils": "^22.2.184",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
@@ -87,7 +87,7 @@
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "^1.0.324",
     "@sprucelabs/jest-json-reporter": "^6.0.307",
-    "@sprucelabs/jest-sheets-reporter": "^1.2.306",
+    "@sprucelabs/jest-sheets-reporter": "^1.2.308",
     "@sprucelabs/resolve-path-aliases": "^1.0.252",
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^7.7.273",
