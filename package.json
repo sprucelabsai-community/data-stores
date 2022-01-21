@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.381",
-    "@sprucelabs/schema": "^25.6.85",
+    "@sprucelabs/schema": "^25.6.86",
     "@sprucelabs/spruce-core-schemas": "^22.8.53",
     "@sprucelabs/spruce-skill-utils": "^23.0.13",
     "globby": "^11.0.4",
