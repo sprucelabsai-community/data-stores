@@ -20,7 +20,7 @@ export default class DatabaseFixture {
 	public constructor(options?: DatabaseFixtureOptions) {
 		const mixed = { ...DatabaseFixture.defaultOptions, ...options }
 
-		this.shouldUseInMemoryDatabase = mixed?.shouldUseInMemoryDatabase ?? true
+		this.shouldUseInMemoryDatabase = this.determineInMemoryDatabase(mixed)
 
 		if (this.shouldUseInMemoryDatabase) {
 			const unexpected: string[] = []
@@ -37,6 +37,7 @@ export default class DatabaseFixture {
 				throw new SchemaError({
 					code: 'UNEXPECTED_PARAMETERS',
 					parameters: unexpected,
+					friendlyMessage: `You can't pass database connection settings if you are using an in memory database.`,
 				})
 			}
 		} else {
@@ -60,6 +61,22 @@ export default class DatabaseFixture {
 			this.dbName = mixed?.dbName
 			this.dbConnectionString = mixed?.dbConnectionString
 		}
+	}
+
+	private determineInMemoryDatabase(mixed: {
+		shouldUseInMemoryDatabase?: boolean | undefined
+		dbConnectionString?: string | undefined
+		dbName?: string | undefined
+	}) {
+		if (typeof mixed?.shouldUseInMemoryDatabase === 'boolean') {
+			return mixed?.shouldUseInMemoryDatabase
+		}
+
+		if (mixed?.dbConnectionString && mixed.dbConnectionString !== 'memory://') {
+			return false
+		}
+
+		return true
 	}
 
 	public async connectToDatabase(): Promise<Database> {

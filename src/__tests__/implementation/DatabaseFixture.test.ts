@@ -75,4 +75,12 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 
 		assert.isFalsy(match)
 	}
+
+	@test()
+	protected static async passingConnectionStringThatStartsWithoutMemory() {
+		new DatabaseFixture({
+			dbConnectionString: process.env.TEST_DB_CONNECTION_STRING,
+			dbName: 'testing',
+		})
+	}
 }

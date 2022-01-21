@@ -11,8 +11,8 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 		{
 			dbConnectionString: 'waka',
 		},
-		'UNEXPECTED_PARAMETERS',
-		['dbConnectionString']
+		'MISSING_PARAMETERS',
+		['dbName']
 	)
 	@test(
 		'throws unexpected with in memory and just passing dbName',
@@ -25,6 +25,7 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 	@test(
 		'throws unexpected with in memory and both passing dbString and ',
 		{
+			shouldUseInMemoryDatabase: true,
 			dbName: 'waka',
 			dbConnectionString: 'taco',
 		},
