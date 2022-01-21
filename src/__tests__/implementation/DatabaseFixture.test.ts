@@ -1,6 +1,6 @@
 import { test, assert } from '@sprucelabs/test'
 import { MongoClient } from 'mongodb'
-import { MongoDatabase, NeDbDatabase } from '../..'
+import { MongoDatabase } from '../..'
 import DatabaseFactory from '../../factories/DatabaseFactory'
 import DatabaseFixture from '../../fixtures/DatabaseFixture'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
@@ -24,8 +24,8 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 		assert.isFunction(DatabaseFixture.setDefaultConnectOptions)
 	}
 
-	@test('connects and resets with beforeEach', 'beforeEach')
-	@test('connects and resets with afterEach', 'afterEach')
+	@test('connects and remembers default settings with beforeEach', 'beforeEach')
+	@test('connects and remembers default settings with afterEach', 'afterEach')
 	protected static async usesDefaultConnectOptions(
 		method: 'beforeEach' | 'afterEach'
 	) {
@@ -45,7 +45,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 		const fixture2 = new DatabaseFixture()
 
 		const db2 = await fixture2.connectToDatabase()
-		assert.isTrue(db2 instanceof NeDbDatabase)
+		assert.isTrue(db2 instanceof MongoDatabase)
 	}
 
 	@test()

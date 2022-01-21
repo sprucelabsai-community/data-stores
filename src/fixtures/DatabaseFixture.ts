@@ -134,7 +134,6 @@ export default class DatabaseFixture {
 		}
 
 		this.activeDatabases = []
-		this.defaultOptions = undefined
 
 		DatabaseFactory.reset()
 	}
