@@ -87,7 +87,7 @@
     "@sprucelabs/resolve-path-aliases": "^1.0.256",
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^7.7.277",
-    "@sprucelabs/test-utils": "^3.0.393",
+    "@sprucelabs/test-utils": "^3.0.395",
     "@types/lodash": "^4.14.178",
     "@types/nedb": "^1.8.12",
     "@types/node": "17.0.5",
