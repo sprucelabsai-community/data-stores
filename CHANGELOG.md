@@ -1,3 +1,10 @@
+# [8.0.0](https://github.com/sprucelabsai/data-stores/compare/v7.2.265...v8.0.0) (2022-01-31)
+
+
+### Breaking Changes
+
+* upgrade ([03a3c7a](https://github.com/sprucelabsai/data-stores/commit/03a3c7a))
+
 ## [7.2.265](https://github.com/sprucelabsai/data-stores/compare/v7.2.264...v7.2.265) (2022-01-29)
 
 ## [7.2.264](https://github.com/sprucelabsai/data-stores/compare/v7.2.263...v7.2.264) (2022-01-29)
