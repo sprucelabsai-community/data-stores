@@ -3,7 +3,7 @@ import {
 	dropPrivateFields,
 	makeFieldsOptional,
 	SchemaValues,
-	validationErrorAssertUtil,
+	validationErrorAssert,
 } from '@sprucelabs/schema'
 import { test, assert } from '@sprucelabs/test'
 import { errorAssertUtil } from '@sprucelabs/test-utils'
@@ -187,7 +187,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			() => this.store.createOne({})
 		)) as SpruceError
 
-		validationErrorAssertUtil.assertError(err, {
+		validationErrorAssert.assertError(err, {
 			missing: ['requiredForCreate', 'phoneNumber'],
 		})
 	}
@@ -286,7 +286,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			() => this.store.updateOne({ id: created.id }, {})
 		)) as SpruceError
 
-		validationErrorAssertUtil.assertError(err, {
+		validationErrorAssert.assertError(err, {
 			missing: ['requiredForUpdate'],
 		})
 	}
@@ -671,7 +671,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			})
 		)) as SpruceError
 
-		validationErrorAssertUtil.assertError(err, {
+		validationErrorAssert.assertError(err, {
 			unexpected: ['cheesyBurrito'],
 		})
 	}
