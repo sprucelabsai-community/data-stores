@@ -34,7 +34,7 @@ export default class MongoDatabase implements Database {
 				serverSelectionTimeoutMS: 5000,
 			})
 		} catch (err: any) {
-			if (err.message.includes('Invalid connection')) {
+			if (err.message.includes('Invalid scheme')) {
 				throw new SpruceError({ code: 'INVALID_DB_CONNECTION_STRING' })
 			}
 			throw err
