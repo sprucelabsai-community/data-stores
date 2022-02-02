@@ -30,7 +30,6 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 		method: 'beforeEach' | 'afterEach'
 	) {
 		DatabaseFixture.setDefaultConnectOptions({
-			shouldUseInMemoryDatabase: false,
 			dbConnectionString: process.env.TEST_DB_CONNECTION_STRING,
 			dbName: DatabaseFixture.generateDbName(),
 		})
@@ -55,7 +54,6 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 			process.env.TEST_DB_CONNECTION_STRING ?? '**missing**'
 
 		DatabaseFixture.setDefaultConnectOptions({
-			shouldUseInMemoryDatabase: false,
 			dbConnectionString: connectionString,
 			dbName,
 		})

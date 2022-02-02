@@ -14,41 +14,6 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 		'MISSING_PARAMETERS',
 		['dbName']
 	)
-	@test(
-		'throws unexpected with in memory and just passing dbName',
-		{
-			dbName: 'waka',
-		},
-		'UNEXPECTED_PARAMETERS',
-		['dbName']
-	)
-	@test(
-		'throws unexpected with in memory and both passing dbString and ',
-		{
-			shouldUseInMemoryDatabase: true,
-			dbName: 'waka',
-			dbConnectionString: 'taco',
-		},
-		'UNEXPECTED_PARAMETERS',
-		['dbName', 'dbConnectionString']
-	)
-	@test(
-		'throws missing when not in memory and missing dbString and dbConnectionString',
-		{
-			shouldUseInMemoryDatabase: false,
-		},
-		'MISSING_PARAMETERS',
-		['dbName', 'dbConnectionString']
-	)
-	@test(
-		'throws missing when not in memory and missing dbString and dbConnectionString',
-		{
-			shouldUseInMemoryDatabase: false,
-			dbName: 'taco',
-		},
-		'MISSING_PARAMETERS',
-		['dbConnectionString']
-	)
 	protected static async cantPassDbValuesIfUsingInMemoryDatabase(
 		options: DatabaseFixtureOptions,
 		code: string,
@@ -74,7 +39,6 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 		})
 
 		const fixture = new DatabaseFixture({
-			shouldUseInMemoryDatabase: false,
 			dbConnectionString: 'memory://',
 			dbName: 'skill2',
 		})
@@ -93,7 +57,6 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 		})
 
 		const fixture = new DatabaseFixture({
-			shouldUseInMemoryDatabase: false,
 			dbConnectionString: 'memory://',
 			dbName: 'skill',
 		})

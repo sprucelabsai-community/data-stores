@@ -27,7 +27,6 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
 
 	protected static async DatabaseFixture(options?: DatabaseFixtureOptions) {
 		const d = new DatabaseFixture({
-			shouldUseInMemoryDatabase: this.shouldUseInMemoryDatabase,
 			...options,
 		})
 
