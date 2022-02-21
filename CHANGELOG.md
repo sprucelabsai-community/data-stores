@@ -1,3 +1,10 @@
+# [8.1.0](https://github.com/sprucelabsai/data-stores/compare/v8.0.126...v8.1.0) (2022-02-21)
+
+
+### Features
+
+* Now can syncIndexes to add normal indexes ([9957e09](https://github.com/sprucelabsai/data-stores/commit/9957e09))
+
 ## [8.0.126](https://github.com/sprucelabsai/data-stores/compare/v8.0.125...v8.0.126) (2022-02-21)
 
 ## [8.0.125](https://github.com/sprucelabsai/data-stores/compare/v8.0.124...v8.0.125) (2022-02-21)
