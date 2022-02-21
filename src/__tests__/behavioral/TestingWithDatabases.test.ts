@@ -1,5 +1,5 @@
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
-import { errorAssertUtil } from '@sprucelabs/test-utils'
+import { errorAssert } from '@sprucelabs/test-utils'
 import DatabaseFactory from '../../factories/DatabaseFactory'
 import DatabaseFixture, {
 	DatabaseFixtureOptions,
@@ -26,7 +26,7 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 				})
 		)
 
-		errorAssertUtil.assertError(err, code, {
+		errorAssert.assertError(err, code, {
 			parameters: params,
 		})
 	}

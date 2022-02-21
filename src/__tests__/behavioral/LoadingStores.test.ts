@@ -1,6 +1,6 @@
 import { diskUtil } from '@sprucelabs/spruce-skill-utils'
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
-import { errorAssertUtil } from '@sprucelabs/test-utils'
+import { errorAssert } from '@sprucelabs/test-utils'
 import StoreFactory from '../../factories/StoreFactory'
 import DatabaseFixture from '../../fixtures/DatabaseFixture'
 import StoreLoader from '../../loaders/StoreLoader'
@@ -65,7 +65,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		const loader = await this.Loader(this.resolvePath(this.cwd))
 		const err = await assert.doesThrowAsync(() => loader.loadStores())
 
-		errorAssertUtil.assertError(err, 'FAILED_TO_LOAD_STORES')
+		errorAssert.assertError(err, 'FAILED_TO_LOAD_STORES')
 		//@ts-ignore
 		assert.isLength(err.options.errors, 1)
 	}
@@ -101,7 +101,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 	@test()
 	protected static async instanceThrowsIfCwdAndDbNotSet() {
 		const err = await assert.doesThrowAsync(() => StoreLoader.getInstance())
-		errorAssertUtil.assertError(err, 'MISSING_PARAMETERS', {
+		errorAssert.assertError(err, 'MISSING_PARAMETERS', {
 			parameters: ['cwd', 'database'],
 		})
 	}

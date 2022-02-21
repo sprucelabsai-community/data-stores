@@ -1,5 +1,5 @@
 import { test, assert } from '@sprucelabs/test'
-import { errorAssertUtil } from '@sprucelabs/test-utils'
+import { errorAssert } from '@sprucelabs/test-utils'
 import StoreFactory from '../../factories/StoreFactory'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import TestStore from '../support/TestStore'
@@ -28,7 +28,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 			//@ts-ignore
 			this.factory.Store('not-found')
 		)
-		errorAssertUtil.assertError(err, 'INVALID_STORE_NAME', {
+		errorAssert.assertError(err, 'INVALID_STORE_NAME', {
 			suppliedName: 'not-found',
 			validNames: ['test'],
 		})
@@ -40,7 +40,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 		this.factory.setStore('test', BadTestStore)
 
 		const err = await assert.doesThrowAsync(() => this.factory.Store('test'))
-		errorAssertUtil.assertError(err, 'INVALID_STORE')
+		errorAssert.assertError(err, 'INVALID_STORE')
 		assert.doesInclude(err.message, 'factory')
 	}
 

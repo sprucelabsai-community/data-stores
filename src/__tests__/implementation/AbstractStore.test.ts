@@ -6,7 +6,7 @@ import {
 	validationErrorAssert,
 } from '@sprucelabs/schema'
 import { test, assert } from '@sprucelabs/test'
-import { errorAssertUtil } from '@sprucelabs/test-utils'
+import { errorAssert } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../constants'
 import SpruceError from '../../errors/SpruceError'
 import AbstractStore from '../../stores/AbstractStore'
@@ -269,7 +269,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			() => this.store.updateOne({ id }, {})
 		)) as SpruceError
 
-		errorAssertUtil.assertError(err, 'RECORD_NOT_FOUND', {
+		errorAssert.assertError(err, 'RECORD_NOT_FOUND', {
 			query: { id },
 		})
 	}
@@ -637,7 +637,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			this.store.scramble('taco')
 		)) as SpruceError
 
-		errorAssertUtil.assertError(err, 'SCRAMBLE_NOT_CONFIGURED')
+		errorAssert.assertError(err, 'SCRAMBLE_NOT_CONFIGURED')
 	}
 
 	@test()

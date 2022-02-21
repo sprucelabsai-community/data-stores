@@ -1,5 +1,5 @@
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
-import { errorAssertUtil } from '@sprucelabs/test-utils'
+import { errorAssert } from '@sprucelabs/test-utils'
 import { ObjectId } from 'mongodb'
 import SpruceError from '../../errors/SpruceError'
 import mongoUtil from '../../utilities/mongo.utility'
@@ -96,6 +96,6 @@ export default class MappingMongoIdsTest extends AbstractSpruceTest {
 	)
 	protected static async throwsAsExpected(query: any, expectedCode: string) {
 		const err = assert.doesThrow(() => mongoUtil.mapQuery(query)) as SpruceError
-		errorAssertUtil.assertError(err, expectedCode)
+		errorAssert.assertError(err, expectedCode)
 	}
 }

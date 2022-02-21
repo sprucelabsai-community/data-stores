@@ -211,7 +211,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 	private loadCollection(
 		collection: string
-	): Datastore<any> & { _uniqueIndexes?: string[][] } {
+	): Datastore<any> & { _uniqueIndexes?: string[][]; _indexes?: string[][] } {
 		if (!this.collections[collection]) {
 			this.collections[collection] = new Datastore()
 		}
@@ -445,13 +445,23 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return col._uniqueIndexes ?? []
 	}
 
+	public async getIndexes(collection: string, shouldIncludeUnique = false) {
+		const col = this.loadCollection(collection)
+		await this.randomDelay()
+		if (shouldIncludeUnique) {
+			const uniqIndexes = col._uniqueIndexes ?? []
+			return uniqIndexes.concat(col._indexes ?? [])
+		}
+		return col._indexes ?? []
+	}
+
 	public async dropIndex(collection: string, fields: string[]) {
 		const col = this.loadCollection(collection)
 
 		await this.randomDelay()
 
 		let found = false
-		const newIndexes = []
+		let newIndexes = []
 
 		for (const uniq of col._uniqueIndexes ?? []) {
 			if (!isEqual(uniq, fields)) {
@@ -461,28 +471,40 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			}
 		}
 
-		if (!found) {
-			throw new SpruceError({ code: 'INDEX_NOT_FOUND', missingIndex: fields })
-		}
+		if (found) {
+			col._uniqueIndexes = newIndexes
+			return
+		} else {
+			newIndexes = []
 
-		col._uniqueIndexes = newIndexes
+			for (const index of col._indexes ?? []) {
+				if (!isEqual(index, fields)) {
+					newIndexes.push(index)
+				} else {
+					found = true
+				}
+			}
+
+			if (found) {
+				col._indexes = newIndexes
+				return
+			}
+		}
+		throw new SpruceError({ code: 'INDEX_NOT_FOUND', missingIndex: fields })
 	}
 
-	private assertUniqueIndexDoesNotExist(
+	private assertIndexDoesNotExist(
 		currentIndexes: UniqueIndex[],
 		fields: string[]
 	) {
-		if (this.doesUniqueIndexExist(currentIndexes, fields)) {
+		if (this.doesIndexExist(currentIndexes, fields)) {
 			throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
 		}
 	}
 
-	private doesUniqueIndexExist(
-		currentIndexes: UniqueIndex[],
-		fields: string[]
-	) {
-		for (const uniq of currentIndexes ?? []) {
-			if (isEqual(uniq, fields)) {
+	private doesIndexExist(currentIndexes: UniqueIndex[], fields: string[]) {
+		for (const index of currentIndexes ?? []) {
+			if (isEqual(index, fields)) {
 				return true
 			}
 		}
@@ -500,7 +522,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		}
 
 		await this.randomDelay()
-		this.assertUniqueIndexDoesNotExist(col._uniqueIndexes, fields)
+		this.assertIndexDoesNotExist(col._uniqueIndexes, fields)
 
 		if (col._uniqueIndexes) {
 			const tempUniqueIndexes = [...col._uniqueIndexes]
@@ -535,6 +557,21 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		col._uniqueIndexes.push(fields)
 	}
 
+	public async createIndex(
+		collection: string,
+		fields: string[]
+	): Promise<void> {
+		const col = this.loadCollection(collection)
+		if (!col._indexes) {
+			col._indexes = []
+		}
+
+		await this.randomDelay()
+		this.assertIndexDoesNotExist(col._indexes, fields)
+
+		col._indexes.push(fields)
+	}
+
 	public async syncUniqueIndexes(
 		collectionName: string,
 		indexes: string[][]
@@ -543,9 +580,32 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
 
 		for (const index of indexes) {
-			if (!this.doesUniqueIndexExist(currentIndexes, index)) {
+			if (!this.doesIndexExist(currentIndexes, index)) {
 				try {
 					await this.createUniqueIndex(collectionName, index)
+				} catch (err: any) {
+					if (err.options?.code !== 'INDEX_EXISTS') {
+						throw err
+					}
+				}
+			}
+		}
+		for (const extra of extraIndexes) {
+			await this.dropIndex(collectionName, extra)
+		}
+	}
+
+	public async syncIndexes(
+		collectionName: string,
+		indexes: string[][]
+	): Promise<void> {
+		const currentIndexes = await this.getIndexes(collectionName)
+		const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
+
+		for (const index of indexes) {
+			if (!this.doesIndexExist(currentIndexes, index)) {
+				try {
+					await this.createIndex(collectionName, index)
 				} catch (err: any) {
 					if (err.options?.code !== 'INDEX_EXISTS') {
 						throw err
