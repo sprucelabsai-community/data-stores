@@ -1,3 +1,10 @@
+# [9.0.0](https://github.com/sprucelabsai/data-stores/compare/v8.1.25...v9.0.0) (2022-02-24)
+
+
+### Breaking Changes
+
+* **auto-upgrade:** upgraded packages [upgrade-all] ([a598275](https://github.com/sprucelabsai/data-stores/commit/a598275))
+
 ## [8.1.25](https://github.com/sprucelabsai/data-stores/compare/v8.1.24...v8.1.25) (2022-02-24)
 
 ## [8.1.24](https://github.com/sprucelabsai/data-stores/compare/v8.1.23...v8.1.24) (2022-02-24)
