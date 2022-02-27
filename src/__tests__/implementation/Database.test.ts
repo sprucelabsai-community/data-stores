@@ -1481,7 +1481,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 
 	@test('can find by id with $in (mongo)', mongo)
 	@test('can find by id with $in (neDb)', neDb)
-	protected static async canFindWith$in(connect: Connect) {
+	protected static async canFindWithIn(connect: Connect) {
 		const db = await connect()
 
 		const record1 = await db.createOne(this.collectionName, {
@@ -1503,6 +1503,34 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		const results = await db.find(this.collectionName, query)
 
 		assert.isLength(results, 3)
+
+		await this.shutdown(db)
+	}
+
+	@test('can find by id with $ne (mongo)', mongo)
+	@test('can find by id with $ne (neDb)', neDb)
+	protected static async canFindWithNe(connect: Connect) {
+		const db = await connect()
+
+		const record1 = await db.createOne(this.collectionName, {
+			foo: 'bar',
+			hello: 'world',
+		})
+
+		await db.createOne(this.collectionName, {
+			foo: 'bar2',
+			hello: 'world',
+		})
+
+		await db.createOne(this.collectionName, {
+			foo: 'bar3',
+			hello: 'planet',
+		})
+
+		const query = { id: { $ne: record1.id } }
+		const results = await db.find(this.collectionName, query)
+
+		assert.isLength(results, 2)
 
 		await this.shutdown(db)
 	}

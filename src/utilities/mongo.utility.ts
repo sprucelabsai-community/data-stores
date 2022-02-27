@@ -72,7 +72,7 @@ function mapNestedIdValues(
 ) {
 	const mapped: Record<string, any> = {}
 	Object.keys(id).forEach((key) => {
-		if (['$gt', '$lt', '$gte', '$lte'].indexOf(key) > -1) {
+		if (['$gt', '$lt', '$gte', '$lte', '$ne'].indexOf(key) > -1) {
 			mapped[key] =
 				options.shouldTransformToObjectId === false
 					? id[key]
