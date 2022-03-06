@@ -72,9 +72,9 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.411",
-    "@sprucelabs/schema": "^27.1.4",
-    "@sprucelabs/spruce-core-schemas": "^25.0.20",
-    "@sprucelabs/spruce-skill-utils": "^25.0.15",
+    "@sprucelabs/schema": "^27.1.5",
+    "@sprucelabs/spruce-core-schemas": "^25.0.21",
+    "@sprucelabs/spruce-skill-utils": "^25.0.16",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
@@ -99,7 +99,7 @@
     "jest": "^27.5.1",
     "jest-circus": "^27.5.1",
     "prettier": "^2.5.1",
-    "ts-node": "^10.6.0",
+    "ts-node": "^10.7.0",
     "tsc-watch": "^4.6.0",
     "tsconfig-paths": "^3.13.0",
     "typescript": "^4.6.2"
