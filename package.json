@@ -71,10 +71,10 @@
     "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
-    "@sprucelabs/error": "^5.0.424",
-    "@sprucelabs/schema": "^27.1.26",
-    "@sprucelabs/spruce-core-schemas": "^25.0.45",
-    "@sprucelabs/spruce-skill-utils": "^25.0.39",
+    "@sprucelabs/error": "^5.0.425",
+    "@sprucelabs/schema": "^27.1.27",
+    "@sprucelabs/spruce-core-schemas": "^25.0.46",
+    "@sprucelabs/spruce-skill-utils": "^25.0.40",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
@@ -86,7 +86,7 @@
     "@sprucelabs/jest-sheets-reporter": "^1.3.27",
     "@sprucelabs/resolve-path-aliases": "^1.1.13",
     "@sprucelabs/semantic-release": "^4.0.8",
-    "@sprucelabs/test": "^7.7.291",
+    "@sprucelabs/test": "^7.7.292",
     "@sprucelabs/test-utils": "^3.0.501",
     "@types/lodash": "^4.14.180",
     "@types/nedb": "^1.8.12",
@@ -101,7 +101,7 @@
     "prettier": "^2.6.0",
     "ts-node": "^10.7.0",
     "tsc-watch": "^4.6.2",
-    "tsconfig-paths": "^3.14.0",
+    "tsconfig-paths": "^3.14.1",
     "typescript": "^4.6.2"
   },
   "engines": {
