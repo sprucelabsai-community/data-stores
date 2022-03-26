@@ -1,3 +1,5 @@
+## [9.0.59](https://github.com/sprucelabsai/data-stores/compare/v9.0.58...v9.0.59) (2022-03-26)
+
 ## [9.0.58](https://github.com/sprucelabsai/data-stores/compare/v9.0.57...v9.0.58) (2022-03-26)
 
 ## [9.0.57](https://github.com/sprucelabsai/data-stores/compare/v9.0.56...v9.0.57) (2022-03-25)
