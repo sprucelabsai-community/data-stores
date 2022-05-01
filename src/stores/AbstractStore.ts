@@ -20,6 +20,18 @@ import { QueryBuilder, QueryOptions } from '../types/query.types'
 import { PrepareOptions, PrepareResults } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
 
+type Response<
+	FullSchema extends Schema,
+	CreateEntityInstances extends boolean,
+	IncludePrivateFields extends boolean,
+	PF extends SchemaPublicFieldNames<FullSchema>,
+	F extends SchemaFieldNames<FullSchema>
+> = IsDynamicSchema<FullSchema> extends true
+	? DynamicSchemaAllValues<FullSchema, CreateEntityInstances>
+	: IncludePrivateFields extends false
+	? Pick<SchemaPublicValues<FullSchema, CreateEntityInstances>, PF>
+	: Pick<SchemaAllValues<FullSchema, CreateEntityInstances>, F>
+
 export default abstract class AbstractStore<
 	FullSchema extends Schema,
 	CreateSchema extends Schema = FullSchema,
@@ -65,7 +77,7 @@ export default abstract class AbstractStore<
 
 	protected willScramble?(
 		values: Partial<DatabaseRecord> & { _isScrambled: true }
-	): Promise<any>
+	): Promise<Partial<DatabaseRecord>>
 
 	protected constructor(db: Database, collectionName?: string) {
 		super()
@@ -89,11 +101,7 @@ export default abstract class AbstractStore<
 		record: any,
 		options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
 	): Promise<
-		IsDynamicSchema<FullSchema> extends true
-			? DynamicSchemaAllValues<FullSchema, CreateEntityInstances>
-			: IncludePrivateFields extends false
-			? Pick<SchemaPublicValues<FullSchema, CreateEntityInstances>, PF>
-			: Pick<SchemaAllValues<FullSchema, CreateEntityInstances>, F>
+		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
 		const preparedRecord = this.prepareRecord
 			? await this.prepareRecord(record, options)
@@ -114,12 +122,16 @@ export default abstract class AbstractStore<
 	}
 
 	public async create<
-		CreateEntityInstances extends boolean,
-		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+		IncludePrivateFields extends boolean = true,
+		CreateEntityInstances extends boolean = false,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
+		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
 	>(
 		values: CreateRecord[],
 		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
-	) {
+	): Promise<
+		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>[]
+	> {
 		try {
 			//@ts-ignore
 			values.forEach((v) => validateSchemaValues(this.createSchema, v))
@@ -149,7 +161,7 @@ export default abstract class AbstractStore<
 				records.map(async (record) =>
 					this.prepareAndNormalizeRecord(record, options)
 				)
-			)
+			) as any
 		} catch (err: any) {
 			const coded = errorUtil.transformToSpruceErrors(
 				err,
@@ -258,13 +270,17 @@ export default abstract class AbstractStore<
 	}
 
 	public async upsertOne<
-		CreateEntityInstances extends boolean,
-		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+		IncludePrivateFields extends boolean = true,
+		CreateEntityInstances extends boolean = false,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
+		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
 	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord & CreateRecord & { id?: string },
-		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
-	) {
+		options?: PrepareOptions<IncludePrivateFields, FullSchema, F>
+	): Promise<
+		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
+	> {
 		const mutexKey = 'upsertOne'
 
 		await this.lock(mutexKey)
@@ -313,9 +329,7 @@ export default abstract class AbstractStore<
 		updates: UpdateRecord,
 		options?: PrepareOptions<IncludePrivateFields, FullSchema, F>
 	): Promise<
-		IncludePrivateFields extends false
-			? Pick<SchemaPublicValues<FullSchema, CreateEntityInstances>, PF>
-			: Pick<SchemaAllValues<FullSchema, CreateEntityInstances>, F>
+		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
 		const notFoundHandler = async (): Promise<FullRecord> => {
 			throw new SpruceError({
@@ -336,14 +350,18 @@ export default abstract class AbstractStore<
 	}
 
 	private async findOneAndUpdate<
-		CreateEntityInstances extends boolean,
-		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+		IncludePrivateFields extends boolean = true,
+		CreateEntityInstances extends boolean = false,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
+		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
 	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord,
 		notFoundHandler: () => Promise<FullRecord>,
-		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
-	) {
+		options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
+	): Promise<
+		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
+	> {
 		try {
 			const isScrambled = this.isScrambled(updates)
 
@@ -420,7 +438,7 @@ export default abstract class AbstractStore<
 		return !!preparedRecord._isScrambled
 	}
 
-	private async generateScrambledRecord(): Promise<Record<string, any>> {
+	private async generateScrambledRecord(): Promise<Partial<DatabaseRecord>> {
 		if (!this.scrambleFields) {
 			throw new SpruceError({ code: 'SCRAMBLE_NOT_CONFIGURED' })
 		}
@@ -442,11 +460,11 @@ export default abstract class AbstractStore<
 		return cleanedValues
 	}
 
-	public async deleteOne(query: QueryBuilder<QueryRecord>) {
+	public async deleteOne(query: QueryBuilder<QueryRecord>): Promise<number> {
 		return await this.db.deleteOne(this.collectionName, query)
 	}
 
-	public async delete(query: QueryBuilder<QueryRecord>) {
+	public async delete(query: QueryBuilder<QueryRecord>): Promise<number> {
 		return await this.db.delete(this.collectionName, query)
 	}
 }
