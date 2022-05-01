@@ -4,7 +4,7 @@ orbs:
 jobs:
   test:
     docker:
-      - image: circleci/node:16.8
+      - image: cimg/node:16.14
       - image: circleci/mongo:4.4.0
     working_directory: /mnt/ramdisk
     steps:
@@ -20,7 +20,7 @@ jobs:
       - spruce/merge_auto_upgrade
   npm_publish:
     docker:
-      - image: circleci/node:16.8
+      - image: cimg/node:16.14
     working_directory: /mnt/ramdisk
     steps:
       - add_ssh_keys:
@@ -32,7 +32,7 @@ jobs:
       - spruce/install_deps_build_dist_release
   upgrade:
     docker:
-      - image: circleci/node:16.8
+      - image: cimg/node:16.14
     working_directory: /mnt/ramdisk
     steps:
       - spruce/check_for_autoupgrade_dns
@@ -69,4 +69,4 @@ workflows:
           filters:
             branches:
               only:
-                - neverRunOnlyForCron
+                - never_run_only_for_cron
