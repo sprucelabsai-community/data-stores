@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "9.0.115",
+  "version": "9.0.125",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -71,23 +71,23 @@
     "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
-    "@sprucelabs/error": "^5.0.448",
-    "@sprucelabs/schema": "^27.1.65",
-    "@sprucelabs/spruce-core-schemas": "^25.0.104",
-    "@sprucelabs/spruce-skill-utils": "^25.0.104",
+    "@sprucelabs/error": "^5.0.450",
+    "@sprucelabs/schema": "^27.1.69",
+    "@sprucelabs/spruce-core-schemas": "^25.0.110",
+    "@sprucelabs/spruce-skill-utils": "^25.1.4",
     "globby": "^11.0.4",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^1.0.456",
-    "@sprucelabs/jest-json-reporter": "^6.0.370",
-    "@sprucelabs/jest-sheets-reporter": "^1.3.42",
-    "@sprucelabs/resolve-path-aliases": "^1.1.35",
+    "@sprucelabs/esm-postbuild": "^1.0.460",
+    "@sprucelabs/jest-json-reporter": "^6.0.373",
+    "@sprucelabs/jest-sheets-reporter": "^1.3.43",
+    "@sprucelabs/resolve-path-aliases": "^1.1.37",
     "@sprucelabs/semantic-release": "^4.0.8",
-    "@sprucelabs/test": "^7.7.309",
-    "@sprucelabs/test-utils": "^3.0.535",
+    "@sprucelabs/test": "^7.7.311",
+    "@sprucelabs/test-utils": "^3.0.538",
     "@types/lodash": "^4.14.182",
     "@types/nedb": "^1.8.12",
     "@types/node": "17.0.5",
@@ -101,7 +101,7 @@
     "prettier": "^2.6.2",
     "ts-node": "^10.7.0",
     "tsc-watch": "^5.0.3",
-    "tsconfig-paths": "^3.14.1",
+    "tsconfig-paths": "^4.0.0",
     "typescript": "^4.6.4"
   },
   "engines": {
