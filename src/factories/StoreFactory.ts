@@ -31,7 +31,7 @@ export default class StoreFactory {
 					code: 'INVALID_STORE',
 					friendlyMessage: `You have to have ${namesUtil.toPascal(
 						name
-					)}.Store(options: StoreOptions) factory method on your store that returns \`new this(options)\`.`,
+					)}.Store(options: UniversalStoreOptions) factory method on your store that returns \`new this(...)\`.`,
 				})
 			}
 			const instance = await Store.Store({
