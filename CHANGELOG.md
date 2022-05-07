@@ -1,3 +1,10 @@
+# [11.0.0](https://github.com/sprucelabsai/data-stores/compare/v10.0.2...v11.0.0) (2022-05-07)
+
+
+### Breaking Changes
+
+* **auto-upgrade:** upgraded packages [upgrade-all] ([48f5c97](https://github.com/sprucelabsai/data-stores/commit/48f5c97))
+
 ## [10.0.2](https://github.com/sprucelabsai/data-stores/compare/v10.0.1...v10.0.2) (2022-05-07)
 
 ## [10.0.1](https://github.com/sprucelabsai/data-stores/compare/v10.0.0...v10.0.1) (2022-05-06)
