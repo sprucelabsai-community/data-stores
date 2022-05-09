@@ -1,5 +1,6 @@
 import { assertOptions } from '@sprucelabs/schema'
-import { QueryOptions } from '../../../types/query.types'
+import clone from 'just-clone'
+import { QueryOptions } from './types/query.types'
 
 export interface CursorQueryOptions extends Omit<QueryOptions, 'skip'> {
 	limit: number
@@ -38,20 +39,21 @@ export default class CursorPager {
 		let cursorQuery: Record<string, any> | undefined
 		let newest: string | undefined
 
-		if (previous) {
-			prepped.skip = 2
-		}
-
-		if (next) {
+		if (next || previous) {
 			cursorQuery = {}
 			const { sort } = prepped
-
-			const cursor = this.parseCursor(next)
-			const compare = sort[0].direction === 'asc' ? '$gt' : '$lt'
+			const cursor = this.parseCursor((next ?? previous)!)
+			let compare = sort[0].direction === 'asc' ? '$gt' : '$lt'
 
 			if (cursor.last.length > 1) {
-				const inverse = compare === '$lt' ? '$gte' : '$lte'
+				let inverse = compare === '$lt' ? '$gte' : '$lte'
 				newest = cursor.newest
+				let sameNameCompare = '$lt'
+
+				if (previous) {
+					sameNameCompare = '$gt'
+					inverse = compare
+				}
 
 				cursorQuery = {
 					$or: [
@@ -60,7 +62,7 @@ export default class CursorPager {
 						},
 						{
 							[sort[0].field]: cursor.last[0],
-							id: { $lt: cursor.id },
+							id: { [sameNameCompare]: cursor.id },
 						},
 						{
 							[sort[0].field]: { [inverse]: cursor.last[0] },
@@ -80,23 +82,54 @@ export default class CursorPager {
 			prepped
 		)
 
-		let newNext: string | undefined
+		let newNextCursor: string | undefined
 
-		if (records.length > options.limit) {
+		const hasExtra = records.length > options.limit
+		if (hasExtra) {
 			records.pop()
-			const extra = records[records.length - 1]
-			newNext = this.encodeCursor({
-				id: extra.id,
+		}
+
+		if (previous) {
+			records.reverse()
+		}
+
+		if (previous || hasExtra) {
+			const record = records[records.length - 1]
+
+			newNextCursor = this.encodeCursor({
+				id: record.id,
 				newest: this.trackNewest(records, newest),
-				last: prepped.sort.map((s) => extra[s.field] ?? null),
+				last: this.getSortFieldValuesFromRecord(prepped, record),
+			})
+		}
+
+		let newPreviousCursor: string | undefined
+
+		if (next || previous) {
+			const record = records[0]
+			newPreviousCursor = this.encodeCursor({
+				id: record.id,
+				newest: this.trackNewest(records, newest),
+				last: this.getSortFieldValuesFromRecord(prepped, record),
 			})
 		}
 
 		return {
 			records,
-			next: newNext ?? null,
-			previous: next ? '234' : null,
+			next: newNextCursor ?? null,
+			previous: newPreviousCursor ?? null,
 		}
+	}
+
+	private static getSortFieldValuesFromRecord(
+		prepped: {
+			limit: number
+			sort: { field: string; direction: 'asc' | 'desc' }[]
+			includeFields?: string[] | undefined
+		},
+		record: any
+	): string[] {
+		return prepped.sort.map((s) => record[s.field] ?? null)
 	}
 
 	private static trackNewest(records: any, newest: string | undefined): string {
@@ -114,17 +147,22 @@ export default class CursorPager {
 		return JSON.stringify(cursor)
 	}
 
-	public static prepareQueryOptions<O extends QueryOptions & { limit: number }>(
-		options: O
-	): O & { sort: NonNullable<O['sort']> } {
-		assertOptions(options, ['limit'])
-		const sort = [...(options.sort ?? [])]
+	public static prepareQueryOptions<
+		O extends CursorQueryOptions & { limit: number }
+	>(options: O): O & { sort: NonNullable<O['sort']> } {
+		const { previous, sort = [] } = clone(assertOptions(options, ['limit']))
 
 		if (!sort.find((p) => p.field === 'id')) {
 			sort.push({
 				field: 'id',
 				direction: 'desc',
 			})
+		}
+
+		if (previous) {
+			for (const s of sort) {
+				s.direction = s.direction === 'asc' ? 'desc' : 'asc'
+			}
 		}
 
 		return {

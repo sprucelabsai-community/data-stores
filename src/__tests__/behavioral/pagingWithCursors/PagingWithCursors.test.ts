@@ -1,9 +1,9 @@
 import { test, assert } from '@sprucelabs/test'
 import { errorAssert } from '@sprucelabs/test-utils'
+import CursorPager, { CursorQueryOptions } from '../../../CursorPager'
 import { QueryOptions } from '../../../types/query.types'
 import AbstractStoreTest from '../usingStores/support/AbstractStoreTest'
 import { SpyRecord } from '../usingStores/support/SpyStore'
-import CursorPager, { CursorQueryOptions } from './CursorPager'
 
 export default class PagingWithCursorsTest extends AbstractStoreTest {
 	private static spyRecordCount = 0
@@ -191,14 +191,14 @@ export default class PagingWithCursorsTest extends AbstractStoreTest {
 
 		await this.createRecordsNamed(names)
 
-		const { next } = await this.assertResultsEqual(options, ['6', '5'])
+		const { next } = await this.assertFindResultsEqual(options, ['6', '5'])
 
-		const { next: next2 } = await this.assertResultsEqual(
+		const { next: next2 } = await this.assertFindResultsEqual(
 			{ ...options, next },
 			['4', '3']
 		)
 
-		await this.assertResultsEqual({ ...options, next: next2 }, ['2', '1'])
+		await this.assertFindResultsEqual({ ...options, next: next2 }, ['2', '1'])
 	}
 
 	@test()
@@ -240,20 +240,144 @@ export default class PagingWithCursorsTest extends AbstractStoreTest {
 
 	@test()
 	protected static async canGoToPreviousPage() {
-		await this.createRecordsNamed(['0', '1', '2', '3', '4', '5'])
-
-		const { next } = await this.assert2ResultsEqual({}, ['5', '4'])
-		const { next: next2 } = await this.assert2ResultsEqual({ next }, ['3', '2'])
-		const { previous } = await this.assert2ResultsEqual({ next: next2 }, [
+		await this.createRecordsNamed([
+			'10',
+			'9',
+			'8',
+			'7',
+			'6',
+			'5',
+			'4',
+			'3',
+			'2',
 			'1',
-			'0',
 		])
 
-		const { previous: previous2 } = await this.assert2ResultsEqual(
-			{ previous },
-			['3', '2']
+		await this.assertExpectedResultsPagingForwardAndBackwards(
+			['1', '2'],
+			['3', '4'],
+			['5', '6'],
+			['7', '8'],
+			['5', '6'],
+			['3', '4']
 		)
-		await this.assert2ResultsEqual({ previous: previous2 }, ['5', '4'])
+	}
+
+	@test()
+	protected static async canGoToPreviousSortingByNonIdField() {
+		await this.createRecordsNamed(['9', '8', '7', '6', '5', '4', '3', '2', '1'])
+
+		const options = this.generateSortByFirstNameLimit2('desc')
+		await this.assertExpectedResultsPagingForwardAndBackwards(
+			['9', '8'],
+			['7', '6'],
+			['5', '4'],
+			['3', '2'],
+			['5', '4'],
+			['7', '6'],
+			options
+		)
+	}
+
+	@test()
+	protected static async canGoToPreviousSortingByNonIdFieldAsc() {
+		await this.createRecordsNamed(['9', '8', '7', '6', '5', '4', '3', '2', '1'])
+
+		const options = this.generateSortByFirstNameLimit2('asc')
+		await this.assertExpectedResultsPagingForwardAndBackwards(
+			['1', '2'],
+			['3', '4'],
+			['5', '6'],
+			['7', '8'],
+			['5', '6'],
+			['3', '4'],
+			options
+		)
+	}
+
+	@test()
+	protected static async canPageBackwordsWithSameName() {
+		const all = await this.createRecordsNamed(['ryan', 'ryan', 'ryan', 'ryan'])
+		const options = this.generateSortByFirstNameLimit2('asc')
+
+		const firstExpected = [all[3].id!, all[2].id!]
+		const { next } = await this.assertFindResultsEqual(
+			{ ...options },
+			firstExpected,
+			'id'
+		)
+
+		const { previous } = await this.assertFindResultsEqual(
+			{
+				...options,
+				next,
+			},
+			[all[1].id!, all[0].id!],
+			'id'
+		)
+
+		await this.assertFindResultsEqual(
+			{
+				...options,
+				previous,
+			},
+			firstExpected,
+			'id'
+		)
+	}
+
+	@test()
+	protected static async canUseNextAfterForwardAndBackwards() {
+		await this.createRecordsNamed(['9', '8', '7', '6', '5', '4', '3', '2', '1'])
+
+		const options = { limit: 2 }
+		const { next } = await this.assertFindResultsEqual(options, ['1', '2'])
+		const { previous } = await this.assertFindResultsEqual(
+			{ ...options, next },
+			['3', '4']
+		)
+
+		const { next: next2 } = await this.assertFindResultsEqual(
+			{ ...options, previous },
+			['1', '2']
+		)
+
+		await this.assertFindResultsEqual({ ...options, next: next2 }, ['3', '4'])
+	}
+
+	private static async assertExpectedResultsPagingForwardAndBackwards(
+		expectedFirst: string[],
+		expectedNext1: string[],
+		expectedNext2: string[],
+		expectedNext3: string[],
+		expectedPrevious1: string[],
+		expectedPrevious2: string[],
+		options: Partial<CursorQueryOptions> = {}
+	) {
+		const { next } = await this.assert2ResultsEqual(options, expectedFirst)
+		const { next: next2 } = await this.assert2ResultsEqual(
+			{ ...options, next },
+			expectedNext1
+		)
+		const { next: next3 } = await this.assert2ResultsEqual(
+			{ ...options, next: next2 },
+			expectedNext2
+		)
+
+		const { previous } = await this.assert2ResultsEqual(
+			{ ...options, next: next3 },
+			expectedNext3
+		)
+
+		const { previous: previous2 } = await this.assert2ResultsEqual(
+			{ ...options, previous },
+			expectedPrevious1
+		)
+
+		await this.assert2ResultsEqual(
+			{ ...options, previous: previous2 },
+			expectedPrevious2
+		)
 	}
 
 	private static async assert2PagesReturnExpectedResults(
@@ -309,7 +433,7 @@ export default class PagingWithCursorsTest extends AbstractStoreTest {
 		options: Partial<CursorQueryOptions>,
 		expected: string[]
 	) {
-		return await this.assertResultsEqual(
+		return await this.assertFindResultsEqual(
 			{
 				limit: 2,
 				...options,
@@ -319,21 +443,24 @@ export default class PagingWithCursorsTest extends AbstractStoreTest {
 	}
 
 	private static async createRecordsNamed(names: string[]) {
-		await Promise.all(names.map((n) => this.createRecord({ firstName: n })))
+		return await Promise.all(
+			names.map((n) => this.createRecord({ firstName: n }))
+		)
 	}
 
-	private static async assertResultsEqual(
+	private static async assertFindResultsEqual(
 		options: Partial<CursorQueryOptions>,
-		expected: string[]
+		expected: string[],
+		fieldToCheck: 'firstName' | 'id' = 'firstName'
 	) {
 		const { next, records, previous } = await this.findWithOptions({
 			...options,
 		})
 		assert.isEqualDeep(
-			records.map((r) => r.firstName),
+			records.map((r) => r[fieldToCheck]),
 			expected
 		)
-		return { next, previous }
+		return { next, previous, records }
 	}
 
 	private static assertRecordsAreDifferent(
@@ -369,7 +496,10 @@ export default class PagingWithCursorsTest extends AbstractStoreTest {
 	private static assertLastFindOptionsEqual(
 		options: Partial<CursorQueryOptions>
 	) {
-		assert.isEqualDeep(this.lastFindArgs[1], this.prepare(options))
+		assert.isEqualDeep(
+			this.mixinDefaultOptions(this.lastFindArgs[1]),
+			this.prepare(options)
+		)
 	}
 
 	private static async find(
@@ -426,17 +556,22 @@ export default class PagingWithCursorsTest extends AbstractStoreTest {
 		options: QueryOptions,
 		expected: QueryOptions
 	) {
-		assert.isEqualDeep(this.prepare(options), {
-			limit: 11,
-			...expected,
-		})
+		assert.isEqualDeep(
+			this.prepare(options),
+			this.mixinDefaultOptions({
+				limit: 11,
+				...expected,
+			})
+		)
 	}
 
 	private static prepare(options: QueryOptions) {
-		return CursorPager.prepareQueryOptions({
-			limit: 10,
-			...options,
-		})
+		return CursorPager.prepareQueryOptions(
+			this.mixinDefaultOptions({
+				limit: 10,
+				...options,
+			})
+		)
 	}
 
 	private static get lastFindArgs() {
