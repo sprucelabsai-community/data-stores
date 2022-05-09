@@ -1,3 +1,10 @@
+# [11.1.0](https://github.com/sprucelabsai/data-stores/compare/v11.0.2...v11.1.0) (2022-05-09)
+
+
+### Features
+
+* CursorPager for cursor based paging ([2e613eb](https://github.com/sprucelabsai/data-stores/commit/2e613eb))
+
 ## [11.0.2](https://github.com/sprucelabsai/data-stores/compare/v11.0.1...v11.0.2) (2022-05-09)
 
 ## [11.0.1](https://github.com/sprucelabsai/data-stores/compare/v11.0.0...v11.0.1) (2022-05-07)
