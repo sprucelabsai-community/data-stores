@@ -13,7 +13,7 @@
 			"type": "node",
 			"request": "launch",
 			"name": "test.file",
-			"runtimeExecutable": "${env:NVM_BIN}/node",
+			"runtimeExecutable": "node",
 			"runtimeArgs": [
 				"--inspect-brk",
 				"--trace-warnings",
@@ -30,7 +30,7 @@
 			"type": "node",
 			"request": "launch",
 			"name": "test.all",
-			"runtimeExecutable": "${env:NVM_BIN}/node",
+			"runtimeExecutable": "node",
 			"runtimeArgs": [
 				"--inspect-brk",
 				"--trace-warnings",

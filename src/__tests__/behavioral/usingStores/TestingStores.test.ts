@@ -1,5 +1,5 @@
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
-import StoreFixture from '../../fixtures/StoreFixture'
+import StoreFixture from '../../../fixtures/StoreFixture'
 
 export default class TestingStoresTest extends AbstractSpruceTest {
 	@test()
@@ -19,6 +19,7 @@ export default class TestingStoresTest extends AbstractSpruceTest {
 	protected static getActiveDir() {
 		this.cwd = this.resolvePath(
 			__dirname,
+			'..',
 			'..',
 			'/testDirsAndFiles/',
 			'one-good-store-skill',

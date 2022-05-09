@@ -17,8 +17,12 @@ const mongoUtil = {
 			})
 		}
 
-		const { id, $or, ...rest } = q
+		const { id, $or, $and, ...rest } = q
 		let normalizedValues = rest
+
+		if (Array.isArray($and)) {
+			normalizedValues.$and = $and.map((a) => this.mapQuery(a, options))
+		}
 
 		if (Array.isArray($or)) {
 			normalizedValues.$or = $or.map((o) => this.mapQuery(o, options))

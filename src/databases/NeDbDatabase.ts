@@ -270,6 +270,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				cursor.limit(mapped.limit)
 			}
 
+			if (mapped.skip) {
+				cursor.skip(mapped.skip)
+			}
+
 			cursor.exec((err: any, results: any[]) => {
 				if (err) {
 					reject(err)

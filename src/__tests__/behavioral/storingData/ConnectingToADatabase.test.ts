@@ -1,5 +1,5 @@
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
-import DatabaseFactory from '../../factories/DatabaseFactory'
+import DatabaseFactory from '../../../factories/DatabaseFactory'
 
 export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
 	@test()

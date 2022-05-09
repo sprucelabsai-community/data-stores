@@ -1,9 +1,9 @@
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
 import { errorAssert } from '@sprucelabs/test-utils'
-import DatabaseFactory from '../../factories/DatabaseFactory'
+import DatabaseFactory from '../../../factories/DatabaseFactory'
 import DatabaseFixture, {
 	DatabaseFixtureOptions,
-} from '../../fixtures/DatabaseFixture'
+} from '../../../fixtures/DatabaseFixture'
 
 export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 	@test(

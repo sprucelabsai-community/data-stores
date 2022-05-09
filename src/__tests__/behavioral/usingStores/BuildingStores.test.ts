@@ -1,8 +1,8 @@
 import { test, assert } from '@sprucelabs/test'
 import { errorAssert } from '@sprucelabs/test-utils'
-import StoreFactory from '../../factories/StoreFactory'
-import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
-import TestStore from '../support/TestStore'
+import StoreFactory from '../../../factories/StoreFactory'
+import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
+import SpyStore from './support/SpyStore'
 
 class BadTestStore {}
 
@@ -11,7 +11,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 	protected static async beforeEach() {
 		await this.connectToDatabase()
 		this.factory = StoreFactory.Factory(this.db)
-		TestStore.initializeCount = 0
+		SpyStore.initializeCount = 0
 		StoreFactory.reset()
 	}
 
@@ -22,7 +22,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 	@test()
 	protected static async throwsWithBadStore() {
-		this.factory.setStore('test', TestStore)
+		this.factory.setStore('spy', SpyStore)
 
 		const err = await assert.doesThrowAsync(() =>
 			//@ts-ignore
@@ -30,39 +30,39 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 		)
 		errorAssert.assertError(err, 'INVALID_STORE_NAME', {
 			suppliedName: 'not-found',
-			validNames: ['test'],
+			validNames: ['spy'],
 		})
 	}
 
 	@test()
 	protected static async throwsWithOutStoreFactoryMethod() {
 		//@ts-ignore
-		this.factory.setStore('test', BadTestStore)
+		this.factory.setStore('spy', BadTestStore)
 
-		const err = await assert.doesThrowAsync(() => this.factory.Store('test'))
+		const err = await assert.doesThrowAsync(() => this.factory.Store('spy'))
 		errorAssert.assertError(err, 'INVALID_STORE')
 		assert.doesInclude(err.message, 'factory')
 	}
 
 	@test()
 	protected static async canSetStore() {
-		this.factory.setStore('test', TestStore)
-		const store = await this.factory.Store('test')
-		assert.isTrue(store instanceof TestStore)
+		this.factory.setStore('spy', SpyStore)
+		const store = await this.factory.Store('spy')
+		assert.isTrue(store instanceof SpyStore)
 	}
 
 	@test()
 	protected static async getsDatabaseToStoreAndFactory() {
-		this.factory.setStore('test', TestStore)
-		const store = await this.factory.Store('test')
+		this.factory.setStore('spy', SpyStore)
+		const store = await this.factory.Store('spy')
 		assert.isTruthy(store.db)
 		assert.isTruthy(store.storeFactory)
 	}
 
 	@test()
 	protected static async storesGetAdditionalOptions() {
-		this.factory.setStore('test', TestStore)
-		const store = await this.factory.Store('test', { testOption: true })
+		this.factory.setStore('spy', SpyStore)
+		const store = await this.factory.Store('spy', { testOption: true })
 		assert.isTrue(store.options.testOption)
 	}
 
@@ -72,49 +72,49 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 		assert.isLength(names, 0)
 
-		this.factory.setStore('test', TestStore)
+		this.factory.setStore('spy', SpyStore)
 
 		names = this.factory.getStoreNames()
 
 		assert.isLength(names, 1)
-		assert.isEqualDeep(names, ['test'])
+		assert.isEqualDeep(names, ['spy'])
 
-		assert.isExactType<typeof names, ('test' | 'testing')[]>(true)
+		assert.isExactType<typeof names, ('spy' | 'dummy')[]>(true)
 	}
 
 	@test()
 	protected static async initializesStore() {
-		this.factory.setStore('test', TestStore)
-		const store = await this.factory.Store('test')
+		this.factory.setStore('spy', SpyStore)
+		const store = await this.factory.Store('spy')
 		assert.isTrue(store.wasInitializedInvoked)
 	}
 
 	@test()
 	protected static async initializeIsOnlyTriggeredOncePerStoreWith1Factory() {
-		this.factory.setStore('test', TestStore)
-		await this.factory.Store('test')
-		await this.factory.Store('test')
-		await this.factory.Store('test')
-		await this.factory.Store('test')
-		assert.isEqual(TestStore.initializeCount, 1)
+		this.factory.setStore('spy', SpyStore)
+		await this.factory.Store('spy')
+		await this.factory.Store('spy')
+		await this.factory.Store('spy')
+		await this.factory.Store('spy')
+		assert.isEqual(SpyStore.initializeCount, 1)
 	}
 
 	@test()
 	protected static async initializeIsOnlyTriggeredOncePerStoreWithMultipleFactories() {
-		this.factory.setStore('test', TestStore)
-		await this.factory.Store('test')
-		await this.factory.Store('test')
-		await this.factory.Store('test')
-		await this.factory.Store('test')
+		this.factory.setStore('spy', SpyStore)
+		await this.factory.Store('spy')
+		await this.factory.Store('spy')
+		await this.factory.Store('spy')
+		await this.factory.Store('spy')
 
 		const factory2 = StoreFactory.Factory(this.db)
-		factory2.setStore('test', TestStore)
+		factory2.setStore('spy', SpyStore)
 
-		await factory2.Store('test')
-		await factory2.Store('test')
-		await factory2.Store('test')
-		await factory2.Store('test')
+		await factory2.Store('spy')
+		await factory2.Store('spy')
+		await factory2.Store('spy')
+		await factory2.Store('spy')
 
-		assert.isEqual(TestStore.initializeCount, 1)
+		assert.isEqual(SpyStore.initializeCount, 1)
 	}
 }

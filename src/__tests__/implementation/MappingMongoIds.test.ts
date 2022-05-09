@@ -79,6 +79,78 @@ export default class MappingMongoIdsTest extends AbstractSpruceTest {
 			$or: [{ _id: { $in: [id1, id2] } }, { isPublic: true }],
 		}
 	)
+	@test(
+		'maps query with $and top level and $in lower level',
+		{
+			$and: [
+				{
+					id: { $in: [id1.toHexString(), id2.toHexString()] },
+				},
+				{
+					isPublic: true,
+				},
+			],
+		},
+		{
+			$and: [{ _id: { $in: [id1, id2] } }, { isPublic: true }],
+		}
+	)
+	@test(
+		'maps query with $and top level and $gt lower level',
+		{
+			$and: [
+				{
+					id: { $gt: id1.toHexString() },
+				},
+				{
+					isPublic: true,
+				},
+			],
+		},
+		{
+			$and: [{ _id: { $gt: id1 } }, { isPublic: true }],
+		}
+	)
+	@test(
+		'maps query with $id with $gt top leven',
+		{
+			id: { $lt: id1.toHexString() },
+		},
+		{
+			_id: { $lt: id1 },
+		}
+	)
+	@test(
+		'maps query with $and and $or with $gt nested in $o0',
+		{
+			$and: [
+				{
+					$or: [
+						{ firstName: { $lte: 'Record 1' } },
+						{
+							firstName: { $gt: 'Record 1' },
+							id: { $gt: id1.toHexString() },
+						},
+					],
+				},
+				{},
+			],
+		},
+		{
+			$and: [
+				{
+					$or: [
+						{ firstName: { $lte: 'Record 1' } },
+						{
+							firstName: { $gt: 'Record 1' },
+							_id: { $gt: id1 },
+						},
+					],
+				},
+				{},
+			],
+		}
+	)
 	@test(`Doesn't bomb with undefined`, undefined, {})
 	protected static async mapsAsExpected(
 		query: Record<string, any>,

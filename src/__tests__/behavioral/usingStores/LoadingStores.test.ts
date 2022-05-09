@@ -1,9 +1,9 @@
 import { diskUtil } from '@sprucelabs/spruce-skill-utils'
 import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
 import { errorAssert } from '@sprucelabs/test-utils'
-import StoreFactory from '../../factories/StoreFactory'
-import DatabaseFixture from '../../fixtures/DatabaseFixture'
-import StoreLoader from '../../loaders/StoreLoader'
+import StoreFactory from '../../../factories/StoreFactory'
+import DatabaseFixture from '../../../fixtures/DatabaseFixture'
+import StoreLoader from '../../../loaders/StoreLoader'
 
 export default class LoadingStoresTest extends AbstractSpruceTest {
 	@test()
@@ -27,12 +27,13 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		assert.isLength(factory.getStoreNames(), 0)
 	}
 
-	@test('loads good stores without trailing slash')
+	@test('loads good stores without trailing slash', '')
 	@test('loads good stores with trailing slash', '/')
 	protected static async loadsStoresWithGoodDir(pathSuffix = '') {
 		this.setCwd(pathSuffix)
 
 		const loader = await this.Loader(this.resolvePath(this.cwd))
+
 		const factory = await loader.loadStores()
 		assert.isLength(factory.getStoreNames(), 1)
 		assert.isEqualDeep(factory.getStoreNames(), ['good'])
@@ -146,6 +147,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		this.cwd =
 			this.resolvePath(
 				__dirname,
+				'..',
 				'..',
 				'/testDirsAndFiles/',
 				`one-${goodOrBad}-store-skill`,
