@@ -29,7 +29,16 @@ export default class CursorPagerFaker {
 		) => Promise<Partial<RecordsWithCursors<Record<string, any>[]>>>
 	) {
 		//@ts-ignore
-		CursorPager.find = response
+		CursorPager.find = async (...args: any[]) => {
+			//@ts-ignore
+			const results = await response(...args)
+			return {
+				next: null,
+				previous: null,
+				records: [],
+				...results,
+			}
+		}
 	}
 
 	public static async beforeEach() {
