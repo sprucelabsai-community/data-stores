@@ -31,7 +31,7 @@ export default class TestingCursorsTest extends AbstractCursorTest {
 		await this.createRecords(10)
 		await this.assertTotalRecords(0)
 
-		CursorPagerFaker.beforeEach()
+		await CursorPagerFaker.beforeEach()
 
 		await this.assertTotalRecords(10)
 	}
