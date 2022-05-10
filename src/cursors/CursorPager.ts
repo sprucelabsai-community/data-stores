@@ -1,6 +1,6 @@
 import { assertOptions } from '@sprucelabs/schema'
 import clone from 'just-clone'
-import { QueryOptions } from './types/query.types'
+import { QueryOptions } from '../types/query.types'
 
 export interface CursorQueryOptions extends Omit<QueryOptions, 'skip'> {
 	limit: number
@@ -14,7 +14,7 @@ interface InternalCursor {
 	newest: string
 }
 
-interface Cursor<
+export interface RecordsWithCursors<
 	Response extends Record<string, any>[] = Record<string, any>[]
 > {
 	records: Response
@@ -33,7 +33,7 @@ export default class CursorPager {
 		store: S,
 		query: Query,
 		options: CursorQueryOptions
-	): Promise<Cursor<Response>> {
+	): Promise<RecordsWithCursors<Response>> {
 		const { next, previous, ...prepped } = this.prepareQueryOptions(options)
 
 		let cursorQuery: Record<string, any> | undefined
@@ -172,7 +172,7 @@ export default class CursorPager {
 		} as any
 	}
 }
-interface SimpleStore {
+export interface SimpleStore {
 	find: (...args: any[]) => Promise<any>
 }
 type UnPromisify<T> = T extends Promise<infer U> ? U : T
