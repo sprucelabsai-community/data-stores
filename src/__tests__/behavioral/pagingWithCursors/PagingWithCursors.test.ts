@@ -20,6 +20,21 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
 		})
 	}
 
+	@test('throws with limit 0', 0)
+	@test('throws with limit -1', -1)
+	protected static async throwsWithLimitLessThan1(limit: number) {
+		const err = assert.doesThrow(() =>
+			CursorPager.prepareQueryOptions({
+				limit,
+				next: null,
+				previous: null,
+			})
+		)
+		errorAssert.assertError(err, 'INVALID_PARAMETERS', {
+			parameters: ['limit'],
+		})
+	}
+
 	@test()
 	protected static addsInIfSortExists() {
 		this.assertPreppedOptionsEqualExpected({

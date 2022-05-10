@@ -1,4 +1,4 @@
-import { assertOptions } from '@sprucelabs/schema'
+import { assertOptions, SchemaError } from '@sprucelabs/schema'
 import clone from 'just-clone'
 import { QueryOptions } from '../types/query.types'
 
@@ -150,7 +150,19 @@ export default class CursorPager {
 	public static prepareQueryOptions<
 		O extends CursorQueryOptions & { limit: number }
 	>(options: O): O & { sort: NonNullable<O['sort']> } {
-		const { previous, sort = [] } = clone(assertOptions(options, ['limit']))
+		const {
+			previous,
+			sort = [],
+			limit,
+		} = clone(assertOptions(options, ['limit']))
+
+		if (limit < 1) {
+			throw new SchemaError({
+				code: 'INVALID_PARAMETERS',
+				parameters: ['limit'],
+				friendlyMessage: 'Your limit must be above zero!',
+			})
+		}
 
 		if (!sort.find((p) => p.field === 'id')) {
 			sort.push({
@@ -167,7 +179,7 @@ export default class CursorPager {
 
 		return {
 			...options,
-			limit: options.limit + 1,
+			limit: limit + 1,
 			sort,
 		} as any
 	}
