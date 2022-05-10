@@ -5,7 +5,7 @@ jobs:
   test:
     docker:
       - image: cimg/node:16.14
-      - image: cimg/mongo
+      - image: circleci/mongo
     working_directory: /mnt/ramdisk
     steps:
       - add_ssh_keys:
