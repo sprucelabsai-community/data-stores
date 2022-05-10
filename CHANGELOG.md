@@ -1,3 +1,10 @@
+# [11.2.0](https://github.com/sprucelabsai/data-stores/compare/v11.1.0...v11.2.0) (2022-05-10)
+
+
+### Features
+
+* new Cursor Pager Faker to make the DX even more DX'ier! ([906d614](https://github.com/sprucelabsai/data-stores/commit/906d614))
+
 # [11.1.0](https://github.com/sprucelabsai/data-stores/compare/v11.0.2...v11.1.0) (2022-05-09)
 
 
