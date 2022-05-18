@@ -22,6 +22,10 @@ export interface RecordsWithCursors<
 	previous: string | null
 }
 
+type PrepareQueryOptions = CursorQueryOptions & {
+	limit: number
+}
+
 export default class CursorPager {
 	public static async find<
 		S extends SimpleStore,
@@ -148,13 +152,13 @@ export default class CursorPager {
 	}
 
 	public static prepareQueryOptions<
-		O extends CursorQueryOptions & { limit: number }
+		O extends PrepareQueryOptions = PrepareQueryOptions
 	>(options: O): O & { sort: NonNullable<O['sort']> } {
 		const {
 			previous,
 			sort = [],
 			limit,
-		} = clone(assertOptions(options, ['limit']))
+		} = clone(assertOptions(options as PrepareQueryOptions, ['limit']))
 
 		if (limit < 1) {
 			throw new SchemaError({
