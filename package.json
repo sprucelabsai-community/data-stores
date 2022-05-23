@@ -87,7 +87,7 @@
     "@sprucelabs/jest-sheets-reporter": "^1.3.44",
     "@sprucelabs/resolve-path-aliases": "^1.1.48",
     "@sprucelabs/semantic-release": "^4.0.8",
-    "@sprucelabs/test": "^7.7.316",
+    "@sprucelabs/test": "^7.7.317",
     "@sprucelabs/test-utils": "^3.0.554",
     "@types/lodash": "^4.14.182",
     "@types/nedb": "^1.8.12",
