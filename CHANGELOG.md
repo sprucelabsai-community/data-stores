@@ -1,3 +1,10 @@
+# [12.0.0](https://github.com/sprucelabsai/data-stores/compare/v11.2.37...v12.0.0) (2022-05-24)
+
+
+### Breaking Changes
+
+* **auto-upgrade:** upgraded packages [upgrade-all] ([9f45e92](https://github.com/sprucelabsai/data-stores/commit/9f45e92))
+
 ## [11.2.37](https://github.com/sprucelabsai/data-stores/compare/v11.2.36...v11.2.37) (2022-05-24)
 
 ## [11.2.36](https://github.com/sprucelabsai/data-stores/compare/v11.2.35...v11.2.36) (2022-05-23)
