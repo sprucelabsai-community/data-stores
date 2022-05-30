@@ -1769,6 +1769,44 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		})
 	}
 
+	@test('can search by regex (mongo)', mongo)
+	@test('can search by regex (neDb)', neDb)
+	protected static async canSearchByRegx(connect: Connect) {
+		const db = await connect()
+
+		await db.create(this.collectionName, [
+			{
+				name: 'first',
+				subObject: {
+					score: 1,
+				},
+			},
+			{
+				name: 'second',
+				subObject: {
+					score: 2,
+				},
+			},
+			{
+				name: 'third',
+				subObject: {
+					score: 2,
+				},
+			},
+		])
+
+		const all = await db.find(
+			this.collectionName,
+			{ name: { $regex: /fi/ } },
+			{ includeFields: ['name'] }
+		)
+		assert.isEqualDeep(all, [
+			{
+				name: 'first',
+			},
+		])
+	}
+
 	private static async getFilteredIndexes(db: Database) {
 		return this.filterIdIndex(await db.getIndexes(this.collectionName))
 	}

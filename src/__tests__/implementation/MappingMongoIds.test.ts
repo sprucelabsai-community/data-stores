@@ -170,4 +170,13 @@ export default class MappingMongoIdsTest extends AbstractSpruceTest {
 		const err = assert.doesThrow(() => mongoUtil.mapQuery(query)) as SpruceError
 		errorAssert.assertError(err, expectedCode)
 	}
+
+	@test()
+	protected static async doesNotDestroyRegex() {
+		const results = mongoUtil.mapQuery({
+			name: { $regex: /hey/ },
+		})
+
+		assert.isTrue(results.name.$regex instanceof RegExp)
+	}
 }

@@ -61,8 +61,6 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				val === null || typeof val === 'undefined' || val === NULL_PLACEHOLDER
 		)
 
-		// return nullsToPlaceholder
-
 		const undefinedToPlaceholder: Record<string, any> = this.handlePlaceholders(
 			nullsToPlaceholder,
 			UNDEFINED_PLACEHOLDER,
@@ -120,6 +118,9 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	) {
 		let withPlaceholders: any = Array.isArray(values) ? [] : {}
 
+		if (values instanceof RegExp) {
+			return values
+		}
 		if (Array.isArray(values)) {
 			withPlaceholders = values.map((v) =>
 				this.handlePlaceholders(v, dropIn, checker)
