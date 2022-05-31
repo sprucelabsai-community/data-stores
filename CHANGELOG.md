@@ -1,3 +1,10 @@
+# [12.1.0](https://github.com/sprucelabsai/data-stores/compare/v12.0.15...v12.1.0) (2022-05-31)
+
+
+### Features
+
+* devs can now perform atomic operations using datastores! ([074abea](https://github.com/sprucelabsai/data-stores/commit/074abea))
+
 ## [12.0.15](https://github.com/sprucelabsai/data-stores/compare/v12.0.14...v12.0.15) (2022-05-30)
 
 ## [12.0.14](https://github.com/sprucelabsai/data-stores/compare/v12.0.13...v12.0.14) (2022-05-30)
