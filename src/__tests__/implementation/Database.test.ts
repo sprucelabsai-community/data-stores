@@ -1807,6 +1807,25 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		])
 	}
 
+	@test('can $push to array (mongo)', mongo)
+	@test('can $push to array (neDb)', neDb)
+	protected static async can$pushOnUpsert(connect: Connect) {
+		const db = await connect()
+		const record = await db.createOne(this.collectionName, { names: [] })
+		await db.updateOne(
+			this.collectionName,
+			{
+				id: record.id,
+			},
+			{
+				$push: { names: 'test' },
+			}
+		)
+
+		const match = await db.findOne(this.collectionName)
+		assert.isEqualDeep(match?.names, ['test'])
+	}
+
 	private static async getFilteredIndexes(db: Database) {
 		return this.filterIdIndex(await db.getIndexes(this.collectionName))
 	}

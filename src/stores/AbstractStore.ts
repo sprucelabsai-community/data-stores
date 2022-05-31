@@ -20,6 +20,17 @@ import { QueryBuilder, QueryOptions } from '../types/query.types'
 import { PrepareOptions, PrepareResults } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
 
+const operations = [
+	'$push',
+	'$inc',
+	'$min',
+	'$max',
+	'$mul',
+	'$push',
+	'$pull',
+	'$pop',
+]
+
 type Response<
 	FullSchema extends Schema,
 	CreateEntityInstances extends boolean,
@@ -41,7 +52,7 @@ export default abstract class AbstractStore<
 	QueryRecord = SchemaPartialValues<FullSchema>,
 	FullRecord = SchemaValues<FullSchema>,
 	CreateRecord = SchemaValues<CreateSchema>,
-	UpdateRecord = SchemaValues<UpdateSchema>
+	UpdateRecord = SchemaValues<UpdateSchema> & { $push?: Record<string, any> }
 > extends AbstractMutexer {
 	public abstract readonly name: string
 
@@ -362,8 +373,10 @@ export default abstract class AbstractStore<
 	): Promise<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
+		const { ops, updates: initialUpdates } = this.pluckOperations(updates)
+
 		try {
-			const isScrambled = this.isScrambled(updates)
+			const isScrambled = this.isScrambled(initialUpdates)
 
 			let current: any = await this.findOne(query, options)
 			if (!current) {
@@ -380,20 +393,20 @@ export default abstract class AbstractStore<
 
 			if (!isScrambled) {
 				//@ts-ignore
-				validateSchemaValues(this.updateSchema, updates)
+				validateSchemaValues(this.updateSchema, initialUpdates)
 			}
 
 			const cleanedUpdates =
 				!isScrambled && this.willUpdate
-					? await this.willUpdate(updates, current)
-					: updates
+					? await this.willUpdate(initialUpdates, current)
+					: initialUpdates
 
 			const databaseRecord = {
 				...current,
 				...cleanedUpdates,
 			}
 
-			const toSave = isScrambled
+			const normalizedValues = isScrambled
 				? databaseRecord
 				: normalizeSchemaValues(this.databaseSchema, databaseRecord, {
 						shouldCreateEntityInstances: false,
@@ -402,10 +415,14 @@ export default abstract class AbstractStore<
 						) as SchemaFieldNames<DatabaseSchema>[],
 				  })
 
+			for (const { name, value } of ops) {
+				normalizedValues[name] = value
+			}
+
 			const results = await this.db.updateOne(
 				this.collectionName,
 				query,
-				toSave
+				normalizedValues
 			)
 
 			return this.prepareAndNormalizeRecord(results, options)
@@ -421,6 +438,27 @@ export default abstract class AbstractStore<
 			)
 			throw coded[0]
 		}
+	}
+	private pluckOperations(updates: UpdateRecord): { ops: any; updates: any } {
+		const { ...initialUpdates } = updates
+		const ops = operations
+			.map((name) => {
+				if (name in initialUpdates) {
+					//@ts-ignore
+					const value = initialUpdates[name]
+					//@ts-ignore
+					delete initialUpdates[name]
+					return {
+						name,
+						value,
+					}
+				}
+
+				return false
+			})
+			.filter((o) => !!o)
+
+		return { ops, updates: initialUpdates }
 	}
 
 	public async scramble(id: string) {

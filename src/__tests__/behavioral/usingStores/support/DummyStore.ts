@@ -22,7 +22,7 @@ declare module '../../../../types/stores.types' {
 }
 
 const fullRecordSchema = buildSchema({
-	id: 'full-schema',
+	id: 'operations-full-schema',
 	name: 'Schema',
 	fields: {
 		id: {
@@ -66,7 +66,7 @@ const fullRecordSchema = buildSchema({
 })
 const createRecordSchema = buildSchema({
 	...fullRecordSchema,
-	id: 'create-schema',
+	id: 'operations-create-schema',
 	fields: {
 		...makeFieldsOptional(fullRecordSchema.fields),
 		requiredForCreate: {
@@ -77,7 +77,7 @@ const createRecordSchema = buildSchema({
 })
 const updateRecordSchema = buildSchema({
 	...fullRecordSchema,
-	id: 'update-schema',
+	id: 'operations-update-schema',
 	fields: {
 		...makeFieldsOptional(dropPrivateFields(fullRecordSchema.fields)),
 		requiredForUpdate: {
@@ -87,7 +87,7 @@ const updateRecordSchema = buildSchema({
 })
 const databaseRecordSchema = buildSchema({
 	...fullRecordSchema,
-	id: 'database-schema',
+	id: 'operations-database-schema',
 	fields: {
 		...fullRecordSchema.fields,
 		requiredForDatabase: {
