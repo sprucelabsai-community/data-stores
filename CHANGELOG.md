@@ -1,3 +1,10 @@
+# [14.0.0](https://github.com/sprucelabsai/data-stores/compare/v13.0.0...v14.0.0) (2022-06-01)
+
+
+### Breaking Changes
+
+* **auto-upgrade:** upgraded packages [upgrade-all] ([43987d0](https://github.com/sprucelabsai/data-stores/commit/43987d0))
+
 # [13.0.0](https://github.com/sprucelabsai/data-stores/compare/v12.1.0...v13.0.0) (2022-05-31)
 
 
