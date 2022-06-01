@@ -1,3 +1,10 @@
+# [16.0.0](https://github.com/sprucelabsai/data-stores/compare/v15.0.0...v16.0.0) (2022-06-01)
+
+
+### Breaking Changes
+
+* spruce upgrade ([2d52070](https://github.com/sprucelabsai/data-stores/commit/2d52070))
+
 # [15.0.0](https://github.com/sprucelabsai/data-stores/compare/v14.0.1...v15.0.0) (2022-06-01)
 
 
