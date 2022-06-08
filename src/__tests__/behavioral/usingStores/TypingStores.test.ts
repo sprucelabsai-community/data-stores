@@ -18,4 +18,10 @@ export default class TypingStoresTest extends AbstractStoreTest {
 		const store = await this.factory.Store('spy', { testOption: true })
 		assert.isExactType<SpyStore, typeof store>(true)
 	}
+
+	@test()
+	protected static async typesSaveOperations() {
+		const store = await this.factory.Store('spy')
+		await store.update({}, { $push: { firstName: '1' } })
+	}
 }
