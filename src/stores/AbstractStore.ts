@@ -16,23 +16,14 @@ import { SCRAMBLE_VALUE } from '../constants'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
-import { QueryBuilder, QueryOptions } from '../types/query.types'
+import {
+	saveOperations,
+	QueryBuilder,
+	QueryOptions,
+	SaveOperations,
+} from '../types/query.types'
 import { PrepareOptions, PrepareResults } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
-
-const operations = [
-	'$push',
-	'$inc',
-	'$min',
-	'$max',
-	'$mul',
-	'$push',
-	'$pull',
-	'$pop',
-] as const
-
-type SaveOperation = typeof operations[number]
-type SaveOperations = Partial<Record<SaveOperation, Record<string, any>>>
 
 type Response<
 	FullSchema extends Schema,
@@ -444,7 +435,7 @@ export default abstract class AbstractStore<
 	}
 	private pluckOperations(updates: UpdateRecord): { ops: any; updates: any } {
 		const { ...initialUpdates } = updates
-		const ops = operations
+		const ops = saveOperations
 			.map((name) => {
 				if (name in initialUpdates) {
 					//@ts-ignore
