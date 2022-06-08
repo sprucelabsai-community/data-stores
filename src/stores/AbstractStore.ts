@@ -29,7 +29,10 @@ const operations = [
 	'$push',
 	'$pull',
 	'$pop',
-]
+] as const
+
+type SaveOperation = typeof operations[number]
+type SaveOperations = Partial<Record<SaveOperation, Record<string, any>>>
 
 type Response<
 	FullSchema extends Schema,
@@ -52,7 +55,7 @@ export default abstract class AbstractStore<
 	QueryRecord = SchemaPartialValues<FullSchema>,
 	FullRecord = SchemaValues<FullSchema>,
 	CreateRecord = SchemaValues<CreateSchema>,
-	UpdateRecord = SchemaValues<UpdateSchema> & { $push?: Record<string, any> }
+	UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations
 > extends AbstractMutexer {
 	public abstract readonly name: string
 
