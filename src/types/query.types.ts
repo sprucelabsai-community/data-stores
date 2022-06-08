@@ -9,20 +9,6 @@ type QueryPredicate<Query, K extends keyof Query> =
 
 type Obj = Record<string, any>
 
-export const saveOperations = [
-	'$push',
-	'$inc',
-	'$min',
-	'$max',
-	'$mul',
-	'$push',
-	'$pull',
-	'$pop',
-] as const
-
-export type SaveOperation = typeof saveOperations[number]
-export type SaveOperations = Partial<Record<SaveOperation, Record<string, any>>>
-
 export type QueryBuilder<
 	Query extends Obj
 	// Flattened = FlattenAndPathKeys<Query>

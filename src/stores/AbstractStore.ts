@@ -16,13 +16,13 @@ import { SCRAMBLE_VALUE } from '../constants'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
+import { QueryBuilder, QueryOptions } from '../types/query.types'
 import {
-	saveOperations,
-	QueryBuilder,
-	QueryOptions,
+	PrepareOptions,
+	PrepareResults,
 	SaveOperations,
-} from '../types/query.types'
-import { PrepareOptions, PrepareResults } from '../types/stores.types'
+	saveOperations,
+} from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
 
 type Response<

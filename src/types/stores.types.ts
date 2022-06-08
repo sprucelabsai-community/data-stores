@@ -7,6 +7,20 @@ import {
 import StoreFactory from '../factories/StoreFactory'
 import { Database } from './database.types'
 
+export const saveOperations = [
+	'$push',
+	'$inc',
+	'$min',
+	'$max',
+	'$mul',
+	'$push',
+	'$pull',
+	'$pop',
+] as const
+
+export type SaveOperation = typeof saveOperations[number]
+export type SaveOperations = Partial<Record<SaveOperation, Record<string, any>>>
+
 export interface UniversalStoreOptions {
 	db: Database
 	storeFactory: StoreFactory
