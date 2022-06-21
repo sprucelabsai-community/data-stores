@@ -1,11 +1,11 @@
 import { test, assert } from '@sprucelabs/test'
 import { errorAssert } from '@sprucelabs/test-utils'
-import { generateId } from '../..'
 import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import NeDbDatabase from '../../databases/NeDbDatabase'
 import SpruceError from '../../errors/SpruceError'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import { Database, Index, UniqueIndex } from '../../types/database.types'
+import generateId from '../../utilities/generateId'
 
 let dbCount = 0
 async function mongo(dbConnectionString = MONGO_TEST_URI, dbName?: string) {
