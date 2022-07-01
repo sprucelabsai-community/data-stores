@@ -31,6 +31,7 @@
       "mongodb",
       "@types/mongodb",
       "@types/node",
+      "@sprucelabs/spruce-core-schemas",
       "@sprucelabs/spruce-test-fixtures"
     ]
   },
@@ -73,7 +74,6 @@
   "dependencies": {
     "@sprucelabs/error": "^5.0.479",
     "@sprucelabs/schema": "^28.2.58",
-    "@sprucelabs/spruce-core-schemas": "^34.0.12",
     "@sprucelabs/spruce-skill-utils": "^26.1.4",
     "globby": "^11.0.4",
     "just-clone": "^6.0.1",
