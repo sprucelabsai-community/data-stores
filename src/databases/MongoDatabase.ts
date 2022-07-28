@@ -1,4 +1,5 @@
-import { differenceWith, isEqual } from 'lodash'
+import differenceWith from 'lodash/differenceWith'
+import isEqual from 'lodash/isEqual'
 import { MongoClientOptions, MongoClient, Db, MongoError } from 'mongodb'
 import SpruceError from '../errors/SpruceError'
 import { Database, Index, UniqueIndex } from '../types/database.types'
