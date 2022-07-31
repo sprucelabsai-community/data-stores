@@ -22,7 +22,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 	@test()
 	protected static async throwsWithBadStore() {
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 
 		const err = await assert.doesThrowAsync(() =>
 			//@ts-ignore
@@ -37,7 +37,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 	@test()
 	protected static async throwsWithOutStoreFactoryMethod() {
 		//@ts-ignore
-		this.factory.setStore('spy', BadTestStore)
+		this.factory.setStoreClass('spy', BadTestStore)
 
 		const err = await assert.doesThrowAsync(() => this.factory.Store('spy'))
 		errorAssert.assertError(err, 'INVALID_STORE')
@@ -46,14 +46,14 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 	@test()
 	protected static async canSetStore() {
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 		const store = await this.factory.Store('spy')
 		assert.isTrue(store instanceof SpyStore)
 	}
 
 	@test()
 	protected static async getsDatabaseToStoreAndFactory() {
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 		const store = await this.factory.Store('spy')
 		assert.isTruthy(store.db)
 		assert.isTruthy(store.storeFactory)
@@ -61,7 +61,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 	@test()
 	protected static async storesGetAdditionalOptions() {
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 		const store = await this.factory.Store('spy', { testOption: true })
 		assert.isTrue(store.options.testOption)
 	}
@@ -72,7 +72,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 		assert.isLength(names, 0)
 
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 
 		names = this.factory.getStoreNames()
 
@@ -84,14 +84,14 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 	@test()
 	protected static async initializesStore() {
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 		const store = await this.factory.Store('spy')
 		assert.isTrue(store.wasInitializedInvoked)
 	}
 
 	@test()
 	protected static async initializeIsOnlyTriggeredOncePerStoreWith1Factory() {
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 		await this.factory.Store('spy')
 		await this.factory.Store('spy')
 		await this.factory.Store('spy')
@@ -101,14 +101,14 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 	@test()
 	protected static async initializeIsOnlyTriggeredOncePerStoreWithMultipleFactories() {
-		this.factory.setStore('spy', SpyStore)
+		this.factory.setStoreClass('spy', SpyStore)
 		await this.factory.Store('spy')
 		await this.factory.Store('spy')
 		await this.factory.Store('spy')
 		await this.factory.Store('spy')
 
 		const factory2 = StoreFactory.Factory(this.db)
-		factory2.setStore('spy', SpyStore)
+		factory2.setStoreClass('spy', SpyStore)
 
 		await factory2.Store('spy')
 		await factory2.Store('spy')

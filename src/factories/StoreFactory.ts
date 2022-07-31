@@ -1,5 +1,6 @@
 import { namesUtil } from '@sprucelabs/spruce-skill-utils'
 import SpruceError from '../errors/SpruceError'
+import AbstractStore from '../stores/AbstractStore'
 import { Database } from '../types/database.types'
 import { Store, StoreMap, StoreName, StoreOptions } from '../types/stores.types'
 
@@ -11,6 +12,7 @@ export default class StoreFactory {
 	private storeMap: Record<string, StoreContructor> = {}
 	private db: Database
 	private static initializations: Record<string, boolean> = {}
+	private stores: Partial<Record<StoreName, any>> = {}
 
 	private constructor(db: Database) {
 		this.db = db
@@ -20,6 +22,11 @@ export default class StoreFactory {
 		return new this(db)
 	}
 
+	/**
+	 * @deprecated stores.Store(..) -> stores.getStore(...)
+	 * This change has big speed improvements. This factory method
+	 * will never be removed, but hopefully won't be needed often.
+	 */
 	public async Store<
 		Name extends StoreName,
 		Options extends StoreOptions<Name>
@@ -59,8 +66,21 @@ export default class StoreFactory {
 		return Object.keys(this.storeMap) as any
 	}
 
-	public setStore(name: string, TestStore: StoreContructor) {
+	public setStoreClass(name: string, TestStore: StoreContructor) {
 		this.storeMap[name] = TestStore
+	}
+
+	public setStore(name: StoreName, store: Store) {
+		this.stores[name] = store
+	}
+
+	public async getStore<Name extends StoreName>(
+		name: Name
+	): Promise<StoreMap[Name]> {
+		if (!this.stores[name]) {
+			this.stores[name] = await this.Store(name)
+		}
+		return this.stores[name]
 	}
 
 	public static reset() {

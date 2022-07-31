@@ -87,7 +87,7 @@ export default class StoreLoader {
 		const factory = StoreFactory.Factory(this.db)
 
 		for (const store of stores) {
-			factory.setStore(namesUtil.toCamel(store.namePascal), store.Class)
+			factory.setStoreClass(namesUtil.toCamel(store.namePascal), store.Class)
 		}
 
 		return { factory, errors }

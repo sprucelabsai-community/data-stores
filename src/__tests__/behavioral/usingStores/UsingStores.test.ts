@@ -4,7 +4,7 @@ import { errorAssert, generateId } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../../constants'
 import SpruceError from '../../../errors/SpruceError'
 import AbstractStoreTest from './support/AbstractStoreTest'
-import { TEST_COLLECTION_NAME } from './support/DummyStore'
+import DummyStore, { TEST_COLLECTION_NAME } from './support/DummyStore'
 
 export const DEMO_PHONE = '555-555-5555'
 export const DEMO_PHONE_FORMATTED = '+1 555-555-5555'
@@ -749,6 +749,25 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			...updates,
 			requiredForDatabase: true,
 		})
+	}
+
+	@test()
+	protected static async getStoreGetsSameInstance() {
+		const d1 = await this.stores.getStore('dummy')
+		assert.isTrue(d1 instanceof DummyStore)
+		const d2 = await this.stores.getStore('dummy')
+		assert.isEqual(d1, d2)
+		const o1 = await this.stores.getStore('operations')
+		assert.isNotEqual(d1, o1 as any)
+	}
+
+	@test()
+	protected static async canSetStore() {
+		await this.stores.getStore('dummy')
+		const d2 = await this.stores.Store('dummy')
+		this.stores.setStore('dummy', d2)
+		const d3 = await this.stores.getStore('dummy')
+		assert.isEqual(d2, d3)
 	}
 
 	private static async createRandomRecord() {

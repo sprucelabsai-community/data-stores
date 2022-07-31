@@ -5,23 +5,23 @@ import SpyStore from './support/SpyStore'
 export default class TypingStoresTest extends AbstractStoreTest {
 	@test('Will type names (always passes, lint fails)')
 	protected static async typesNames() {
-		await this.factory.Store('spy')
+		await this.stores.Store('spy')
 	}
 
 	@test('Types options (will always pass, fails lint)')
 	protected static async typesOptions() {
-		await this.factory.Store('spy', { testOption: true })
+		await this.stores.Store('spy', { testOption: true })
 	}
 
 	@test('Types returned store (will always pass, fails lint)')
 	protected static async typesStore() {
-		const store = await this.factory.Store('spy', { testOption: true })
+		const store = await this.stores.Store('spy', { testOption: true })
 		assert.isExactType<SpyStore, typeof store>(true)
 	}
 
 	@test()
 	protected static async typesSaveOperations() {
-		const store = await this.factory.Store('spy')
+		const store = await this.stores.Store('spy')
 		await store.update({}, { $push: { firstName: '1' } })
 	}
 }
