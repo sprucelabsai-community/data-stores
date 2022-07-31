@@ -1,6 +1,5 @@
 import { namesUtil } from '@sprucelabs/spruce-skill-utils'
 import SpruceError from '../errors/SpruceError'
-import AbstractStore from '../stores/AbstractStore'
 import { Database } from '../types/database.types'
 import { Store, StoreMap, StoreName, StoreOptions } from '../types/stores.types'
 
