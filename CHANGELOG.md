@@ -1,3 +1,10 @@
+# [17.1.0](https://github.com/sprucelabsai/data-stores/compare/v17.0.69...v17.1.0) (2022-07-31)
+
+
+### Features
+
+* stores now have didCreate and didUpdate hooks! ([405e12e](https://github.com/sprucelabsai/data-stores/commit/405e12e))
+
 ## [17.0.69](https://github.com/sprucelabsai/data-stores/compare/v17.0.68...v17.0.69) (2022-07-31)
 
 ## [17.0.68](https://github.com/sprucelabsai/data-stores/compare/v17.0.67...v17.0.68) (2022-07-31)
