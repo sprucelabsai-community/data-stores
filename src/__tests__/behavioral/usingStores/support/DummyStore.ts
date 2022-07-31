@@ -98,11 +98,14 @@ const databaseRecordSchema = buildSchema({
 })
 export const TEST_COLLECTION_NAME = 'test_collection'
 
+type DatabaseRecordSchema = typeof databaseRecordSchema
+type DatabaseRecord = SchemaValues<DatabaseRecordSchema>
+
 export default class DummyStore extends AbstractStore<
 	typeof fullRecordSchema,
 	typeof createRecordSchema,
 	typeof updateRecordSchema,
-	typeof databaseRecordSchema
+	DatabaseRecordSchema
 > {
 	public name = 'Test'
 
@@ -122,6 +125,8 @@ export default class DummyStore extends AbstractStore<
 	protected willScramble = undefined
 	public willUpdateUpdates?: any
 	public willUpdateValues?: any
+	public didCreateValues?: any
+	public didUpdateValues?: any
 
 	protected async willCreate(values: SchemaValues<typeof createRecordSchema>) {
 		return {
@@ -134,6 +139,10 @@ export default class DummyStore extends AbstractStore<
 		}
 	}
 
+	protected async didCreate(values: DatabaseRecord) {
+		this.didCreateValues = values
+	}
+
 	protected async willUpdate(
 		updates: SchemaValues<typeof updateRecordSchema>,
 		values: SchemaValues<typeof databaseRecordSchema>
@@ -142,6 +151,10 @@ export default class DummyStore extends AbstractStore<
 		this.willUpdateValues = values
 
 		return updates as any
+	}
+
+	protected async didUpdate(old: DatabaseRecord, updated: DatabaseRecord) {
+		this.didUpdateValues = { old, updated }
 	}
 
 	protected async prepareRecord<IncludePrivateFields extends boolean>(

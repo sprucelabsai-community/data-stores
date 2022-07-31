@@ -1,6 +1,6 @@
 import { validationErrorAssert } from '@sprucelabs/schema'
 import { test, assert } from '@sprucelabs/test'
-import { errorAssert } from '@sprucelabs/test-utils'
+import { errorAssert, generateId } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../../constants'
 import SpruceError from '../../../errors/SpruceError'
 import AbstractStoreTest from './support/AbstractStoreTest'
@@ -680,7 +680,10 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForUpdate: 'yes!',
 		})
 
-		assert.isEqualDeep(this.dummyStore.willUpdateValues, created)
+		assert.isEqualDeep(this.dummyStore.willUpdateValues, {
+			...created,
+			privateField: 'private!',
+		})
 	}
 
 	@test()
@@ -715,5 +718,60 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			phoneNumber: DEMO_PHONE_FORMATTED,
 			privateField: 'private!',
 		})
+	}
+
+	@test()
+	protected static async triggersDidCreateAfterCreating() {
+		const expected = await this.createRandomRecord()
+
+		assert.isEqualDeep(this.dummyStore.didCreateValues, {
+			...expected,
+		})
+	}
+
+	@test()
+	protected static async triggersDidUpdateAfterUpdating() {
+		const created = await this.createRandomRecord()
+		const updates = {
+			phoneNumber: '+1 555-000-1111',
+			requiredForCreate: generateId(),
+			requiredForFull: generateId(),
+			requiredForUpdate: generateId(),
+		}
+
+		await this.dummyStore.updateOne({}, updates)
+		//@ts-ignore
+		delete created.requiredForDatabase
+		assert.isEqualDeep(this.dummyStore.didUpdateValues?.old, created)
+
+		assert.isEqualDeep(this.dummyStore.didUpdateValues?.updated, {
+			...created,
+			...updates,
+			requiredForDatabase: true,
+		})
+	}
+
+	private static async createRandomRecord() {
+		const record = {
+			id: generateId(),
+			phoneNumber: '555-555-0000',
+			requiredForCreate: generateId(),
+			requiredForUpdate: generateId(),
+		}
+		await this.dummyStore.createOne(record)
+
+		return this.findOne()
+	}
+
+	private static async findOne() {
+		const expected = await this.dummyStore.findOne(
+			{},
+			{ shouldIncludePrivateFields: true }
+		)
+
+		return {
+			...expected,
+			requiredForDatabase: true,
+		}
 	}
 }

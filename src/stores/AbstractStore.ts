@@ -75,10 +75,17 @@ export default abstract class AbstractStore<
 		values: CreateRecord
 	): Promise<Omit<DatabaseRecord, 'id'>>
 
+	protected didCreate?(values: CreateRecord): Promise<void>
+
 	protected willUpdate?(
 		updates: UpdateRecord,
 		values: DatabaseRecord
 	): Promise<Partial<DatabaseRecord>>
+
+	protected didUpdate?(
+		old: DatabaseRecord,
+		updated: DatabaseRecord
+	): Promise<void>
 
 	protected willScramble?(
 		values: Partial<DatabaseRecord> & { _isScrambled: true }
@@ -210,8 +217,11 @@ export default abstract class AbstractStore<
 			)
 
 			const record = await this.db.createOne(this.collectionName, toSave)
+			await this.didCreate?.(record as any)
 
-			return this.prepareAndNormalizeRecord(record, options)
+			const normalized = await this.prepareAndNormalizeRecord(record, options)
+
+			return normalized
 		} catch (err: any) {
 			const coded = errorUtil.transformToSpruceErrors(
 				err,
@@ -292,7 +302,10 @@ export default abstract class AbstractStore<
 
 		try {
 			const notFoundHandler = async (): Promise<FullRecord> => {
-				const created = await this.createOne(updates, options)
+				const created = await this.createOne(updates, {
+					...options,
+					shouldIncludePrivateFields: true,
+				})
 				//@ts-ignore
 				return created
 			}
@@ -372,7 +385,10 @@ export default abstract class AbstractStore<
 		try {
 			const isScrambled = this.isScrambled(initialUpdates)
 
-			let current: any = await this.findOne(query, options)
+			let current: any = await this.findOne(query, {
+				...options,
+				shouldIncludePrivateFields: true,
+			})
 			if (!current) {
 				current = await notFoundHandler()
 
@@ -418,6 +434,8 @@ export default abstract class AbstractStore<
 				query,
 				normalizedValues
 			)
+
+			await this.didUpdate?.(current, results as any)
 
 			return this.prepareAndNormalizeRecord(results, options)
 		} catch (err: any) {
