@@ -1,3 +1,10 @@
+# [18.0.0](https://github.com/sprucelabsai/data-stores/compare/v17.1.0...v18.0.0) (2022-07-31)
+
+
+### Breaking Changes
+
+* StoreFactory.setStore -> StoreFactory.setStoreClass (it was named poorly). Also, deprecation notice for stores.Store() to move towards stores.getStore() for performance bosts ([4747ebf](https://github.com/sprucelabsai/data-stores/commit/4747ebf))
+
 # [17.1.0](https://github.com/sprucelabsai/data-stores/compare/v17.0.69...v17.1.0) (2022-07-31)
 
 
