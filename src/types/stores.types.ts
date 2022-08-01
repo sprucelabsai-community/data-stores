@@ -30,6 +30,7 @@ export interface Store {
 	initialize?(): Promise<void>
 }
 
+export type SimplifiedStoreFactory = Pick<StoreFactory, 'getStore'>
 export interface StoreMap {}
 export interface StoreOptionsMap {}
 
