@@ -24,7 +24,7 @@ export default class DatabaseFactory {
 			})
 		}
 
-		const cacheKey = options.dbName + options.dbConnectionString
+		const cacheKey = this.generateCacheKey(options)
 
 		if (!this.cache[cacheKey]) {
 			if (dbConnectionString.startsWith('memory')) {
@@ -37,6 +37,16 @@ export default class DatabaseFactory {
 		}
 
 		return this.cache[cacheKey]
+	}
+
+	private static generateCacheKey(options: {
+		dbName: string
+		dbConnectionString: string
+	}) {
+		if (!options.dbName && options.dbConnectionString.includes('memory')) {
+			options.dbName = 'memory'
+		}
+		return options.dbName + options.dbConnectionString
 	}
 
 	public static reset() {
