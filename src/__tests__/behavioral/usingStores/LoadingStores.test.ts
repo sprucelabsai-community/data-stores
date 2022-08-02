@@ -12,13 +12,6 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 		assert.isTruthy(loadingStores)
 	}
 
-	private static async Loader(storesDir?: string) {
-		const fixture = new DatabaseFixture()
-		const db = await fixture.connectToDatabase()
-
-		return StoreLoader.Loader(storesDir ?? this.cwd, db)
-	}
-
 	@test()
 	protected static async loadsNoStoresWithDirWithNoStores() {
 		const loader = await this.Loader(diskUtil.createRandomTempDir())
@@ -32,9 +25,9 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 	protected static async loadsStoresWithGoodDir(pathSuffix = '') {
 		this.setCwd(pathSuffix)
 
-		const loader = await this.Loader(this.resolvePath(this.cwd))
-
+		const loader = await this.loaderWithCwd()
 		const factory = await loader.loadStores()
+
 		assert.isLength(factory.getStoreNames(), 1)
 		assert.isEqualDeep(factory.getStoreNames(), ['good'])
 	}
@@ -141,6 +134,43 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 
 		assert.isLength(names, 1)
 		assert.isEqual(names[0], 'good')
+	}
+
+	@test()
+	protected static async onlyLoadsStoresOnce() {
+		const loader = await this.loaderWithCwd()
+
+		const { factory: factory1 } = await loader.loadStoresAndErrors()
+		const { factory: factory2 } = await loader.loadStoresAndErrors()
+
+		assert.isEqual(factory1, factory2)
+	}
+
+	@test()
+	protected static async loadingWithErrorsDoesNotCacheInstance() {
+		const loader = await this.loaderWithCwd()
+		//@ts-ignore
+		loader.loadStoreClassesWithErrors = async () => {
+			return {
+				stores: [],
+				errors: [new Error('test')],
+			}
+		}
+
+		await loader.loadStoresAndErrors()
+		//@ts-ignore
+		assert.isFalsy(loader.factory)
+	}
+
+	private static async loaderWithCwd() {
+		return await this.Loader(this.resolvePath(this.cwd))
+	}
+
+	private static async Loader(storesDir?: string) {
+		const fixture = new DatabaseFixture()
+		const db = await fixture.connectToDatabase()
+
+		return StoreLoader.Loader(storesDir ?? this.cwd, db)
 	}
 
 	protected static setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {

@@ -25,6 +25,7 @@ export default class StoreLoader {
 	private static instance: Record<string, Promise<StoreLoader>> = {}
 	private static defaultStoreDir: string
 	private static defaultDb: Database
+	private factory?: StoreFactory
 
 	private constructor(activeDir: string, db: Database) {
 		this.activeDir = activeDir
@@ -83,14 +84,23 @@ export default class StoreLoader {
 	}
 
 	public async loadStoresAndErrors() {
-		const { stores, errors } = await this.loadStoreClassesWithErrors()
-		const factory = StoreFactory.Factory(this.db)
+		let errors: StoreLoadError[] = []
+		if (!this.factory) {
+			const { stores, errors: loadedErrors } =
+				await this.loadStoreClassesWithErrors()
 
-		for (const store of stores) {
-			factory.setStoreClass(namesUtil.toCamel(store.namePascal), store.Class)
+			errors = loadedErrors
+			const factory = StoreFactory.Factory(this.db)
+
+			for (const store of stores) {
+				factory.setStoreClass(namesUtil.toCamel(store.namePascal), store.Class)
+			}
+
+			if (errors.length === 0) {
+				this.factory = factory
+			}
 		}
-
-		return { factory, errors }
+		return { factory: this.factory, errors }
 	}
 
 	private async loadStoreClassesWithErrors(): Promise<{
