@@ -9,6 +9,8 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
 		this.assertSameInstanceReturned(generateId(), 'memory://')
 		this.assertSameInstanceReturned(undefined, 'memory://')
 		this.assertSameInstanceReturned('memory', 'memory://', undefined)
+		this.assertSameInstanceReturned(generateId(), 'memory://', undefined)
+		this.assertSameInstanceReturned(undefined, 'memory://', undefined)
 	}
 
 	@test()
@@ -19,6 +21,19 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
 		})
 		const db2 = DatabaseFactory.Database({
 			dbName: 'test2',
+			dbConnectionString: 'memory://',
+		})
+
+		assert.isNotEqual(db1, db2)
+	}
+
+	@test()
+	protected static async doesNotConfuseMemoryForNotMemoryDbs() {
+		const db1 = DatabaseFactory.Database({
+			dbName: 'test1',
+			dbConnectionString: 'mongodb://localhost:27017',
+		})
+		const db2 = DatabaseFactory.Database({
 			dbConnectionString: 'memory://',
 		})
 

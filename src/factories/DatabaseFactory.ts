@@ -9,7 +9,7 @@ export default class DatabaseFactory {
 	private constructor() {}
 
 	public static Database(options: {
-		dbName: string
+		dbName?: string
 		dbConnectionString: string
 	}): Database {
 		const { dbName, dbConnectionString } = options
@@ -40,11 +40,14 @@ export default class DatabaseFactory {
 	}
 
 	private static generateCacheKey(options: {
-		dbName: string
+		dbName?: string
 		dbConnectionString: string
 	}) {
 		if (!options.dbName && options.dbConnectionString.includes('memory')) {
-			options.dbName = 'memory'
+			const key = Object.keys(this.cache).find((k) => k.startsWith('memory'))
+			if (key) {
+				return key
+			}
 		}
 		return options.dbName + options.dbConnectionString
 	}
