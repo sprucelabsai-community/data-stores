@@ -100,7 +100,7 @@ export default class StoreLoader {
 				this.factory = factory
 			}
 		}
-		return { factory: this.factory, errors }
+		return { factory: this.factory!, errors }
 	}
 
 	private async loadStoreClassesWithErrors(): Promise<{
