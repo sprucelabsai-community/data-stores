@@ -98,6 +98,8 @@ export default class StoreLoader {
 
 			if (errors.length === 0) {
 				this.factory = factory
+			} else {
+				return { factory, errors }
 			}
 		}
 		return { factory: this.factory!, errors }
