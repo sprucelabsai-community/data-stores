@@ -157,9 +157,11 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 			}
 		}
 
-		await loader.loadStoresAndErrors()
+		const { factory } = await loader.loadStoresAndErrors()
+
 		//@ts-ignore
 		assert.isFalsy(loader.factory)
+		assert.isTruthy(factory)
 	}
 
 	private static async loaderWithCwd() {
