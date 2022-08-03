@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "18.0.9",
+  "version": "18.0.11",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -74,7 +74,7 @@
   "dependencies": {
     "@sprucelabs/error": "^5.0.490",
     "@sprucelabs/schema": "^28.4.2",
-    "@sprucelabs/spruce-skill-utils": "^26.4.0",
+    "@sprucelabs/spruce-skill-utils": "^26.4.1",
     "globby": "^11.0.4",
     "just-clone": "^6.0.1",
     "lodash": "^4.17.21",
