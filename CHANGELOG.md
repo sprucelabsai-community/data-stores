@@ -1,3 +1,10 @@
+# [18.1.0](https://github.com/sprucelabsai/data-stores/compare/v18.0.34...v18.1.0) (2022-08-16)
+
+
+### Features
+
+* can now clean cached stores without type issues ([b31aca1](https://github.com/sprucelabsai/data-stores/commit/b31aca1))
+
 ## [18.0.34](https://github.com/sprucelabsai/data-stores/compare/v18.0.33...v18.0.34) (2022-08-16)
 
 ## [18.0.33](https://github.com/sprucelabsai/data-stores/compare/v18.0.32...v18.0.33) (2022-08-15)
