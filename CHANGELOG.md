@@ -1,3 +1,47 @@
+## [18.0.34](https://github.com/sprucelabsai/data-stores/compare/v18.0.33...v18.0.34) (2022-08-16)
+
+## [18.0.33](https://github.com/sprucelabsai/data-stores/compare/v18.0.32...v18.0.33) (2022-08-15)
+
+## [18.0.32](https://github.com/sprucelabsai/data-stores/compare/v18.0.31...v18.0.32) (2022-08-15)
+
+## [18.0.31](https://github.com/sprucelabsai/data-stores/compare/v18.0.30...v18.0.31) (2022-08-15)
+
+## [18.0.30](https://github.com/sprucelabsai/data-stores/compare/v18.0.29...v18.0.30) (2022-08-14)
+
+## [18.0.29](https://github.com/sprucelabsai/data-stores/compare/v18.0.28...v18.0.29) (2022-08-14)
+
+## [18.0.28](https://github.com/sprucelabsai/data-stores/compare/v18.0.27...v18.0.28) (2022-08-13)
+
+## [18.0.27](https://github.com/sprucelabsai/data-stores/compare/v18.0.26...v18.0.27) (2022-08-13)
+
+## [18.0.26](https://github.com/sprucelabsai/data-stores/compare/v18.0.25...v18.0.26) (2022-08-12)
+
+## [18.0.25](https://github.com/sprucelabsai/data-stores/compare/v18.0.24...v18.0.25) (2022-08-12)
+
+## [18.0.24](https://github.com/sprucelabsai/data-stores/compare/v18.0.23...v18.0.24) (2022-08-11)
+
+## [18.0.23](https://github.com/sprucelabsai/data-stores/compare/v18.0.22...v18.0.23) (2022-08-10)
+
+## [18.0.22](https://github.com/sprucelabsai/data-stores/compare/v18.0.21...v18.0.22) (2022-08-10)
+
+## [18.0.21](https://github.com/sprucelabsai/data-stores/compare/v18.0.20...v18.0.21) (2022-08-08)
+
+## [18.0.20](https://github.com/sprucelabsai/data-stores/compare/v18.0.19...v18.0.20) (2022-08-07)
+
+## [18.0.19](https://github.com/sprucelabsai/data-stores/compare/v18.0.18...v18.0.19) (2022-08-06)
+
+## [18.0.18](https://github.com/sprucelabsai/data-stores/compare/v18.0.17...v18.0.18) (2022-08-06)
+
+## [18.0.17](https://github.com/sprucelabsai/data-stores/compare/v18.0.16...v18.0.17) (2022-08-06)
+
+## [18.0.16](https://github.com/sprucelabsai/data-stores/compare/v18.0.15...v18.0.16) (2022-08-05)
+
+## [18.0.15](https://github.com/sprucelabsai/data-stores/compare/v18.0.14...v18.0.15) (2022-08-05)
+
+## [18.0.14](https://github.com/sprucelabsai/data-stores/compare/v18.0.13...v18.0.14) (2022-08-05)
+
+## [18.0.13](https://github.com/sprucelabsai/data-stores/compare/v18.0.12...v18.0.13) (2022-08-03)
+
 ## [18.0.12](https://github.com/sprucelabsai/data-stores/compare/v18.0.11...v18.0.12) (2022-08-03)
 
 ## [18.0.11](https://github.com/sprucelabsai/data-stores/compare/v18.0.10...v18.0.11) (2022-08-02)
