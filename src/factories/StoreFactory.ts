@@ -65,11 +65,11 @@ export default class StoreFactory {
 		return Object.keys(this.storeMap) as any
 	}
 
-	public setStoreClass(name: string, TestStore: StoreContructor) {
-		this.storeMap[name] = TestStore
+	public setStoreClass(name: string, Class: StoreContructor) {
+		this.storeMap[name] = Class
 	}
 
-	public setStore(name: StoreName, store: Store) {
+	public setStore(name: StoreName, store: Store | null) {
 		this.stores[name] = store
 	}
 
