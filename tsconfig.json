@@ -31,7 +31,8 @@
 	"include": [
 		"./src/*.ts",
 		"./src/**/*.ts",
-		"./src/.spruce/**/*"
+		"./src/.spruce/**/*",
+		"./src/__tests__/testDirsAndFiles/**/.spruce/**/*.ts"
 	],
 	"exclude": [
 		"build",
