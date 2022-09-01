@@ -10,7 +10,7 @@ type QueryPredicate<Query, K extends keyof Query> =
 type Obj = Record<string, any>
 
 export type QueryBuilder<
-	Query extends Obj
+	Query
 	// Flattened = FlattenAndPathKeys<Query>
 > = {
 	[K in keyof Query]?: QueryPredicate<Query, K>

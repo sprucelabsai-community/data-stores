@@ -310,7 +310,7 @@ export default abstract class AbstractStore<
 				return created
 			}
 
-			const entity = new SchemaEntity(this.updateSchema, updates)
+			const entity = new SchemaEntity(this.updateSchema, updates as any)
 			const cleanedUpdates = entity.getValues({
 				validate: false,
 				//@ts-ignore
@@ -364,7 +364,7 @@ export default abstract class AbstractStore<
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord
 	): Promise<number> {
-		return this.db.update(this.collectionName, query, updates)
+		return this.db.update(this.collectionName, query, updates as any)
 	}
 
 	private async findOneAndUpdate<
