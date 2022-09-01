@@ -12,7 +12,7 @@ import {
 	ObjectId,
 	Timestamp,
 } from 'bson'
-import { BSONType, ChangeStream, ResumeToken } from 'mongodb'
+import { BSONType, ResumeToken } from 'mongodb'
 import { AggregationCursor, Code } from 'mongodb'
 import { ClientSession, MongoClient, MongoError, ReadPreference } from 'mongodb'
 
@@ -2106,21 +2106,6 @@ export interface Collection<
 		options: UpdateOneOptions,
 		callback: MongoCallback<UpdateWriteOpResult>
 	): void
-	/**
-	 * Create a new Change Stream, watching for new changes (insertions, updates, replacements, deletions, and invalidations) in this collection.
-	 *
-	 * @param pipeline An array of {@link https://docs.mongodb.com/v3.6/reference/operator/aggregation-pipeline/ aggregation pipeline stages}
-	 * through which to pass change stream documents. This allows for filtering (using `$match`) and manipulating the change stream documents.
-	 * @param options Optional settings
-	 * @see https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#watch
-	 */
-	watch<T = TSchema>(
-		pipeline?: object[],
-		options?: ChangeStreamOptions & { session?: ClientSession | undefined }
-	): ChangeStream<T>
-	watch<T = TSchema>(
-		options?: ChangeStreamOptions & { session?: ClientSession | undefined }
-	): ChangeStream<T>
 }
 
 /** Update Query */
@@ -2486,6 +2471,7 @@ export type FilterQuery<T> = {
 /** @see https://docs.mongodb.com/v3.6/reference/method/db.collection.bulkWrite/#insertone */
 export type BulkWriteInsertOneOperation<TSchema> = {
 	insertOne: {
+		/** @ts-ignore */
 		document: OptionalId<TSchema>
 	}
 }
