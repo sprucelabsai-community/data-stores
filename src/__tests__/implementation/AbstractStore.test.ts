@@ -5,7 +5,7 @@ import {
 	SchemaValues,
 	validationErrorAssert,
 } from '@sprucelabs/schema'
-import { test, assert } from '@sprucelabs/test'
+import { test, assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../constants'
 import SpruceError from '../../errors/SpruceError'

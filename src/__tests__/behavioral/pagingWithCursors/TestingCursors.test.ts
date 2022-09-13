@@ -1,4 +1,4 @@
-import { test, assert } from '@sprucelabs/test'
+import { test, assert } from '@sprucelabs/test-utils'
 import CursorPagerFaker from '../../../cursors/CursorPagerFaker'
 import generateId from '../../../utilities/generateId'
 import { SpyRecord } from '../usingStores/support/SpyStore'
