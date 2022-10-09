@@ -502,10 +502,15 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 	private assertIndexDoesNotExist(
 		currentIndexes: UniqueIndex[],
-		fields: string[]
+		fields: string[],
+		collectionName: string
 	) {
 		if (this.doesIndexExist(currentIndexes, fields)) {
-			throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+			throw new SpruceError({
+				code: 'INDEX_EXISTS',
+				index: fields,
+				collectionName,
+			})
 		}
 	}
 
@@ -529,7 +534,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		}
 
 		await this.randomDelay()
-		this.assertIndexDoesNotExist(col._uniqueIndexes, fields)
+		this.assertIndexDoesNotExist(col._uniqueIndexes, fields, collection)
 
 		if (col._uniqueIndexes) {
 			const tempUniqueIndexes = [...col._uniqueIndexes]
@@ -574,7 +579,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		}
 
 		await this.randomDelay()
-		this.assertIndexDoesNotExist(col._indexes, fields)
+		this.assertIndexDoesNotExist(col._indexes, fields, collection)
 
 		col._indexes.push(fields)
 	}

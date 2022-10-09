@@ -112,7 +112,9 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 			case 'INDEX_EXISTS':
 				message = `The unique index ${options.index.join(
 					', '
-				)} you attempted to create already exists!`
+				)} you attempted to create in '${
+					options.collectionName
+				}' already exists!`
 				break
 
 			case 'UNKNOWN_ERROR':

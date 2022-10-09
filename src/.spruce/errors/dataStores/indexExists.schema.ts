@@ -16,6 +16,12 @@ const indexExistsSchema: SpruceErrors.DataStores.IndexExistsSchema  = {
 	                isArray: true,
 	                options: undefined
 	            },
+	            /** . */
+	            'collectionName': {
+	                type: 'text',
+	                isRequired: true,
+	                options: undefined
+	            },
 	    }
 }
 

@@ -420,7 +420,11 @@ export default class MongoDatabase implements Database {
 		fields: string[]
 	) {
 		if (this.doesIndexExist(currentIndexes, fields)) {
-			throw new SpruceError({ code: 'INDEX_EXISTS', index: fields })
+			throw new SpruceError({
+				code: 'INDEX_EXISTS',
+				index: fields,
+				collectionName: this.dbName,
+			})
 		}
 	}
 

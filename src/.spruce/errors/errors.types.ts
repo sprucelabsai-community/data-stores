@@ -371,6 +371,8 @@ export declare namespace SpruceErrors.DataStores {
 		
 			/** Index Exists. */
 			'index': string[]
+			
+			'collectionName': string
 	}
 
 	export interface IndexExistsSchema extends SpruceSchema.Schema {
@@ -384,6 +386,12 @@ export declare namespace SpruceErrors.DataStores {
 		                type: 'text',
 		                isRequired: true,
 		                isArray: true,
+		                options: undefined
+		            },
+		            /** . */
+		            'collectionName': {
+		                type: 'text',
+		                isRequired: true,
 		                options: undefined
 		            },
 		    }
