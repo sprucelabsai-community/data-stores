@@ -1,4 +1,4 @@
-import { test, assert } from '@sprucelabs/test'
+import { test, assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import CursorPager, { CursorQueryOptions } from '../../../cursors/CursorPager'
 import { QueryOptions } from '../../../types/query.types'

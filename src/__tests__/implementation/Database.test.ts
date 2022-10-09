@@ -1,4 +1,4 @@
-import { test, assert } from '@sprucelabs/test'
+import { test, assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import NeDbDatabase from '../../databases/NeDbDatabase'

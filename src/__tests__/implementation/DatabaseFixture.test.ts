@@ -1,4 +1,4 @@
-import { test, assert } from '@sprucelabs/test'
+import { test, assert } from '@sprucelabs/test-utils'
 import { MongoClient } from 'mongodb'
 import { MongoDatabase } from '../..'
 import DatabaseFactory from '../../factories/DatabaseFactory'

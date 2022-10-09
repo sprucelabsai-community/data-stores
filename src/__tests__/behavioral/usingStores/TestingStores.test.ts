@@ -1,4 +1,4 @@
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test'
+import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
 import StoreFixture from '../../../fixtures/StoreFixture'
 
 export default class TestingStoresTest extends AbstractSpruceTest {

@@ -1,5 +1,5 @@
 import { SchemaRegistry } from '@sprucelabs/schema'
-import AbstractSpruceTest from '@sprucelabs/test'
+import AbstractSpruceTest from '@sprucelabs/test-utils'
 import DatabaseFixture, {
 	DatabaseFixtureOptions,
 } from '../fixtures/DatabaseFixture'
