@@ -82,10 +82,10 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^2.0.18",
+    "@sprucelabs/esm-postbuild": "^2.0.19",
     "@sprucelabs/jest-json-reporter": "^6.0.510",
     "@sprucelabs/jest-sheets-reporter": "^2.0.18",
-    "@sprucelabs/resolve-path-aliases": "^1.1.118",
+    "@sprucelabs/resolve-path-aliases": "^1.1.119",
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^7.7.377",
     "@sprucelabs/test-utils": "^3.2.43",
