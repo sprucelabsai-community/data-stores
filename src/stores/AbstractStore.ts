@@ -455,7 +455,7 @@ export default abstract class AbstractStore<
 		const { ...initialUpdates } = updates
 		const ops = saveOperations
 			.map((name) => {
-				if (name in initialUpdates) {
+				if (name in (initialUpdates as Record<string, any>)) {
 					//@ts-ignore
 					const value = initialUpdates[name]
 					//@ts-ignore
