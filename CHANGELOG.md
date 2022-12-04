@@ -1,3 +1,10 @@
+# [19.1.0](https://github.com/sprucelabsai/data-stores/compare/v19.0.63...v19.1.0) (2022-12-04)
+
+
+### Features
+
+* SimplifiedStoreFactory deprecated - use SimpleStoreFactory ([f4500c0](https://github.com/sprucelabsai/data-stores/commit/f4500c0))
+
 ## [19.0.63](https://github.com/sprucelabsai/data-stores/compare/v19.0.62...v19.0.63) (2022-12-02)
 
 ## [19.0.62](https://github.com/sprucelabsai/data-stores/compare/v19.0.61...v19.0.62) (2022-12-01)
