@@ -1,3 +1,21 @@
+## [19.0.63](https://github.com/sprucelabsai/data-stores/compare/v19.0.62...v19.0.63) (2022-12-02)
+
+## [19.0.62](https://github.com/sprucelabsai/data-stores/compare/v19.0.61...v19.0.62) (2022-12-01)
+
+## [19.0.61](https://github.com/sprucelabsai/data-stores/compare/v19.0.60...v19.0.61) (2022-11-30)
+
+## [19.0.60](https://github.com/sprucelabsai/data-stores/compare/v19.0.59...v19.0.60) (2022-11-30)
+
+## [19.0.59](https://github.com/sprucelabsai/data-stores/compare/v19.0.58...v19.0.59) (2022-11-30)
+
+## [19.0.58](https://github.com/sprucelabsai/data-stores/compare/v19.0.57...v19.0.58) (2022-11-30)
+
+## [19.0.57](https://github.com/sprucelabsai/data-stores/compare/v19.0.56...v19.0.57) (2022-11-29)
+
+## [19.0.56](https://github.com/sprucelabsai/data-stores/compare/v19.0.55...v19.0.56) (2022-11-29)
+
+## [19.0.55](https://github.com/sprucelabsai/data-stores/compare/v19.0.54...v19.0.55) (2022-11-28)
+
 ## [19.0.54](https://github.com/sprucelabsai/data-stores/compare/v19.0.53...v19.0.54) (2022-11-15)
 
 ## [19.0.53](https://github.com/sprucelabsai/data-stores/compare/v19.0.52...v19.0.53) (2022-11-15)
