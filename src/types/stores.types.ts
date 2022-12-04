@@ -29,8 +29,11 @@ export interface UniversalStoreOptions {
 export interface Store {
 	initialize?(): Promise<void>
 }
-
+/**
+ * @deprecated SimplifiedStoreFactory -> SimpleStoreFactory
+ */
 export type SimplifiedStoreFactory = Pick<StoreFactory, 'getStore'>
+export type SimpleStoreFactory = Pick<StoreFactory, 'getStore'>
 export interface StoreMap {}
 export interface StoreOptionsMap {}
 
