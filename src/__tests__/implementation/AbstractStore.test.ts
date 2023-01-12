@@ -481,7 +481,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		})
 
 		assert.isExactType<
-			typeof matches[0],
+			(typeof matches)[0],
 			{
 				id: string
 				requiredForCreate: string
@@ -492,7 +492,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		>(true)
 
 		assert.isExactType<
-			typeof matches[1],
+			(typeof matches)[1],
 			{
 				id: string
 				requiredForCreate: string
@@ -603,7 +603,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		})
 
 		assert.isExactType<
-			typeof matches[0],
+			(typeof matches)[0],
 			{
 				id: string
 				requiredForCreate: string
@@ -616,7 +616,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 		>(true)
 
 		assert.isExactType<
-			typeof matches[1],
+			(typeof matches)[1],
 			{
 				id: string
 				requiredForCreate: string

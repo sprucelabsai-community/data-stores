@@ -18,7 +18,7 @@ export const saveOperations = [
 	'$pop',
 ] as const
 
-export type SaveOperation = typeof saveOperations[number]
+export type SaveOperation = (typeof saveOperations)[number]
 export type SaveOperations = Partial<Record<SaveOperation, Record<string, any>>>
 
 export interface UniversalStoreOptions {
