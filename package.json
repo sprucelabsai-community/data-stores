@@ -85,7 +85,7 @@
     "@sprucelabs/esm-postbuild": "^2.0.74",
     "@sprucelabs/jest-json-reporter": "^6.0.553",
     "@sprucelabs/jest-sheets-reporter": "^2.0.21",
-    "@sprucelabs/resolve-path-aliases": "^1.1.163",
+    "@sprucelabs/resolve-path-aliases": "^1.1.164",
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^7.7.410",
     "@sprucelabs/test-utils": "^3.2.99",
