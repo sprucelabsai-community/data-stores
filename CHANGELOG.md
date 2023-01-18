@@ -1,3 +1,5 @@
+## [19.1.48](https://github.com/sprucelabsai/data-stores/compare/v19.1.47...v19.1.48) (2023-01-18)
+
 ## [19.1.47](https://github.com/sprucelabsai/data-stores/compare/v19.1.46...v19.1.47) (2023-01-18)
 
 ## [19.1.46](https://github.com/sprucelabsai/data-stores/compare/v19.1.45...v19.1.46) (2023-01-18)
