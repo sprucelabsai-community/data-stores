@@ -72,9 +72,9 @@
     "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
-    "@sprucelabs/error": "^5.0.571",
-    "@sprucelabs/schema": "^28.5.113",
-    "@sprucelabs/spruce-skill-utils": "^28.1.63",
+    "@sprucelabs/error": "^5.0.572",
+    "@sprucelabs/schema": "^28.5.115",
+    "@sprucelabs/spruce-skill-utils": "^28.1.65",
     "globby": "^11.0.4",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
@@ -82,13 +82,13 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^2.0.76",
+    "@sprucelabs/esm-postbuild": "^2.0.77",
     "@sprucelabs/jest-json-reporter": "^6.0.554",
     "@sprucelabs/jest-sheets-reporter": "^2.0.21",
-    "@sprucelabs/resolve-path-aliases": "^1.1.167",
+    "@sprucelabs/resolve-path-aliases": "^1.1.168",
     "@sprucelabs/semantic-release": "^4.0.8",
-    "@sprucelabs/test": "^7.7.412",
-    "@sprucelabs/test-utils": "^3.2.102",
+    "@sprucelabs/test": "^7.7.413",
+    "@sprucelabs/test-utils": "^3.2.104",
     "@types/lodash": "^4.14.191",
     "@types/nedb": "^1.8.12",
     "@types/node": "17.0.5",
