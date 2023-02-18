@@ -1,185 +1,170 @@
 import { test } from '@sprucelabs/test-utils'
-import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
-import NeDbDatabase from '../../databases/NeDbDatabase'
-import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
-import databaseAssertUtil from '../../tests/databaseAssertUtil'
-import { Database } from '../../types/database.types'
-
-let dbCount = 0
-async function mongo(dbConnectionString = MONGO_TEST_URI, dbName?: string) {
-	const name = dbName ?? `mercury_${new Date().getTime()}-${dbCount++}`
-	const database = new MongoDatabase(dbConnectionString, { dbName: name })
-
-	await database.connect()
-
-	return database
-}
-
-async function neDb() {
-	const database = new NeDbDatabase()
-	await database.connect()
-	return database
-}
-
-export type Connect = (
-	connectionString?: string,
-	dbName?: string
-) => Promise<Database>
+import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
+import databaseAssertUtil from '../../../tests/databaseAssertUtil'
+import { Database } from '../../../types/database.types'
+import mongoConnect from '../../support/mongoConnect'
+import neDbConnect from '../../support/neDbConnect'
 
 export default class MongoDatabaseTest extends AbstractDatabaseTest {
-	@test('throws error when updating record not found (mongo)', mongo)
-	@test('throws error when updating record not found (neDb)', neDb)
+	@test('throws error when updating record not found (mongo)', mongoConnect)
+	@test('throws error when updating record not found (neDb)', neDbConnect)
 	protected static async throwsErrorWhenUpdatingRecordNotFound(
 		connect: Connect
 	) {
 		await databaseAssertUtil.assertThrowsWhenUpdatingRecordNotFound(connect)
 	}
 
-	@test('inserting generates id (mongo)', mongo)
-	@test('inserting generates id (neDb)', neDb)
+	@test('inserting generates id (mongo)', mongoConnect)
+	@test('inserting generates id (neDb)', neDbConnect)
 	protected static async insertingGeneratesId(connect: Connect) {
 		await databaseAssertUtil.assertInsertingGeneratesId(connect)
 	}
 
-	@test('can sort asc on finds (mongo)', mongo)
-	@test('can sort asc on finds (neDb)', neDb)
+	@test('can sort asc on finds (mongo)', mongoConnect)
+	@test('can sort asc on finds (neDb)', neDbConnect)
 	protected static async canSortAscResults(connect: Connect) {
 		await databaseAssertUtil.assertCanSortAsc(connect)
 	}
 
-	@test('can sort desc (mongo)', mongo)
-	@test('can sort desc (neDb)', neDb)
+	@test('can sort desc (mongo)', mongoConnect)
+	@test('can sort desc (neDb)', neDbConnect)
 	protected static async canSortDescResults(connect: Connect) {
 		await databaseAssertUtil.assertCanSortDesc(connect)
 	}
 
-	@test('sort by id (mongo)', mongo)
-	@test('sort by id (neDb)', neDb)
+	@test('sort by id (mongo)', mongoConnect)
+	@test('sort by id (neDb)', neDbConnect)
 	protected static async canSortById(connect: Connect) {
 		await databaseAssertUtil.assertCanSortById(connect)
 	}
 
-	@test('can update record (mongo)', mongo)
-	@test('can update record (neDb)', neDb)
+	@test('can update record (mongo)', mongoConnect)
+	@test('can update record (neDb)', neDbConnect)
 	protected static async canUpdate(connect: Connect) {
 		await databaseAssertUtil.assertCanUpdate(connect)
 	}
 
-	@test('can find with $or', mongo)
+	@test('can find with $or', mongoConnect)
 	protected static async canQueryWithOr(connect: Connect) {
 		await databaseAssertUtil.assertCanQueryWithOr(connect)
 	}
 
-	@test('update many (mongo)', mongo)
-	@test('update many (neDb)', neDb)
+	@test('update many (mongo)', mongoConnect)
+	@test('update many (neDb)', neDbConnect)
 	protected static async updateMany(connect: Connect) {
 		await databaseAssertUtil.assertCanUpdateMany(connect)
 	}
 
-	@test('can create many (mongo)', mongo)
-	@test('can create many (neDb)', neDb)
+	@test('can create many (mongo)', mongoConnect)
+	@test('can create many (neDb)', neDbConnect)
 	protected static async canCreateMany(connect: Connect) {
 		await databaseAssertUtil.assertCanCreateMany(connect)
 	}
 
-	@test('can push onto array (mongo)', mongo)
-	@test('can push onto array (neDb)', neDb)
+	@test('can push onto array (mongo)', mongoConnect)
+	@test('can push onto array (neDb)', neDbConnect)
 	protected static async canPush(connect: Connect) {
 		await databaseAssertUtil.assertCanPushOntoArrayValue(connect)
 	}
 
-	@test('find with invalid id returns empty results (mongo)', mongo)
-	@test('find with invalid id returns empty results  (neDb)', neDb)
+	@test('find with invalid id returns empty results (mongo)', mongoConnect)
+	@test('find with invalid id returns empty results  (neDb)', neDbConnect)
 	protected static async getEmptyResultFind(connect: Connect) {
 		await databaseAssertUtil.assertEmptyDatabaseReturnsEmptyArray(connect)
 	}
 
-	@test('findOne with invalid id returns empty results (mongo)', mongo)
-	@test('findOne with invalid id returns empty results  (neDb)', neDb)
+	@test('findOne with invalid id returns empty results (mongo)', mongoConnect)
+	@test('findOne with invalid id returns empty results  (neDb)', neDbConnect)
 	protected static async getEmptyResultsFindOne(connect: Connect) {
 		await databaseAssertUtil.assertFindOneOnEmptyDatabaseReturnsNull(connect)
 	}
 
-	@test('can limit results (mongo)', mongo)
-	@test('can limit results (neDb)', neDb)
+	@test('can limit results (mongo)', mongoConnect)
+	@test('can limit results (neDb)', neDbConnect)
 	protected static async canLimitResults(connect: Connect) {
 		await databaseAssertUtil.assertCanLimitResults(connect)
 	}
 
-	@test('can limit to zero results (mongo)', mongo)
-	@test('can limit to zero results (neDb)', neDb)
+	@test('can limit to zero results (mongo)', mongoConnect)
+	@test('can limit to zero results (neDb)', neDbConnect)
 	protected static async canLimitToZeroResults(connect: Connect) {
 		await databaseAssertUtil.assertCanLimitResultsToZero(connect)
 	}
 
-	@test('can delete record (mongo)', mongo)
-	@test('can delete record (neDb)', neDb)
+	@test('can delete record (mongo)', mongoConnect)
+	@test('can delete record (neDb)', neDbConnect)
 	protected static async canDeleteRecord(connect: Connect) {
 		await databaseAssertUtil.assertCanDeleteRecord(connect)
 	}
 
-	@test('can delete one (mongo)', mongo)
-	@test('can delete one (neDb)', neDb)
+	@test('can delete one (mongo)', mongoConnect)
+	@test('can delete one (neDb)', neDbConnect)
 	protected static async canDeleteOne(connect: Connect) {
 		await databaseAssertUtil.assertCanDeleteOne(connect)
 	}
 
-	@test('can upsert (mongo)', mongo)
-	@test('can upsert (neDb)', neDb)
+	@test('can upsert (mongo)', mongoConnect)
+	@test('can upsert (neDb)', neDbConnect)
 	protected static async canUpsert(connect: Connect) {
 		await databaseAssertUtil.assertCanShutdown(connect)
 	}
 
-	@test('has no unique indexes to start (mongo)', mongo)
-	@test('has no unique indexes to start (neDb)', neDb)
+	@test('has no unique indexes to start (mongo)', mongoConnect)
+	@test('has no unique indexes to start (neDb)', neDbConnect)
 	protected static async hasNoUniqueIndexToStart(connect: Connect) {
 		await databaseAssertUtil.assertHasNoUniqueIndexToStart(connect)
 	}
 
-	@test('can create multiple unique indexes (mongo)', mongo)
-	@test('can create multiple unique indexes (neDb)', neDb)
+	@test('can create multiple unique indexes (mongo)', mongoConnect)
+	@test('can create multiple unique indexes (neDb)', neDbConnect)
 	protected static async canCreateUniqueIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanCreateUniqueIndex(connect)
 	}
 
-	@test('can create a compound field unique index (mongo)', mongo)
-	@test('can create a compound field unique index (neDb)', neDb)
+	@test('can create a compound field unique index (mongo)', mongoConnect)
+	@test('can create a compound field unique index (neDb)', neDbConnect)
 	protected static async canCreateMultiFieldUniqueIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanCreateMultiFieldUniqueIndex(connect)
 	}
 
-	@test("can't create the same unique indexes twice (mongo)", mongo)
-	@test("can't create the same unique indexes twice (neDb)", neDb)
+	@test("can't create the same unique indexes twice (mongo)", mongoConnect)
+	@test("can't create the same unique indexes twice (neDb)", neDbConnect)
 	protected static async cantCreateSameUniqueIndexTwice(connect: Connect) {
 		await databaseAssertUtil.assertCantCreateUniqueIndexTwice(connect)
 	}
 
-	@test('can drop a unique index (mongo)', mongo)
-	@test('can drop a unique index (neDb)', neDb)
+	@test('can drop a unique index (mongo)', mongoConnect)
+	@test('can drop a unique index (neDb)', neDbConnect)
 	protected static async canDropUniqueIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanDropUniqueIndex(connect)
 	}
 
-	@test('can drop compound unique index (mongo)', mongo)
-	@test('can drop compound unique index (neDb)', neDb)
+	@test('can drop compound unique index (mongo)', mongoConnect)
+	@test('can drop compound unique index (neDb)', neDbConnect)
 	protected static async canDropCompoundUniqueIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanDropCompoundUniqueIndex(connect)
 	}
 
-	@test("can't drop unique index that doesn't exist (mongo)", mongo)
-	@test("can't drop unique index that doesn't exist (neDb)", neDb)
+	@test("can't drop unique index that doesn't exist (mongo)", mongoConnect)
+	@test("can't drop unique index that doesn't exist (neDb)", neDbConnect)
 	protected static async cantDropUniqueIndexThatDoesntExist(connect: Connect) {
 		await databaseAssertUtil.assertCantDropUniqueIndexThatDoesntExist(connect)
 	}
 
-	@test("can't drop index when no indexes exist (mongo)", mongo)
-	@test("can't drop index when no indexes exist (neDb)", neDb)
+	@test("can't drop index when no indexes exist (mongo)", mongoConnect)
+	@test("can't drop index when no indexes exist (neDb)", neDbConnect)
 	protected static async cantDropIndexWhenNoIndexExist(connect: Connect) {
 		await databaseAssertUtil.assertCantDropIndexWhenNoIndexExists(connect)
 	}
 
-	@test("can't drop compound unique index that doesn't exist (mongo)", mongo)
-	@test("can't drop compound unique index that doesn't exist (neDb)", neDb)
+	@test(
+		"can't drop compound unique index that doesn't exist (mongo)",
+		mongoConnect
+	)
+	@test(
+		"can't drop compound unique index that doesn't exist (neDb)",
+		neDbConnect
+	)
 	protected static async cantDropCompoundUniqueIndexThatDoesntExist(
 		connect: Connect
 	) {
@@ -188,16 +173,16 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		)
 	}
 
-	@test('syncUniqueIndexes adds missing indexes (mongo)', mongo)
-	@test('syncUniqueIndexes adds missing indexes (neDb)', neDb)
+	@test('syncUniqueIndexes adds missing indexes (mongo)', mongoConnect)
+	@test('syncUniqueIndexes adds missing indexes (neDb)', neDbConnect)
 	protected static async syncUniqueIndexesAddsMissingIndexes(connect: Connect) {
 		await databaseAssertUtil.assertSyncingUniqueIndexsAddsMissingIndexes(
 			connect
 		)
 	}
 
-	@test('syncUniqueIndexes skips existing indexes (mongo)', mongo)
-	@test('syncUniqueIndexes skips existing indexes (neDb)', neDb)
+	@test('syncUniqueIndexes skips existing indexes (mongo)', mongoConnect)
+	@test('syncUniqueIndexes skips existing indexes (neDb)', neDbConnect)
 	protected static async syncUniqueIndexesSkipsExistingIndexes(
 		connect: Connect
 	) {
@@ -206,8 +191,8 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		)
 	}
 
-	@test('syncUniqueIndexes removes extra indexes (mongo)', mongo)
-	@test('syncUniqueIndexes removes extra indexes (neDb)', neDb)
+	@test('syncUniqueIndexes removes extra indexes (mongo)', mongoConnect)
+	@test('syncUniqueIndexes removes extra indexes (neDb)', neDbConnect)
 	protected static async syncUniqueIndexesRemovesExtraIndexes(
 		connect: Connect
 	) {
@@ -216,19 +201,25 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		)
 	}
 
-	@test('syncUniqueIndexes multiple times with different keys (mongo)', mongo)
-	@test('syncUniqueIndexes multiple times with different keys (neDb)', neDb)
+	@test(
+		'syncUniqueIndexes multiple times with different keys (mongo)',
+		mongoConnect
+	)
+	@test(
+		'syncUniqueIndexes multiple times with different keys (neDb)',
+		neDbConnect
+	)
 	protected static async syncUniqueIndexesMultipleUpdates(connect: Connect) {
 		await databaseAssertUtil.assertSyncingUniqueIndexesIsRaceProof(connect)
 	}
 
 	@test(
 		'syncUniqueIndexes does not remove and add existing indexes (mongo)',
-		mongo
+		mongoConnect
 	)
 	@test(
 		'syncUniqueIndexes does not remove and add existing indexes (neDb)',
-		neDb
+		neDbConnect
 	)
 	protected static async syncUniqueIndexesDoesNotRemoveAndAddExistingIndexes(
 		connect: Connect
@@ -236,16 +227,19 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await databaseAssertUtil.assertSyncingIndexesDoesNotAddAndRemove(connect)
 	}
 
-	@test('can create a unique index that blocks duplicates (mongo)', mongo)
-	@test('can create a unique index that blocks duplicates (neDb)', neDb)
+	@test(
+		'can create a unique index that blocks duplicates (mongo)',
+		mongoConnect
+	)
+	@test('can create a unique index that blocks duplicates (neDb)', neDbConnect)
 	protected static async canCreateUniqueIndexBlocksDuplicates(
 		connect: Connect
 	) {
 		await databaseAssertUtil.assertUniqueIndexBlocksDuplicates(connect)
 	}
 
-	@test('duplicate Keys On Insert Throws SpruceError (mongo)', mongo)
-	@test('duplicate Keys On Insert Throws SpruceError (neDb)', neDb)
+	@test('duplicate Keys On Insert Throws SpruceError (mongo)', mongoConnect)
+	@test('duplicate Keys On Insert Throws SpruceError (neDb)', neDbConnect)
 	protected static async duplicateKeysOnInsertThrowsSpruceError(
 		connect: Connect
 	) {
@@ -254,9 +248,12 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 
 	@test(
 		'syncing Unique Index On Duped Fields Throws SpruceError (mongo)',
-		mongo
+		mongoConnect
 	)
-	@test('syncing Unique Index On Duped Fields Throws SpruceError (neDb)', neDb)
+	@test(
+		'syncing Unique Index On Duped Fields Throws SpruceError (neDb)',
+		neDbConnect
+	)
 	protected static async settingUniqueIndexOnDupedFieldsThrowsSpruceError(
 		connect: Connect
 	) {
@@ -265,19 +262,19 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		)
 	}
 
-	@test('can create unique index based on nested field (mongo)', mongo)
-	@test('can create unique index based on nested field (neBd)', neDb)
+	@test('can create unique index based on nested field (mongo)', mongoConnect)
+	@test('can create unique index based on nested field (neBd)', neDbConnect)
 	protected static async nestedFieldIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanCreateUniqueIndexOnNestedField(connect)
 	}
 
 	@test(
 		'can upsert record updating only changed field with unique index (mongo)',
-		mongo
+		mongoConnect
 	)
 	@test(
 		'can upsert record updating only changed field with unique index (neDb)',
-		neDb
+		neDbConnect
 	)
 	protected static async upsertWithUniqueIndex(connect: Connect) {
 		await databaseAssertUtil.assertUpsertWithUniqueIndex(connect)
@@ -285,44 +282,47 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 
 	@test(
 		'can update record with unique index based on nested field (mongo)',
-		mongo
+		mongoConnect
 	)
 	@test(
 		'can update record with unique index based on nested field (neBd)',
-		neDb
+		neDbConnect
 	)
 	protected static async nestedFieldIndexUpdate(connect: Connect) {
 		await databaseAssertUtil.assertNestedFieldIndexUpdates(connect)
 	}
 
-	@test('has no indexes to start (mongo)', mongo)
-	@test('has no indexes to start (neDb)', neDb)
+	@test('has no indexes to start (mongo)', mongoConnect)
+	@test('has no indexes to start (neDb)', neDbConnect)
 	protected static async hasNoIndexToStart(connect: Connect) {
 		await databaseAssertUtil.assertHasNoIndexToStart(connect)
 	}
 
-	@test('can create multiple indexes (mongo)', mongo)
-	@test('can create multiple indexes (neDb)', neDb)
+	@test('can create multiple indexes (mongo)', mongoConnect)
+	@test('can create multiple indexes (neDb)', neDbConnect)
 	protected static async canCreateIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanCreateIndex(connect)
 	}
 
-	@test("can't create the same indexes twice (mongo)", mongo)
-	@test("can't create the same indexes twice (neDb)", neDb)
+	@test("can't create the same indexes twice (mongo)", mongoConnect)
+	@test("can't create the same indexes twice (neDb)", neDbConnect)
 	protected static async cantCreateSameIndexTwice(connect: Connect) {
 		await databaseAssertUtil.assertCantCreateSameIndexTwice(connect)
 	}
 
-	@test('can create a compound field index 1 (mongo)', mongo, [
+	@test('can create a compound field index 1 (mongo)', mongoConnect, [
 		'field',
 		'field2',
 	])
-	@test('can create a compound field index 1 (neDb)', neDb, ['field', 'field2'])
-	@test('can create a compound field index 2 (mongo)', mongo, [
+	@test('can create a compound field index 1 (neDb)', neDbConnect, [
+		'field',
+		'field2',
+	])
+	@test('can create a compound field index 2 (mongo)', mongoConnect, [
 		'otherField',
 		'otherField2',
 	])
-	@test('can create a compound field index 2 (neDb)', neDb, [
+	@test('can create a compound field index 2 (neDb)', neDbConnect, [
 		'otherField',
 		'otherField2',
 	])
@@ -333,20 +333,20 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		await databaseAssertUtil.assertCanCreateMultiFieldIndex(connect, fields)
 	}
 
-	@test('can drop a index (mongo)', mongo)
-	@test('can drop a index (neDb)', neDb)
+	@test('can drop a index (mongo)', mongoConnect)
+	@test('can drop a index (neDb)', neDbConnect)
 	protected static async canDropIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanDropIndex(connect)
 	}
 
-	@test('can drop a compound index (mongo)', mongo)
-	@test('can drop a compound index (neDb)', neDb)
+	@test('can drop a compound index (mongo)', mongoConnect)
+	@test('can drop a compound index (neDb)', neDbConnect)
 	protected static async canDropCompoundIndex(connect: Connect) {
 		await databaseAssertUtil.assertCanDropCompoundIndex(connect)
 	}
 
-	@test("can't drop compound  index that doesn't exist (mongo)", mongo)
-	@test("can't drop compound  index that doesn't exist (neDb)", neDb)
+	@test("can't drop compound  index that doesn't exist (mongo)", mongoConnect)
+	@test("can't drop compound  index that doesn't exist (neDb)", neDbConnect)
 	protected static async cantDropCompoundIndexThatDoesntExist(
 		connect: Connect
 	) {
@@ -355,25 +355,31 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		)
 	}
 
-	@test('syncIndexes skips existing indexes (mongo)', mongo)
-	@test('syncIndexes skips existing indexes (neDb)', neDb)
+	@test('syncIndexes skips existing indexes (mongo)', mongoConnect)
+	@test('syncIndexes skips existing indexes (neDb)', neDbConnect)
 	protected static async syncIndexesSkipsExistingIndexes(connect: Connect) {
 		await databaseAssertUtil.assertSyncIndexesSkipsExisting(connect)
 	}
 
-	@test('syncIndexes removes extra indexes (neDb)', neDb)
+	@test('syncIndexes removes extra indexes (neDb)', neDbConnect)
 	protected static async syncIndexesRemovesExtraIndexes(connect: Connect) {
 		await databaseAssertUtil.assertSyncIndexesRemovesExtraIndexes(connect)
 	}
 
-	@test('syncIndexes multiple times with different keys (mongo)', mongo)
-	@test('syncIndexes multiple times with different keys (neDb)', neDb)
+	@test('syncIndexes multiple times with different keys (mongo)', mongoConnect)
+	@test('syncIndexes multiple times with different keys (neDb)', neDbConnect)
 	protected static async syncIndexesMultipleUpdates(connect: Connect) {
 		await databaseAssertUtil.assertSyncIndexesHandlesRaceConditions(connect)
 	}
 
-	@test('syncIndexes does not remove and add existing indexes (mongo)', mongo)
-	@test('syncIndexes does not remove and add existing indexes (neDb)', neDb)
+	@test(
+		'syncIndexes does not remove and add existing indexes (mongo)',
+		mongoConnect
+	)
+	@test(
+		'syncIndexes does not remove and add existing indexes (neDb)',
+		neDbConnect
+	)
 	protected static async syncIndexesDoesNotRemoveAndAddExistingIndexes(
 		connect: Connect
 	) {
@@ -382,11 +388,11 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 
 	@test(
 		'can save, get back, update, and search against null+undefined undefined -> null (mongo)',
-		mongo
+		mongoConnect
 	)
 	@test(
 		'can save, get back, update, and search against null+undefined undefined -> null (neDb)',
-		neDb
+		neDbConnect
 	)
 	protected static async canSaveAndGetNullAndUndefined(connect: Connect) {
 		await databaseAssertUtil.assertCanSaveAndGetNullAndUndefined(connect)
@@ -395,44 +401,47 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	// nodejs mongo lib can't upsert when searching against null field (or maybe non id field???)
 	@test.skip(
 		'can upsert against null+undefined undefined -> null (mongo)',
-		mongo
+		mongoConnect
 	)
-	@test('can upsert against null+undefined undefined -> null (neDb)', neDb)
+	@test(
+		'can upsert against null+undefined undefined -> null (neDb)',
+		neDbConnect
+	)
 	protected static async canUpsertNull(connect: Connect) {
 		await databaseAssertUtil.assertCanUpsertNull(connect)
 	}
 
-	@test('can count (mongo)', mongo)
-	@test('can count (neDb)', neDb)
+	@test('can count (mongo)', mongoConnect)
+	@test('can count (neDb)', neDbConnect)
 	protected static async canCount(connect: Connect) {
 		await databaseAssertUtil.assertCanCount(connect)
 	}
 
-	@test('can count on id (mongo)', mongo)
-	@test('can count on id (neDb)', neDb)
+	@test('can count on id (mongo)', mongoConnect)
+	@test('can count on id (neDb)', neDbConnect)
 	protected static async canCountOnId(connect: Connect) {
 		await databaseAssertUtil.assertCanCountOnId(connect)
 	}
 
-	@test('can find by id with $in (mongo)', mongo)
-	@test('can find by id with $in (neDb)', neDb)
+	@test('can find by id with $in (mongo)', mongoConnect)
+	@test('can find by id with $in (neDb)', neDbConnect)
 	protected static async canFindWithIn(connect: Connect) {
 		await databaseAssertUtil.assertCanFindWithIn(connect)
 	}
 
-	@test('can find by id with $ne (mongo)', mongo)
-	@test('can find by id with $ne (neDb)', neDb)
+	@test('can find by id with $ne (mongo)', mongoConnect)
+	@test('can find by id with $ne (neDb)', neDbConnect)
 	protected static async canFindWithNe(connect: Connect) {
 		await databaseAssertUtil.assertCanFindWithNe(connect)
 	}
 
 	@test(
 		'provides helpful duplicate field error with multiple indexes, one at a time (mongo)',
-		mongo
+		mongoConnect
 	)
 	@test(
 		'provides helpful duplicate field error with multiple indexes, one at a time (neDb)',
-		neDb
+		neDbConnect
 	)
 	protected static async duplicateFieldsOnMultipleUniqueIndexesHitOneAtATime(
 		connect: Connect
@@ -442,54 +451,60 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		)
 	}
 
-	@test('can find by $gt, $lt, $gte, $lte (mongo)', mongo)
-	@test('can find by $gt, $lt, $gte, $lte (neDb)', neDb)
+	@test('can find by $gt, $lt, $gte, $lte (mongo)', mongoConnect)
+	@test('can find by $gt, $lt, $gte, $lte (neDb)', neDbConnect)
 	protected static async canQueryByGtLtGteLte(connect: Connect) {
 		await databaseAssertUtil.assertCanQueryByGtLtGteLte(connect)
 	}
 
-	@test('can search by path to sub object (mongo)', mongo)
-	@test('can search by path to sub object (neDb)', neDb)
+	@test('can search by path to sub object (mongo)', mongoConnect)
+	@test('can search by path to sub object (neDb)', neDbConnect)
 	protected static async canQueryByPathToSubObject(connect: Connect) {
 		await databaseAssertUtil.assertCanQueryPathWithDotSyntax(connect)
 	}
 
-	@test('knows if connected (mongo)', mongo)
-	@test('always connected (nedb)', neDb)
+	@test('knows if connected (mongo)', mongoConnect)
+	@test('always connected (nedb)', neDbConnect)
 	protected static async knowsIfConnected(connect: Connect) {
 		await databaseAssertUtil.assertKnowsIfConnectionClosed(connect)
 	}
 
-	@test('throws invalid connection string (mongo)', mongo)
+	@test('throws invalid connection string (mongo)', mongoConnect)
 	protected static async throwsInvalidConnectionString(connect: Connect) {
 		await databaseAssertUtil.assertThrowsWithInvalidConnectionString(connect)
 	}
 
-	@test('throws unable to connect to db (mongo)', mongo)
+	@test('throws unable to connect to db (mongo)', mongoConnect)
 	protected static async throwsWhenCantConnectToDb(connect: Connect) {
 		await databaseAssertUtil.assertThrowsWhenCantConnect(connect)
 	}
 
-	@test("can't name a database undefined (mongo)", mongo)
+	@test("can't name a database undefined (mongo)", mongoConnect)
 	protected static async cantUndefinedADbName(connect: Connect) {
 		await databaseAssertUtil.assertThrowsWithoutDatabaseName(connect)
 	}
 
-	@test('can choose which fields to return (mongo)', mongo)
-	@test('can choose which fields to return (neDb)', neDb)
+	@test('can choose which fields to return (mongo)', mongoConnect)
+	@test('can choose which fields to return (neDb)', neDbConnect)
 	protected static async selectFields(connect: Connect) {
 		await databaseAssertUtil.assertCanReturnOnlySelectFields(connect)
 	}
 
-	@test('can search by regex (mongo)', mongo)
-	@test('can search by regex (neDb)', neDb)
+	@test('can search by regex (mongo)', mongoConnect)
+	@test('can search by regex (neDb)', neDbConnect)
 	protected static async canSearchByRegx(connect: Connect) {
 		await databaseAssertUtil.assertCanSearchByRegex(connect)
 	}
 
-	@test('can $push to array (mongo)', mongo)
-	@test('can $push to array (neDb)', neDb)
+	@test('can $push to array (mongo)', mongoConnect)
+	@test('can $push to array (neDb)', neDbConnect)
 	protected static async can$pushOnUpsert(connect: Connect) {
 		await databaseAssertUtil.assertCanPushToArrayOnUpsert(connect)
 	}
 }
+
+export let dbCount = 0
+export type Connect = (
+	connectionString?: string,
+	dbName?: string
+) => Promise<Database>

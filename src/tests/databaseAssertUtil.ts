@@ -1,15 +1,26 @@
+import { assertOptions } from '@sprucelabs/schema'
 import { assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
-import { Connect } from '../__tests__/implementation/Database.test'
+import { Connect } from '../__tests__/behavioral/database/Database.test'
+import { pluckAssertionMethods } from '../__tests__/behavioral/database/pluckAssertionMethods'
 import SpruceError from '../errors/SpruceError'
 import { Database, Index, UniqueIndex } from '../types/database.types'
 import generateId from '../utilities/generateId'
 
 const databaseAssertUtil = {
 	collectionName: 'test_collection',
+
+	async runSuite(connect: Connect) {
+		assertOptions({ connect }, ['connect'])
+		const methods = pluckAssertionMethods(this)
+		//@ts-ignore
+		await Promise.all(methods.map((method) => this[method](connect)))
+	},
+
 	async getFilteredIndexes(db: Database) {
 		return this.filterIdIndex(await db.getIndexes(this.collectionName))
 	},
+
 	filterIdIndex(allIndexes: UniqueIndex[] | Index[]) {
 		return allIndexes.filter((i) => i[0] !== '_id') as UniqueIndex[] | Index[]
 	},
