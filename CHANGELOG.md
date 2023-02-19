@@ -1,3 +1,10 @@
+# [19.3.0](https://github.com/sprucelabsai/data-stores/compare/v19.2.0...v19.3.0) (2023-02-19)
+
+
+### Features
+
+* upgrades ([463501d](https://github.com/sprucelabsai/data-stores/commit/463501d))
+
 # [19.2.0](https://github.com/sprucelabsai/data-stores/compare/v19.1.67...v19.2.0) (2023-02-19)
 
 
