@@ -17,11 +17,11 @@ const databaseAssertUtil = {
 		await Promise.all(methods.map((method) => this[method](connect)))
 	},
 
-	async getFilteredIndexes(db: Database) {
-		return this.filterIdIndex(await db.getIndexes(this.collectionName))
+	async _getFilteredIndexes(db: Database) {
+		return this._filterIdIndex(await db.getIndexes(this.collectionName))
 	},
 
-	filterIdIndex(allIndexes: UniqueIndex[] | Index[]) {
+	_filterIdIndex(allIndexes: UniqueIndex[] | Index[]) {
 		return allIndexes.filter((i) => i[0] !== '_id') as UniqueIndex[] | Index[]
 	},
 	async _assertUpdateUpdatedRightNumberOfRecords(
@@ -35,6 +35,7 @@ const databaseAssertUtil = {
 		const count = await db.count(this.collectionName, updates)
 		assert.isEqual(count, expectedUpdateCount)
 	},
+
 	async assertCanSortDesc(connect: Connect) {
 		const db = await connect()
 		await db.createOne(this.collectionName, { name: 'second', count: 1 })
@@ -152,12 +153,14 @@ const databaseAssertUtil = {
 		assert.isLength(indexes, 3)
 		assert.isEqual(indexes[2][0], 'uniqueField3')
 		assert.isEqual(indexes[2][1], 'uniqueField4')
+		await this.shutdown(db)
 	},
 
 	async assertHasNoUniqueIndexToStart(connect: Connect) {
 		const db = await connect()
 		const indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(indexes, 0)
+		await this.shutdown(db)
 	},
 
 	async assertCanShutdown(connect: Connect) {
@@ -332,6 +335,8 @@ const databaseAssertUtil = {
 		const db = await connect()
 		const results = await db.findOne(this.collectionName, { id: '111' })
 		assert.isFalsy(results)
+
+		await this.shutdown(db)
 	},
 
 	async assertEmptyDatabaseReturnsEmptyArray(connect: Connect) {
@@ -339,6 +344,8 @@ const databaseAssertUtil = {
 
 		const results = await db.find(this.collectionName, { id: '111' })
 		assert.isLength(results, 0)
+
+		await this.shutdown(db)
 	},
 
 	async assertCanPushOntoArrayValue(connect: Connect) {
@@ -442,6 +449,8 @@ const databaseAssertUtil = {
 		})
 
 		assert.isLength(matches, 2)
+
+		await this.shutdown(db)
 	},
 
 	async assertCanUpdate(connect: Connect) {
@@ -598,6 +607,7 @@ const databaseAssertUtil = {
 
 		assert.isTrue(err instanceof SpruceError)
 		errorAssert.assertError(err, 'DUPLICATE_KEY')
+		await this.shutdown(db)
 	},
 
 	async assertDuplicateKeyThrowsOnInsert(connect: Connect) {
@@ -613,6 +623,7 @@ const databaseAssertUtil = {
 		)
 
 		assert.isTrue(err instanceof SpruceError)
+		await this.shutdown(db)
 	},
 
 	async assertSyncingIndexesDoesNotAddAndRemove(connect: Connect) {
@@ -632,6 +643,7 @@ const databaseAssertUtil = {
 			['someField'],
 			['otherField'],
 		])
+		await this.shutdown(db)
 	},
 
 	async assertSyncingUniqueIndexesRemovesExtraIndexes(connect: Connect) {
@@ -649,6 +661,7 @@ const databaseAssertUtil = {
 		indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(indexes, 1)
 		assert.isEqual(indexes[0][0], 'uniqueField')
+		await this.shutdown(db)
 	},
 
 	async assertSyncingUniqueIndexsSkipsExistingIndexs(connect: Connect) {
@@ -666,6 +679,7 @@ const databaseAssertUtil = {
 
 		indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(indexes, 3)
+		await this.shutdown(db)
 	},
 
 	async assertSyncingUniqueIndexsAddsMissingIndexes(connect: Connect) {
@@ -687,6 +701,7 @@ const databaseAssertUtil = {
 
 		indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(indexes, 2)
+		await this.shutdown(db)
 	},
 
 	async assertCantDropCompoundUniqueIndexThatDoesntExist(connect: Connect) {
@@ -700,6 +715,7 @@ const databaseAssertUtil = {
 			db.dropIndex(this.collectionName, ['uniqueField', 'someOtherField'])
 		)
 		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+		await this.shutdown(db)
 	},
 
 	async assertCantDropIndexWhenNoIndexExists(connect: Connect) {
@@ -709,6 +725,7 @@ const databaseAssertUtil = {
 			db.dropIndex(this.collectionName, ['someOtherField'])
 		)
 		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+		await this.shutdown(db)
 	},
 
 	async assertCantDropUniqueIndexThatDoesntExist(connect: Connect) {
@@ -719,6 +736,8 @@ const databaseAssertUtil = {
 			db.dropIndex(this.collectionName, ['someOtherField'])
 		)
 		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+
+		await this.shutdown(db)
 	},
 
 	async assertCanDropCompoundUniqueIndex(connect: Connect) {
@@ -734,6 +753,8 @@ const databaseAssertUtil = {
 		await db.dropIndex(this.collectionName, ['someField', 'someField3'])
 		indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(indexes, 1)
+
+		await this.shutdown(db)
 	},
 
 	async assertCanDropUniqueIndex(connect: Connect) {
@@ -749,6 +770,8 @@ const databaseAssertUtil = {
 		await db.dropIndex(this.collectionName, ['someField3'])
 		indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(indexes, 1)
+
+		await this.shutdown(db)
 	},
 
 	async assertCantCreateUniqueIndexTwice(connect: Connect) {
@@ -761,6 +784,8 @@ const databaseAssertUtil = {
 			db.createUniqueIndex(this.collectionName, ['uniqueField'])
 		)
 		errorAssert.assertError(err, 'INDEX_EXISTS')
+
+		await this.shutdown(db)
 	},
 	async assertSyncingUniqueIndexesIsRaceProof(connect: Connect) {
 		const db = await connect()
@@ -797,6 +822,8 @@ const databaseAssertUtil = {
 			]),
 		]
 		await Promise.all(syncs)
+
+		await this.shutdown(db)
 	},
 	async assertUniqueIndexBlocksDuplicates(connect: Connect) {
 		const db = await connect()
@@ -923,6 +950,8 @@ const databaseAssertUtil = {
 				slug: 'a slug',
 			}
 		)
+
+		await this.shutdown(db)
 	},
 
 	async assertCanPushToArrayOnUpsert(connect: Connect) {
@@ -940,6 +969,8 @@ const databaseAssertUtil = {
 
 		const match = await db.findOne(this.collectionName)
 		assert.isEqualDeep(match?.names, ['test'])
+
+		await this.shutdown(db)
 	},
 
 	async assertCanSearchByRegex(connect: Connect) {
@@ -976,6 +1007,8 @@ const databaseAssertUtil = {
 				name: 'first',
 			},
 		])
+
+		await this.shutdown(db)
 	},
 
 	async assertCanReturnOnlySelectFields(connect: Connect) {
@@ -1030,6 +1063,8 @@ const databaseAssertUtil = {
 				score: 1,
 			},
 		})
+
+		await this.shutdown(db)
 	},
 
 	async assertThrowsWithoutDatabaseName(connect: Connect) {
@@ -1369,6 +1404,7 @@ const databaseAssertUtil = {
 		}
 
 		await db.syncIndexes(this.collectionName, [['someField'], ['otherField']])
+		await this.shutdown(db)
 	},
 
 	async assertSyncIndexesRemovesExtraIndexes(connect: Connect) {
@@ -1378,21 +1414,22 @@ const databaseAssertUtil = {
 			['someField'],
 			['otherField', 'otherField2'],
 		])
-		let indexes = await this.getFilteredIndexes(db)
+		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 3)
 
 		await db.syncIndexes(this.collectionName, [['field']])
 
-		indexes = await this.getFilteredIndexes(db)
+		indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
 		assert.isEqual(indexes[0][0], 'field')
+		await this.shutdown(db)
 	},
 
 	async assertSyncIndexesSkipsExisting(connect: Connect) {
 		const db = await connect()
 		await db.syncIndexes(this.collectionName, [['field']])
 
-		let indexes = await this.getFilteredIndexes(db)
+		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
 
 		await db.syncIndexes(this.collectionName, [
@@ -1401,8 +1438,9 @@ const databaseAssertUtil = {
 			['otherField', 'otherField2'],
 		])
 
-		indexes = await this.getFilteredIndexes(db)
+		indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 3)
+		await this.shutdown(db)
 	},
 
 	async assertCantDropCompoundIndexThatDoesNotExist(connect: Connect) {
@@ -1413,6 +1451,7 @@ const databaseAssertUtil = {
 			db.dropIndex(this.collectionName, ['uniqueField', 'someOtherField'])
 		)
 		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+		await this.shutdown(db)
 	},
 
 	async assertCanDropCompoundIndex(connect: Connect) {
@@ -1420,14 +1459,15 @@ const databaseAssertUtil = {
 		await db.createIndex(this.collectionName, ['someField', 'otherField'])
 		await db.dropIndex(this.collectionName, ['someField', 'otherField'])
 
-		let indexes = await this.getFilteredIndexes(db)
+		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 0)
 
 		await db.createIndex(this.collectionName, ['someField', 'someField2'])
 		await db.createIndex(this.collectionName, ['someField', 'someField3'])
 		await db.dropIndex(this.collectionName, ['someField', 'someField3'])
-		indexes = await this.getFilteredIndexes(db)
+		indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
+		await this.shutdown(db)
 	},
 
 	async assertCanDropIndex(connect: Connect) {
@@ -1435,58 +1475,62 @@ const databaseAssertUtil = {
 		await db.createIndex(this.collectionName, ['someField'])
 		await db.dropIndex(this.collectionName, ['someField'])
 
-		let indexes = await this.getFilteredIndexes(db)
+		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 0)
 
 		await db.createIndex(this.collectionName, ['someField2'])
 		await db.createIndex(this.collectionName, ['someField3'])
 		await db.dropIndex(this.collectionName, ['someField3'])
-		indexes = await this.getFilteredIndexes(db)
+		indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
+		await this.shutdown(db)
 	},
 
 	async assertCanCreateMultiFieldIndex(connect: Connect, fields: any) {
 		const db = await connect()
 		await db.createIndex(this.collectionName, fields)
-		let indexes = await this.getFilteredIndexes(db)
+		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
 
 		assert.isEqualDeep(indexes, [fields])
+		await this.shutdown(db)
 	},
 
 	async assertCantCreateSameIndexTwice(connect: Connect) {
 		const db = await connect()
 		await db.createIndex(this.collectionName, ['field'])
-		let indexes = await this.getFilteredIndexes(db)
+		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
 
 		const err = await assert.doesThrowAsync(() =>
 			db.createIndex(this.collectionName, ['field'])
 		)
 		errorAssert.assertError(err, 'INDEX_EXISTS')
+		await this.shutdown(db)
 	},
 
 	async assertCanCreateIndex(connect: Connect) {
 		const db = await connect()
 		await db.createIndex(this.collectionName, ['field'])
-		let indexes = await this.getFilteredIndexes(db)
+		let indexes = await this._getFilteredIndexes(db)
 
 		assert.isLength(indexes, 1)
 		assert.isLength(indexes[0], 1)
 		assert.isEqual(indexes[0][0], 'field')
 
 		await db.createIndex(this.collectionName, ['field2'])
-		indexes = await this.getFilteredIndexes(db)
+		indexes = await this._getFilteredIndexes(db)
 
 		assert.isLength(indexes, 2)
 		assert.isEqual(indexes[1][0], 'field2')
 
 		await db.createIndex(this.collectionName, ['field3', 'field4'])
-		indexes = await this.getFilteredIndexes(db)
+		indexes = await this._getFilteredIndexes(db)
 
 		assert.isLength(indexes, 3)
 		assert.isEqual(indexes[2][0], 'field3')
 		assert.isEqual(indexes[2][1], 'field4')
+		await this.shutdown(db)
 	},
 
 	async assertHasNoIndexToStart(connect: Connect) {
@@ -1495,6 +1539,7 @@ const databaseAssertUtil = {
 		const indexes = await db.getIndexes(this.collectionName)
 
 		assert.isLength(indexes, 0)
+		await this.shutdown(db)
 	},
 
 	async assertNestedFieldIndexUpdates(connect: Connect) {
@@ -1525,6 +1570,7 @@ const databaseAssertUtil = {
 		)
 
 		assert.isEqual(updated.aNonIndexedField, false)
+		await this.shutdown(db)
 	},
 
 	async assertUpsertWithUniqueIndex(connect: Connect) {
@@ -1557,6 +1603,7 @@ const databaseAssertUtil = {
 
 		assert.isEqual(results.id, updated.id)
 		assert.isEqual(updated.name, 'notsquirrel')
+		await this.shutdown(db)
 	},
 	async assertSyncIndexesHandlesRaceConditions(connect: Connect) {
 		const db = await connect()
@@ -1573,6 +1620,8 @@ const databaseAssertUtil = {
 			db.syncIndexes(this.collectionName, [['otherField', 'otherField2']]),
 		]
 		await Promise.all(syncs)
+
+		await this.shutdown(db)
 	},
 	async assertDuplicateFieldsWithMultipleUniqueIndexesWorkAsExpected(
 		connect: Connect
