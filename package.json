@@ -15,7 +15,7 @@
   "module": "./build/esm/index.js",
   "sideEffects": false,
   "license": "MIT",
-  "description": "A way to store data",
+  "description": "A standardized way to store data across many storage platforms. This is NOT an ORM. Just a simple adapter layer built to make it easy to work with storage!",
   "keywords": [
     "node",
     "sprucelabs"
@@ -28,8 +28,6 @@
     "namespace": "data-stores",
     "upgradeIgnoreList": [
       "globby",
-      "mongodb",
-      "@types/mongodb",
       "@types/node",
       "@sprucelabs/spruce-core-schemas",
       "@sprucelabs/spruce-test-fixtures"
@@ -76,9 +74,9 @@
     "@sprucelabs/schema": "^28.5.128",
     "@sprucelabs/spruce-skill-utils": "^28.1.79",
     "globby": "^11.0.4",
-    "lodash": "^4.17.21",
     "just-clone": "^6.2.0",
-    "mongodb": "^4.1.0",
+    "lodash": "^4.17.21",
+    "mongodb": "^5.0.1",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
@@ -89,8 +87,8 @@
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^7.7.420",
     "@sprucelabs/test-utils": "^3.3.10",
-    "@types/nedb": "^1.8.12",
     "@types/lodash": "^4.14.191",
+    "@types/nedb": "^1.8.12",
     "@types/node": "17.0.5",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^7.6.0",

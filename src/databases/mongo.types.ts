@@ -34,7 +34,6 @@ export {
 	Long,
 	MaxKey,
 	MinKey,
-	ObjectID,
 	ObjectId,
 	Timestamp,
 } from 'bson'
