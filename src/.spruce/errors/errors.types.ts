@@ -336,6 +336,35 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface InvalidConnectionStringScheme {
+		
+			
+			'connectionString': string
+	}
+
+	export interface InvalidConnectionStringSchemeSchema extends SpruceSchema.Schema {
+		id: 'invalidConnectionStringScheme',
+		namespace: 'DataStores',
+		name: 'Invalid connection string scheme',
+		    fields: {
+		            /** . */
+		            'connectionString': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		    }
+	}
+
+	export type InvalidConnectionStringSchemeEntity = SchemaEntity<SpruceErrors.DataStores.InvalidConnectionStringSchemeSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface IndexNotFound {
 		
 			/** Missing Index. */

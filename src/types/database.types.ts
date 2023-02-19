@@ -1,3 +1,4 @@
+import { Log } from '@sprucelabs/spruce-skill-utils'
 import { QueryOptions } from './query.types'
 
 export type UniqueIndex = string[]
@@ -57,4 +58,9 @@ export interface Database {
 	count(collection: string, query?: Record<string, any>): Promise<number>
 	createUniqueIndex(collection: string, fields: UniqueIndex): Promise<void>
 	createIndex(collection: string, fields: Index): Promise<void>
+}
+
+export interface DatabaseOptions {
+	dbName?: string
+	log?: Log
 }

@@ -127,6 +127,12 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 				}`
 				break
 
+			case 'INVALID_CONNECTION_STRING_SCHEME':
+				message = `There is no database adapter setup for: ${
+					options.connectionString.split('://')[0]
+				}`
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}

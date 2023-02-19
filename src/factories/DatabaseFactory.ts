@@ -1,12 +1,21 @@
 import { SchemaError } from '@sprucelabs/schema'
 import MongoDatabase from '../databases/MongoDatabase'
 import NeDbDatabase from '../databases/NeDbDatabase'
-import { Database } from '../types/database.types'
+import SpruceError from '../errors/SpruceError'
+import { Database, DatabaseOptions } from '../types/database.types'
 
 export default class DatabaseFactory {
 	private static cache: Record<string, any> = {}
+	private static Adapters: AdapterMap = {
+		'mongodb://': MongoDatabase,
+		'memory://': NeDbDatabase,
+	}
 
 	private constructor() {}
+
+	public static addAdapter(scheme: string, Adapter: DatabaseConstructor) {
+		this.Adapters[scheme] = Adapter
+	}
 
 	public static Database(options: {
 		dbName?: string
@@ -27,10 +36,18 @@ export default class DatabaseFactory {
 		const cacheKey = this.generateCacheKey(options)
 
 		if (!this.cache[cacheKey]) {
-			if (dbConnectionString.startsWith('memory')) {
-				database = new NeDbDatabase()
-			} else {
-				database = new MongoDatabase(dbConnectionString, { dbName })
+			for (const [key, Adapter] of Object.entries(this.Adapters)) {
+				if (dbConnectionString.startsWith(key)) {
+					database = new Adapter(dbConnectionString, { dbName })
+					break
+				}
+			}
+
+			if (!database) {
+				throw new SpruceError({
+					code: 'INVALID_CONNECTION_STRING_SCHEME',
+					connectionString: dbConnectionString,
+				})
 			}
 
 			this.cache[cacheKey] = database
@@ -56,3 +73,10 @@ export default class DatabaseFactory {
 		this.cache = {}
 	}
 }
+
+export type DatabaseConstructor = new (
+	connectionString: string,
+	options: DatabaseOptions
+) => Database
+
+type AdapterMap = Record<string, DatabaseConstructor>

@@ -1,5 +1,13 @@
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
-import DatabaseFactory from '../../../factories/DatabaseFactory'
+import AbstractSpruceTest, {
+	test,
+	assert,
+	errorAssert,
+} from '@sprucelabs/test-utils'
+import MongoDatabase from '../../../databases/MongoDatabase'
+import NeDbDatabase from '../../../databases/NeDbDatabase'
+import DatabaseFactory, {
+	DatabaseConstructor,
+} from '../../../factories/DatabaseFactory'
 import generateId from '../../../utilities/generateId'
 
 export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
@@ -38,6 +46,36 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
 		})
 
 		assert.isNotEqual(db1, db2)
+	}
+
+	@test()
+	protected static async throwsWithBadConnectionScheme() {
+		const connectionString = `${generateId()}://localhost:27017`
+		const err = assert.doesThrow(() => {
+			DatabaseFactory.Database({
+				dbConnectionString: connectionString,
+			})
+		})
+
+		errorAssert.assertError(err, 'INVALID_CONNECTION_STRING_SCHEME', {
+			connectionString,
+		})
+	}
+
+	@test()
+	protected static async canSetAdapterOnFactory() {
+		this.assertCanSetAdapter('postgres://', MongoDatabase)
+		this.assertCanSetAdapter('cheesey://', NeDbDatabase)
+	}
+
+	private static assertCanSetAdapter(schema: string, Db: DatabaseConstructor) {
+		DatabaseFactory.addAdapter(schema, Db)
+		this.assertAdapterSet(schema, Db)
+	}
+
+	private static assertAdapterSet(schema: string, Db: DatabaseConstructor) {
+		//@ts-ignore
+		assert.isEqual(DatabaseFactory.Adapters[schema], Db)
 	}
 
 	private static assertSameInstanceReturned(

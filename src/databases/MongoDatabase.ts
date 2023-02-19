@@ -1,9 +1,14 @@
-import { buildLog, Log } from '@sprucelabs/spruce-skill-utils'
+import { buildLog } from '@sprucelabs/spruce-skill-utils'
 import differenceWith from 'lodash/differenceWith'
 import isEqual from 'lodash/isEqual'
 import { MongoClientOptions, MongoClient, Db, MongoError } from 'mongodb'
 import SpruceError from '../errors/SpruceError'
-import { Database, Index, UniqueIndex } from '../types/database.types'
+import {
+	Database,
+	DatabaseOptions,
+	Index,
+	UniqueIndex,
+} from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
@@ -19,7 +24,7 @@ export default class MongoDatabase implements Database {
 
 	public constructor(
 		url: string,
-		options?: MongoClientOptions & { dbName?: string; log?: Log }
+		options?: MongoClientOptions & DatabaseOptions
 	) {
 		const { dbName, log = buildLog('Mongodb'), ...rest } = options ?? {}
 

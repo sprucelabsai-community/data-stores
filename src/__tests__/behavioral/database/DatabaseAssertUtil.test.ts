@@ -3,7 +3,7 @@ import { test, assert, errorAssert } from '@sprucelabs/test-utils'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import databaseAssertUtil from '../../../tests/databaseAssertUtil'
 import mongoConnect from '../../support/mongoConnect'
-import { pluckAssertionMethods } from './pluckAssertionMethods'
+import pluckAssertionMethods from '../../../tests/pluckAssertionMethods'
 
 export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
 	@test()
