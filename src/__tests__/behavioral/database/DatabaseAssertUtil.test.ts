@@ -2,8 +2,8 @@ import { cloneDeep } from '@sprucelabs/schema'
 import { test, assert, errorAssert } from '@sprucelabs/test-utils'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import databaseAssertUtil from '../../../tests/databaseAssertUtil'
-import mongoConnect from '../../support/mongoConnect'
 import pluckAssertionMethods from '../../../tests/pluckAssertionMethods'
+import mongoConnect from '../../support/mongoConnect'
 
 export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
 	@test()
