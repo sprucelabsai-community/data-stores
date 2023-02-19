@@ -1,3 +1,12 @@
+# [19.2.0](https://github.com/sprucelabsai/data-stores/compare/v19.1.67...v19.2.0) (2023-02-19)
+
+
+### Features
+
+* databaseAssert util can run all suites at once ([f064628](https://github.com/sprucelabsai/data-stores/commit/f064628))
+* databaseAssertUtil ([a3b9fb3](https://github.com/sprucelabsai/data-stores/commit/a3b9fb3))
+* databaseAssertUtil can run suite of tests to help the creation of new database adapters ([f89d184](https://github.com/sprucelabsai/data-stores/commit/f89d184))
+
 ## [19.1.67](https://github.com/sprucelabsai/data-stores/compare/v19.1.66...v19.1.67) (2023-02-18)
 
 ## [19.1.66](https://github.com/sprucelabsai/data-stores/compare/v19.1.65...v19.1.66) (2023-02-16)
