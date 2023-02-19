@@ -2,10 +2,10 @@ import { assertOptions } from '@sprucelabs/schema'
 import { assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import { Connect } from '../__tests__/behavioral/database/Database.test'
-import pluckAssertionMethods from './pluckAssertionMethods'
 import SpruceError from '../errors/SpruceError'
 import { Database, Index, UniqueIndex } from '../types/database.types'
 import generateId from '../utilities/generateId'
+import pluckAssertionMethods from './pluckAssertionMethods'
 
 const databaseAssertUtil = {
 	collectionName: 'test_collection',
