@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "19.3.2",
+  "version": "19.3.3",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -71,22 +71,22 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.580",
-    "@sprucelabs/schema": "^28.5.128",
-    "@sprucelabs/spruce-skill-utils": "^28.1.80",
+    "@sprucelabs/schema": "^28.5.129",
+    "@sprucelabs/spruce-skill-utils": "^28.1.82",
     "globby": "^11.0.4",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
-    "mongodb": "^5.0.1",
+    "mongodb": "^5.1.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^2.0.90",
-    "@sprucelabs/jest-json-reporter": "^6.0.562",
+    "@sprucelabs/esm-postbuild": "^2.0.91",
+    "@sprucelabs/jest-json-reporter": "^6.0.563",
     "@sprucelabs/jest-sheets-reporter": "^2.0.21",
     "@sprucelabs/resolve-path-aliases": "^1.1.177",
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^7.7.420",
-    "@sprucelabs/test-utils": "^3.3.10",
+    "@sprucelabs/test-utils": "^3.4.1",
     "@types/lodash": "^4.14.191",
     "@types/nedb": "^1.8.12",
     "@types/node": "17.0.5",
