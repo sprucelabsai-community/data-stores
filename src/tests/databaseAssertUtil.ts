@@ -5,16 +5,64 @@ import { Connect } from '../__tests__/behavioral/database/Database.test'
 import SpruceError from '../errors/SpruceError'
 import { Database, Index, UniqueIndex } from '../types/database.types'
 import generateId from '../utilities/generateId'
-import pluckAssertionMethods from './pluckAssertionMethods'
 
 const databaseAssertUtil = {
 	collectionName: 'test_collection',
 
 	async runSuite(connect: Connect) {
 		assertOptions({ connect }, ['connect'])
-		const methods = pluckAssertionMethods(this)
-		//@ts-ignore
-		await Promise.all(methods.map((method) => this[method](connect)))
+		const methods = [
+			//inserting
+			'assertEmptyDatabaseReturnsEmptyArray',
+			'assertKnowsIfConnectionClosed',
+			'assertFindOneOnEmptyDatabaseReturnsNull',
+			'assertCanSortDesc',
+			'assertCanSortAsc',
+			'assertCanSortById',
+			'assertCanQueryWithOr',
+			'generateIdDifferentEachTime',
+			'assertInsertingGeneratesId',
+			'assertCanCreateMany',
+			'assertCanLimitResults',
+
+			//updating
+			'assertThrowsWhenUpdatingRecordNotFound',
+			'assertCanUpdate',
+			'assertCanUpdateMany',
+			'assertCanPushOntoArrayValue',
+
+			//upserting
+			'assertCanUpsertOne',
+
+			//finding
+			'assertEmptyDatabaseReturnsEmptyArray',
+			'assertFindOneOnEmptyDatabaseReturnsNull',
+			'assertCanLimitResults',
+			'assertCanLimitResultsToZero',
+
+			//deleting
+			'assertCanDeleteRecord',
+			'assertCanDeleteOne',
+
+			//indexing
+			'assertHasNoUniqueIndexToStart',
+			'assertCanCreateUniqueIndex',
+			'assertCanCreateMultiFieldUniqueIndex',
+		]
+
+		const db = await connect()
+		await db.dropDatabase()
+		await this.shutdown(db)
+
+		for (const method of methods) {
+			try {
+				//@ts-ignore
+				await this[method](connect)
+			} catch (err: any) {
+				err.message = `Error in ${method}:\n\n ${err.message}`
+				throw err
+			}
+		}
 	},
 
 	async _getFilteredIndexes(db: Database) {
@@ -31,16 +79,43 @@ const databaseAssertUtil = {
 		expectedUpdateCount: number
 	) {
 		const updatedCount = await db.update(this.collectionName, search, updates)
-		assert.isEqual(updatedCount, expectedUpdateCount)
+		assert.isEqual(
+			updatedCount,
+			expectedUpdateCount,
+			'db.update() did not update the expected amount of records! Make sure it returns an integer of the number of records updated.'
+		)
 		const count = await db.count(this.collectionName, updates)
 		assert.isEqual(count, expectedUpdateCount)
 	},
 
+	async generateIdDifferentEachTime(connect: Connect) {
+		const db = await connect()
+		const id1 = db.generateId()
+		const id2 = db.generateId()
+		assert.isNotEqual(
+			id1,
+			id2,
+			'generateId() must generate a different id each time'
+		)
+		await this.shutdown(db)
+	},
+
 	async assertCanSortDesc(connect: Connect) {
 		const db = await connect()
-		await db.createOne(this.collectionName, { name: 'second', count: 1 })
-		await db.createOne(this.collectionName, { name: 'third', count: 5 })
-		await db.createOne(this.collectionName, { name: 'first', count: -1 })
+		const second = await db.createOne(this.collectionName, {
+			name: 'second',
+			count: 1,
+		})
+		const third = await db.createOne(this.collectionName, {
+			name: 'third',
+			count: 5,
+		})
+		const first = await db.createOne(this.collectionName, {
+			name: 'first',
+			count: -1,
+		})
+
+		assert.isFunction(db.find, `db.find() must be a function.`)
 
 		const results = await db.find(
 			this.collectionName,
@@ -55,15 +130,57 @@ const databaseAssertUtil = {
 			}
 		)
 
-		assert.isEqual(results[0].name, 'third')
-		assert.isEqual(results[1].name, 'second')
-		assert.isEqual(results[2].name, 'first')
+		assert.isBelow(
+			results.length,
+			4,
+			`You are not resetting data when .dropDatabase() is called. If you can't drop the database in your env, then you need to clear at all rows in all tables! Got back ${results.length} records!`
+		)
+
+		assert.isLength(
+			results,
+			3,
+			`Should have 3 records back from find() after 3 createOne()s. Make sure your createOne() is inserting records! I only got back ${results.length} records!`
+		)
+
+		assert.isEqual(
+			results[0].name,
+			'third',
+			`first record should be named "third" when sorting desc by name. Make sure you are sorting using the "sort" option.`
+		)
+		assert.isEqual(
+			results[1].name,
+			'second',
+			`second record should be named "second" when sorting desc by name.`
+		)
+		assert.isEqual(
+			results[2].name,
+			'first',
+			`third record should be named "first" when sorting desc by name.`
+		)
+
+		assert.isEqualDeep(
+			results[0],
+			third,
+			`createOne() is not returning the record that was created!`
+		)
+
+		assert.isEqualDeep(
+			results[1],
+			second,
+			`createOne() is not returning the record that was created!`
+		)
+
+		assert.isEqualDeep(
+			results[2],
+			first,
+			`createOne() is not returning the record that was created!`
+		)
 
 		const result = await db.findOne(this.collectionName, undefined, {
 			sort: [{ field: 'count', direction: 'desc' }],
 		})
-		assert.isTruthy(result)
-		assert.isEqual(result.name, 'third')
+		assert.isTruthy(result, 'findOne() should return a record!')
+		assert.isEqual(result.name, 'third', 'findOne() should honor sort!')
 
 		await this.shutdown(db)
 	},
@@ -87,9 +204,9 @@ const databaseAssertUtil = {
 			}
 		)
 
-		assert.isEqual(results[0].name, 'first')
-		assert.isEqual(results[1].name, 'second')
-		assert.isEqual(results[2].name, 'third')
+		assert.isEqual(results[0].name, 'first', 'find is not sorting ascending')
+		assert.isEqual(results[1].name, 'second', 'find is not sorting ascending')
+		assert.isEqual(results[2].name, 'third', 'find is not sorting ascending')
 
 		const result = await db.findOne(this.collectionName, undefined, {
 			sort: [{ field: 'count', direction: 'asc' }],
@@ -102,31 +219,47 @@ const databaseAssertUtil = {
 
 	async assertInsertingGeneratesId(connect: Connect) {
 		const db = await connect()
+		const name = generateId()
 		const inserted = await db.createOne(this.collectionName, {
-			name: 'first',
+			name,
 		})
 
-		assert.isTruthy(inserted)
-		assert.isString(inserted.id)
-		assert.isEqual(inserted.name, 'first')
+		assert.isTruthy(inserted, "createOne() didn't return anything!")
+		assert.isTruthy(inserted.id, 'createOne() record id is missing!')
+		assert.isEqual(
+			inserted.name,
+			name,
+			'createOne() record name field was not set to ' + name
+		)
 
 		await this.shutdown(db)
 	},
 
 	async assertThrowsWhenUpdatingRecordNotFound(connect: Connect) {
 		const db = await connect()
-		const err = (await assert.doesThrowAsync(() =>
-			db.updateOne('unknown', { id: db.generateId() }, { foo: 'bar' })
-		)) as SpruceError
+		assert.isFunction(
+			db.generateId,
+			`db.generateId() must be a function that returns a unique identifier.`
+		)
 
-		errorAssert.assertError(err, 'RECORD_NOT_FOUND')
+		assert.isFunction(
+			db.updateOne,
+			'You must implement updateOne() in your database adapter.'
+		)
+
+		await this._assertThrowsExpectedNotFoundOnUpdateOne(db, {
+			id: db.generateId(),
+		})
+		await this._assertThrowsExpectedNotFoundOnUpdateOne(db, { count: 10 })
 
 		await this.shutdown(db)
 	},
 
 	async shutdown(db: Database) {
-		await db.dropDatabase()
-		await db.close()
+		if (db.isConnected()) {
+			await db.dropDatabase()
+			await db.close()
+		}
 	},
 
 	async assertCanCreateUniqueIndex(connect: Connect) {
@@ -134,15 +267,27 @@ const databaseAssertUtil = {
 		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
 		let indexes = await db.getUniqueIndexes(this.collectionName)
 
-		assert.isLength(indexes, 1)
-		assert.isLength(indexes[0], 1)
-		assert.isEqual(indexes[0][0], 'uniqueField')
+		assert.isLength(
+			indexes,
+			1,
+			'getUniqueIndexes() did not return the unique index I tried to create!'
+		)
+		assert.isLength(
+			indexes[0],
+			1,
+			'getUniqueIndexes() needs to return an array of arrays. Each item in the array should be an array of fields that make up the unique index.'
+		)
+		assert.isEqual(
+			indexes[0][0].toLowerCase(),
+			'uniqueField'.toLowerCase(),
+			'getUniqueIndexes() did not add the expected field to the first unique index.'
+		)
 
 		await db.createUniqueIndex(this.collectionName, ['uniqueField2'])
 		indexes = await db.getUniqueIndexes(this.collectionName)
 
 		assert.isLength(indexes, 2)
-		assert.isEqual(indexes[1][0], 'uniqueField2')
+		assert.isEqual(indexes[1][0].toLowerCase(), 'uniqueField2'.toLowerCase())
 
 		await db.createUniqueIndex(this.collectionName, [
 			'uniqueField3',
@@ -151,19 +296,23 @@ const databaseAssertUtil = {
 		indexes = await db.getUniqueIndexes(this.collectionName)
 
 		assert.isLength(indexes, 3)
-		assert.isEqual(indexes[2][0], 'uniqueField3')
-		assert.isEqual(indexes[2][1], 'uniqueField4')
+		assert.isEqual(indexes[2][0].toLowerCase(), 'uniqueField3'.toLowerCase())
+		assert.isEqual(indexes[2][1].toLowerCase(), 'uniqueField4'.toLowerCase())
 		await this.shutdown(db)
 	},
 
 	async assertHasNoUniqueIndexToStart(connect: Connect) {
 		const db = await connect()
 		const indexes = await db.getUniqueIndexes(this.collectionName)
-		assert.isLength(indexes, 0)
+		assert.isLength(
+			indexes,
+			0,
+			"getUniqueIndexes() should return an empty array when there are no unique indexes (primary key indexes don't count!). Also, make sure that dropDatabase() in your adapter clears out any unique indexes you've created."
+		)
 		await this.shutdown(db)
 	},
 
-	async assertCanShutdown(connect: Connect) {
+	async assertCanUpsertOne(connect: Connect) {
 		const db = await connect()
 		const id = db.generateId()
 
@@ -176,9 +325,9 @@ const databaseAssertUtil = {
 			}
 		)
 
-		assert.isTruthy(created)
+		assert.isTruthy(created, 'upsertOne() should return the record it created!')
 		assert.isEqual(created.name, 'first')
-		assert.isEqual(created.id, id)
+		assert.isEqual(`${created.id}`, `${id}`, 'ids do not match!')
 
 		const upserted = await db.upsertOne(
 			this.collectionName,
@@ -205,6 +354,14 @@ const databaseAssertUtil = {
 		assert.isTruthy(upserted2)
 		assert.isEqual(upserted2.name, 'third')
 
+		const match = await db.findOne(this.collectionName, { id })
+
+		assert.isEqualDeep(
+			match,
+			upserted2,
+			'upsertOne() did not update the record!'
+		)
+
 		await this.shutdown(db)
 	},
 
@@ -227,7 +384,7 @@ const databaseAssertUtil = {
 
 		const count = await db.count(this.collectionName)
 
-		assert.isEqual(count, 2)
+		assert.isEqual(count, 2, 'deleteOne() did not delete a single record!')
 
 		await this.shutdown(db)
 	},
@@ -256,7 +413,10 @@ const databaseAssertUtil = {
 			id: created.id,
 		})
 
-		assert.isFalsy(matchedAfterDelete)
+		assert.isFalsy(
+			matchedAfterDelete,
+			`Record with the id of ${created.id} was not deleted!`
+		)
 
 		await db.create(this.collectionName, [
 			{
@@ -272,7 +432,11 @@ const databaseAssertUtil = {
 
 		const manyDeleted = await db.delete(this.collectionName, {})
 
-		assert.isEqual(manyDeleted, 3)
+		assert.isEqual(
+			manyDeleted,
+			3,
+			`delete() did not return the total recrods deleted!`
+		)
 
 		await this.shutdown(db)
 	},
@@ -353,6 +517,7 @@ const databaseAssertUtil = {
 
 		const inserted = await db.createOne(this.collectionName, {
 			id: db.generateId(),
+			name: 'nope',
 			names: ['first'],
 		})
 
@@ -377,10 +542,10 @@ const databaseAssertUtil = {
 	async assertCanCreateMany(connect: Connect) {
 		const db = await connect()
 		const values = [
-			{ first: 'ry' },
-			{ first: 'tay' },
-			{ first: 'bill' },
-			{ first: 'bob' },
+			{ name: 'ry' },
+			{ name: 'tay' },
+			{ name: 'bill' },
+			{ name: 'bob' },
 		]
 
 		const results = await db.create(this.collectionName, values)
@@ -431,24 +596,35 @@ const databaseAssertUtil = {
 	async assertCanQueryWithOr(connect: Connect) {
 		const db = await connect()
 
-		const id1 = generateId()
-		const id2 = generateId()
+		const name1 = generateId()
+		const name2 = generateId()
+
+		assert.isFunction(
+			db.create,
+			'db.create() must be a function that creates records and returns it.'
+		)
 
 		await db.create(this.collectionName, [
 			{
 				isPublic: true,
-				id: id1,
+				name: name1,
 			},
 			{
-				id: id2,
+				name: name2,
 			},
 		])
 
-		const matches = await db.find(this.collectionName, {
-			$or: [{ isPublic: true }, { id: id2 }],
-		})
+		await this._assert$orReturnsExpectedTotalRecords(
+			db,
+			[{ isPublic: true }, { name: name2 }],
+			2
+		)
 
-		assert.isLength(matches, 2)
+		await this._assert$orReturnsExpectedTotalRecords(
+			db,
+			[{ isPublic: true }],
+			1
+		)
 
 		await this.shutdown(db)
 	},
@@ -461,8 +637,19 @@ const databaseAssertUtil = {
 			name: 'first',
 		})
 
-		assert.isString(inserted.id)
-		assert.isEqual(inserted.name, 'first')
+		assert.isTruthy(
+			inserted,
+			'createOne needs to return the record that was inserted!'
+		)
+		assert.isTruthy(
+			inserted.id,
+			`an id must be return with the record from createOne!`
+		)
+		assert.isEqual(
+			inserted.name,
+			'first',
+			'name did not set as expected on the inserted record'
+		)
 
 		const updated = await db.updateOne(
 			this.collectionName,
@@ -470,6 +657,11 @@ const databaseAssertUtil = {
 			{
 				name: 'updated',
 			}
+		)
+
+		assert.isTruthy(
+			updated,
+			`updateOne needs to return the record that was updated!`
 		)
 
 		assert.isEqual(updated.id, inserted.id)
@@ -528,25 +720,36 @@ const databaseAssertUtil = {
 		])
 
 		await db.createOne(this.collectionName, {
+			name: generateId(),
 			uniqueField: 'hello world',
 			uniqueField2: 'hello again',
 		})
 
 		await db.createOne(this.collectionName, {
+			name: generateId(),
 			uniqueField: 'hello world',
 			uniqueField2: 'unique',
 		})
 
-		let err = (await assert.doesThrowAsync(() =>
-			db.createOne(this.collectionName, {
-				uniqueField: 'hello world',
-				uniqueField2: 'unique',
-			})
+		let err = (await assert.doesThrowAsync(
+			() =>
+				db.createOne(this.collectionName, {
+					name: generateId(),
+					uniqueField: 'hello world',
+					uniqueField2: 'unique',
+				}),
+			undefined,
+			`createOne() should throw a SpruceError with the code: DUPLICATE_RECORD`
 		)) as SpruceError
+
+		lowerCaseErrorDuplicateFields(err)
 
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
 			collectionName: this.collectionName,
-			duplicateFields: ['uniqueField', 'uniqueField2'],
+			duplicateFields: [
+				'uniqueField'.toLowerCase(),
+				'uniqueField2'.toLowerCase(),
+			],
 			duplicateValues: ['hello world', 'unique'],
 			action: 'create',
 		})
@@ -558,28 +761,36 @@ const databaseAssertUtil = {
 				uniqueField2: 'unique',
 			},
 			{
+				name: generateId(),
 				uniqueField: 'hello world',
 				uniqueField2: 'unique2',
 			}
 		)
 
-		err = (await assert.doesThrowAsync(() =>
-			db.upsertOne(
-				this.collectionName,
-				{
-					uniqueField: 'hello world',
-					uniqueField2: 'unique2',
-				},
-				{
-					uniqueField: 'hello world',
-					uniqueField2: 'hello again',
-				}
-			)
+		err = (await assert.doesThrowAsync(
+			() =>
+				db.upsertOne(
+					this.collectionName,
+					{
+						uniqueField: 'hello world',
+						uniqueField2: 'unique2',
+					},
+					{
+						name: generateId(),
+						uniqueField: 'hello world',
+						uniqueField2: 'hello again',
+					}
+				),
+			undefined,
+			'upsertOne() should throw a SpruceError with the code: DUPLICATE_RECORD'
 		)) as SpruceError
 
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
 			collectionName: this.collectionName,
-			duplicateFields: ['uniqueField', 'uniqueField2'],
+			duplicateFields: [
+				'uniqueField'.toLowerCase(),
+				'uniqueField2'.toLowerCase(),
+			],
 			duplicateValues: ['hello world', 'hello again'],
 			action: 'upsertOne',
 		})
@@ -1090,11 +1301,23 @@ const databaseAssertUtil = {
 
 	async assertKnowsIfConnectionClosed(connect: Connect) {
 		const db = await connect()
-		assert.isTrue(db.isConnected())
+		assert.isFunction(
+			db.isConnected,
+			`db.isConnected() needs to be a function!`
+		)
+		assert.isTrue(
+			db.isConnected(),
+			'isConnected() should return true when connected'
+		)
 
 		await db.close()
 
-		assert.isFalse(db.isConnected())
+		assert.isFalse(
+			db.isConnected(),
+			'isConnected() should return false when disconnected (after calling db.close())'
+		)
+
+		await this.shutdown(db)
 	},
 
 	async assertCanQueryPathWithDotSyntax(connect: Connect) {
@@ -1666,6 +1889,43 @@ const databaseAssertUtil = {
 
 		await this.shutdown(db)
 	},
+
+	async _assertThrowsExpectedNotFoundOnUpdateOne(
+		db: Database,
+		query: Record<string, any>
+	) {
+		const err = (await assert.doesThrowAsync(
+			() => db.updateOne(this.collectionName, query, { name: 'bar' }),
+			undefined,
+			`updateOne should throw a RECORD_NOT_FOUND when updating a record that cannot be found!`
+		)) as SpruceError
+
+		errorAssert.assertError(err, 'RECORD_NOT_FOUND', {
+			query,
+		})
+	},
+
+	async _assert$orReturnsExpectedTotalRecords(
+		db: Database,
+		$or: (
+			| { isPublic: boolean; name?: undefined }
+			| { name: string; isPublic?: undefined }
+		)[],
+		expected: number
+	) {
+		const matches = await db.find(this.collectionName, {
+			$or,
+		})
+
+		assert.isLength(matches, expected)
+	},
 }
 
 export default databaseAssertUtil
+function lowerCaseErrorDuplicateFields(err: SpruceError) {
+	if (err.options.duplicateFields) {
+		err.options.duplicateFields = err.options.duplicateFields.map((f) =>
+			f.toLowerCase()
+		)
+	}
+}

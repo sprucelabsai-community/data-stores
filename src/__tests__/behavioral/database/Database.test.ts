@@ -17,6 +17,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	@test('inserting generates id (mongo)', mongoConnect)
 	@test('inserting generates id (neDb)', neDbConnect)
 	protected static async insertingGeneratesId(connect: Connect) {
+		await databaseAssertUtil.generateIdDifferentEachTime(connect)
 		await databaseAssertUtil.assertInsertingGeneratesId(connect)
 	}
 
@@ -106,7 +107,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	@test('can upsert (mongo)', mongoConnect)
 	@test('can upsert (neDb)', neDbConnect)
 	protected static async canUpsert(connect: Connect) {
-		await databaseAssertUtil.assertCanShutdown(connect)
+		await databaseAssertUtil.assertCanUpsertOne(connect)
 	}
 
 	@test('has no unique indexes to start (mongo)', mongoConnect)

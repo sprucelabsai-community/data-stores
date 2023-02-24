@@ -16,10 +16,15 @@ export type QueryBuilder<
 	[K in keyof Query]?: QueryPredicate<Query, K>
 } & { id?: string | QuerySelector<string> }
 
+export interface QuerySortField {
+	field: string
+	direction: 'asc' | 'desc'
+}
+
 export interface QueryOptions {
 	skip?: number
 	limit?: number
-	sort?: { field: string; direction: 'asc' | 'desc' }[]
+	sort?: QuerySortField[]
 	includeFields?: string[]
 }
 
