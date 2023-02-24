@@ -346,7 +346,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 							new SpruceError({
 								code: 'RECORD_NOT_FOUND',
 								storeName: 'NeDatabase',
-								query: preppedQuery,
+								query,
 							})
 						)
 					} else {

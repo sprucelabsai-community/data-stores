@@ -785,6 +785,8 @@ const databaseAssertUtil = {
 			'upsertOne() should throw a SpruceError with the code: DUPLICATE_RECORD'
 		)) as SpruceError
 
+		lowerCaseErrorDuplicateFields(err)
+
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
 			collectionName: this.collectionName,
 			duplicateFields: [
@@ -1923,7 +1925,9 @@ const databaseAssertUtil = {
 
 export default databaseAssertUtil
 function lowerCaseErrorDuplicateFields(err: SpruceError) {
+	//@ts-ignore
 	if (err.options.duplicateFields) {
+		//@ts-ignore
 		err.options.duplicateFields = err.options.duplicateFields.map((f) =>
 			f.toLowerCase()
 		)

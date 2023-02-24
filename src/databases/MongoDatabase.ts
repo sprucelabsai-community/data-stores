@@ -558,7 +558,7 @@ export default class MongoDatabase implements Database {
 				throw new SpruceError({
 					code: 'RECORD_NOT_FOUND',
 					storeName: 'MongoDatabase',
-					query: q,
+					query,
 				})
 			}
 
