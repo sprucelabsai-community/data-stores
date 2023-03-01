@@ -350,7 +350,11 @@ export default class MongoDatabase implements Database {
 			}
 		}
 		if (!found) {
-			throw new SpruceError({ code: 'INDEX_NOT_FOUND', missingIndex: fields })
+			throw new SpruceError({
+				code: 'INDEX_NOT_FOUND',
+				missingIndex: fields,
+				collectionName: collection,
+			})
 		}
 	}
 
@@ -399,7 +403,7 @@ export default class MongoDatabase implements Database {
 		fields: string[]
 	): Promise<void> {
 		const currentIndexes = await this.getIndexes(collection)
-		await this.assertIndexDoesNotExist(currentIndexes, fields)
+		await this.assertIndexDoesNotExist(currentIndexes, fields, collection)
 
 		const index: Record<string, any> = {}
 		fields.forEach((name) => {
@@ -426,13 +430,14 @@ export default class MongoDatabase implements Database {
 
 	private assertIndexDoesNotExist(
 		currentIndexes: UniqueIndex[] | Index[],
-		fields: string[]
+		fields: string[],
+		collectionName: string
 	) {
 		if (this.doesIndexExist(currentIndexes, fields)) {
 			throw new SpruceError({
 				code: 'INDEX_EXISTS',
 				index: fields,
-				collectionName: this.dbName,
+				collectionName,
 			})
 		}
 	}
@@ -476,7 +481,7 @@ export default class MongoDatabase implements Database {
 		fields: string[]
 	): Promise<void> {
 		const currentIndexes = await this.getUniqueIndexes(collection)
-		await this.assertIndexDoesNotExist(currentIndexes, fields)
+		await this.assertIndexDoesNotExist(currentIndexes, fields, collection)
 
 		const index: Record<string, any> = {}
 		fields.forEach((name) => {

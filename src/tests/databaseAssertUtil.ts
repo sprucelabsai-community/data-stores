@@ -1,17 +1,27 @@
 import { assertOptions } from '@sprucelabs/schema'
 import { assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
-import { Connect } from '../__tests__/behavioral/database/Database.test'
 import SpruceError from '../errors/SpruceError'
-import { Database, Index, UniqueIndex } from '../types/database.types'
+import {
+	Database,
+	Index,
+	TestConnect,
+	UniqueIndex,
+} from '../types/database.types'
 import generateId from '../utilities/generateId'
 
 const databaseAssertUtil = {
 	collectionName: 'test_collection',
 
-	async runSuite(connect: Connect) {
+	async runSuite(connect: TestConnect, tests?: string[]) {
 		assertOptions({ connect }, ['connect'])
+
 		const methods = [
+			//connecting
+			'assertThrowsWithInvalidConnectionString',
+			'assertThrowsWhenCantConnect',
+			'assertThrowsWithBadDatabaseName',
+
 			//inserting
 			'assertEmptyDatabaseReturnsEmptyArray',
 			'assertKnowsIfConnectionClosed',
@@ -24,21 +34,38 @@ const databaseAssertUtil = {
 			'assertInsertingGeneratesId',
 			'assertCanCreateMany',
 			'assertCanLimitResults',
+			'assertCanCreateWithObjectField',
+
+			//counting
+			'assertCanCountOnId',
+			'assertCanCount',
 
 			//updating
 			'assertThrowsWhenUpdatingRecordNotFound',
 			'assertCanUpdate',
 			'assertCanUpdateMany',
 			'assertCanPushOntoArrayValue',
+			'canUpdateWithObjectField',
+			'canUpdateFieldInObjectFieldWithTargettedWhere',
+			'assertCanSaveAndGetNullAndUndefined',
 
 			//upserting
 			'assertCanUpsertOne',
+			'assertCanUpsertNull',
+			'assertCanPushToArrayOnUpsert',
 
 			//finding
 			'assertEmptyDatabaseReturnsEmptyArray',
 			'assertFindOneOnEmptyDatabaseReturnsNull',
 			'assertCanLimitResults',
 			'assertCanLimitResultsToZero',
+			'assertCanFindWithBooleanField',
+			'assertCanQueryByGtLtGteLte',
+			'assertCanQueryPathWithDotSyntax',
+			'assertCanReturnOnlySelectFields',
+			'assertCanSearchByRegex',
+			'assertCanFindWithNe',
+			'assertCanFindWithIn',
 
 			//deleting
 			'assertCanDeleteRecord',
@@ -48,18 +75,50 @@ const databaseAssertUtil = {
 			'assertHasNoUniqueIndexToStart',
 			'assertCanCreateUniqueIndex',
 			'assertCanCreateMultiFieldUniqueIndex',
+			'assertCantCreateUniqueIndexTwice',
+			'assertCanDropUniqueIndex',
+			'assertCanDropCompoundUniqueIndex',
+			'assertCantDropUniqueIndexThatDoesntExist',
+			'assertCantDropIndexWhenNoIndexExists',
+			'assertCantDropCompoundUniqueIndexThatDoesntExist',
+			'assertSyncingUniqueIndexsAddsMissingIndexes',
+			'assertSyncingUniqueIndexsSkipsExistingIndexs',
+			'assertSyncingUniqueIndexesRemovesExtraIndexes',
+			'assertSyncingUniqueIndexesIsRaceProof',
+			'assertSyncingIndexesDoesNotAddAndRemove',
+			'assertUniqueIndexBlocksDuplicates',
+			'assertDuplicateKeyThrowsOnInsert',
+			'assertSettingUniqueIndexViolationThrowsSpruceError',
+			'assertCanCreateUniqueIndexOnNestedField',
+			'assertUpsertWithUniqueIndex',
+			'assertNestedFieldIndexUpdates',
+			'assertHasNoIndexToStart',
+			'assertCanCreateIndex',
+			'assertCantCreateSameIndexTwice',
+			'assertCanCreateMultiFieldIndex',
+			'assertCanDropIndex',
+			'assertCanDropCompoundIndex',
+			'assertCantDropCompoundIndexThatDoesNotExist',
+			'assertSyncIndexesSkipsExisting',
+			'assertSyncIndexesRemovesExtraIndexes',
+			'assertSyncIndexesHandlesRaceConditions',
+			'assertSyncIndexesDoesNotRemoveExisting',
+			'assertDuplicateFieldsWithMultipleUniqueIndexesWorkAsExpected',
 		]
 
-		const db = await connect()
+		const db = await connectToDabatase(connect)
 		await db.dropDatabase()
 		await this.shutdown(db)
 
-		for (const method of methods) {
+		const toRun = tests ?? methods
+		for (const method of toRun) {
 			try {
 				//@ts-ignore
 				await this[method](connect)
 			} catch (err: any) {
-				err.message = `Error in ${method}:\n\n ${err.message}`
+				const prefix = `Error in ${method}:\n\n `
+				err.message = `${prefix} ${err.message}`
+				err.stack = `${prefix} ${err.stack}`
 				throw err
 			}
 		}
@@ -88,8 +147,8 @@ const databaseAssertUtil = {
 		assert.isEqual(count, expectedUpdateCount)
 	},
 
-	async generateIdDifferentEachTime(connect: Connect) {
-		const db = await connect()
+	async generateIdDifferentEachTime(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const id1 = db.generateId()
 		const id2 = db.generateId()
 		assert.isNotEqual(
@@ -100,8 +159,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanSortDesc(connect: Connect) {
-		const db = await connect()
+	async assertCanSortDesc(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const second = await db.createOne(this.collectionName, {
 			name: 'second',
 			count: 1,
@@ -185,8 +244,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanSortAsc(connect: Connect) {
-		const db = await connect()
+	async assertCanSortAsc(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createOne(this.collectionName, { name: 'second', count: 1 })
 		await db.createOne(this.collectionName, { name: 'third', count: 5 })
 		await db.createOne(this.collectionName, { name: 'first', count: -1 })
@@ -217,8 +276,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertInsertingGeneratesId(connect: Connect) {
-		const db = await connect()
+	async assertInsertingGeneratesId(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const name = generateId()
 		const inserted = await db.createOne(this.collectionName, {
 			name,
@@ -235,8 +294,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertThrowsWhenUpdatingRecordNotFound(connect: Connect) {
-		const db = await connect()
+	async assertThrowsWhenUpdatingRecordNotFound(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		assert.isFunction(
 			db.generateId,
 			`db.generateId() must be a function that returns a unique identifier.`
@@ -262,8 +321,8 @@ const databaseAssertUtil = {
 		}
 	},
 
-	async assertCanCreateUniqueIndex(connect: Connect) {
-		const db = await connect()
+	async assertCanCreateUniqueIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
 		let indexes = await db.getUniqueIndexes(this.collectionName)
 
@@ -301,8 +360,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertHasNoUniqueIndexToStart(connect: Connect) {
-		const db = await connect()
+	async assertHasNoUniqueIndexToStart(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(
 			indexes,
@@ -312,8 +371,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanUpsertOne(connect: Connect) {
-		const db = await connect()
+	async assertCanUpsertOne(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const id = db.generateId()
 
 		const created = await db.upsertOne(
@@ -335,10 +394,11 @@ const databaseAssertUtil = {
 			{ name: 'second' }
 		)
 
+		const id2 = db.generateId()
 		await db.upsertOne(
 			this.collectionName,
-			{ id: db.generateId() },
-			{ name: 'second' }
+			{ id: id2 },
+			{ name: 'second', id: id2 }
 		)
 
 		assert.isTruthy(upserted)
@@ -365,8 +425,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanDeleteOne(connect: Connect) {
-		const db = await connect()
+	async assertCanDeleteOne(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.create(this.collectionName, [
 			{
@@ -389,8 +449,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanDeleteRecord(connect: Connect) {
-		const db = await connect()
+	async assertCanDeleteRecord(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const created = await db.createOne(this.collectionName, {
 			id: db.generateId(),
 			name: 'first',
@@ -441,8 +501,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanLimitResultsToZero(connect: Connect) {
-		const db = await connect()
+	async assertCanLimitResultsToZero(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.createOne(this.collectionName, {
 			id: db.generateId(),
@@ -467,8 +527,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanLimitResults(connect: Connect) {
-		const db = await connect()
+	async assertCanLimitResults(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.createOne(this.collectionName, {
 			id: db.generateId(),
@@ -495,16 +555,16 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertFindOneOnEmptyDatabaseReturnsNull(connect: Connect) {
-		const db = await connect()
+	async assertFindOneOnEmptyDatabaseReturnsNull(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const results = await db.findOne(this.collectionName, { id: '111' })
 		assert.isFalsy(results)
 
 		await this.shutdown(db)
 	},
 
-	async assertEmptyDatabaseReturnsEmptyArray(connect: Connect) {
-		const db = await connect()
+	async assertEmptyDatabaseReturnsEmptyArray(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const results = await db.find(this.collectionName, { id: '111' })
 		assert.isLength(results, 0)
@@ -512,8 +572,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanPushOntoArrayValue(connect: Connect) {
-		const db = await connect()
+	async assertCanPushOntoArrayValue(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const inserted = await db.createOne(this.collectionName, {
 			id: db.generateId(),
@@ -539,8 +599,92 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanCreateMany(connect: Connect) {
-		const db = await connect()
+	async assertCanCreateWithObjectField(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+
+		const values = {
+			name: 'first',
+			target: {
+				organizationId: generateId(),
+				locationId: generateId(),
+			},
+		}
+
+		let created: Record<string, any> | undefined
+		try {
+			created = await db.createOne(this.collectionName, values)
+		} catch {
+			assert.fail(
+				'createOne() tried to create a record with an object field. Make sure the target field handles objects!'
+			)
+		}
+
+		const matched = await db.findOne(this.collectionName, { id: created!.id })
+
+		assert.isEqualDeep(matched, { ...created, id: matched!.id })
+
+		await this.shutdown(db)
+	},
+
+	async canUpdateWithObjectField(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+
+		const values = {
+			name: 'first',
+			target: {
+				organizationId: generateId(),
+				locationId: generateId(),
+			},
+		}
+
+		const created = await db.createOne(this.collectionName, values)
+		const target = {
+			organizationId: 'hey',
+			locationId: 'there',
+		}
+		await db.updateOne(
+			this.collectionName,
+			{ id: created.id },
+			{
+				target,
+			}
+		)
+		const matched = await db.findOne(this.collectionName, { id: created!.id })
+
+		assert.isEqualDeep(matched!.target, target)
+
+		await this.shutdown(db)
+	},
+
+	async canUpdateFieldInObjectFieldWithTargettedWhere(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+
+		const target = {
+			organizationId: generateId(),
+			locationId: generateId(),
+		}
+		const values = {
+			name: 'first',
+			target,
+		}
+
+		const created = await db.createOne(this.collectionName, values)
+		await db.updateOne(
+			this.collectionName,
+			{ id: created.id },
+			{
+				'target.organizationId': 'oy oy',
+			}
+		)
+		const matched = await db.findOne(this.collectionName, { id: created!.id })
+
+		assert.isEqualDeep(matched!.target, { ...target, organizationId: 'oy oy' })
+
+		await this.shutdown(db)
+	},
+
+	async assertCanCreateMany(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const values = [
 			{ name: 'ry' },
 			{ name: 'tay' },
@@ -558,8 +702,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanUpdateMany(connect: Connect) {
-		const db = await connect()
+	async assertCanUpdateMany(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.create(this.collectionName, [
 			{
@@ -593,8 +737,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanQueryWithOr(connect: Connect) {
-		const db = await connect()
+	async assertCanQueryWithOr(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const name1 = generateId()
 		const name2 = generateId()
@@ -629,8 +773,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanUpdate(connect: Connect) {
-		const db = await connect()
+	async assertCanUpdate(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const inserted = await db.createOne(this.collectionName, {
 			id: db.generateId(),
@@ -670,8 +814,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanSortById(connect: Connect) {
-		const db = await connect()
+	async assertCanSortById(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.createOne(this.collectionName, {
 			id: db.generateId(),
@@ -712,8 +856,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanCreateMultiFieldUniqueIndex(connect: Connect) {
-		const db = await connect()
+	async assertCanCreateMultiFieldUniqueIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, [
 			'uniqueField',
 			'uniqueField2',
@@ -800,47 +944,60 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertSettingUniqueIndexViolationThrowsSpruceError(connect: Connect) {
-		const db = await connect()
+	async assertSettingUniqueIndexViolationThrowsSpruceError(
+		connect: TestConnect
+	) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, ['randomUniqueField'])
 
 		await db.createOne(this.collectionName, {
 			uniqueField: 'hello world',
 			randomUniqueField: '1',
+			name: generateId(),
 		})
 
 		await db.createOne(this.collectionName, {
 			uniqueField: 'hello world',
 			randomUniqueField: '2',
+			name: generateId(),
 		})
 
 		let err = await assert.doesThrowAsync(() =>
 			db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 		)
 
-		assert.isTrue(err instanceof SpruceError)
 		errorAssert.assertError(err, 'DUPLICATE_KEY')
 		await this.shutdown(db)
 	},
 
-	async assertDuplicateKeyThrowsOnInsert(connect: Connect) {
-		const db = await connect()
+	async assertDuplicateKeyThrowsOnInsert(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
 
 		await db.createOne(this.collectionName, {
 			uniqueField: 'hello world',
+			name: generateId(),
 		})
 
 		let err = await assert.doesThrowAsync(() =>
-			db.createOne(this.collectionName, { uniqueField: 'hello world' })
+			db.createOne(this.collectionName, {
+				uniqueField: 'hello world',
+				name: generateId(),
+			})
 		)
 
-		assert.isTrue(err instanceof SpruceError)
+		lowerCaseErrorDuplicateFields(err)
+
+		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
+			duplicateFields: ['uniquefield'],
+			duplicateValues: ['hello world'],
+			collectionName: this.collectionName,
+		})
 		await this.shutdown(db)
 	},
 
-	async assertSyncingIndexesDoesNotAddAndRemove(connect: Connect) {
-		const db = await connect()
+	async assertSyncingIndexesDoesNotAddAndRemove(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.createUniqueIndex(this.collectionName, ['otherField'])
 		await db.createUniqueIndex(this.collectionName, ['someField'])
@@ -859,26 +1016,30 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertSyncingUniqueIndexesRemovesExtraIndexes(connect: Connect) {
-		const db = await connect()
+	async assertSyncingUniqueIndexesRemovesExtraIndexes(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.syncUniqueIndexes(this.collectionName, [
 			['uniqueField'],
 			['someField'],
 			['otherField', 'otherField2'],
 		])
 		let indexes = await db.getUniqueIndexes(this.collectionName)
-		assert.isLength(indexes, 3)
+		assert.isLength(
+			indexes,
+			3,
+			'syncUniqueIndexes() should have created 3 indexes.'
+		)
 
 		await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
 		indexes = await db.getUniqueIndexes(this.collectionName)
 		assert.isLength(indexes, 1)
-		assert.isEqual(indexes[0][0], 'uniqueField')
+		assert.isEqual(indexes[0][0].toLowerCase(), 'uniquefield')
 		await this.shutdown(db)
 	},
 
-	async assertSyncingUniqueIndexsSkipsExistingIndexs(connect: Connect) {
-		const db = await connect()
+	async assertSyncingUniqueIndexsSkipsExistingIndexs(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
 		let indexes = await db.getUniqueIndexes(this.collectionName)
@@ -895,17 +1056,17 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertSyncingUniqueIndexsAddsMissingIndexes(connect: Connect) {
-		const db = await connect()
+	async assertSyncingUniqueIndexsAddsMissingIndexes(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
 		let indexes = await db.getUniqueIndexes(this.collectionName)
-		assert.isLength(indexes, 1)
+		assert.isLength(indexes, 1, 'There should be 1 index after syncing.')
 
 		await db.syncUniqueIndexes(this.collectionName, [['someField']])
 
 		indexes = await db.getUniqueIndexes(this.collectionName)
-		assert.isLength(indexes, 1)
+		assert.isLength(indexes, 1, 'There should now be 2 indexes after syncing.')
 
 		await db.syncUniqueIndexes(this.collectionName, [
 			['uniqueField'],
@@ -913,12 +1074,16 @@ const databaseAssertUtil = {
 		])
 
 		indexes = await db.getUniqueIndexes(this.collectionName)
-		assert.isLength(indexes, 2)
+		assert.isLength(
+			indexes,
+			2,
+			'There should still be 2 indexes after syncing.'
+		)
 		await this.shutdown(db)
 	},
 
-	async assertCantDropCompoundUniqueIndexThatDoesntExist(connect: Connect) {
-		const db = await connect()
+	async assertCantDropCompoundUniqueIndexThatDoesntExist(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, [
 			'someField',
 			'someOtherField',
@@ -927,34 +1092,52 @@ const databaseAssertUtil = {
 		const err = await assert.doesThrowAsync(() =>
 			db.dropIndex(this.collectionName, ['uniqueField', 'someOtherField'])
 		)
-		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+
+		lowerCaseMissingIndexValues(err)
+
+		errorAssert.assertError(err, 'INDEX_NOT_FOUND', {
+			collectionName: this.collectionName,
+			missingIndex: ['uniquefield', 'someotherfield'],
+		})
 		await this.shutdown(db)
 	},
 
-	async assertCantDropIndexWhenNoIndexExists(connect: Connect) {
-		const db = await connect()
+	async assertCantDropIndexWhenNoIndexExists(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const err = await assert.doesThrowAsync(() =>
 			db.dropIndex(this.collectionName, ['someOtherField'])
 		)
-		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+
+		lowerCaseMissingIndexValues(err)
+
+		errorAssert.assertError(err, 'INDEX_NOT_FOUND', {
+			collectionName: this.collectionName,
+			missingIndex: ['someotherfield'],
+		})
 		await this.shutdown(db)
 	},
 
-	async assertCantDropUniqueIndexThatDoesntExist(connect: Connect) {
-		const db = await connect()
+	async assertCantDropUniqueIndexThatDoesntExist(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, ['someField'])
 
 		const err = await assert.doesThrowAsync(() =>
 			db.dropIndex(this.collectionName, ['someOtherField'])
 		)
-		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+
+		lowerCaseMissingIndexValues(err)
+
+		errorAssert.assertError(err, 'INDEX_NOT_FOUND', {
+			collectionName: this.collectionName,
+			missingIndex: ['someotherfield'],
+		})
 
 		await this.shutdown(db)
 	},
 
-	async assertCanDropCompoundUniqueIndex(connect: Connect) {
-		const db = await connect()
+	async assertCanDropCompoundUniqueIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, ['someField', 'otherField'])
 		await db.dropIndex(this.collectionName, ['someField', 'otherField'])
 
@@ -970,13 +1153,17 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanDropUniqueIndex(connect: Connect) {
-		const db = await connect()
+	async assertCanDropUniqueIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, ['someField'])
 		await db.dropIndex(this.collectionName, ['someField'])
 
 		let indexes = await db.getUniqueIndexes(this.collectionName)
-		assert.isLength(indexes, 0)
+		assert.isLength(
+			indexes,
+			0,
+			'getUniqueIndexes() still returned an index even though it should not have after dropIndex().'
+		)
 
 		await db.createUniqueIndex(this.collectionName, ['someField2'])
 		await db.createUniqueIndex(this.collectionName, ['someField3'])
@@ -987,21 +1174,20 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCantCreateUniqueIndexTwice(connect: Connect) {
-		const db = await connect()
-		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
-		let indexes = await db.getUniqueIndexes(this.collectionName)
-		assert.isLength(indexes, 1)
+	async assertCantCreateUniqueIndexTwice(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
-		const err = await assert.doesThrowAsync(() =>
-			db.createUniqueIndex(this.collectionName, ['uniqueField'])
+		await assertCantCreateUniqueIndexTwice(
+			db,
+			this.collectionName,
+			['uniqueField'],
+			1
 		)
-		errorAssert.assertError(err, 'INDEX_EXISTS')
 
 		await this.shutdown(db)
 	},
-	async assertSyncingUniqueIndexesIsRaceProof(connect: Connect) {
-		const db = await connect()
+	async assertSyncingUniqueIndexesIsRaceProof(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const syncs = [
 			db.syncUniqueIndexes(this.collectionName, [
 				['otherField', 'otherField2'],
@@ -1038,27 +1224,34 @@ const databaseAssertUtil = {
 
 		await this.shutdown(db)
 	},
-	async assertUniqueIndexBlocksDuplicates(connect: Connect) {
-		const db = await connect()
+	async assertUniqueIndexBlocksDuplicates(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
 
 		await db.createOne(this.collectionName, {
 			uniqueField: 'hello world',
+			name: 'hello world',
 		})
 
 		let err = (await assert.doesThrowAsync(() =>
-			db.createOne(this.collectionName, { uniqueField: 'hello world' })
+			db.createOne(this.collectionName, {
+				uniqueField: 'hello world',
+				name: 'hello world',
+			})
 		)) as SpruceError
+
+		lowerCaseStringArray(err, 'duplicateFields')
 
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
 			collectionName: this.collectionName,
-			duplicateFields: ['uniqueField'],
+			duplicateFields: ['uniquefield'],
 			duplicateValues: ['hello world'],
 			action: 'create',
 		})
 
 		const created = await db.createOne(this.collectionName, {
 			uniqueField: 'pass',
+			name: 'hello world',
 		})
 
 		err = (await assert.doesThrowAsync(() =>
@@ -1069,9 +1262,11 @@ const databaseAssertUtil = {
 			)
 		)) as SpruceError
 
+		lowerCaseStringArray(err, 'duplicateFields')
+
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
 			collectionName: this.collectionName,
-			duplicateFields: ['uniqueField'],
+			duplicateFields: ['uniquefield'],
 			duplicateValues: ['hello world'],
 			action: 'updateOne',
 		})
@@ -1081,6 +1276,7 @@ const databaseAssertUtil = {
 			promises.push(
 				db.createOne(this.collectionName, {
 					uniqueField: 'fast',
+					name: 'hello world',
 				})
 			)
 		}
@@ -1089,8 +1285,10 @@ const databaseAssertUtil = {
 			Promise.all(promises)
 		)) as SpruceError
 
+		lowerCaseStringArray(err, 'duplicateFields')
+
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
-			duplicateFields: ['uniqueField'],
+			duplicateFields: ['uniquefield'],
 			duplicateValues: ['fast'],
 		})
 
@@ -1102,6 +1300,7 @@ const databaseAssertUtil = {
 					{ uniqueField: `${c}` },
 					{
 						uniqueField: 'upsertFast',
+						name: 'hello world',
 					}
 				)
 			)
@@ -1116,14 +1315,23 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanCreateUniqueIndexOnNestedField(connect: Connect) {
-		const db = await connect()
-		await db.createUniqueIndex(this.collectionName, [
-			'target.organizationId',
-			'slug',
-		])
+	async assertCanCreateUniqueIndexOnNestedField(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+
+		try {
+			await db.createUniqueIndex(this.collectionName, [
+				'target.organizationId',
+				'slug',
+			])
+		} catch (err: any) {
+			assert.fail(
+				`Trying to create a unique index on target.organizationId and slug failed.\n\n` +
+					err.stack ?? err.message
+			)
+		}
 
 		await db.createOne(this.collectionName, {
+			name: generateId(),
 			target: {
 				organizationId: 'go!',
 				locationId: null,
@@ -1133,6 +1341,7 @@ const databaseAssertUtil = {
 
 		const err = await assert.doesThrowAsync(() =>
 			db.createOne(this.collectionName, {
+				name: generateId(),
 				target: {
 					organizationId: 'go!',
 					locationId: null,
@@ -1156,6 +1365,7 @@ const databaseAssertUtil = {
 				},
 			},
 			{
+				name: 'test',
 				target: {
 					organizationId: 'go 2!',
 					locationId: null,
@@ -1167,9 +1377,12 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanPushToArrayOnUpsert(connect: Connect) {
-		const db = await connect()
-		const record = await db.createOne(this.collectionName, { names: [] })
+	async assertCanPushToArrayOnUpsert(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+		const record = await db.createOne(this.collectionName, {
+			name: 'test',
+			names: [],
+		})
 		await db.updateOne(
 			this.collectionName,
 			{
@@ -1186,25 +1399,25 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanSearchByRegex(connect: Connect) {
-		const db = await connect()
+	async assertCanSearchByRegex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.create(this.collectionName, [
 			{
 				name: 'first',
-				subObject: {
+				target: {
 					score: 1,
 				},
 			},
 			{
 				name: 'second',
-				subObject: {
+				target: {
 					score: 2,
 				},
 			},
 			{
 				name: 'third',
-				subObject: {
+				target: {
 					score: 2,
 				},
 			},
@@ -1215,34 +1428,38 @@ const databaseAssertUtil = {
 			{ name: { $regex: /fi/ } },
 			{ includeFields: ['name'] }
 		)
-		assert.isEqualDeep(all, [
-			{
-				name: 'first',
-			},
-		])
+		assert.isEqualDeep(
+			all,
+			[
+				{
+					name: 'first',
+				},
+			],
+			'Searching by regex failed.!'
+		)
 
 		await this.shutdown(db)
 	},
 
-	async assertCanReturnOnlySelectFields(connect: Connect) {
-		const db = await connect()
+	async assertCanReturnOnlySelectFields(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.create(this.collectionName, [
 			{
 				name: 'first',
-				subObject: {
+				target: {
 					score: 1,
 				},
 			},
 			{
 				name: 'second',
-				subObject: {
+				target: {
 					score: 2,
 				},
 			},
 			{
 				name: 'third',
-				subObject: {
+				target: {
 					score: 2,
 				},
 			},
@@ -1268,11 +1485,11 @@ const databaseAssertUtil = {
 		const first = await db.findOne(
 			this.collectionName,
 			{},
-			{ includeFields: ['subObject'] }
+			{ includeFields: ['target'] }
 		)
 
 		assert.isEqualDeep(first, {
-			subObject: {
+			target: {
 				score: 1,
 			},
 		})
@@ -1280,29 +1497,40 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertThrowsWithoutDatabaseName(connect: Connect) {
+	async assertThrowsWithBadDatabaseName(connect: TestConnect) {
+		const {
+			db,
+			connectionStringWithRandomBadDatabaseName:
+				connectionStringWithRandomBadDatabaseeName,
+			badDatabaseName,
+		} = await connect()
+		await this.shutdown(db)
+
 		const err = await assert.doesThrowAsync(() =>
-			connect(undefined, 'undefined')
+			connect(connectionStringWithRandomBadDatabaseeName)
 		)
 		errorAssert.assertError(err, 'INVALID_DATABASE_NAME', {
-			suppliedName: 'undefined',
+			suppliedName: badDatabaseName,
 		})
 	},
 
-	async assertThrowsWhenCantConnect(connect: Connect) {
+	async assertThrowsWhenCantConnect(connect: TestConnect) {
+		const { db, scheme } = await connect()
+		await this.shutdown(db)
+
 		const err = await assert.doesThrowAsync(() =>
-			connect('mongodb://localhost:9999')
+			connect(`${scheme}localhost:9999`)
 		)
 		errorAssert.assertError(err, 'UNABLE_TO_CONNECT_TO_DB')
 	},
 
-	async assertThrowsWithInvalidConnectionString(connect: Connect) {
+	async assertThrowsWithInvalidConnectionString(connect: TestConnect) {
 		const err = await assert.doesThrowAsync(() => connect('astnoehusantoheun'))
 		errorAssert.assertError(err, 'INVALID_DB_CONNECTION_STRING')
 	},
 
-	async assertKnowsIfConnectionClosed(connect: Connect) {
-		const db = await connect()
+	async assertKnowsIfConnectionClosed(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		assert.isFunction(
 			db.isConnected,
 			`db.isConnected() needs to be a function!`
@@ -1322,109 +1550,117 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanQueryPathWithDotSyntax(connect: Connect) {
-		const db = await connect()
+	async assertCanQueryPathWithDotSyntax(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.create(this.collectionName, [
 			{
 				name: 'first',
-				subObject: {
+				target: {
 					score: 1,
 				},
 			},
 			{
 				name: 'second',
-				subObject: {
+				target: {
 					score: 2,
 				},
 			},
 			{
 				name: 'third',
-				subObject: {
+				target: {
 					score: 2,
 				},
 			},
 		])
 
 		const secondMatch = await db.findOne(this.collectionName, {
-			'subObject.score': 2,
+			'target.score': 2,
 		})
 
-		assert.isTruthy(secondMatch)
+		assert.isTruthy(secondMatch, 'Could not match on path with dot syntax.')
 		assert.isEqual(secondMatch.name, 'second')
 
 		await this.shutdown(db)
 	},
 
-	async assertCanQueryByGtLtGteLte(connect: Connect) {
-		const db = await connect()
+	async assertCanQueryByGtLtGteLte(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const created = await db.create(this.collectionName, [
 			{
-				position: 1,
+				number: 1,
+				name: generateId(),
 			},
 			{
-				position: 2,
+				number: 2,
+				name: generateId(),
 			},
 			{
-				position: 3,
+				number: 3,
+				name: generateId(),
 			},
 			{
-				position: 4,
+				number: 4,
+				name: generateId(),
 			},
 		])
 
 		const gtMatches = await db.find(this.collectionName, {
-			id: { $gt: created[2].id },
+			number: { $gt: 3 },
 		})
 
-		assert.isLength(gtMatches, 1)
-		assert.isEqual(gtMatches[0].position, 4)
+		assert.isLength(gtMatches, 1, 'Expected 1 match for $gt: 3')
+		assert.isEqual(
+			gtMatches[0].number,
+			4,
+			'Did not match the expected result for $gt: 3'
+		)
 
 		const gteMatches = await db.find(this.collectionName, {
-			id: { $gte: created[2].id },
+			number: { $gte: created[2].number },
 		})
 
 		assert.isLength(gteMatches, 2)
-		assert.isEqual(gteMatches[0].position, 3)
-		assert.isEqual(gteMatches[1].position, 4)
+		assert.isEqual(gteMatches[0].number, 3)
+		assert.isEqual(gteMatches[1].number, 4)
 
 		const ltMatches = await db.find(this.collectionName, {
-			id: { $lt: created[2].id },
+			number: { $lt: created[2].number },
 		})
 
 		assert.isLength(ltMatches, 2)
-		assert.isEqual(ltMatches[0].position, 1)
-		assert.isEqual(ltMatches[1].position, 2)
+		assert.isEqual(ltMatches[0].number, 1)
+		assert.isEqual(ltMatches[1].number, 2)
 
 		const lteMatches = await db.find(this.collectionName, {
-			id: { $lte: created[2].id },
+			number: { $lte: created[2].number },
 		})
 
 		assert.isLength(lteMatches, 3)
-		assert.isEqual(lteMatches[0].position, 1)
-		assert.isEqual(lteMatches[1].position, 2)
-		assert.isEqual(lteMatches[2].position, 3)
+		assert.isEqual(lteMatches[0].number, 1)
+		assert.isEqual(lteMatches[1].number, 2)
+		assert.isEqual(lteMatches[2].number, 3)
 
 		await this.shutdown(db)
 	},
 
-	async assertCanFindWithNe(connect: Connect) {
-		const db = await connect()
+	async assertCanFindWithNe(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const record1 = await db.createOne(this.collectionName, {
-			foo: 'bar',
-			hello: 'world',
+			name: 'bar',
+			someField: 'world',
 		})
 
 		await db.createOne(this.collectionName, {
-			foo: 'bar2',
-			hello: 'world',
+			name: 'bar2',
+			someField: 'world',
 		})
 
 		await db.createOne(this.collectionName, {
-			foo: 'bar3',
-			hello: 'planet',
+			name: 'bar3',
+			someField: 'planet',
 		})
 
 		const query = { id: { $ne: record1.id } }
@@ -1435,22 +1671,22 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanFindWithIn(connect: Connect) {
-		const db = await connect()
+	async assertCanFindWithIn(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const record1 = await db.createOne(this.collectionName, {
-			foo: 'bar',
-			hello: 'world',
+			name: 'bar',
+			otherField: 'world',
 		})
 
 		const record2 = await db.createOne(this.collectionName, {
-			foo: 'bar2',
-			hello: 'world',
+			name: 'bar2',
+			otherField: 'world',
 		})
 
 		const record3 = await db.createOne(this.collectionName, {
-			foo: 'bar3',
-			hello: 'planet',
+			name: 'bar3',
+			otherField: 'planet',
 		})
 
 		const query = { id: { $in: [record1.id, record2.id, record3.id] } }
@@ -1461,20 +1697,56 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanCountOnId(connect: Connect) {
-		const db = await connect()
+	async assertCanFindWithBooleanField(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const first = await db.createOne(this.collectionName, {
-			foo: 'bar',
-			hello: 'world',
+			name: generateId(),
+			isPublic: true,
+		})
+
+		const second = await db.createOne(this.collectionName, {
+			name: generateId(),
+			isPublic: false,
+		})
+
+		const firstMatch = await db.findOne(this.collectionName, {
+			isPublic: true,
+		})
+
+		assert.isEqualDeep(
+			firstMatch,
+			first,
+			`Searching where boolean field is true failed.`
+		)
+
+		const secondMatch = await db.findOne(this.collectionName, {
+			isPublic: false,
+		})
+
+		assert.isEqualDeep(
+			secondMatch,
+			second,
+			`Searching where boolean field is false failed.`
+		)
+
+		await this.shutdown(db)
+	},
+
+	async assertCanCountOnId(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+
+		const first = await db.createOne(this.collectionName, {
+			name: 'bar',
+			otherField: 'world',
 		})
 		const second = await db.createOne(this.collectionName, {
-			foo: 'bar2',
-			hello: 'world',
+			name: 'bar2',
+			otherField: 'world',
 		})
 		const third = await db.createOne(this.collectionName, {
-			foo: 'bar3',
-			hello: 'planet',
+			name: 'bar3',
+			otherField: 'planet',
 		})
 
 		const countFirst = await db.count(this.collectionName, { id: first.id })
@@ -1492,12 +1764,21 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanCount(connect: Connect) {
-		const db = await connect()
+	async assertCanCount(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
-		await db.createOne(this.collectionName, { foo: 'bar', hello: 'world' })
-		await db.createOne(this.collectionName, { foo: 'bar2', hello: 'world' })
-		await db.createOne(this.collectionName, { foo: 'bar3', hello: 'planet' })
+		await db.createOne(this.collectionName, {
+			name: 'bar',
+			otherField: 'world',
+		})
+		await db.createOne(this.collectionName, {
+			name: 'bar2',
+			otherField: 'world',
+		})
+		await db.createOne(this.collectionName, {
+			name: 'bar3',
+			otherField: 'planet',
+		})
 
 		const countAll = await db.count(this.collectionName)
 
@@ -1506,8 +1787,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanUpsertNull(connect: Connect) {
-		const db = await connect()
+	async assertCanUpsertNull(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const createdUndefined = await db.upsertOne(
 			this.collectionName,
@@ -1516,19 +1797,25 @@ const databaseAssertUtil = {
 			},
 			{
 				undefinedField: undefined,
+				name: generateId(),
 			}
 		)
 
 		assert.isTruthy(createdUndefined)
-		assert.isNull(createdUndefined.undefinedField)
+		assert.isTrue(
+			createdUndefined.undefinedField === null ||
+				createdUndefined.undefinedfield === null
+		)
 
 		const createdNull = await db.upsertOne(
 			this.collectionName,
 			{
 				nullField: null,
+				name: '234',
 			},
 			{
 				nullField: null,
+				name: generateId(),
 			}
 		)
 
@@ -1536,7 +1823,7 @@ const databaseAssertUtil = {
 
 		let all = await db.find(this.collectionName)
 
-		assert.isLength(all, 2)
+		assert.isLength(all, 2, 'I expected to find 2 records after 2 upserts.')
 
 		const updatedUndefined = await db.upsertOne(
 			this.collectionName,
@@ -1547,7 +1834,10 @@ const databaseAssertUtil = {
 		)
 
 		assert.isEqual(updatedUndefined.id, createdUndefined.id)
-		assert.isEqual(updatedUndefined.undefinedField, 'now defined')
+		assert.isEqual(
+			updatedUndefined.undefinedField ?? updatedUndefined.undefinedfield,
+			'now defined'
+		)
 
 		const updatedNull = await db.upsertOne(
 			this.collectionName,
@@ -1558,7 +1848,11 @@ const databaseAssertUtil = {
 		)
 
 		assert.isEqual(updatedNull.id, createdNull.id)
-		assert.isEqual(updatedNull.nullField, 'now defined')
+		assert.isEqual(
+			updatedNull.nullField ?? updatedNull.nullfield,
+			'now defined',
+			'nullField should have upserted to "now defined"'
+		)
 
 		all = await db.find(this.collectionName)
 
@@ -1567,29 +1861,43 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanSaveAndGetNullAndUndefined(connect: Connect) {
-		const db = await connect()
+	async assertCanSaveAndGetNullAndUndefined(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const created = await db.createOne(this.collectionName, {
 			undefinedField: undefined,
 			nullField: null,
+			name: 'hey',
 		})
 
-		assert.isNull(created.undefinedField)
-		assert.isNull(created.nullField)
+		assert.isTrue(
+			created.undefinedField === null || created.undefinedfield === null,
+			'undefinedField should be null'
+		)
+		assert.isTrue(
+			created.nullField === null || created.nullfield === null,
+			'nullField should be null'
+		)
 
 		const matchedUndefined = await db.findOne(this.collectionName, {
 			undefinedField: undefined,
 		})
 
 		assert.isTruthy(matchedUndefined)
-		assert.isNull(matchedUndefined.undefinedField)
+		assert.isTrue(
+			matchedUndefined.undefinedField === null ||
+				matchedUndefined.undefinedfield === null,
+			'findOne should return null for undefinedField'
+		)
 
 		const matchedNull = await db.findOne(this.collectionName, {
 			nullField: null,
 		})
 
 		assert.isTruthy(matchedNull)
-		assert.isNull(matchedNull.nullField)
+		assert.isTrue(
+			matchedNull.nullField === null || matchedNull.nullfield === null,
+			'findOne should return null for nullField'
+		)
 
 		const updatedUndefined = await db.updateOne(
 			this.collectionName,
@@ -1600,7 +1908,10 @@ const databaseAssertUtil = {
 		)
 
 		assert.isEqual(updatedUndefined.id, created.id)
-		assert.isEqual(updatedUndefined.undefinedField, 'now defined')
+		assert.isEqual(
+			updatedUndefined.undefinedField ?? updatedUndefined.undefinedfield,
+			'now defined'
+		)
 
 		const updatedNull = await db.updateOne(
 			this.collectionName,
@@ -1610,13 +1921,16 @@ const databaseAssertUtil = {
 			{ nullField: 'now defined' }
 		)
 
-		assert.isEqual(updatedNull.nullField, 'now defined')
+		assert.isEqual(
+			updatedNull.nullField ?? updatedNull.nullfield,
+			'now defined'
+		)
 
 		await this.shutdown(db)
 	},
 
-	async assertSyncIndexesDoesNotRemoveExisting(connect: Connect) {
-		const db = await connect()
+	async assertSyncIndexesDoesNotRemoveExisting(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.createIndex(this.collectionName, ['otherField'])
 		await db.createIndex(this.collectionName, ['someField'])
@@ -1632,33 +1946,34 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertSyncIndexesRemovesExtraIndexes(connect: Connect) {
-		const db = await connect()
+	async assertSyncIndexesRemovesExtraIndexes(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+
 		await db.syncIndexes(this.collectionName, [
-			['field'],
+			['name'],
 			['someField'],
 			['otherField', 'otherField2'],
 		])
 		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 3)
 
-		await db.syncIndexes(this.collectionName, [['field']])
+		await db.syncIndexes(this.collectionName, [['name']])
 
 		indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
-		assert.isEqual(indexes[0][0], 'field')
+		assert.isEqual(indexes[0][0], 'name')
 		await this.shutdown(db)
 	},
 
-	async assertSyncIndexesSkipsExisting(connect: Connect) {
-		const db = await connect()
-		await db.syncIndexes(this.collectionName, [['field']])
+	async assertSyncIndexesSkipsExisting(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+		await db.syncIndexes(this.collectionName, [['name']])
 
 		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
 
 		await db.syncIndexes(this.collectionName, [
-			['field'],
+			['name'],
 			['someField'],
 			['otherField', 'otherField2'],
 		])
@@ -1668,19 +1983,22 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCantDropCompoundIndexThatDoesNotExist(connect: Connect) {
-		const db = await connect()
+	async assertCantDropCompoundIndexThatDoesNotExist(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createIndex(this.collectionName, ['someField', 'someOtherField'])
 
 		const err = await assert.doesThrowAsync(() =>
 			db.dropIndex(this.collectionName, ['uniqueField', 'someOtherField'])
 		)
-		errorAssert.assertError(err, 'INDEX_NOT_FOUND')
+		errorAssert.assertError(err, 'INDEX_NOT_FOUND', {
+			collectionName: this.collectionName,
+			missingIndex: ['uniqueField', 'someOtherField'],
+		})
 		await this.shutdown(db)
 	},
 
-	async assertCanDropCompoundIndex(connect: Connect) {
-		const db = await connect()
+	async assertCanDropCompoundIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createIndex(this.collectionName, ['someField', 'otherField'])
 		await db.dropIndex(this.collectionName, ['someField', 'otherField'])
 
@@ -1695,8 +2013,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanDropIndex(connect: Connect) {
-		const db = await connect()
+	async assertCanDropIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createIndex(this.collectionName, ['someField'])
 		await db.dropIndex(this.collectionName, ['someField'])
 
@@ -1711,55 +2029,74 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanCreateMultiFieldIndex(connect: Connect, fields: any) {
-		const db = await connect()
-		await db.createIndex(this.collectionName, fields)
-		let indexes = await this._getFilteredIndexes(db)
-		assert.isLength(indexes, 1)
-
-		assert.isEqualDeep(indexes, [fields])
-		await this.shutdown(db)
+	async assertCanCreateMultiFieldIndex(connect: TestConnect) {
+		await this._assertCanCreateMultiFieldIndex(connect, [
+			'otherField',
+			'someField',
+		])
+		await this._assertCanCreateMultiFieldIndex(connect, [
+			'someField',
+			'otherField',
+		])
+		await this._assertCanCreateMultiFieldIndex(connect, [
+			'otherField',
+			'otherField2',
+		])
+		await this._assertCanCreateMultiFieldIndex(connect, [
+			'otherField2',
+			'otherField',
+		])
 	},
 
-	async assertCantCreateSameIndexTwice(connect: Connect) {
-		const db = await connect()
-		await db.createIndex(this.collectionName, ['field'])
+	async assertCantCreateSameIndexTwice(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+		await db.createIndex(this.collectionName, ['name'])
 		let indexes = await this._getFilteredIndexes(db)
 		assert.isLength(indexes, 1)
 
 		const err = await assert.doesThrowAsync(() =>
-			db.createIndex(this.collectionName, ['field'])
+			db.createIndex(this.collectionName, ['name'])
 		)
 		errorAssert.assertError(err, 'INDEX_EXISTS')
 		await this.shutdown(db)
 	},
 
-	async assertCanCreateIndex(connect: Connect) {
-		const db = await connect()
-		await db.createIndex(this.collectionName, ['field'])
+	async assertCanCreateIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
+		await db.createIndex(this.collectionName, ['uniqueField'])
 		let indexes = await this._getFilteredIndexes(db)
 
-		assert.isLength(indexes, 1)
-		assert.isLength(indexes[0], 1)
-		assert.isEqual(indexes[0][0], 'field')
+		assert.isArray(indexes, 'getIndexes() should return an array!')
+		assert.isLength(
+			indexes,
+			1,
+			'getIndexes() should return the one index that was created!'
+		)
+		assert.isLength(
+			indexes[0],
+			1,
+			'getIndexes() should return an array of arrays! It should be returing the first index I created!'
+		)
+		assert.isEqual(indexes[0][0].toLowerCase(), 'uniqueField'.toLowerCase())
 
-		await db.createIndex(this.collectionName, ['field2'])
+		await db.createIndex(this.collectionName, ['uniqueField2'])
 		indexes = await this._getFilteredIndexes(db)
 
 		assert.isLength(indexes, 2)
-		assert.isEqual(indexes[1][0], 'field2')
+		assert.isEqual(indexes[1][0].toLowerCase(), 'uniqueField2'.toLowerCase())
 
-		await db.createIndex(this.collectionName, ['field3', 'field4'])
+		await db.createIndex(this.collectionName, ['uniqueField3', 'uniqueField4'])
 		indexes = await this._getFilteredIndexes(db)
 
 		assert.isLength(indexes, 3)
-		assert.isEqual(indexes[2][0], 'field3')
-		assert.isEqual(indexes[2][1], 'field4')
+		assert.isEqual(indexes[2][0].toLowerCase(), 'uniqueField3'.toLowerCase())
+		assert.isEqual(indexes[2][1].toLowerCase(), 'uniqueField4'.toLowerCase())
+
 		await this.shutdown(db)
 	},
 
-	async assertHasNoIndexToStart(connect: Connect) {
-		const db = await connect()
+	async assertHasNoIndexToStart(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		const indexes = await db.getIndexes(this.collectionName)
 
@@ -1767,8 +2104,8 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertNestedFieldIndexUpdates(connect: Connect) {
-		const db = await connect()
+	async assertNestedFieldIndexUpdates(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		await db.createUniqueIndex(this.collectionName, [
 			'target.organizationId',
 			'slug',
@@ -1779,6 +2116,7 @@ const databaseAssertUtil = {
 				organizationId: 'go!',
 			},
 			aNonIndexedField: true,
+			name: 'squirrel',
 			slug: 'a slug',
 		})
 
@@ -1794,12 +2132,13 @@ const databaseAssertUtil = {
 			}
 		)
 
-		assert.isEqual(updated.aNonIndexedField, false)
+		assert.isEqual(updated.aNonIndexedField ?? updated.anonindexedfield, false)
+
 		await this.shutdown(db)
 	},
 
-	async assertUpsertWithUniqueIndex(connect: Connect) {
-		const db = await connect()
+	async assertUpsertWithUniqueIndex(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 
 		await db.syncUniqueIndexes(this.collectionName, [
 			['name', 'target.organizationId'],
@@ -1830,8 +2169,8 @@ const databaseAssertUtil = {
 		assert.isEqual(updated.name, 'notsquirrel')
 		await this.shutdown(db)
 	},
-	async assertSyncIndexesHandlesRaceConditions(connect: Connect) {
-		const db = await connect()
+	async assertSyncIndexesHandlesRaceConditions(connect: TestConnect) {
+		const db = await connectToDabatase(connect)
 		const syncs = [
 			db.syncIndexes(this.collectionName, [['otherField', 'otherField2']]),
 			db.syncIndexes(this.collectionName, [['otherField', 'otherField2']]),
@@ -1849,42 +2188,49 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 	async assertDuplicateFieldsWithMultipleUniqueIndexesWorkAsExpected(
-		connect: Connect
+		connect: TestConnect
 	) {
-		const db = await connect()
+		const db = await connectToDabatase(connect)
 
-		await db.createUniqueIndex(this.collectionName, ['uniqueField1'])
+		await db.createUniqueIndex(this.collectionName, ['uniqueField'])
 		await db.createUniqueIndex(this.collectionName, ['uniqueField2'])
 
 		await db.createOne(this.collectionName, {
-			uniqueField1: 'unique field 1',
+			name: generateId(),
+			uniqueField: 'unique field 1',
 			uniqueField2: 'unique field 2',
 		})
 
 		let err = await assert.doesThrowAsync(() =>
 			db.createOne(this.collectionName, {
-				uniqueField1: 'unique field 1',
+				name: generateId(),
+				uniqueField: 'unique field 1',
 				uniqueField2: 'unique field 2',
 			})
 		)
 
+		lowerCaseStringArray(err, 'duplicateFields')
+
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
 			collectionName: this.collectionName,
-			duplicateFields: ['uniqueField1'],
+			duplicateFields: ['uniquefield'],
 			duplicateValues: ['unique field 1'],
 			action: 'create',
 		})
 
 		err = await assert.doesThrowAsync(() =>
 			db.createOne(this.collectionName, {
-				uniqueField1: 'unique field 1.0',
+				name: generateId(),
+				uniqueField: 'unique field 1.0',
 				uniqueField2: 'unique field 2',
 			})
 		)
 
+		lowerCaseStringArray(err, 'duplicateFields')
+
 		errorAssert.assertError(err, 'DUPLICATE_RECORD', {
 			collectionName: this.collectionName,
-			duplicateFields: ['uniqueField2'],
+			duplicateFields: ['uniquefield2'],
 			duplicateValues: ['unique field 2'],
 			action: 'create',
 		})
@@ -1909,10 +2255,7 @@ const databaseAssertUtil = {
 
 	async _assert$orReturnsExpectedTotalRecords(
 		db: Database,
-		$or: (
-			| { isPublic: boolean; name?: undefined }
-			| { name: string; isPublic?: undefined }
-		)[],
+		$or: Record<string, any>[],
 		expected: number
 	) {
 		const matches = await db.find(this.collectionName, {
@@ -1921,15 +2264,73 @@ const databaseAssertUtil = {
 
 		assert.isLength(matches, expected)
 	},
+
+	async _assertCanCreateMultiFieldIndex(
+		connect: TestConnect,
+		fields: string[]
+	) {
+		const db = await connectToDabatase(connect)
+
+		await db.createIndex(this.collectionName, fields)
+		const indexes = await this._getFilteredIndexes(db)
+		assert.isLength(
+			indexes,
+			1,
+			`getIndexes() should return the index it created. I expected 1 but got ${indexes.length}. Also, make sure you clear the indexes when resetting the database!`
+		)
+
+		assert.isEqualDeep(
+			indexes[0].map((i) => i.toLowerCase()),
+			fields.map((f) => f.toLowerCase())
+		)
+
+		await this.shutdown(db)
+	},
 }
 
 export default databaseAssertUtil
-function lowerCaseErrorDuplicateFields(err: SpruceError) {
+
+async function assertCantCreateUniqueIndexTwice(
+	db: Database,
+	collectionName: string,
+	fields: string[],
+	expectedTotalUniqueIndexes: number
+) {
+	await db.createUniqueIndex(collectionName, fields)
+	let indexes = await db.getUniqueIndexes(collectionName)
+	assert.isLength(
+		indexes,
+		expectedTotalUniqueIndexes,
+		'getUniqueIndexes() should return total unique indexs'
+	)
+
+	const err = await assert.doesThrowAsync(
+		() => db.createUniqueIndex(collectionName, ['uniqueField']),
+		undefined,
+		'createUniqueIndex() should throw a DataStoreError({code: "INDEX_EXISTS"}) error.'
+	)
+	errorAssert.assertError(err, 'INDEX_EXISTS', {
+		collectionName,
+		index: ['uniqueField'],
+	})
+}
+
+function lowerCaseErrorDuplicateFields(err: Error) {
+	lowerCaseStringArray(err, 'duplicateFields')
+}
+
+function lowerCaseMissingIndexValues(err: Error) {
+	lowerCaseStringArray(err, 'missingIndex')
+}
+
+function lowerCaseStringArray(err: Error, key: string) {
 	//@ts-ignore
-	if (err.options.duplicateFields) {
+	if (err.options?.[key]?.map) {
 		//@ts-ignore
-		err.options.duplicateFields = err.options.duplicateFields.map((f) =>
-			f.toLowerCase()
-		)
+		err.options[key] = err.options[key].map((i: string) => i.toLowerCase())
 	}
+}
+async function connectToDabatase(connect: TestConnect) {
+	const { db } = await connect()
+	return db
 }

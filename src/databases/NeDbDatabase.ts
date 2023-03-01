@@ -497,7 +497,11 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				return
 			}
 		}
-		throw new SpruceError({ code: 'INDEX_NOT_FOUND', missingIndex: fields })
+		throw new SpruceError({
+			code: 'INDEX_NOT_FOUND',
+			missingIndex: fields,
+			collectionName: 'test_collection',
+		})
 	}
 
 	private assertIndexDoesNotExist(

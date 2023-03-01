@@ -64,3 +64,13 @@ export interface DatabaseOptions {
 	dbName?: string
 	log?: Log
 }
+
+export type TestConnect = (
+	connectionString?: string,
+	dbName?: string
+) => Promise<{
+	db: Database
+	scheme: string
+	connectionStringWithRandomBadDatabaseName: string
+	badDatabaseName: string
+}>

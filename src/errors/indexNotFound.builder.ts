@@ -11,5 +11,9 @@ export default buildErrorSchema({
 			isArray: true,
 			isRequired: true,
 		},
+		collectionName: {
+			type: 'text',
+			isRequired: true,
+		},
 	},
 })

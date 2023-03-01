@@ -21,21 +21,47 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
 	}
 
 	@test()
-	protected static async runSuiteHitsAllAssertions() {
+	protected static async canSpecifyTests() {
 		const utilClone = cloneDeep(databaseAssertUtil)
 		const keys = pluckAssertionMethods(utilClone)
 
-		let hitCount = 0
+		let hits: string[] = []
 
 		for (const key of keys) {
 			//@ts-ignore
 			utilClone[key] = async () => {
-				hitCount++
+				hits.push(key)
+			}
+		}
+
+		let tests = ['assertCanSortDesc']
+		await utilClone.runSuite(mongoConnect, tests)
+		assert.isEqualDeep(hits, tests)
+
+		hits = []
+		tests = ['assertCanQueryWithOr', 'assertCanLimitResults']
+		await utilClone.runSuite(mongoConnect, tests)
+		assert.isEqualDeep(hits, tests)
+	}
+
+	@test()
+	protected static async runSuiteHitsAllAssertions() {
+		const utilClone = cloneDeep(databaseAssertUtil)
+		const keys = pluckAssertionMethods(utilClone)
+
+		const hits: Record<string, boolean> = {}
+		const expected: Record<string, boolean> = {}
+
+		for (const key of keys) {
+			expected[key] = true
+			//@ts-ignore
+			utilClone[key] = () => {
+				hits[key] = true
 			}
 		}
 
 		await utilClone.runSuite(mongoConnect)
 
-		assert.isEqual(hitCount, keys.length)
+		assert.isEqualDeep(hits, expected)
 	}
 }

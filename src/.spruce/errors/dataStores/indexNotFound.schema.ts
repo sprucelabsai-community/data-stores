@@ -16,6 +16,12 @@ const indexNotFoundSchema: SpruceErrors.DataStores.IndexNotFoundSchema  = {
 	                isArray: true,
 	                options: undefined
 	            },
+	            /** . */
+	            'collectionName': {
+	                type: 'text',
+	                isRequired: true,
+	                options: undefined
+	            },
 	    }
 }
 
