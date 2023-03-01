@@ -1,3 +1,15 @@
+# [20.0.0](https://github.com/sprucelabsai/data-stores/compare/v19.3.3...v20.0.0) (2023-03-01)
+
+
+### Breaking Changes
+
+* way more robust testing tools ([88d712d](https://github.com/sprucelabsai/data-stores/commit/88d712d))
+
+
+### Features
+
+* export data stores error ([4935218](https://github.com/sprucelabsai/data-stores/commit/4935218))
+
 ## [19.3.3](https://github.com/sprucelabsai/data-stores/compare/v19.3.2...v19.3.3) (2023-02-24)
 
 ## [19.3.2](https://github.com/sprucelabsai/data-stores/compare/v19.3.1...v19.3.2) (2023-02-22)
