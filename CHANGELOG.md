@@ -1,3 +1,10 @@
+# [20.1.0](https://github.com/sprucelabsai/data-stores/compare/v20.0.8...v20.1.0) (2023-03-03)
+
+
+### Features
+
+* can getCollectionName on a data store! ([8ae3408](https://github.com/sprucelabsai/data-stores/commit/8ae3408))
+
 ## [20.0.8](https://github.com/sprucelabsai/data-stores/compare/v20.0.7...v20.0.8) (2023-03-03)
 
 ## [20.0.7](https://github.com/sprucelabsai/data-stores/compare/v20.0.6...v20.0.7) (2023-03-03)
