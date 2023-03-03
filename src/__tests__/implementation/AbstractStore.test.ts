@@ -5,7 +5,7 @@ import {
 	SchemaValues,
 	validationErrorAssert,
 } from '@sprucelabs/schema'
-import { test, assert } from '@sprucelabs/test-utils'
+import { test, assert, generateId } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../constants'
 import SpruceError from '../../errors/SpruceError'
@@ -127,6 +127,10 @@ class TestStore extends AbstractStore<
 
 	public static Store(db: Database) {
 		return new this(db)
+	}
+
+	public setCollectionName(name: string) {
+		super.setCollectionName(name)
 	}
 
 	protected async willCreate(values: SchemaValues<typeof createRecordSchema>) {
@@ -812,5 +816,12 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 
 		count = await this.store.count({ phoneNumber: DEMO_PHONE_FORMATTED })
 		assert.isEqual(count, 3)
+	}
+
+	@test()
+	protected static async canSetAndGetCollectionName() {
+		const name = generateId()
+		this.store.setCollectionName(name)
+		assert.isEqual(this.store.getCollectionName(), name)
 	}
 }
