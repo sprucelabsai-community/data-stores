@@ -100,8 +100,12 @@ export default abstract class AbstractStore<
 		}
 	}
 
-	private setCollectionName(name: string) {
+	protected setCollectionName(name: string) {
 		this.collectionName = name
+	}
+
+	public getCollectionName() {
+		return this.collectionName
 	}
 
 	protected async prepareAndNormalizeRecord<
