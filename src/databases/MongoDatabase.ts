@@ -646,4 +646,10 @@ export default class MongoDatabase implements Database {
 			duplicateValues,
 		}
 	}
+
+	public async query<T>(): Promise<T> {
+		throw new SpruceError({
+			code: 'NOT_IMPLEMENTED',
+		})
+	}
 }

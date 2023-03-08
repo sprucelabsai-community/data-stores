@@ -136,7 +136,12 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 				}`
 				break
 
-			default:
+			
+            case 'NOT_IMPLEMENTED':
+                message = 'A Not implemented just happened!'
+                break
+
+default:
 				message = super.friendlyMessage()
 		}
 

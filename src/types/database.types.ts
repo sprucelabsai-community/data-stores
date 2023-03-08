@@ -58,6 +58,7 @@ export interface Database {
 	count(collection: string, query?: Record<string, any>): Promise<number>
 	createUniqueIndex(collection: string, fields: UniqueIndex): Promise<void>
 	createIndex(collection: string, fields: Index): Promise<void>
+	query<T>(query: string): Promise<T>
 }
 
 export interface DatabaseOptions {

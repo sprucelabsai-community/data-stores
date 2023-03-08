@@ -633,4 +633,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			await this.dropIndex(collectionName, extra)
 		}
 	}
+
+	public async query<T>(): Promise<T> {
+		throw new SpruceError({
+			code: 'NOT_IMPLEMENTED',
+		})
+	}
 }

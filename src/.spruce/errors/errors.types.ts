@@ -206,6 +206,27 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface NotImplemented {
+		
+	}
+
+	export interface NotImplementedSchema extends SpruceSchema.Schema {
+		id: 'notImplemented',
+		namespace: 'DataStores',
+		name: 'Not implemented',
+		    fields: {
+		    }
+	}
+
+	export type NotImplementedEntity = SchemaEntity<SpruceErrors.DataStores.NotImplementedSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface MongoIdMappingError {
 		
 	}

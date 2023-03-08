@@ -1,4 +1,4 @@
-import { test } from '@sprucelabs/test-utils'
+import { assert, errorAssert, test } from '@sprucelabs/test-utils'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import databaseAssertUtil from '../../../tests/databaseAssertUtil'
 import { TestConnect } from '../../../types/database.types'
@@ -519,6 +519,17 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	@test('can $push to array (neDb)', neDbConnect)
 	protected static async can$pushOnUpsert(connect: TestConnect) {
 		await databaseAssertUtil.assertCanPushToArrayOnUpsert(connect)
+	}
+
+	@test('throws when trying raw query (mongo)', mongoConnect)
+	@test('throws when trying raw query (neDb)', neDbConnect)
+	protected static async cantRunRawQuery(connect: TestConnect) {
+		const { db } = await connect()
+		const err = await assert.doesThrowAsync(() =>
+			db.query('select * from test')
+		)
+
+		errorAssert.assertError(err, 'NOT_IMPLEMENTED')
 	}
 }
 
