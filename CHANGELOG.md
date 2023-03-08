@@ -1,3 +1,10 @@
+# [22.3.0](https://github.com/sprucelabsai/data-stores/compare/v22.2.0...v22.3.0) (2023-03-08)
+
+
+### Features
+
+* database now has "query()" method to run a row query ([15f8264](https://github.com/sprucelabsai/data-stores/commit/15f8264))
+
 # [22.2.0](https://github.com/sprucelabsai/data-stores/compare/v22.1.0...v22.2.0) (2023-03-08)
 
 
