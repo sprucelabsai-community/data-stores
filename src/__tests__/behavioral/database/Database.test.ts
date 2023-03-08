@@ -470,7 +470,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	@test('can find by $gt, $lt, $gte, $lte (mongo)', mongoConnect)
 	@test('can find by $gt, $lt, $gte, $lte (neDb)', neDbConnect)
 	protected static async canQueryByGtLtGteLte(connect: TestConnect) {
-		await databaseAssertUtil.assertCanQueryByGtLtGteLte(connect)
+		await databaseAssertUtil.assertCanQueryByGtLtGteLteNe(connect)
 	}
 
 	@test('can search by path to sub object (mongo)', mongoConnect)

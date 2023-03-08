@@ -60,7 +60,7 @@ const databaseAssertUtil = {
 			'assertCanLimitResults',
 			'assertCanLimitResultsToZero',
 			'assertCanFindWithBooleanField',
-			'assertCanQueryByGtLtGteLte',
+			'assertCanQueryByGtLtGteLteNe',
 			'assertCanQueryPathWithDotSyntax',
 			'assertCanReturnOnlySelectFields',
 			'assertCanSearchByRegex',
@@ -1584,25 +1584,29 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async assertCanQueryByGtLtGteLte(connect: TestConnect) {
+	async assertCanQueryByGtLtGteLteNe(connect: TestConnect) {
 		const db = await connectToDabatase(connect)
 
 		const created = await db.create(this.collectionName, [
 			{
 				number: 1,
 				name: generateId(),
+				someField: null,
 			},
 			{
 				number: 2,
 				name: generateId(),
+				someField: 'test',
 			},
 			{
 				number: 3,
 				name: generateId(),
+				someField: 'test',
 			},
 			{
 				number: 4,
 				name: generateId(),
+				someField: 'test',
 			},
 		])
 
@@ -1641,6 +1645,23 @@ const databaseAssertUtil = {
 		assert.isEqual(lteMatches[0].number, 1)
 		assert.isEqual(lteMatches[1].number, 2)
 		assert.isEqual(lteMatches[2].number, 3)
+
+		const notMatches = await db.find(this.collectionName, {
+			id: {
+				$ne: created[0].id,
+			},
+		})
+
+		assert.isNotEqual(notMatches[0].id, created[0].id)
+		assert.isLength(notMatches, created.length - 1)
+
+		const notNull = await db.find(this.collectionName, {
+			someField: {
+				$ne: null,
+			},
+		})
+
+		assert.isLength(notNull, created.length - 1)
 
 		await this.shutdown(db)
 	},
