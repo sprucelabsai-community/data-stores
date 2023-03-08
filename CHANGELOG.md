@@ -1,3 +1,10 @@
+# [22.2.0](https://github.com/sprucelabsai/data-stores/compare/v22.1.0...v22.2.0) (2023-03-08)
+
+
+### Features
+
+* assert fixes ([807bc4e](https://github.com/sprucelabsai/data-stores/commit/807bc4e))
+
 # [22.1.0](https://github.com/sprucelabsai/data-stores/compare/v22.0.3...v22.1.0) (2023-03-08)
 
 
