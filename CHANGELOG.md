@@ -1,3 +1,16 @@
+## [22.0.3](https://github.com/sprucelabsai/data-stores/compare/v22.0.2...v22.0.3) (2023-03-06)
+
+## [22.0.2](https://github.com/sprucelabsai/data-stores/compare/v22.0.1...v22.0.2) (2023-03-06)
+
+## [22.0.1](https://github.com/sprucelabsai/data-stores/compare/v22.0.0...v22.0.1) (2023-03-05)
+
+# [22.0.0](https://github.com/sprucelabsai/data-stores/compare/v21.0.0...v22.0.0) (2023-03-05)
+
+
+### Breaking Changes
+
+* **auto-upgrade:** upgraded packages [upgrade-all] ([b42fae7](https://github.com/sprucelabsai/data-stores/commit/b42fae7))
+
 # [21.0.0](https://github.com/sprucelabsai/data-stores/compare/v20.1.2...v21.0.0) (2023-03-05)
 
 
