@@ -1,3 +1,10 @@
+# [22.1.0](https://github.com/sprucelabsai/data-stores/compare/v22.0.3...v22.1.0) (2023-03-08)
+
+
+### Features
+
+* can setup test database without database name ([c0473e1](https://github.com/sprucelabsai/data-stores/commit/c0473e1))
+
 ## [22.0.3](https://github.com/sprucelabsai/data-stores/compare/v22.0.2...v22.0.3) (2023-03-06)
 
 ## [22.0.2](https://github.com/sprucelabsai/data-stores/compare/v22.0.1...v22.0.2) (2023-03-06)
