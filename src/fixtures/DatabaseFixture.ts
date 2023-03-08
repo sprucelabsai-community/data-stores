@@ -27,10 +27,6 @@ export default class DatabaseFixture {
 			missing.push('dbConnectionString')
 		}
 
-		if (!dbName && dbConnectionString !== MEMORY) {
-			missing.push('dbName')
-		}
-
 		if (missing.length > 0) {
 			throw new SchemaError({
 				code: 'MISSING_PARAMETERS',

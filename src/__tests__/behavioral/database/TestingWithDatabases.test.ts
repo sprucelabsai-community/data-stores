@@ -9,10 +9,10 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
 	@test(
 		'throws unexpected with in memory and just passing dbString',
 		{
-			dbConnectionString: 'waka',
+			dbConnectionString: false,
 		},
 		'MISSING_PARAMETERS',
-		['dbName']
+		['dbConnectionString']
 	)
 	protected static async cantPassDbValuesIfUsingInMemoryDatabase(
 		options: DatabaseFixtureOptions,
