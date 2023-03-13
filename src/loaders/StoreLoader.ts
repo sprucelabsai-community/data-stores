@@ -1,12 +1,12 @@
 import pathUtil from 'path'
 import AbstractSpruceError from '@sprucelabs/error'
+import globby from '@sprucelabs/globby'
 import { SchemaError } from '@sprucelabs/schema'
 import {
 	diskUtil,
 	HASH_SPRUCE_DIR_NAME,
 	namesUtil,
 } from '@sprucelabs/spruce-skill-utils'
-import globby from 'globby'
 import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
 import SpruceError from '../errors/SpruceError'
 import StoreFactory from '../factories/StoreFactory'

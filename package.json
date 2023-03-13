@@ -27,7 +27,6 @@
   "skill": {
     "namespace": "data-stores",
     "upgradeIgnoreList": [
-      "globby",
       "@types/node",
       "@sprucelabs/spruce-core-schemas",
       "@sprucelabs/spruce-test-fixtures"
@@ -71,16 +70,16 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.0.587",
+    "@sprucelabs/globby": "^0.0.7",
     "@sprucelabs/schema": "^28.5.146",
-    "@sprucelabs/spruce-skill-utils": "^28.1.101",
-    "globby": "^11.0.4",
+    "@sprucelabs/spruce-skill-utils": "^28.1.102",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^5.1.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^3.0.6",
+    "@sprucelabs/esm-postbuild": "^3.0.7",
     "@sprucelabs/jest-json-reporter": "^7.0.6",
     "@sprucelabs/jest-sheets-reporter": "^2.0.21",
     "@sprucelabs/resolve-path-aliases": "^1.1.194",
