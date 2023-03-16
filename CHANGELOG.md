@@ -1,3 +1,5 @@
+## [22.3.12](https://github.com/sprucelabsai/data-stores/compare/v22.3.11...v22.3.12) (2023-03-16)
+
 ## [22.3.11](https://github.com/sprucelabsai/data-stores/compare/v22.3.10...v22.3.11) (2023-03-15)
 
 ## [22.3.10](https://github.com/sprucelabsai/data-stores/compare/v22.3.9...v22.3.10) (2023-03-15)
