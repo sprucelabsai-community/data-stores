@@ -1,3 +1,10 @@
+# [23.0.0](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.17...v23.0.0) (2023-03-27)
+
+
+### Breaking Changes
+
+* **auto-upgrade:** upgraded packages [upgrade-all] ([d3dd65e](https://github.com/sprucelabsai-community/data-stores/commit/d3dd65e))
+
 ## [22.3.17](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.16...v22.3.17) (2023-03-26)
 
 ## [22.3.16](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.15...v22.3.16) (2023-03-24)
