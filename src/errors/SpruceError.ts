@@ -103,7 +103,7 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 			}
 
 			case 'INVALID_DATABASE_NAME':
-				message = `Halt! '${options.suppliedName}' is not a valid name for a database!`
+				message = `Halt! '${options.suppliedName}' database not found! Make sure it exists or if you're using Mongo, make sure it's a valid name (no funky chars).`
 				break
 
 			case 'INDEX_NOT_FOUND':
