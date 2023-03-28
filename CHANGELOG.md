@@ -1,3 +1,32 @@
+## [23.0.1](https://github.com/sprucelabsai-community/data-stores/compare/v23.0.0...v23.0.1) (2023-03-27)
+
+# [23.0.0](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.17...v23.0.0) (2023-03-27)
+
+
+### Breaking Changes
+
+* **auto-upgrade:** upgraded packages [upgrade-all] ([d3dd65e](https://github.com/sprucelabsai-community/data-stores/commit/d3dd65e))
+
+## [22.3.17](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.16...v22.3.17) (2023-03-26)
+
+## [22.3.16](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.15...v22.3.16) (2023-03-24)
+
+## [22.3.15](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.14...v22.3.15) (2023-03-23)
+
+## [22.3.14](https://github.com/sprucelabsai-community/data-stores/compare/v22.3.13...v22.3.14) (2023-03-21)
+
+## [22.3.13](https://github.com/sprucelabsai/data-stores/compare/v22.3.12...v22.3.13) (2023-03-16)
+
+## [22.3.12](https://github.com/sprucelabsai/data-stores/compare/v22.3.11...v22.3.12) (2023-03-16)
+
+## [22.3.11](https://github.com/sprucelabsai/data-stores/compare/v22.3.10...v22.3.11) (2023-03-15)
+
+## [22.3.10](https://github.com/sprucelabsai/data-stores/compare/v22.3.9...v22.3.10) (2023-03-15)
+
+## [22.3.9](https://github.com/sprucelabsai/data-stores/compare/v22.3.8...v22.3.9) (2023-03-15)
+
+## [22.3.8](https://github.com/sprucelabsai/data-stores/compare/v22.3.7...v22.3.8) (2023-03-14)
+
 ## [22.3.7](https://github.com/sprucelabsai/data-stores/compare/v22.3.6...v22.3.7) (2023-03-13)
 
 ## [22.3.6](https://github.com/sprucelabsai/data-stores/compare/v22.3.5...v22.3.6) (2023-03-13)
