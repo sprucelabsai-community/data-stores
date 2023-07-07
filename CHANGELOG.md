@@ -1,3 +1,11 @@
+# [25.0.0](https://github.com/sprucelabsai-community/data-stores/compare/v24.0.40...v25.0.0) (2023-07-07)
+
+
+### Breaking Changes
+
+* results now do not include null or undefined fields ([cb9d594](https://github.com/sprucelabsai-community/data-stores/commit/cb9d594))
+* upgrade ([24fba0e](https://github.com/sprucelabsai-community/data-stores/commit/24fba0e))
+
 ## [24.0.40](https://github.com/sprucelabsai-community/data-stores/compare/v24.0.39...v24.0.40) (2023-06-22)
 
 ## [24.0.39](https://github.com/sprucelabsai-community/data-stores/compare/v24.0.38...v24.0.39) (2023-06-22)
