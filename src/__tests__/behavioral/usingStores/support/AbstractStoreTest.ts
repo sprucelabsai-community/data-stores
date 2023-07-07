@@ -20,8 +20,8 @@ export default abstract class AbstractStoreTest extends AbstractDatabaseTest {
 		this.stores.setStoreClass('dummy', DummyStore)
 		this.stores.setStoreClass('operations', OperationsStore)
 
-		this.spyStore = await this.stores.Store('spy')
-		this.dummyStore = await this.stores.Store('dummy')
-		this.operationsStore = await this.stores.Store('operations')
+		this.spyStore = await this.stores.getStore('spy')
+		this.dummyStore = await this.stores.getStore('dummy')
+		this.operationsStore = await this.stores.getStore('operations')
 	}
 }

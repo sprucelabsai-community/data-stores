@@ -212,7 +212,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: DEMO_PHONE_FORMATTED,
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -250,7 +249,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 
@@ -261,7 +260,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 	}
 
@@ -316,7 +314,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'for update!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqual(updated.requiredForCreate, 'yes!')
@@ -356,7 +353,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForUpdate: 'for update!',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqual(updated.requiredForCreate, 'yes!')
@@ -370,7 +366,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 				requiredForFull: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 	}
@@ -393,7 +389,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -430,7 +425,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -442,7 +436,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 	}
@@ -472,7 +466,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqualDeep(matches[1], {
@@ -481,7 +474,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -593,7 +585,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqualDeep(matches[1], {
@@ -603,7 +594,6 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private2!',
 			phoneNumber: '+1 555-555-1234',
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -615,7 +605,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 
@@ -628,7 +618,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 	}

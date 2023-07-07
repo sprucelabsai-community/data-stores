@@ -1,14 +1,10 @@
 import SchemaEntity, {
-	DynamicSchemaAllValues,
 	Schema,
 	SchemaGetValuesOptions,
-	IsDynamicSchema,
 	normalizeSchemaValues,
-	SchemaAllValues,
 	SchemaFieldNames,
 	SchemaPartialValues,
 	SchemaPublicFieldNames,
-	SchemaPublicValues,
 	SchemaValues,
 	validateSchemaValues,
 } from '@sprucelabs/schema'
@@ -24,18 +20,6 @@ import {
 	saveOperations,
 } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
-
-type Response<
-	FullSchema extends Schema,
-	CreateEntityInstances extends boolean,
-	IncludePrivateFields extends boolean,
-	PF extends SchemaPublicFieldNames<FullSchema>,
-	F extends SchemaFieldNames<FullSchema>
-> = IsDynamicSchema<FullSchema> extends true
-	? DynamicSchemaAllValues<FullSchema, CreateEntityInstances>
-	: IncludePrivateFields extends false
-	? Pick<SchemaPublicValues<FullSchema, CreateEntityInstances>, PF>
-	: Pick<SchemaAllValues<FullSchema, CreateEntityInstances>, F>
 
 export default abstract class AbstractStore<
 	FullSchema extends Schema,
@@ -116,7 +100,7 @@ export default abstract class AbstractStore<
 	>(
 		record: any,
 		options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
-	): Promise<
+		): Promise<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
 		const preparedRecord = this.prepareRecord
@@ -133,8 +117,9 @@ export default abstract class AbstractStore<
 			...options,
 			fields: options.includeFields,
 			shouldIncludePrivateFields: options.shouldIncludePrivateFields === true,
-			createEntityInstances: false as CreateEntityInstances,
-		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields>)
+			shouldCreateEntityInstances: false as CreateEntityInstances,
+			shouldIncludeNullAndUndefinedFields: false,
+		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields, false>)  as Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	}
 
 	public async create<
@@ -276,8 +261,10 @@ export default abstract class AbstractStore<
 
 		if (results) {
 			const all = results.map((result) =>
-				//@ts-ignore
-				this.prepareAndNormalizeRecord(result, options)
+				this.prepareAndNormalizeRecord(result, {
+					...options,
+					shouldStripUndefinedAndNullValues: true,
+				})
 			)
 
 			const records = await Promise.all(all)
@@ -522,3 +509,11 @@ export default abstract class AbstractStore<
 		return await this.db.delete(this.collectionName, query)
 	}
 }
+
+type Response<
+	FullSchema extends Schema,
+	CreateEntityInstances extends boolean,
+	IncludePrivateFields extends boolean,
+	PF extends SchemaPublicFieldNames<FullSchema>,
+	F extends SchemaFieldNames<FullSchema>
+> = SchemaValues<FullSchema, CreateEntityInstances, IncludePrivateFields, false, F,PF>

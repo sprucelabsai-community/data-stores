@@ -44,6 +44,7 @@ export interface PrepareOptions<
 > {
 	shouldIncludePrivateFields?: IncludePrivateFields
 	includeFields?: FieldNames[]
+	shouldStripUndefinedAndNullValues?: boolean
 }
 
 export type PrepareResults<

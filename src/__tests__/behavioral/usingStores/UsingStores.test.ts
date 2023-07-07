@@ -54,7 +54,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: DEMO_PHONE_FORMATTED,
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -92,7 +91,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 
@@ -103,7 +102,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 	}
 
@@ -158,7 +156,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'for update!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqual(updated.requiredForCreate, 'yes!')
@@ -191,6 +188,8 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			{ shouldIncludePrivateFields: true }
 		)
 
+
+		
 		assert.isEqualDeep(updated, {
 			id: updated.id,
 			requiredForCreate: 'yes!',
@@ -198,10 +197,10 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForUpdate: 'for update!',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqual(updated.requiredForCreate, 'yes!')
+
 
 		assert.isExactType<
 			typeof updated,
@@ -212,7 +211,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 				requiredForFull: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 	}
@@ -226,7 +225,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 		})
 
 		const match = await this.dummyStore.findOne({ id: created.id })
-
 		assert.isTruthy(match)
 
 		assert.isEqualDeep(match, {
@@ -235,8 +233,22 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: '+1 555-555-5555',
+		})
+
+		//@ts-ignore
+		const rawMatch = await this.dummyStore.findOneRaw({ _id: created.id })
+
+		assert.isEqualDeep(rawMatch, {
+			id: match.id,
+			requiredForCreate: 'yes!',
+			requiredForFull: 'generated for full',
+			requiredForUpdate: 'generated for update',
+			phoneNumber: '+1 555-555-5555',
+			privateField: 'private!',
+			requiredForDatabase: true,
 			relatedSchema: null,
 		})
+
 
 		assert.isExactType<
 			typeof match,
@@ -272,8 +284,8 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
+
 
 		assert.isExactType<
 			typeof match,
@@ -284,7 +296,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 	}
@@ -314,7 +326,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqualDeep(matches[1], {
@@ -323,7 +334,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForFull: 'generated for full',
 			requiredForUpdate: 'generated for update',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -435,7 +445,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
-			relatedSchema: null,
 		})
 
 		assert.isEqualDeep(matches[1], {
@@ -445,7 +454,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForUpdate: 'generated for update',
 			privateField: 'private2!',
 			phoneNumber: '+1 555-555-1234',
-			relatedSchema: null,
 		})
 
 		assert.isExactType<
@@ -457,7 +465,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 
@@ -470,7 +478,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 				requiredForUpdate: string
 				privateField: string
 				phoneNumber: string
-				relatedSchema: RelatedSchemaType
+				relatedSchema?: RelatedSchemaType
 			}
 		>(true)
 	}
@@ -724,6 +732,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 	protected static async triggersDidCreateAfterCreating() {
 		const expected = await this.createRandomRecord()
 
+		delete this.dummyStore.didCreateValues.relatedSchema
 		assert.isEqualDeep(this.dummyStore.didCreateValues, {
 			...expected,
 		})
@@ -737,13 +746,19 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForCreate: generateId(),
 			requiredForFull: generateId(),
 			requiredForUpdate: generateId(),
+			relatedSchema: {
+				boolField: true,
+				textField: 'text'
+			},
 		}
 
 		await this.dummyStore.updateOne({}, updates)
+
 		//@ts-ignore
 		delete created.requiredForDatabase
-		assert.isEqualDeep(this.dummyStore.didUpdateValues?.old, created)
 
+		debugger
+		assert.isEqualDeep(this.dummyStore.didUpdateValues?.old, created)
 		assert.isEqualDeep(this.dummyStore.didUpdateValues?.updated, {
 			...created,
 			...updates,
@@ -768,6 +783,22 @@ export default class UsingStoresTest extends AbstractStoreTest {
 		this.stores.setStore('dummy', d2)
 		const d3 = await this.stores.getStore('dummy')
 		assert.isEqual(d2, d3)
+	}
+
+	@test()
+	protected static async byDefaultStripsUndefinedAndNullValuesWhenLoading() {
+		const dummy = await this.operationsStore.createOne({
+			arrayOfNumbers: [1, 2, 3],
+		})
+
+		const match = await this.operationsStore.findOne({
+			id: dummy.id,
+		})
+
+		assert.isEqualDeep(match, {
+			arrayOfNumbers: [1, 2, 3],
+			id: dummy.id,
+		})
 	}
 
 	private static async createRandomRecord() {

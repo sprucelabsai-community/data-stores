@@ -177,4 +177,8 @@ export default class DummyStore extends AbstractStore<
 	public static Store(options: UniversalStoreOptions) {
 		return new this(options.db)
 	}
+
+	public async findOneRaw(query: { id: string }) {
+		return this.db.findOne(this.collectionName, query)
+	}
 }
