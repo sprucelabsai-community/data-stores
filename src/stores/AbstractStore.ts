@@ -100,7 +100,7 @@ export default abstract class AbstractStore<
 	>(
 		record: any,
 		options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
-		): Promise<
+	): Promise<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
 		const preparedRecord = this.prepareRecord
@@ -119,7 +119,13 @@ export default abstract class AbstractStore<
 			shouldIncludePrivateFields: options.shouldIncludePrivateFields === true,
 			shouldCreateEntityInstances: false as CreateEntityInstances,
 			shouldIncludeNullAndUndefinedFields: false,
-		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields, false>)  as Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
+		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields, false>) as Response<
+			FullSchema,
+			CreateEntityInstances,
+			IncludePrivateFields,
+			PF,
+			F
+		>
 	}
 
 	public async create<
@@ -516,4 +522,11 @@ type Response<
 	IncludePrivateFields extends boolean,
 	PF extends SchemaPublicFieldNames<FullSchema>,
 	F extends SchemaFieldNames<FullSchema>
-> = SchemaValues<FullSchema, CreateEntityInstances, IncludePrivateFields, false, F,PF>
+> = SchemaValues<
+	FullSchema,
+	CreateEntityInstances,
+	IncludePrivateFields,
+	false,
+	F,
+	PF
+>

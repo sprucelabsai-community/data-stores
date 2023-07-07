@@ -188,8 +188,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			{ shouldIncludePrivateFields: true }
 		)
 
-
-		
 		assert.isEqualDeep(updated, {
 			id: updated.id,
 			requiredForCreate: 'yes!',
@@ -200,7 +198,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 		})
 
 		assert.isEqual(updated.requiredForCreate, 'yes!')
-
 
 		assert.isExactType<
 			typeof updated,
@@ -249,7 +246,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			relatedSchema: null,
 		})
 
-
 		assert.isExactType<
 			typeof match,
 			{
@@ -285,7 +281,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			privateField: 'private!',
 			phoneNumber: '+1 555-555-5555',
 		})
-
 
 		assert.isExactType<
 			typeof match,
@@ -748,7 +743,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			requiredForUpdate: generateId(),
 			relatedSchema: {
 				boolField: true,
-				textField: 'text'
+				textField: 'text',
 			},
 		}
 
@@ -757,7 +752,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 		//@ts-ignore
 		delete created.requiredForDatabase
 
-		debugger
 		assert.isEqualDeep(this.dummyStore.didUpdateValues?.old, created)
 		assert.isEqualDeep(this.dummyStore.didUpdateValues?.updated, {
 			...created,
