@@ -1,5 +1,4 @@
 <img src="https://raw.githubusercontent.com/sprucelabsai/data-stores/master/docs/images/hero.jpg">
-
 <h1 align="center">
 Spruce XP Documentation
 </h1>
