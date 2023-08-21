@@ -72,10 +72,10 @@
     "@sprucelabs/error": "^5.1.22",
     "@sprucelabs/globby": "^1.0.3",
     "@sprucelabs/schema": "^29.0.32",
-    "@sprucelabs/spruce-skill-utils": "^30.0.3",
+    "@sprucelabs/spruce-skill-utils": "^30.0.4",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
-    "mongodb": "^5.7.0",
+    "mongodb": "^5.8.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
