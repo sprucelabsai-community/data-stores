@@ -71,7 +71,7 @@
   "dependencies": {
     "@sprucelabs/error": "^5.1.24",
     "@sprucelabs/globby": "^1.0.3",
-    "@sprucelabs/schema": "^29.0.35",
+    "@sprucelabs/schema": "^29.0.36",
     "@sprucelabs/spruce-skill-utils": "^30.0.8",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
@@ -79,13 +79,13 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^5.0.53",
-    "@sprucelabs/jest-json-reporter": "^7.0.82",
+    "@sprucelabs/esm-postbuild": "^5.0.54",
+    "@sprucelabs/jest-json-reporter": "^7.0.83",
     "@sprucelabs/jest-sheets-reporter": "^3.0.26",
     "@sprucelabs/resolve-path-aliases": "^1.1.239",
     "@sprucelabs/semantic-release": "^4.0.8",
     "@sprucelabs/test": "^8.0.9",
-    "@sprucelabs/test-utils": "^4.0.27",
+    "@sprucelabs/test-utils": "^4.0.28",
     "@types/lodash": "^4.14.197",
     "@types/nedb": "^1.8.13",
     "@types/node": "17.0.5",
