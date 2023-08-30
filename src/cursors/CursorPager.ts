@@ -15,7 +15,7 @@ interface InternalCursor {
 }
 
 export interface RecordsWithCursors<
-	Response extends Record<string, any>[] = Record<string, any>[]
+	Response extends Record<string, any>[] = Record<string, any>[],
 > {
 	records: Response
 	next: string | null
@@ -32,7 +32,8 @@ export default class CursorPager {
 		Find extends S['find'] = S['find'],
 		Query extends Parameters<Find>[0] = Parameters<Find>[0],
 		PromisedResponse extends ReturnType<Find> = ReturnType<Find>,
-		Response extends UnPromisify<PromisedResponse> = UnPromisify<PromisedResponse>
+		Response extends
+			UnPromisify<PromisedResponse> = UnPromisify<PromisedResponse>,
 	>(
 		store: S,
 		query: Query,
@@ -152,7 +153,7 @@ export default class CursorPager {
 	}
 
 	public static prepareQueryOptions<
-		O extends PrepareQueryOptions = PrepareQueryOptions
+		O extends PrepareQueryOptions = PrepareQueryOptions,
 	>(options: O): O & { sort: NonNullable<O['sort']> } {
 		const {
 			previous,

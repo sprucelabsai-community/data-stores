@@ -40,7 +40,7 @@ export interface StoreOptionsMap {}
 export interface PrepareOptions<
 	IncludePrivateFields extends boolean,
 	S extends Schema,
-	FieldNames extends SchemaFieldNames<S> = SchemaFieldNames<S>
+	FieldNames extends SchemaFieldNames<S> = SchemaFieldNames<S>,
 > {
 	shouldIncludePrivateFields?: IncludePrivateFields
 	includeFields?: FieldNames[]
@@ -49,7 +49,7 @@ export interface PrepareOptions<
 
 export type PrepareResults<
 	S extends Schema,
-	IncludePrivateFields extends boolean
+	IncludePrivateFields extends boolean,
 > = IncludePrivateFields extends true ? SchemaPublicValues<S> : SchemaValues<S>
 
 export type StoreName = keyof StoreMap

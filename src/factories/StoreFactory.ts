@@ -28,7 +28,7 @@ export default class StoreFactory {
 	 */
 	public async Store<
 		Name extends StoreName,
-		Options extends StoreOptions<Name>
+		Options extends StoreOptions<Name>,
 	>(name: Name, options?: Options): Promise<StoreMap[Name]> {
 		const Store = this.storeMap[name]
 		if (Store) {

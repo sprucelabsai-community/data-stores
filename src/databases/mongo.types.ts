@@ -1168,7 +1168,7 @@ export type WithId<TSchema> = EnhancedOmit<TSchema, '_id'> & {
  * @see https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html
  */
 export interface Collection<
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > {
 	/**
 	 * Get the collection name.
@@ -2135,7 +2135,7 @@ type ReadonlyPartial<TSchema> = {
 export type OnlyFieldsOfType<
 	TSchema,
 	FieldType = any,
-	AssignableType = FieldType
+	AssignableType = FieldType,
 > = AcceptedFields<TSchema, FieldType, AssignableType> &
 	NotAcceptedFields<TSchema, FieldType> &
 	DotAndArrayNotation<AssignableType>
@@ -3649,7 +3649,7 @@ export type ChangeEventTypes =
 	| 'invalidate'
 export interface ChangeEventBase<
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > {
 	_id: ResumeToken
 	/**
@@ -3671,7 +3671,7 @@ export interface ChangeEventBase<
 		| undefined
 }
 export interface ChangeEventCR<
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > extends ChangeEventBase<TSchema> {
 	operationType: 'insert' | 'replace'
 	fullDocument?: TSchema | undefined
@@ -3681,7 +3681,7 @@ export interface ChangeEventCR<
 }
 type FieldUpdates<TSchema> = Partial<TSchema> & { [key: string]: any }
 export interface ChangeEventUpdate<
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > extends ChangeEventBase<TSchema> {
 	operationType: 'update'
 	updateDescription: {
@@ -3698,7 +3698,7 @@ export interface ChangeEventUpdate<
 	}
 }
 export interface ChangeEventDelete<
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > extends ChangeEventBase<TSchema> {
 	operationType: 'delete'
 	documentKey: {
@@ -3706,7 +3706,7 @@ export interface ChangeEventDelete<
 	}
 }
 export interface ChangeEventRename<
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > extends ChangeEventBase<TSchema> {
 	operationType: 'rename'
 	to: {
@@ -3716,14 +3716,14 @@ export interface ChangeEventRename<
 }
 
 export interface ChangeEventOther<
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > extends ChangeEventBase<TSchema> {
 	operationType: 'drop' | 'dropDatabase'
 }
 
 export interface ChangeEventInvalidate<
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	TSchema extends { [key: string]: any } = DefaultSchema
+	TSchema extends { [key: string]: any } = DefaultSchema,
 > {
 	_id: ResumeToken
 	operationType: 'invalidate'

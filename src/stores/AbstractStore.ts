@@ -30,7 +30,7 @@ export default abstract class AbstractStore<
 	QueryRecord = SchemaPartialValues<FullSchema>,
 	FullRecord = SchemaValues<FullSchema>,
 	CreateRecord = SchemaValues<CreateSchema>,
-	UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations
+	UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations,
 > extends AbstractMutexer {
 	public abstract readonly name: string
 
@@ -49,7 +49,7 @@ export default abstract class AbstractStore<
 	// run on each record before it's returned by the store
 	protected prepareRecord?<
 		IncludePrivateFields extends boolean,
-		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
 	>(
 		record: DatabaseRecord,
 		options?: PrepareOptions<IncludePrivateFields, FullSchema, F>
@@ -96,7 +96,8 @@ export default abstract class AbstractStore<
 		IncludePrivateFields extends boolean = true,
 		CreateEntityInstances extends boolean = false,
 		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
+		PF extends
+			SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
 	>(
 		record: any,
 		options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
@@ -119,7 +120,14 @@ export default abstract class AbstractStore<
 			shouldIncludePrivateFields: options.shouldIncludePrivateFields === true,
 			shouldCreateEntityInstances: false as CreateEntityInstances,
 			shouldIncludeNullAndUndefinedFields: false,
-		} as unknown as SchemaGetValuesOptions<FullSchema, SchemaFieldNames<FullSchema>, SchemaPublicFieldNames<FullSchema>, CreateEntityInstances, IncludePrivateFields, false>) as Response<
+		} as unknown as SchemaGetValuesOptions<
+			FullSchema,
+			SchemaFieldNames<FullSchema>,
+			SchemaPublicFieldNames<FullSchema>,
+			CreateEntityInstances,
+			IncludePrivateFields,
+			false
+		>) as Response<
 			FullSchema,
 			CreateEntityInstances,
 			IncludePrivateFields,
@@ -132,7 +140,8 @@ export default abstract class AbstractStore<
 		IncludePrivateFields extends boolean = true,
 		CreateEntityInstances extends boolean = false,
 		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
+		PF extends
+			SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
 	>(
 		values: CreateRecord[],
 		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
@@ -185,7 +194,7 @@ export default abstract class AbstractStore<
 
 	public async createOne<
 		CreateEntityInstances extends boolean,
-		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
 	>(
 		values: CreateRecord,
 		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
@@ -233,7 +242,7 @@ export default abstract class AbstractStore<
 
 	public async findOne<
 		CreateEntityInstances extends boolean,
-		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
 	>(
 		query: QueryBuilder<QueryRecord>,
 		options: PrepareOptions<CreateEntityInstances, FullSchema, F> = {}
@@ -254,7 +263,7 @@ export default abstract class AbstractStore<
 
 	public async find<
 		CreateEntityInstances extends boolean,
-		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
 	>(
 		query: QueryBuilder<QueryRecord>,
 		queryOptions?: Omit<QueryOptions, 'includeFields'>,
@@ -285,7 +294,8 @@ export default abstract class AbstractStore<
 		IncludePrivateFields extends boolean = true,
 		CreateEntityInstances extends boolean = false,
 		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
+		PF extends
+			SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
 	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord & CreateRecord & { id?: string },
@@ -338,7 +348,8 @@ export default abstract class AbstractStore<
 		IncludePrivateFields extends boolean = false,
 		CreateEntityInstances extends boolean = false,
 		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
+		PF extends
+			SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
 	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord,
@@ -368,7 +379,8 @@ export default abstract class AbstractStore<
 		IncludePrivateFields extends boolean = true,
 		CreateEntityInstances extends boolean = false,
 		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-		PF extends SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>
+		PF extends
+			SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
 	>(
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord,
@@ -490,10 +502,13 @@ export default abstract class AbstractStore<
 			throw new SpruceError({ code: 'SCRAMBLE_NOT_CONFIGURED' })
 		}
 
-		const scrambledFields = this.scrambleFields?.reduce((values, name) => {
-			values[name] = SCRAMBLE_VALUE
-			return values
-		}, {} as Record<string, any>)
+		const scrambledFields = this.scrambleFields?.reduce(
+			(values, name) => {
+				values[name] = SCRAMBLE_VALUE
+				return values
+			},
+			{} as Record<string, any>
+		)
 
 		const record = {
 			...scrambledFields,
@@ -521,7 +536,7 @@ type Response<
 	CreateEntityInstances extends boolean,
 	IncludePrivateFields extends boolean,
 	PF extends SchemaPublicFieldNames<FullSchema>,
-	F extends SchemaFieldNames<FullSchema>
+	F extends SchemaFieldNames<FullSchema>,
 > = SchemaValues<
 	FullSchema,
 	CreateEntityInstances,

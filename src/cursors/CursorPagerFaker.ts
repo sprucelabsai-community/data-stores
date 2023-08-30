@@ -14,7 +14,7 @@ export default class CursorPagerFaker {
 			? U
 			: PromisedResponse = PromisedResponse extends Promise<infer U>
 			? U
-			: PromisedResponse
+			: PromisedResponse,
 	>(
 		store: S,
 		query: Query,
