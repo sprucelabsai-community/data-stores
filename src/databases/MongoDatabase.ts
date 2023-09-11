@@ -559,7 +559,7 @@ export default class MongoDatabase implements Database {
 				.collection(collection)
 				.findOneAndUpdate(q, values, { returnDocument: 'after' })
 
-			if (!results.value) {
+			if (!results?.value) {
 				throw new SpruceError({
 					code: 'RECORD_NOT_FOUND',
 					storeName: 'MongoDatabase',
@@ -567,7 +567,7 @@ export default class MongoDatabase implements Database {
 				})
 			}
 
-			return this.normalizeRecord(results.value)
+			return this.normalizeRecord(results?.value)
 		} catch (err) {
 			if (err instanceof MongoError) {
 				if (err.code === 11000) {
