@@ -45,8 +45,8 @@ const databaseAssertUtil = {
 			'assertCanUpdate',
 			'assertCanUpdateMany',
 			'assertCanPushOntoArrayValue',
-			'canUpdateWithObjectField',
-			'canUpdateFieldInObjectFieldWithTargettedWhere',
+			'assertCanUpdateWithObjectField',
+			'assertCanUpdateFieldInObjectFieldWithTargettedWhere',
 			'assertCanSaveAndGetNullAndUndefined',
 
 			//upserting
@@ -626,7 +626,7 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async canUpdateWithObjectField(connect: TestConnect) {
+	async assertCanUpdateWithObjectField(connect: TestConnect) {
 		const db = await connectToDabatase(connect)
 
 		const values = {
@@ -656,7 +656,9 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	async canUpdateFieldInObjectFieldWithTargettedWhere(connect: TestConnect) {
+	async assertCanUpdateFieldInObjectFieldWithTargettedWhere(
+		connect: TestConnect
+	) {
 		const db = await connectToDabatase(connect)
 
 		const target = {

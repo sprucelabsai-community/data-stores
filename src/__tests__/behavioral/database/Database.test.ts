@@ -71,13 +71,13 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	@test('can update with object field (mongo)', mongoConnect)
 	@test('can update with object field (neDb)', neDbConnect)
 	protected static async canUpdateNestedObject(connect: TestConnect) {
-		await databaseAssertUtil.canUpdateWithObjectField(connect)
+		await databaseAssertUtil.assertCanUpdateWithObjectField(connect)
 	}
 
 	@test('can target update with object field (mongo)', mongoConnect)
 	@test('can target update with object field (neDb)', neDbConnect)
 	protected static async canTargetUpdateNestedObject(connect: TestConnect) {
-		await databaseAssertUtil.canUpdateFieldInObjectFieldWithTargettedWhere(
+		await databaseAssertUtil.assertCanUpdateFieldInObjectFieldWithTargettedWhere(
 			connect
 		)
 	}
