@@ -49,6 +49,16 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
 	}
 
 	@test()
+	protected static async supportsMongoSrvSchemes() {
+		const db = DatabaseFactory.Database({
+			dbName: 'test1',
+			dbConnectionString: 'mongodb+srv://localhost',
+		})
+
+		assert.isInstanceOf(db, MongoDatabase)
+	}
+
+	@test()
 	protected static async throwsWithBadConnectionScheme() {
 		const connectionString = `${generateId()}://localhost:27017`
 		const err = assert.doesThrow(() => {

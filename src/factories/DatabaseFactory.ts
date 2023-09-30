@@ -8,6 +8,7 @@ export default class DatabaseFactory {
 	private static cache: Record<string, any> = {}
 	private static Adapters: AdapterMap = {
 		'mongodb://': MongoDatabase,
+		'mongodb+srv://': MongoDatabase,
 		'memory://': NeDbDatabase,
 	}
 
