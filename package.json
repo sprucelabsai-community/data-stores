@@ -27,7 +27,6 @@
   "skill": {
     "namespace": "data-stores",
     "upgradeIgnoreList": [
-      "@types/node",
       "@sprucelabs/spruce-core-schemas",
       "@sprucelabs/spruce-test-fixtures"
     ]
@@ -88,7 +87,7 @@
     "@sprucelabs/test-utils": "^4.0.51",
     "@types/lodash": "^4.14.199",
     "@types/nedb": "^1.8.14",
-    "@types/node": "17.0.5",
+    "@types/node": "^20.8.0",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^8.2.1",
     "dotenv": "^16.3.1",
