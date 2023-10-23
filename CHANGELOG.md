@@ -1,3 +1,10 @@
+# [25.1.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.0.49...v25.1.0) (2023-10-23)
+
+
+### Features
+
+* findBatch now on stores to find things in batches ([ebe3b15](https://github.com/sprucelabsai-community/data-stores/commit/ebe3b15))
+
 ## [25.0.49](https://github.com/sprucelabsai-community/data-stores/compare/v25.0.48...v25.0.49) (2023-10-22)
 
 ## [25.0.48](https://github.com/sprucelabsai-community/data-stores/compare/v25.0.47...v25.0.48) (2023-10-20)
