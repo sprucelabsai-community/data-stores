@@ -9,6 +9,7 @@ import SchemaEntity, {
 	validateSchemaValues,
 } from '@sprucelabs/schema'
 import { SCRAMBLE_VALUE } from '../constants'
+import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
@@ -288,6 +289,21 @@ export default abstract class AbstractStore<
 		}
 
 		return []
+	}
+
+	public async findBatch<
+		IncludePrivateFields extends boolean = true,
+		CreateEntityInstances extends boolean = false,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
+		PF extends
+			SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
+	>(
+		query?: QueryBuilder<QueryRecord>,
+		options?: FindBatchOptions<IncludePrivateFields, FullSchema, F>
+	) {
+		return BatchCursorImpl.Cursor<
+			Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
+		>(this as AbstractStore<Schema>, query, options as any)
 	}
 
 	public async upsertOne<

@@ -4,35 +4,6 @@ import AbstractStore from '../../../../stores/AbstractStore'
 import { Database } from '../../../../types/database.types'
 import { UniversalStoreOptions } from '../../../../types/stores.types'
 
-declare module '../../../../types/stores.types' {
-	interface StoreMap {
-		spy: SpyStore
-	}
-
-	interface StoreOptionsMap {
-		spy: { testOption: boolean }
-	}
-}
-
-const spySchema = buildSchema({
-	id: 'test',
-	fields: {
-		id: {
-			type: 'id',
-		},
-		firstName: {
-			type: 'text',
-			label: 'First Name',
-		},
-		lastName: {
-			type: 'text',
-			label: 'Last Name',
-		},
-	},
-})
-
-type SpyRecordSchema = typeof spySchema
-export type SpyRecord = SchemaValues<SpyRecordSchema>
 export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 	public db!: Database
 	public storeFactory!: StoreFactory
@@ -69,3 +40,33 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 		return super.find(...args)
 	}
 }
+
+declare module '../../../../types/stores.types' {
+	interface StoreMap {
+		spy: SpyStore
+	}
+
+	interface StoreOptionsMap {
+		spy: { testOption: boolean }
+	}
+}
+
+const spySchema = buildSchema({
+	id: 'test',
+	fields: {
+		id: {
+			type: 'id',
+		},
+		firstName: {
+			type: 'text',
+			label: 'First Name',
+		},
+		lastName: {
+			type: 'text',
+			label: 'Last Name',
+		},
+	},
+})
+
+type SpyRecordSchema = typeof spySchema
+export type SpyRecord = SchemaValues<SpyRecordSchema>
