@@ -79,7 +79,10 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 		assert.isLength(names, 1)
 		assert.isEqualDeep(names, ['spy'])
 
-		assert.isExactType<typeof names, ('spy' | 'dummy' | 'operations')[]>(true)
+		assert.isExactType<
+			typeof names,
+			('spy' | 'dummy' | 'operations' | 'customPrimary' | 'customPrimary2')[]
+		>(true)
 	}
 
 	@test()

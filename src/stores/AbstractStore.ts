@@ -41,8 +41,8 @@ export default abstract class AbstractStore<
 	protected abstract fullSchema: FullSchema
 	protected abstract databaseSchema: DatabaseSchema
 	protected scrambleFields?: string[]
-
 	protected db: Database
+	protected primaryFieldNames: string[] = ['id']
 
 	// place to set any indexes, run once after instantiation
 	public initialize?(): Promise<void>
@@ -159,8 +159,9 @@ export default abstract class AbstractStore<
 
 			const databaseRecords = cleanedValues.map((v) => ({
 				...v,
-				//@ts-ignore
-				id: v.id ?? this.db.generateId(),
+				[this.primaryFieldName]:
+					//@ts-ignore
+					v[this.primaryFieldName] ?? this.db.generateId(),
 			}))
 
 			const toSave = databaseRecords.map((r) =>
@@ -210,8 +211,9 @@ export default abstract class AbstractStore<
 
 			const databaseRecord = {
 				...cleanedValues,
-				//@ts-ignore
-				id: cleanedValues.id ?? this.db.generateId(),
+				[this.primaryFieldName]:
+					//@ts-ignore
+					cleanedValues[this.primaryFieldName] ?? this.db.generateId(),
 			}
 
 			const toSave = normalizeSchemaValues(
@@ -239,6 +241,10 @@ export default abstract class AbstractStore<
 			)
 			throw coded[0]
 		}
+	}
+
+	private get primaryFieldName() {
+		return this.primaryFieldNames[0]
 	}
 
 	public async findOne<
