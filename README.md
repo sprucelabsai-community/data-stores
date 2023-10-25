@@ -12,7 +12,6 @@ Spruce XP Documentation
 <p align="center">
 <img align="center" width="80%" src="https://raw.githubusercontent.com/sprucelabsai/data-stores/master/docs/images/sprucebot-message.png">
 </p>
-
 <br />
 
 <p align="center">
