@@ -1,3 +1,10 @@
+# [25.3.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.2.3...v25.3.0) (2023-10-25)
+
+
+### Features
+
+* field case mapping! ([3e9444f](https://github.com/sprucelabsai-community/data-stores/commit/3e9444f))
+
 ## [25.2.3](https://github.com/sprucelabsai-community/data-stores/compare/v25.2.2...v25.2.3) (2023-10-25)
 
 ## [25.2.2](https://github.com/sprucelabsai-community/data-stores/compare/v25.2.1...v25.2.2) (2023-10-24)
