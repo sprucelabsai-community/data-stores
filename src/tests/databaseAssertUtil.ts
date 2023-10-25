@@ -2312,8 +2312,11 @@ const databaseAssertUtil = {
 	},
 
 	assertHasLowerCaseToCamelCaseMappingEnabled(store: AbstractStore<any>) {
-		//@ts-ignore
-		assert.isTrue(store.shouldMapLowerCaseToCamelCase)
+		assert.isTrue(
+			//@ts-ignore
+			store.shouldMapLowerCaseToCamelCase,
+			`Your data store is not mapping lower case to camel case field names! To make that work, add protected shouldMapLowerCaseToCamelCase = true to your store.`
+		)
 	},
 }
 
