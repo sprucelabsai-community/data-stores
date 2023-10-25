@@ -53,10 +53,12 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
 		const expected: Record<string, boolean> = {}
 
 		for (const key of keys) {
-			expected[key] = true
-			//@ts-ignore
-			utilClone[key] = () => {
-				hits[key] = true
+			if (key !== 'assertHasLowerCaseToCamelCaseMappingEnabled') {
+				expected[key] = true
+				//@ts-ignore
+				utilClone[key] = () => {
+					hits[key] = true
+				}
 			}
 		}
 

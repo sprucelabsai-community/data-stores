@@ -2,6 +2,7 @@ import { assertOptions } from '@sprucelabs/schema'
 import { assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import SpruceError from '../errors/SpruceError'
+import AbstractStore from '../stores/AbstractStore'
 import {
 	Database,
 	Index,
@@ -2308,6 +2309,11 @@ const databaseAssertUtil = {
 		)
 
 		await this.shutdown(db)
+	},
+
+	assertHasLowerCaseToCamelCaseMappingEnabled(store: AbstractStore<any>) {
+		//@ts-ignore
+		assert.isTrue(store.shouldMapLowerCaseToCamelCase)
 	},
 }
 

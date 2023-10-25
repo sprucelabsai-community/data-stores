@@ -104,6 +104,24 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 		assert.isLength(fourth, 1)
 	}
 
+	@test.skip('can map next results 1', [])
+	@test.skip('can map next results 2', [{ test: 1 }])
+	protected static async canMapNextResults(expected: Record<string, any>[]) {
+		await this.createMany(11)
+		const batch = await this.findBatch()
+
+		// batch.setOnNextResults((results) => {
+		// 	console.log(results)
+		// 	return expected
+		// })
+
+		const all = await batch.next()
+		assert.isEqualDeep(all, expected)
+	}
+
+	@test()
+	protected static async passesResultsToOnNextResults() {}
+
 	private static async createOneAndFindFirst(
 		options?: Partial<FindBatchOptions>
 	) {

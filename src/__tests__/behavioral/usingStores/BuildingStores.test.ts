@@ -81,7 +81,14 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 
 		assert.isExactType<
 			typeof names,
-			('spy' | 'dummy' | 'operations' | 'customPrimary' | 'customPrimary2')[]
+			(
+				| 'spy'
+				| 'dummy'
+				| 'operations'
+				| 'customPrimary'
+				| 'customPrimary2'
+				| 'simple'
+			)[]
 		>(true)
 	}
 

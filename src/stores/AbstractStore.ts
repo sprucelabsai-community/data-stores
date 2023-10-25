@@ -43,6 +43,7 @@ export default abstract class AbstractStore<
 	protected scrambleFields?: string[]
 	protected db: Database
 	protected primaryFieldNames: string[] = ['id']
+	protected shouldMapLowerCaseToCamelCase = false
 
 	// place to set any indexes, run once after instantiation
 	public initialize?(): Promise<void>
@@ -89,6 +90,10 @@ export default abstract class AbstractStore<
 		this.collectionName = name
 	}
 
+	public getDb() {
+		return this.db
+	}
+
 	public getCollectionName() {
 		return this.collectionName
 	}
@@ -115,6 +120,10 @@ export default abstract class AbstractStore<
 			return preparedRecord
 		}
 
+		if (this.shouldMapLowerCaseToCamelCase) {
+			this.mapCasing(preparedRecord)
+		}
+
 		return normalizeSchemaValues(this.fullSchema, preparedRecord, {
 			...options,
 			fields: options.includeFields,
@@ -135,6 +144,17 @@ export default abstract class AbstractStore<
 			PF,
 			F
 		>
+	}
+
+	private mapCasing(preparedRecord: any) {
+		const fields = this.fullSchema.fields ?? {}
+		Object.keys(fields).forEach((f) => {
+			const lowerF = f.toLowerCase()
+			if (lowerF !== f && lowerF in preparedRecord) {
+				preparedRecord[f] = preparedRecord[lowerF]
+				delete preparedRecord[lowerF]
+			}
+		})
 	}
 
 	public async create<

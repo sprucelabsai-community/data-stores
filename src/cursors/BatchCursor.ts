@@ -9,6 +9,8 @@ export default class BatchCursorImpl<ResponseRecord>
 	private store: AbstractStore<Schema>
 	private options?: FindBatchOptions
 	private query?: Record<string, any>
+	private nextResults?: (results: ResponseRecord[]) => never[]
+
 	private constructor(
 		store: AbstractStore<Schema>,
 		query?: Record<string, any>,
@@ -27,8 +29,17 @@ export default class BatchCursorImpl<ResponseRecord>
 		return new this(store, query, options) as BatchCursor<Response>
 	}
 
+	public setOnNextResults(cb: (results: ResponseRecord[]) => never[]): void {
+		this.nextResults = cb
+	}
+
 	public async next(): Promise<ResponseRecord[] | null> {
 		const { batchSize = 10, ...rest } = this.options ?? {}
+
+		if (this.nextResults) {
+			//@ts-ignore
+			return this.nextResults()
+		}
 
 		const matches = await this.store.find(
 			{ ...(this.query as any) },
@@ -69,5 +80,6 @@ export interface FindBatchOptions<
 }
 
 export interface BatchCursor<ResponseRecord> {
+	setOnNextResults(cb: (results: ResponseRecord[]) => never[]): void
 	next(): Promise<ResponseRecord[] | null>
 }
