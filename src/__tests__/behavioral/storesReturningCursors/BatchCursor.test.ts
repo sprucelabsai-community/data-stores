@@ -53,8 +53,8 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 	protected static async honorsIncludeFields() {
 		await this.createOne()
 		//@ts-ignore
-		const batch = await this.findBatch({ includeFields: ['id'] })
-		const [first] = (await batch.next()) ?? []
+		const cursor = await this.findBatch({ includeFields: ['id'] })
+		const [first] = (await cursor.next()) ?? []
 		//@ts-ignore
 		assert.isEqualDeep(first, { id: first!.id })
 	}
@@ -81,9 +81,9 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 	@test()
 	protected static async nextBatchFindsNextResults() {
 		await this.createMany(11)
-		const batch = await this.findBatch()
-		const first = await batch.next()
-		const second = await batch.next()
+		const cursor = await this.findBatch()
+		const first = await cursor.next()
+		const second = await cursor.next()
 
 		assert.isLength(first, 10)
 		assert.isLength(second, 1)
@@ -92,11 +92,11 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 	@test()
 	protected static async finds4Batches() {
 		await this.createMany(31)
-		const batch = await this.findBatch()
-		const first = await batch.next()
-		const second = await batch.next()
-		const third = await batch.next()
-		const fourth = await batch.next()
+		const cursor = await this.findBatch()
+		const first = await cursor.next()
+		const second = await cursor.next()
+		const third = await cursor.next()
+		const fourth = await cursor.next()
 
 		assert.isLength(first, 10)
 		assert.isLength(second, 10)
@@ -104,30 +104,65 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 		assert.isLength(fourth, 1)
 	}
 
-	@test.skip('can map next results 1', [])
-	@test.skip('can map next results 2', [{ test: 1 }])
+	@test('can map next results 1', [])
+	@test('can map next results 2', [{ test: 1 }])
 	protected static async canMapNextResults(expected: Record<string, any>[]) {
-		await this.createMany(11)
-		const batch = await this.findBatch()
+		await this.createMany(1)
+		const cursor = await this.findBatch()
 
-		// batch.setOnNextResults((results) => {
-		// 	console.log(results)
-		// 	return expected
-		// })
+		cursor.setOnNextResults(() => {
+			return expected
+		})
 
-		const all = await batch.next()
+		const all = await cursor.next()
 		assert.isEqualDeep(all, expected)
 	}
 
 	@test()
-	protected static async passesResultsToOnNextResults() {}
+	protected static async passesResultsToOnNextResults() {
+		await this.createMany(11)
+
+		const first = [this.generateDummyValues()]
+		const second = [this.generateDummyValues()]
+		const overridden = [first, second]
+
+		const cursor = await this.findBatch({ batchSize: 1 })
+
+		cursor.setOnNextResults(() => {
+			return overridden.shift()!
+		})
+
+		const actualFirst = await cursor.next()
+		const actualSecond = await cursor.next()
+
+		assert.isEqualDeep(actualFirst, first)
+		assert.isEqualDeep(actualSecond, second)
+	}
+
+	@test()
+	protected static async passesActualRecordsToOnNextResults() {
+		await this.createMany(2)
+		const cursor = await this.findBatch()
+
+		let passedResults: Record<string, any>[] = []
+
+		cursor.setOnNextResults((results) => {
+			passedResults = results
+			return results
+		})
+
+		const actual = await cursor.next()
+
+		assert.isLength(actual, 2)
+		assert.isEqualDeep(actual, passedResults)
+	}
 
 	private static async createOneAndFindFirst(
 		options?: Partial<FindBatchOptions>
 	) {
 		const created = await this.createOne()
-		const batch = await this.findBatch(options)
-		const [first] = (await batch.next()) ?? []
+		const cursor = await this.findBatch(options)
+		const [first] = (await cursor.next()) ?? []
 		return { first, created }
 	}
 
@@ -164,8 +199,8 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 	}
 
 	private static async firstBatch(options?: Partial<FindBatchOptions>) {
-		const batch = await this.findBatch(options)
-		const first = await batch.next()
+		const cursor = await this.findBatch(options)
+		const first = await cursor.next()
 		return first
 	}
 }

@@ -72,7 +72,7 @@ export default class LoadingRecordsWhithoutCasedFieldsTest extends AbstractStore
 	protected static async canAssertMappingIsEnabled() {
 		assert.doesThrow(() =>
 			databaseAssertUtil.assertHasLowerCaseToCamelCaseMappingEnabled(
-				this.dummyStore as any
+				this.dummyStore
 			)
 		)
 

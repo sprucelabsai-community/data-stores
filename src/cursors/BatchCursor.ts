@@ -9,7 +9,7 @@ export default class BatchCursorImpl<ResponseRecord>
 	private store: AbstractStore<Schema>
 	private options?: FindBatchOptions
 	private query?: Record<string, any>
-	private nextResults?: (results: ResponseRecord[]) => never[]
+	private nextHandler?: (results: ResponseRecord[]) => never[]
 
 	private constructor(
 		store: AbstractStore<Schema>,
@@ -30,16 +30,11 @@ export default class BatchCursorImpl<ResponseRecord>
 	}
 
 	public setOnNextResults(cb: (results: ResponseRecord[]) => never[]): void {
-		this.nextResults = cb
+		this.nextHandler = cb
 	}
 
 	public async next(): Promise<ResponseRecord[] | null> {
 		const { batchSize = 10, ...rest } = this.options ?? {}
-
-		if (this.nextResults) {
-			//@ts-ignore
-			return this.nextResults()
-		}
 
 		const matches = await this.store.find(
 			{ ...(this.query as any) },
@@ -50,11 +45,16 @@ export default class BatchCursorImpl<ResponseRecord>
 				...(rest as any),
 			}
 		)
+
 		if (matches.length === 0) {
 			return null
 		}
 
 		this.bumpCursorPosition(matches)
+
+		if (this.nextHandler) {
+			return this.nextHandler(matches as ResponseRecord[])
+		}
 
 		return matches as ResponseRecord[]
 	}
@@ -80,6 +80,8 @@ export interface FindBatchOptions<
 }
 
 export interface BatchCursor<ResponseRecord> {
-	setOnNextResults(cb: (results: ResponseRecord[]) => never[]): void
+	setOnNextResults(
+		cb: (results: ResponseRecord[]) => Record<string, any>[]
+	): void
 	next(): Promise<ResponseRecord[] | null>
 }

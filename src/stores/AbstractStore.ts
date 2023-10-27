@@ -18,21 +18,25 @@ import {
 	PrepareOptions,
 	PrepareResults,
 	SaveOperations,
+	Store,
 	saveOperations,
 } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
 
 export default abstract class AbstractStore<
-	FullSchema extends Schema,
-	CreateSchema extends Schema = FullSchema,
-	UpdateSchema extends Schema = CreateSchema,
-	DatabaseSchema extends Schema = FullSchema,
-	DatabaseRecord = SchemaValues<DatabaseSchema> & { id: string },
-	QueryRecord = SchemaPartialValues<FullSchema>,
-	FullRecord = SchemaValues<FullSchema>,
-	CreateRecord = SchemaValues<CreateSchema>,
-	UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations,
-> extends AbstractMutexer {
+		FullSchema extends Schema,
+		CreateSchema extends Schema = FullSchema,
+		UpdateSchema extends Schema = CreateSchema,
+		DatabaseSchema extends Schema = FullSchema,
+		DatabaseRecord = SchemaValues<DatabaseSchema> & { id: string },
+		QueryRecord = SchemaPartialValues<FullSchema>,
+		FullRecord = SchemaValues<FullSchema>,
+		CreateRecord = SchemaValues<CreateSchema>,
+		UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations,
+	>
+	extends AbstractMutexer
+	implements Store
+{
 	public abstract readonly name: string
 
 	protected abstract collectionName: string
