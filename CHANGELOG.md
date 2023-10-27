@@ -1,3 +1,10 @@
+# [25.4.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.3.2...v25.4.0) (2023-10-27)
+
+
+### Features
+
+* batch cursor rev 1. ([1a132b8](https://github.com/sprucelabsai-community/data-stores/commit/1a132b8))
+
 ## [25.3.2](https://github.com/sprucelabsai-community/data-stores/compare/v25.3.1...v25.3.2) (2023-10-26)
 
 ## [25.3.1](https://github.com/sprucelabsai-community/data-stores/compare/v25.3.0...v25.3.1) (2023-10-26)
