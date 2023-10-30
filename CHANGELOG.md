@@ -1,3 +1,10 @@
+# [25.6.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.5.0...v25.6.0) (2023-10-30)
+
+
+### Features
+
+* batch array cursor for static array batching behaviros ([fc5b889](https://github.com/sprucelabsai-community/data-stores/commit/fc5b889))
+
 # [25.5.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.4.1...v25.5.0) (2023-10-30)
 
 
