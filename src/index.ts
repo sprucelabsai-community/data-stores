@@ -20,10 +20,14 @@ export { default as CursorPager } from './cursors/CursorPager'
 export * from './cursors/CursorPager'
 export { default as CursorPagerFaker } from './cursors/CursorPagerFaker'
 export * from './cursors/CursorPager'
+
 /**
  * @deprecated databaseAssertUtil -> databaseAssert
  */
 export { default as databaseAssertUtil } from './tests/databaseAssertUtil'
 export { default as databaseAssert } from './tests/databaseAssertUtil'
+
 export { default as BatchCursorImpl } from './cursors/BatchCursor'
 export * from './cursors/BatchCursor'
+export { default as BatchArrayCursor } from './cursors/BatchArrayCursor'
+export * from './cursors/BatchArrayCursor'

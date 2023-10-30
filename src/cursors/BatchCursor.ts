@@ -9,7 +9,7 @@ export default class BatchCursorImpl<ResponseRecord>
 	private store: AbstractStore<Schema>
 	private options?: FindBatchOptions
 	private query?: Record<string, any>
-	private nextHandler?: (results: ResponseRecord[]) => never[]
+	private nextHandler?: OnNextResultsHandler<ResponseRecord>
 
 	private constructor(
 		store: AbstractStore<Schema>,
@@ -57,7 +57,7 @@ export default class BatchCursorImpl<ResponseRecord>
 		this.bumpCursorPosition(matches)
 
 		if (this.nextHandler) {
-			return this.nextHandler(matches as ResponseRecord[])
+			return this.nextHandler(matches as ResponseRecord[]) as any
 		}
 
 		return matches as ResponseRecord[]
@@ -83,10 +83,12 @@ export interface FindBatchOptions<
 	batchSize?: number
 }
 
+export type OnNextResultsHandler<ResponseRecord> = (
+	results: ResponseRecord[]
+) => Record<string, any>[] | Promise<Record<string, any>[]>
+
 export interface BatchCursor<ResponseRecord> {
 	getTotalRecords(): Promise<number>
-	setOnNextResults(
-		cb: (results: ResponseRecord[]) => Record<string, any>[]
-	): void
+	setOnNextResults(cb: OnNextResultsHandler<ResponseRecord>): void
 	next(): Promise<ResponseRecord[] | null>
 }
