@@ -1,3 +1,10 @@
+# [25.5.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.4.1...v25.5.0) (2023-10-30)
+
+
+### Features
+
+* can get total records off batch cursor ([1542450](https://github.com/sprucelabsai-community/data-stores/commit/1542450))
+
 ## [25.4.1](https://github.com/sprucelabsai-community/data-stores/compare/v25.4.0...v25.4.1) (2023-10-27)
 
 # [25.4.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.3.2...v25.4.0) (2023-10-27)
