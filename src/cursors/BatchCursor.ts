@@ -33,6 +33,10 @@ export default class BatchCursorImpl<ResponseRecord>
 		this.nextHandler = cb
 	}
 
+	public async getTotalRecords(): Promise<number> {
+		return this.store.count({ ...(this.query as any) })
+	}
+
 	public async next(): Promise<ResponseRecord[] | null> {
 		const { batchSize = 10, ...rest } = this.options ?? {}
 
@@ -80,6 +84,7 @@ export interface FindBatchOptions<
 }
 
 export interface BatchCursor<ResponseRecord> {
+	getTotalRecords(): Promise<number>
 	setOnNextResults(
 		cb: (results: ResponseRecord[]) => Record<string, any>[]
 	): void

@@ -157,6 +157,37 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 		assert.isEqualDeep(actual, passedResults)
 	}
 
+	@test()
+	protected static async canGetTotalRecords() {
+		await this.assertTotalRecords(0)
+		await this.createOne()
+		await this.assertTotalRecords(1)
+		await this.createMany(2)
+		await this.assertTotalRecords(3)
+	}
+
+	@test()
+	protected static async totalRecordsHonorsQuery() {
+		const created = await this.createOne()
+		this.query = {
+			requiredForCreate: generateId(),
+		}
+		await this.assertTotalRecords(0)
+		this.query = {
+			requiredForCreate: created.requiredForCreate,
+		}
+		await this.assertTotalRecords(1)
+	}
+
+	private static async assertTotalRecords(
+		expected: number,
+		options?: Partial<FindBatchOptions>
+	) {
+		const cursor = await this.findBatch(options)
+		const total = await cursor.getTotalRecords()
+		assert.isEqual(total, expected)
+	}
+
 	private static async createOneAndFindFirst(
 		options?: Partial<FindBatchOptions>
 	) {
