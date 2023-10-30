@@ -1,3 +1,10 @@
+# [25.7.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.6.0...v25.7.0) (2023-10-30)
+
+
+### Features
+
+* cursors now support iteration ([5e97ede](https://github.com/sprucelabsai-community/data-stores/commit/5e97ede))
+
 # [25.6.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.5.0...v25.6.0) (2023-10-30)
 
 
