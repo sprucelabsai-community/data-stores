@@ -33,6 +33,15 @@ export default class BatchArrayCursor<T> implements BatchCursor<T> {
 
 		return i.length ? i : null
 	}
+
+	public [Symbol.asyncIterator](): AsyncIterator<T, T, undefined> {
+		return {
+			next: async () => {
+				const value = await this.next()
+				return { value, done: value === null } as any
+			},
+		}
+	}
 }
 
 export type BatchArrayCursorOptions = {

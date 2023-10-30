@@ -21,6 +21,19 @@ export default class BatchCursorImpl<ResponseRecord>
 		this.options = options
 	}
 
+	public [Symbol.asyncIterator](): AsyncIterator<
+		ResponseRecord,
+		any,
+		undefined
+	> {
+		return {
+			next: async () => {
+				const value = await this.next()
+				return { value, done: value === null } as any
+			},
+		}
+	}
+
 	public static Cursor<Response>(
 		store: AbstractStore<Schema>,
 		query?: Record<string, any>,
@@ -87,7 +100,8 @@ export type OnNextResultsHandler<ResponseRecord> = (
 	results: ResponseRecord[]
 ) => Record<string, any>[] | Promise<Record<string, any>[]>
 
-export interface BatchCursor<ResponseRecord> {
+export interface BatchCursor<ResponseRecord>
+	extends AsyncIterable<ResponseRecord> {
 	getTotalRecords(): Promise<number>
 	setOnNextResults(cb: OnNextResultsHandler<ResponseRecord>): void
 	next(): Promise<ResponseRecord[] | null>

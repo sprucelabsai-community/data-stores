@@ -179,6 +179,31 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 		await this.assertTotalRecords(1)
 	}
 
+	@test()
+	protected static async supportIteration() {
+		const items = await this.createMany(3)
+		const cursor = await this.findBatch()
+		const results = []
+		for await (const result of cursor) {
+			results.push(result)
+		}
+
+		assert.isEqualDeep(results[0], items)
+	}
+
+	@test()
+	protected static async supportIterationWithMultipleBatches() {
+		const items = await this.createMany(11)
+		const cursor = await this.findBatch()
+		const results = []
+		for await (const result of cursor) {
+			results.push(result)
+		}
+
+		assert.isEqualDeep(results[0], items.slice(0, 10))
+		assert.isEqualDeep(results[1], items.slice(10, 11))
+	}
+
 	private static async assertTotalRecords(
 		expected: number,
 		options?: Partial<FindBatchOptions>

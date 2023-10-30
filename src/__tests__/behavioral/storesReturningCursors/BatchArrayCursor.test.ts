@@ -128,6 +128,32 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
 		assert.isLength(actual, 0)
 	}
 
+	@test()
+	protected static async supportsIterator() {
+		const items = this.reloadWithTotalItems(3)
+
+		const results = []
+		for await (const result of this.cursor) {
+			results.push(result)
+		}
+
+		assert.isEqualDeep(results[0], items)
+	}
+
+	@test()
+	protected static async iteratesAcrossBatches() {
+		const items = this.reloadWithTotalItems(11, { batchSize: 5 })
+
+		const results = []
+		for await (const result of this.cursor) {
+			results.push(result)
+		}
+
+		assert.isEqualDeep(results[0], items.slice(0, 5))
+		assert.isEqualDeep(results[1], items.slice(5, 10))
+		assert.isEqualDeep(results[2], items.slice(10, 11))
+	}
+
 	private static async assertTotalInNextBatch(expected: number) {
 		const results = await this.next()
 		assert.isLength(results, expected)
