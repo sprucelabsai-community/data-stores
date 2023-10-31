@@ -1,4 +1,4 @@
-import { Schema, SchemaFieldNames } from '@sprucelabs/schema'
+import { Schema, SchemaFieldNames, assertOptions } from '@sprucelabs/schema'
 import AbstractStore from '../stores/AbstractStore'
 import { QueryOptions } from '../types/query.types'
 import { PrepareOptions } from '../types/stores.types'
@@ -39,6 +39,11 @@ export default class BatchCursorImpl<ResponseRecord>
 		query?: Record<string, any>,
 		options?: FindBatchOptions
 	) {
+		assertOptions(
+			{ store },
+			['store'],
+			'You need to pass a store to BatchCursor.Cursor()'
+		)
 		return new this(store, query, options) as BatchCursor<Response>
 	}
 

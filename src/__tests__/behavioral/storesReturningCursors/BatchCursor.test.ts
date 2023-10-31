@@ -1,5 +1,5 @@
-import { test, assert, generateId } from '@sprucelabs/test-utils'
-import { FindBatchOptions } from 'cursors/BatchCursor'
+import { test, assert, generateId, errorAssert } from '@sprucelabs/test-utils'
+import BatchCursorImpl, { FindBatchOptions } from 'cursors/BatchCursor'
 import AbstractStoreTest from '../usingStores/support/AbstractStoreTest'
 
 export default class FindWithCursorTest extends AbstractStoreTest {
@@ -8,6 +8,14 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 	protected static async beforeEach(): Promise<void> {
 		await super.beforeEach()
 		this.query = undefined
+	}
+
+	@test()
+	protected static async throwsWhenMissingRequired() {
+		const err = await assert.doesThrowAsync(() => BatchCursorImpl.Cursor())
+		errorAssert.assertError(err, 'MISSING_PARAMETERS', {
+			parameters: ['store'],
+		})
 	}
 
 	@test()
