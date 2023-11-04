@@ -8,7 +8,7 @@ import {
 	TestConnect,
 	UniqueIndex,
 } from '../types/database.types'
-import { Store } from '../types/stores.types'
+import { DataStore } from '../types/stores.types'
 import generateId from '../utilities/generateId'
 
 const databaseAssertUtil = {
@@ -2311,7 +2311,7 @@ const databaseAssertUtil = {
 		await this.shutdown(db)
 	},
 
-	assertHasLowerCaseToCamelCaseMappingEnabled(store: Store) {
+	assertHasLowerCaseToCamelCaseMappingEnabled(store: DataStore) {
 		assert.isTrue(
 			//@ts-ignore
 			store.shouldMapLowerCaseToCamelCase,

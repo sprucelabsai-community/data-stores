@@ -213,6 +213,28 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 		assert.isEqualDeep(results[1], items.slice(10, 11))
 	}
 
+	@test()
+	protected static async nextHonorsQueryWith$or() {
+		const [event, event2] = await this.createMany(4)
+		this.query = {
+			$or: [
+				{
+					requiredForCreate: event.requiredForCreate,
+				},
+				{
+					requiredForCreate: event2.requiredForCreate,
+				},
+			],
+		}
+		const cursor = await this.findBatch({ batchSize: 2 })
+		const matches = await cursor.next()
+
+		assert.isEqualDeep(matches, [event, event2])
+
+		const next = await cursor.next()
+		assert.isNull(next)
+	}
+
 	private static async assertTotalRecords(
 		expected: number,
 		options?: Partial<FindBatchOptions>

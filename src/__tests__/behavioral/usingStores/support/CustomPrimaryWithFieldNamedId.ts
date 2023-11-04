@@ -2,13 +2,13 @@ import { buildSchema, dropFields, makeFieldsOptional } from '@sprucelabs/schema'
 import AbstractStore from '../../../../stores/AbstractStore'
 import { UniversalStoreOptions } from '../../../../types/stores.types'
 
-export default class CustomPrimaryStore2 extends AbstractStore<
+export default class CustomPrimaryStoreWithFieldNamedId extends AbstractStore<
 	typeof fullRecordSchema,
 	typeof createRecordSchema,
 	typeof updateRecordSchema,
 	DatabaseRecordSchema
 > {
-	public name = 'CustomPrimary2'
+	public name = 'CustomPrimaryWithFieldNamedId'
 	protected scrambleFields = []
 	protected collectionName = TEST_COLLECTION_NAME
 	protected fullSchema = fullRecordSchema
@@ -30,21 +30,24 @@ export default class CustomPrimaryStore2 extends AbstractStore<
 
 declare module '../../../../types/stores.types' {
 	interface StoreMap {
-		customPrimary2: CustomPrimaryStore2
+		customPrimaryWithFieldNamedId: CustomPrimaryStoreWithFieldNamedId
 	}
 
 	interface StoreOptionsMap {
-		customPrimary2: Record<string, never>
+		customPrimaryWithFieldNamedId: Record<string, never>
 	}
 }
 
 const fullRecordSchema = buildSchema({
-	id: 'customPrimary2',
+	id: 'customPrimaryWithFieldNamedId',
 	name: 'Schema',
 	fields: {
 		anotherCustomId: {
 			type: 'id',
 			isRequired: true,
+		},
+		id: {
+			type: 'id',
 		},
 		name: {
 			type: 'text',
@@ -54,14 +57,14 @@ const fullRecordSchema = buildSchema({
 })
 const createRecordSchema = buildSchema({
 	...fullRecordSchema,
-	id: 'customPrimaryCreate2',
+	id: 'customPrimaryWithFieldNamedIdCreate',
 	fields: {
 		...dropFields(fullRecordSchema.fields, ['anotherCustomId']),
 	},
 })
 const updateRecordSchema = buildSchema({
 	...fullRecordSchema,
-	id: 'customPrimaryUpdate2',
+	id: 'customPrimaryWithFieldNamedIdUpdate',
 	fields: {
 		...dropFields(makeFieldsOptional(fullRecordSchema.fields), [
 			'anotherCustomId',
@@ -70,7 +73,7 @@ const updateRecordSchema = buildSchema({
 })
 const databaseRecordSchema = buildSchema({
 	...fullRecordSchema,
-	id: 'customPrimaryDatabase2',
+	id: 'customPrimaryWithFieldNamedIdDatabase',
 	fields: {
 		...fullRecordSchema.fields,
 	},

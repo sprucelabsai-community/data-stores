@@ -87,7 +87,9 @@ export default class BatchCursorImpl<ResponseRecord>
 			if (!this.query) {
 				this.query = {}
 			}
-			this.query.id = { $gt: last.id }
+			this.query = {
+				$and: [{ id: { $gt: last.id } }, { ...this.query }],
+			}
 		}
 	}
 }

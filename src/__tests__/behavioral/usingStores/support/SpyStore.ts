@@ -1,7 +1,7 @@
 import { buildSchema, SchemaValues } from '@sprucelabs/schema'
 import StoreFactory from '../../../../factories/StoreFactory'
 import AbstractStore from '../../../../stores/AbstractStore'
-import { Database } from '../../../../types/database.types'
+import { Database, DataStorePlugin } from '../../../../types/database.types'
 import { UniversalStoreOptions } from '../../../../types/stores.types'
 
 export default class SpyStore extends AbstractStore<SpyRecordSchema> {
@@ -38,6 +38,14 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 		this.findArgs.push(args)
 		//@ts-ignore
 		return super.find(...args)
+	}
+
+	public setCollectionName(name: string): void {
+		this.collectionName = name
+	}
+
+	public addPlugin(plugin: DataStorePlugin) {
+		this.plugins.push(plugin)
 	}
 }
 

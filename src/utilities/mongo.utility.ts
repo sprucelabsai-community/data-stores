@@ -10,7 +10,12 @@ const mongoUtil = {
 	) {
 		const q = query || {}
 		const opts = options
-		if (Object.prototype.hasOwnProperty.call(q, 'id') && q.id === undefined) {
+		const shouldTransformIdToObjectId = opts.shouldTransformToObjectId !== false
+		if (
+			Object.prototype.hasOwnProperty.call(q, 'id') &&
+			q.id === undefined &&
+			shouldTransformIdToObjectId
+		) {
 			throw new SpruceError({
 				code: 'MONGO_ID_MAPPING_ERROR',
 				friendlyMessage: '`id` cannot be undefined',
@@ -27,8 +32,9 @@ const mongoUtil = {
 		if (Array.isArray($or)) {
 			normalizedValues.$or = $or.map((o) => this.mapQuery(o, options))
 		} else if (typeof id === 'string') {
-			normalizedValues._id =
-				opts.shouldTransformToObjectId === false ? id : new ObjectId(id)
+			normalizedValues._id = !shouldTransformIdToObjectId
+				? id
+				: new ObjectId(id)
 		} else if (id) {
 			normalizedValues._id = mapNestedIdValues(id, options)
 		}

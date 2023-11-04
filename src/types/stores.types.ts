@@ -26,8 +26,9 @@ export interface UniversalStoreOptions {
 	storeFactory: StoreFactory
 }
 
-export interface Store {
+export interface DataStore {
 	initialize?(): Promise<void>
+	getCollectionName?(): string
 }
 /**
  * @deprecated SimplifiedStoreFactory -> SimpleStoreFactory

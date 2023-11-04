@@ -9,13 +9,7 @@ export default class CustomPrimaryStore extends AbstractStore<
 	DatabaseRecordSchema
 > {
 	public name = 'Test'
-	protected scrambleFields = [
-		'requiredForCreate',
-		'requiredForFull',
-		'requiredForUpdate',
-		'privateField',
-		'phoneNumber',
-	]
+	protected scrambleFields = []
 	protected collectionName = TEST_COLLECTION_NAME
 	protected fullSchema = fullRecordSchema
 	protected createSchema = createRecordSchema

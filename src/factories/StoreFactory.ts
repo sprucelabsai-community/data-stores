@@ -1,10 +1,15 @@
 import { namesUtil } from '@sprucelabs/spruce-skill-utils'
 import SpruceError from '../errors/SpruceError'
 import { Database } from '../types/database.types'
-import { Store, StoreMap, StoreName, StoreOptions } from '../types/stores.types'
+import {
+	DataStore,
+	StoreMap,
+	StoreName,
+	StoreOptions,
+} from '../types/stores.types'
 
 interface StoreContructor {
-	Store(o: any): Promise<Store> | Store
+	Store(o: any): Promise<DataStore> | DataStore
 }
 
 export default class StoreFactory {
@@ -69,7 +74,7 @@ export default class StoreFactory {
 		this.storeMap[name] = Class
 	}
 
-	public setStore(name: StoreName, store: Store | null) {
+	public setStore(name: StoreName, store: DataStore | null) {
 		this.stores[name] = store
 	}
 

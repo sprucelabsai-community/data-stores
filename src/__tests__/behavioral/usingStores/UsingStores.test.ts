@@ -6,20 +6,6 @@ import SpruceError from '../../../errors/SpruceError'
 import AbstractStoreTest from './support/AbstractStoreTest'
 import DummyStore, { TEST_COLLECTION_NAME } from './support/DummyStore'
 
-export const DEMO_PHONE = '555-555-5555'
-export const DEMO_PHONE_FORMATTED = '+1 555-555-5555'
-export const DEMO_PHONE2_FORMATTED = '+1 555-555-1234'
-export const DEMO_PHONE3_FORMATTED = '+1 555-555-1235'
-export const DEMO_PHONE4_FORMATTED = '+1 555-555-1236'
-
-type RelatedSchemaType =
-	| {
-			textField?: string | null | undefined
-			boolField?: boolean | null | undefined
-	  }
-	| null
-	| undefined
-
 export default class UsingStoresTest extends AbstractStoreTest {
 	@test()
 	protected static async canCreateTestStore() {
@@ -819,3 +805,17 @@ export default class UsingStoresTest extends AbstractStoreTest {
 		}
 	}
 }
+
+export const DEMO_PHONE = '555-555-5555'
+export const DEMO_PHONE_FORMATTED = '+1 555-555-5555'
+export const DEMO_PHONE2_FORMATTED = '+1 555-555-1234'
+export const DEMO_PHONE3_FORMATTED = '+1 555-555-1235'
+export const DEMO_PHONE4_FORMATTED = '+1 555-555-1236'
+
+type RelatedSchemaType =
+	| {
+			textField?: string | null | undefined
+			boolField?: boolean | null | undefined
+	  }
+	| null
+	| undefined

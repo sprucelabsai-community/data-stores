@@ -75,3 +75,22 @@ export type TestConnect = (
 	connectionStringWithRandomBadDatabaseName: string
 	badDatabaseName: string
 }>
+
+export interface DataStorePlugin {
+	willCreateOne?: (
+		values: Record<string, any>
+	) => Promise<void | DataStorePluginHookResponse>
+	willUpdateOne?: (
+		query: Record<string, any>,
+		updates: Record<string, any>
+	) => Promise<void | DataStorePluginWillUpdateOneResponse>
+	getName(): string
+}
+
+export interface DataStorePluginHookResponse {
+	valuesToMixinBeforeReturning?: Record<string, any>
+}
+
+export interface DataStorePluginWillUpdateOneResponse {
+	query?: Record<string, any>
+}

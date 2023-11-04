@@ -12,13 +12,13 @@ import { SCRAMBLE_VALUE } from '../constants'
 import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
-import { Database } from '../types/database.types'
+import { DataStorePlugin, Database } from '../types/database.types'
 import { QueryBuilder, QueryOptions } from '../types/query.types'
 import {
 	PrepareOptions,
 	PrepareResults,
 	SaveOperations,
-	Store,
+	DataStore,
 	saveOperations,
 } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
@@ -35,7 +35,7 @@ export default abstract class AbstractStore<
 		UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations,
 	>
 	extends AbstractMutexer
-	implements Store
+	implements DataStore
 {
 	public abstract readonly name: string
 
@@ -48,6 +48,7 @@ export default abstract class AbstractStore<
 	protected db: Database
 	protected primaryFieldNames: string[] = ['id']
 	protected shouldMapLowerCaseToCamelCase = false
+	protected plugins: DataStorePlugin[] = []
 
 	// place to set any indexes, run once after instantiation
 	public initialize?(): Promise<void>
@@ -85,6 +86,7 @@ export default abstract class AbstractStore<
 		super()
 
 		this.db = db
+
 		if (collectionName) {
 			this.setCollectionName(collectionName)
 		}
@@ -247,12 +249,22 @@ export default abstract class AbstractStore<
 				{ shouldCreateEntityInstances: false }
 			)
 
+			let mixinValuesOnReturn = {}
+
+			for (const plugin of this.plugins) {
+				const r = await plugin.willCreateOne?.(toSave)
+				mixinValuesOnReturn = {
+					...mixinValuesOnReturn,
+					...r?.valuesToMixinBeforeReturning,
+				}
+			}
+
 			const record = await this.db.createOne(this.collectionName, toSave)
 			await this.didCreate?.(record as any)
 
 			const normalized = await this.prepareAndNormalizeRecord(record, options)
 
-			return normalized
+			return { ...normalized, ...mixinValuesOnReturn }
 		} catch (err: any) {
 			const coded = errorUtil.transformToSpruceErrors(
 				err,
@@ -482,6 +494,10 @@ export default abstract class AbstractStore<
 
 			for (const { name, value } of ops) {
 				normalizedValues[name] = value
+			}
+
+			for (const plugin of this.plugins) {
+				await plugin.willUpdateOne?.(query, normalizedValues)
 			}
 
 			const results = await this.db.updateOne(
