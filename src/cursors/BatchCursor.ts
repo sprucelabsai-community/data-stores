@@ -6,12 +6,14 @@ import { PrepareOptions } from '../types/stores.types'
 export default class BatchCursorImpl<ResponseRecord>
 	implements BatchCursor<ResponseRecord>
 {
+	public static Class?: new (...args: any[]) => BatchCursor<any>
 	private store: AbstractStore<Schema>
 	private options?: FindBatchOptions
-	private query?: Record<string, any>
+	protected query?: Record<string, any>
 	private nextHandler?: OnNextResultsHandler<ResponseRecord>
+	private lastId?: string
 
-	private constructor(
+	protected constructor(
 		store: AbstractStore<Schema>,
 		query?: Record<string, any>,
 		options?: FindBatchOptions
@@ -44,10 +46,14 @@ export default class BatchCursorImpl<ResponseRecord>
 			['store'],
 			'You need to pass a store to BatchCursor.Cursor()'
 		)
-		return new this(store, query, options) as BatchCursor<Response>
+		return new (this.Class ?? this)(
+			store,
+			query,
+			options
+		) as BatchCursor<Response>
 	}
 
-	public setOnNextResults(cb: (results: ResponseRecord[]) => never[]): void {
+	public setOnNextResults(cb: OnNextResultsHandler<ResponseRecord>): void {
 		this.nextHandler = cb
 	}
 
@@ -58,8 +64,16 @@ export default class BatchCursorImpl<ResponseRecord>
 	public async next(): Promise<ResponseRecord[] | null> {
 		const { batchSize = 10, ...rest } = this.options ?? {}
 
+		let query = { ...(this.query as any) }
+
+		if (this.lastId) {
+			query = {
+				$and: [this.query ?? {}, { id: { $gt: this.lastId } }],
+			}
+		}
+
 		const matches = await this.store.find(
-			{ ...(this.query as any) },
+			query,
 			{
 				limit: batchSize,
 			},
@@ -87,9 +101,7 @@ export default class BatchCursorImpl<ResponseRecord>
 			if (!this.query) {
 				this.query = {}
 			}
-			this.query = {
-				$and: [{ id: { $gt: last.id } }, { ...this.query }],
-			}
+			this.lastId = last.id
 		}
 	}
 }

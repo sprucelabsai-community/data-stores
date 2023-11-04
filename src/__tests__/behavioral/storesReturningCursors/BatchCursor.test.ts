@@ -8,6 +8,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 	protected static async beforeEach(): Promise<void> {
 		await super.beforeEach()
 		this.query = undefined
+		BatchCursorImpl.Class = SpyCursor
 	}
 
 	@test()
@@ -235,6 +236,20 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 		assert.isNull(next)
 	}
 
+	@test()
+	protected static async queryIsNotMutatedOnQuery() {
+		const [event] = await this.createMany(20)
+
+		this.query = {
+			requiredForCreate: event.requiredForCreate,
+		}
+
+		const cursor = await this.findBatch({ batchSize: 2 })
+		await cursor.next()
+
+		assert.isEqualDeep(this.query, cursor.getQuery())
+	}
+
 	private static async assertTotalRecords(
 		expected: number,
 		options?: Partial<FindBatchOptions>
@@ -280,14 +295,24 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 	}
 
 	private static async findBatch(options?: Partial<FindBatchOptions>) {
-		return await this.dummyStore.findBatch(this.query, {
+		return (await this.dummyStore.findBatch(this.query, {
 			...options,
-		})
+		})) as SpyCursor
 	}
 
 	private static async firstBatch(options?: Partial<FindBatchOptions>) {
 		const cursor = await this.findBatch(options)
 		const first = await cursor.next()
 		return first
+	}
+}
+
+class SpyCursor extends BatchCursorImpl<Record<string, any>> {
+	public constructor(...args: any[]) {
+		//@ts-ignore
+		super(...args)
+	}
+	public getQuery() {
+		return this.query
 	}
 }
