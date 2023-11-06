@@ -19,6 +19,7 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 	protected databaseSchema = spySchema
 	public wasInitializedInvoked = false
 	public static initializeCount = 0
+	public lastWillUpdateRecord?: SpyRecord
 
 	public static async Store(options: UniversalStoreOptions) {
 		const store = new this(options.db)
@@ -26,6 +27,12 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 		store.storeFactory = options.storeFactory
 		store.options = options
 		return store
+	}
+
+	//@ts-ignore
+	public async willUpdate(updates: Partial<SpyRecord>, record: SpyRecord) {
+		this.lastWillUpdateRecord = record
+		return updates
 	}
 
 	public async initialize() {
@@ -72,6 +79,9 @@ const spySchema = buildSchema({
 		lastName: {
 			type: 'text',
 			label: 'Last Name',
+		},
+		extraField: {
+			type: 'text',
 		},
 	},
 })

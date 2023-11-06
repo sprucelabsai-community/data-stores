@@ -70,7 +70,7 @@ export default abstract class AbstractStore<
 
 	protected willUpdate?(
 		updates: UpdateRecord,
-		values: DatabaseRecord
+		record: DatabaseRecord
 	): Promise<Partial<DatabaseRecord>>
 
 	protected didUpdate?(
@@ -448,14 +448,24 @@ export default abstract class AbstractStore<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
 		const { ops, updates: initialUpdates } = this.pluckOperations(updates)
+		let q = query
 
 		try {
 			const isScrambled = this.isScrambled(initialUpdates)
 
-			let current: any = await this.findOne(query, {
+			for (const plugin of this.plugins) {
+				const results = await plugin.willUpdateOne?.(q, initialUpdates)
+
+				if (results?.query) {
+					q = results.query
+				}
+			}
+
+			let current: any = await this.findOne(q, {
 				...options,
 				shouldIncludePrivateFields: true,
 			})
+
 			if (!current) {
 				current = await notFoundHandler()
 
@@ -479,7 +489,6 @@ export default abstract class AbstractStore<
 					: initialUpdates
 
 			const databaseRecord = {
-				...current,
 				...cleanedUpdates,
 			}
 
@@ -496,13 +505,9 @@ export default abstract class AbstractStore<
 				normalizedValues[name] = value
 			}
 
-			for (const plugin of this.plugins) {
-				await plugin.willUpdateOne?.(query, normalizedValues)
-			}
-
 			const results = await this.db.updateOne(
 				this.collectionName,
-				query,
+				q,
 				normalizedValues
 			)
 

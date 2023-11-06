@@ -1,4 +1,4 @@
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, assert, generateId, errorAssert } from '@sprucelabs/test-utils'
 import {
 	DataStorePlugin,
 	DataStorePluginHookResponse,
@@ -101,20 +101,58 @@ export default class UsingPluginsTest extends AbstractStoreTest {
 			firstName: 'Tay',
 		})
 
-		// const { created: created1 } = await this.createOne({
-		// 	firstName: 'Tay',
-		// })
+		const { created: created1 } = await this.createOne({
+			firstName: 'Tay',
+		})
 
-		// const { created: created2 } = await this.createOne({
-		// 	firstName: 'Eric',
-		// })
+		const { created: created2 } = await this.createOne({
+			firstName: 'Eric',
+			extraField: generateId(),
+		})
 
-		// const { updated } = await this.spyStore.updateOne(
-		// 	{ id: created2.id! },
-		// 	{
-		// 		lastName: 'Jay',
-		// 	}
-		// )
+		const updated = await this.updateOne(
+			{ id: created2.id! },
+			{
+				lastName: 'Jay',
+			}
+		)
+
+		assert.isEqual(updated.id, created1.id)
+
+		const match = await this.spyStore.findOne({ lastName: 'Jay' })
+
+		assert.isEqual(match?.id, created1.id)
+		assert.isEqual(match?.firstName, 'Tay')
+		assert.isFalsy(match?.extraField)
+
+		assert.isEqualDeep(this.spyStore.lastWillUpdateRecord, created1)
+	}
+
+	@test()
+	protected static async throwsNotFoundIfQueryReturnedReturnsNoResults() {
+		this.plugin.setQueryToReturnOnWillUpdateOne({
+			firstName: generateId(),
+		})
+
+		await this.createOne()
+
+		const err = await assert.doesThrowAsync(() =>
+			this.updateOne(
+				{},
+				{
+					firstName: generateId(),
+				}
+			)
+		)
+
+		errorAssert.assertError(err, 'RECORD_NOT_FOUND')
+	}
+
+	private static async updateOne(
+		query: Partial<SpyRecord>,
+		updates: Partial<SpyRecord>
+	) {
+		return await this.spyStore.updateOne(query as any, updates)
 	}
 
 	private static async randomlyUpdateOne() {
@@ -125,7 +163,7 @@ export default class UsingPluginsTest extends AbstractStoreTest {
 			id: created.id!,
 		}
 
-		await this.spyStore.updateOne(query, updates)
+		await this.updateOne(query, updates)
 		return { query, updates }
 	}
 
@@ -190,7 +228,10 @@ class MockPlugin implements DataStorePlugin {
 	}
 
 	public assertWillCreateOneParameters(values: Record<string, any>) {
-		assert.isEqualDeep(this.willCreateOneValues, values)
+		assert.isEqualDeep(this.willCreateOneValues, {
+			extraField: undefined,
+			...values,
+		})
 	}
 
 	public getName(): string {
