@@ -96,7 +96,7 @@ export default class UsingPluginsTest extends AbstractStoreTest {
 	}
 
 	@test()
-	protected static async pluginCanModifyQueryOnUpdate() {
+	protected static async pluginCanModifyQueryOnUpdateOne() {
 		this.plugin.setQueryToReturnOnWillUpdateOne({
 			firstName: 'Tay',
 		})
@@ -148,6 +148,40 @@ export default class UsingPluginsTest extends AbstractStoreTest {
 		errorAssert.assertError(err, 'RECORD_NOT_FOUND')
 	}
 
+	@test()
+	protected static async deleteOneGetsExpectedParams() {
+		const { created } = await this.createOne()
+
+		const query = {
+			id: created.id!,
+		}
+
+		assert.doesThrow(() => this.plugin.assertWillDeleteOneParameters(query))
+
+		await this.deleteOne(query)
+
+		this.plugin.assertWillDeleteOneParameters(query)
+	}
+
+	@test()
+	protected static async handlesMultiplePluginsOnDeleteOne() {
+		const plugin = this.addAnotherPlugin()
+
+		const { created } = await this.createOne()
+
+		const query = {
+			id: created.id!,
+		}
+
+		await this.deleteOne(query)
+
+		plugin.assertWillDeleteOneParameters(query)
+	}
+
+	private static async deleteOne(query: Record<string, any>) {
+		await this.spyStore.deleteOne(query as any)
+	}
+
 	private static async updateOne(
 		query: Partial<SpyRecord>,
 		updates: Partial<SpyRecord>
@@ -195,6 +229,7 @@ class MockPlugin implements DataStorePlugin {
 	}
 	private mixinValuesOnCreate?: Record<string, any>
 	private queryToReturnOnWillUpdateOne?: Record<string, any>
+	private willDeleteOneQuery?: Record<string, any>
 
 	public async willCreateOne(
 		values: Record<string, any>
@@ -203,6 +238,10 @@ class MockPlugin implements DataStorePlugin {
 		return {
 			valuesToMixinBeforeReturning: this.mixinValuesOnCreate,
 		}
+	}
+
+	public async willDeleteOne(query: Record<string, any>): Promise<void> {
+		this.willDeleteOneQuery = query
 	}
 
 	public async willUpdateOne(
@@ -232,6 +271,10 @@ class MockPlugin implements DataStorePlugin {
 			extraField: undefined,
 			...values,
 		})
+	}
+
+	public assertWillDeleteOneParameters(query: Record<string, any>) {
+		assert.isEqualDeep(this.willDeleteOneQuery, query)
 	}
 
 	public getName(): string {

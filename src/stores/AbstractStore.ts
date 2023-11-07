@@ -590,6 +590,9 @@ export default abstract class AbstractStore<
 	}
 
 	public async deleteOne(query: QueryBuilder<QueryRecord>): Promise<number> {
+		for (const plugin of this.plugins) {
+			await plugin.willDeleteOne?.(query)
+		}
 		return await this.db.deleteOne(this.collectionName, query)
 	}
 
