@@ -2,6 +2,7 @@ import { test, assert, generateId, errorAssert } from '@sprucelabs/test-utils'
 import {
 	DataStorePlugin,
 	DataStorePluginHookResponse,
+	DataStorePluginWillDeleteOneResponse,
 	DataStorePluginWillUpdateOneResponse,
 } from '../../../types/database.types'
 import AbstractStoreTest from '../usingStores/support/AbstractStoreTest'
@@ -178,6 +179,23 @@ export default class UsingPluginsTest extends AbstractStoreTest {
 		plugin.assertWillDeleteOneParameters(query)
 	}
 
+	@test()
+	protected static async deleteOneCanUpdateQuery() {
+		const { created: c1 } = await this.createOne()
+		const { created: c2 } = await this.createOne()
+
+		this.plugin.setQueryToReturnOnWillDeleteOne({
+			id: c1.id,
+		})
+
+		await this.deleteOne({
+			id: c2.id,
+		})
+
+		const count = await this.spyStore.count({ id: c1.id! })
+		assert.isEqual(count, 0)
+	}
+
 	private static async deleteOne(query: Record<string, any>) {
 		await this.spyStore.deleteOne(query as any)
 	}
@@ -230,6 +248,7 @@ class MockPlugin implements DataStorePlugin {
 	private mixinValuesOnCreate?: Record<string, any>
 	private queryToReturnOnWillUpdateOne?: Record<string, any>
 	private willDeleteOneQuery?: Record<string, any>
+	private queryToReturnOnWillDeleteOne?: Record<string, any>
 
 	public async willCreateOne(
 		values: Record<string, any>
@@ -240,8 +259,17 @@ class MockPlugin implements DataStorePlugin {
 		}
 	}
 
-	public async willDeleteOne(query: Record<string, any>): Promise<void> {
+	public async willDeleteOne(
+		query: Record<string, any>
+	): Promise<void | DataStorePluginWillDeleteOneResponse> {
 		this.willDeleteOneQuery = query
+		return {
+			query: this.queryToReturnOnWillDeleteOne,
+		}
+	}
+
+	public async setQueryToReturnOnWillDeleteOne(query: Record<string, any>) {
+		this.queryToReturnOnWillDeleteOne = query
 	}
 
 	public async willUpdateOne(
