@@ -1,3 +1,11 @@
+# [25.8.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.7.10...v25.8.0) (2023-11-07)
+
+
+### Features
+
+* plugin can mutate query before update enhancements ([2ee8003](https://github.com/sprucelabsai-community/data-stores/commit/2ee8003))
+* plugins triggered on will delete ([b5e6bc0](https://github.com/sprucelabsai-community/data-stores/commit/b5e6bc0))
+
 ## [25.7.10](https://github.com/sprucelabsai-community/data-stores/compare/v25.7.9...v25.7.10) (2023-11-07)
 
 ## [25.7.9](https://github.com/sprucelabsai-community/data-stores/compare/v25.7.8...v25.7.9) (2023-11-07)
