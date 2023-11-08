@@ -28,6 +28,8 @@ const storePluginAssert = {
 				`I could not find the plugin '${pluginName}' in the store you passed. Make sure you added it to 'protected plugins: DataStorePlugin[] = [...]' or added it in the constructor of your store with 'this.plugins[...]'`
 			)
 		}
+
+		return plugin!
 	},
 }
 

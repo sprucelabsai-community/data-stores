@@ -38,6 +38,13 @@ export default class AssertingPluginsTest extends AbstractPluginTest {
 		this.assertHasPlugin(plugin.getName())
 	}
 
+	@test()
+	protected static async returnsPlugin() {
+		const plugin = this.addNewPlugin()
+		const found = this.assertHasPlugin(plugin.getName())
+		assert.isEqual(found, plugin)
+	}
+
 	private static assertHasPluginThrows(name: string) {
 		assert.doesThrow(() => this.assertHasPlugin(name))
 	}
