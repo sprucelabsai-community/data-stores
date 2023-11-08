@@ -1,3 +1,10 @@
+# [25.10.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.9.0...v25.10.0) (2023-11-08)
+
+
+### Features
+
+* new storePluginAssert to getting plugins in your stores to be quick and easy! ([8039cd8](https://github.com/sprucelabsai-community/data-stores/commit/8039cd8))
+
 # [25.9.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.8.1...v25.9.0) (2023-11-08)
 
 
