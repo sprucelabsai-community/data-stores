@@ -249,15 +249,7 @@ export default abstract class AbstractStore<
 				{ shouldCreateEntityInstances: false }
 			)
 
-			let mixinValuesOnReturn = {}
-
-			for (const plugin of this.plugins) {
-				const r = await plugin.willCreateOne?.(toSave)
-				mixinValuesOnReturn = {
-					...mixinValuesOnReturn,
-					...r?.valuesToMixinBeforeReturning,
-				}
-			}
+			const mixinValuesOnReturn = await this.handleWillCreateForPlugins(toSave)
 
 			const record = await this.db.createOne(this.collectionName, toSave)
 			await this.didCreate?.(record as any)
@@ -277,6 +269,19 @@ export default abstract class AbstractStore<
 			)
 			throw coded[0]
 		}
+	}
+
+	private async handleWillCreateForPlugins(toSave: Record<string, any>) {
+		let mixinValuesOnReturn = {}
+
+		for (const plugin of this.plugins) {
+			const r = await plugin.willCreateOne?.(toSave)
+			mixinValuesOnReturn = {
+				...mixinValuesOnReturn,
+				...r?.valuesToMixinBeforeReturning,
+			}
+		}
+		return mixinValuesOnReturn
 	}
 
 	private get primaryFieldName() {
