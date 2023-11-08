@@ -1,3 +1,10 @@
+# [25.11.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.10.0...v25.11.0) (2023-11-08)
+
+
+### Features
+
+* plugins can now mixin values on find one! ([a809e17](https://github.com/sprucelabsai-community/data-stores/commit/a809e17))
+
 # [25.10.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.9.0...v25.10.0) (2023-11-08)
 
 
