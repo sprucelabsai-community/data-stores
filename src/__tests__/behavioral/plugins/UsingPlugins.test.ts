@@ -268,7 +268,7 @@ class MockPlugin implements DataStorePlugin {
 		}
 	}
 
-	public async setQueryToReturnOnWillDeleteOne(query: Record<string, any>) {
+	public setQueryToReturnOnWillDeleteOne(query: Record<string, any>) {
 		this.queryToReturnOnWillDeleteOne = query
 	}
 
