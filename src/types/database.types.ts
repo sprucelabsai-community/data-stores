@@ -87,6 +87,10 @@ export interface DataStorePlugin {
 	willDeleteOne?: (
 		query: Record<string, any>
 	) => Promise<void | DataStorePluginWillDeleteOneResponse>
+	didFindOne?: (
+		query: Record<string, any>,
+		record: Record<string, any>
+	) => Promise<void | DataStorePluginDidFindOneResponse>
 	getName(): string
 }
 
@@ -100,4 +104,8 @@ export interface DataStorePluginWillUpdateOneResponse {
 
 export interface DataStorePluginWillDeleteOneResponse {
 	query?: Record<string, any>
+}
+
+export interface DataStorePluginDidFindOneResponse {
+	valuesToMixinBeforeReturning?: Record<string, any>
 }

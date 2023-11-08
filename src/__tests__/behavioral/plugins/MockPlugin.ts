@@ -1,6 +1,7 @@
 import { assert } from '@sprucelabs/test-utils'
 import {
 	DataStorePlugin,
+	DataStorePluginDidFindOneResponse,
 	DataStorePluginHookResponse,
 	DataStorePluginWillDeleteOneResponse,
 	DataStorePluginWillUpdateOneResponse,
@@ -12,6 +13,10 @@ export default class MockPlugin implements DataStorePlugin {
 	private willUpdateOneParams?: {
 		query: Record<string, any>
 		updates: Record<string, any>
+	}
+	private didFindOneParams?: {
+		query: Record<string, any>
+		record: Record<string, any>
 	}
 	private mixinValuesOnCreate?: Record<string, any>
 	private queryToReturnOnWillUpdateOne?: Record<string, any>
@@ -35,6 +40,19 @@ export default class MockPlugin implements DataStorePlugin {
 		this.willDeleteOneQuery = query
 		return {
 			query: this.queryToReturnOnWillDeleteOne,
+		}
+	}
+
+	public async didFindOne(
+		query: Record<string, any>,
+		record: Record<string, any>
+	): Promise<void | DataStorePluginDidFindOneResponse> {
+		this.didFindOneParams = {
+			query,
+			record,
+		}
+		return {
+			valuesToMixinBeforeReturning: this.mixinValuesOnCreate,
 		}
 	}
 
@@ -75,6 +93,16 @@ export default class MockPlugin implements DataStorePlugin {
 		assert.isEqualDeep(this.willDeleteOneQuery, query)
 	}
 
+	public assertWillFindOneParameters(
+		query: Record<string, any>,
+		record: Record<string, any>
+	) {
+		assert.isEqualDeep(this.didFindOneParams, {
+			query,
+			record,
+		})
+	}
+
 	public getName(): string {
 		return this.name
 	}
@@ -89,5 +117,9 @@ export default class MockPlugin implements DataStorePlugin {
 
 	public setQueryToReturnOnWillUpdateOne(query: Record<string, any>) {
 		this.queryToReturnOnWillUpdateOne = query
+	}
+
+	public setMixinOnFindOneValues(values: Record<string, any>) {
+		this.mixinValuesOnCreate = values
 	}
 }

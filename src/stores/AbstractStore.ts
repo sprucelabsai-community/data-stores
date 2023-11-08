@@ -291,12 +291,29 @@ export default abstract class AbstractStore<
 		options: PrepareOptions<CreateEntityInstances, FullSchema, F> = {}
 	) {
 		const results = await this.find(query, { limit: 1 }, options)
+		let match = results[0]
 
-		if (results.length > 0) {
-			return results[0]
+		if (match) {
+			match = (await this.handleDidFindForPlugins(query, match)) as typeof match
+			return match
 		}
 
 		return null
+	}
+
+	private async handleDidFindForPlugins(
+		query: QueryBuilder<QueryRecord>,
+		match: Record<string, any>
+	) {
+		for (const plugin of this.plugins) {
+			const { valuesToMixinBeforeReturning: values } =
+				(await plugin.didFindOne?.(query, match)) ?? {}
+
+			if (values) {
+				match = { ...match, ...values }
+			}
+		}
+		return match
 	}
 
 	public async count(query?: QueryBuilder<QueryRecord>) {

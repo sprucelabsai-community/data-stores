@@ -155,7 +155,6 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		assert.doesThrow(() => this.plugin.assertWillDeleteOneParameters(query))
 
 		await this.deleteOne(query)
-
 		this.plugin.assertWillDeleteOneParameters(query)
 	}
 
@@ -170,7 +169,6 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		}
 
 		await this.deleteOne(query)
-
 		plugin.assertWillDeleteOneParameters(query)
 	}
 
@@ -189,6 +187,67 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 
 		const count = await this.spyStore.count({ id: c1.id! })
 		assert.isEqual(count, 0)
+	}
+
+	@test()
+	protected static async canMixinValuesOnFindOne() {
+		const { created } = await this.createOne()
+
+		const values = {
+			what: generateId(),
+		}
+
+		this.plugin.setMixinOnFindOneValues(values)
+
+		const found = await this.findOne({
+			id: created.id!,
+		})
+		assert.doesInclude(found, values)
+	}
+
+	@test()
+	protected static async passesExpectedParamsToWillFindOne() {
+		const { created } = await this.createOne()
+
+		const query = {
+			id: created.id!,
+		}
+
+		await this.findOne(query)
+
+		this.plugin.assertWillFindOneParameters(query, created)
+	}
+
+	@test()
+	protected static async canMixinValuesFromMultiplePluginsOnFindOne() {
+		const { created } = await this.createOne()
+
+		const values1 = {
+			what: generateId(),
+		}
+
+		this.plugin.setMixinOnFindOneValues(values1)
+
+		const plugin = this.addNewPlugin()
+
+		const values2 = {
+			the: generateId(),
+		}
+
+		plugin.setMixinOnFindOneValues(values2)
+
+		const found = await this.findOne({
+			id: created.id!,
+		})
+
+		assert.doesInclude(found, {
+			...values1,
+			...values2,
+		})
+	}
+
+	private static async findOne(query: { id: string }) {
+		return await this.spyStore.findOne(query)
 	}
 
 	private static async deleteOne(query: Record<string, any>) {
