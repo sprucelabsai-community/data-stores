@@ -28,7 +28,7 @@ export default abstract class AbstractStore<
 		CreateSchema extends Schema = FullSchema,
 		UpdateSchema extends Schema = CreateSchema,
 		DatabaseSchema extends Schema = FullSchema,
-		DatabaseRecord = SchemaValues<DatabaseSchema> & { id: string },
+		DatabaseRecord = SchemaValues<DatabaseSchema>,
 		QueryRecord = SchemaPartialValues<FullSchema>,
 		FullRecord = SchemaValues<FullSchema>,
 		CreateRecord = SchemaValues<CreateSchema>,

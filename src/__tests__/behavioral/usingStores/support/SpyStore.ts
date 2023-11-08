@@ -29,7 +29,6 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 		return store
 	}
 
-	//@ts-ignore
 	public async willUpdate(updates: Partial<SpyRecord>, record: SpyRecord) {
 		this.lastWillUpdateRecord = record
 		return updates
@@ -40,11 +39,10 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 		SpyStore.initializeCount++
 	}
 
-	//@ts-ignore
 	public async find(...args: any[]) {
 		this.findArgs.push(args)
 		//@ts-ignore
-		return super.find(...args)
+		return super.find(...args) as any[]
 	}
 
 	public setCollectionName(name: string): void {

@@ -26,6 +26,7 @@ export * from './cursors/CursorPager'
  */
 export { default as databaseAssertUtil } from './tests/databaseAssertUtil'
 export { default as databaseAssert } from './tests/databaseAssertUtil'
+export { default as storePluginAssert } from './tests/storePluginAssert'
 
 export { default as BatchCursorImpl } from './cursors/BatchCursor'
 export * from './cursors/BatchCursor'

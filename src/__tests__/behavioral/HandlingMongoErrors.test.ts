@@ -11,7 +11,7 @@ export default class HandlingMongoErrorsTest extends AbstractDatabaseTest {
 
 		await database.connect()
 
-		database.throwOnTopology(new Error('not great yo!'))
+		database.throwOnTopology(new Error('Purposely throwing!'))
 
 		await database.close()
 	}
