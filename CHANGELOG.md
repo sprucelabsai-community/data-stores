@@ -1,3 +1,10 @@
+# [25.9.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.8.1...v25.9.0) (2023-11-08)
+
+
+### Features
+
+* plugin can override the delete query ([08609c8](https://github.com/sprucelabsai-community/data-stores/commit/08609c8))
+
 ## [25.8.1](https://github.com/sprucelabsai-community/data-stores/compare/v25.8.0...v25.8.1) (2023-11-07)
 
 # [25.8.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.7.10...v25.8.0) (2023-11-07)
