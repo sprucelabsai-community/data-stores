@@ -230,6 +230,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		}
 
 		await this.deleteOne(query)
+
 		plugin.assertWillDeleteOneParameters(query)
 	}
 
@@ -263,6 +264,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		const found = await this.findOne({
 			id: created.id!,
 		})
+
 		assert.doesInclude(found, values)
 	}
 

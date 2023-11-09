@@ -65,6 +65,7 @@ export default class MockPlugin implements DataStorePlugin {
 			query,
 			record,
 		}
+
 		return {
 			valuesToMixinBeforeReturning: this.valuesToMixinAfterCreate,
 		}
