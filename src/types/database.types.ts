@@ -79,7 +79,10 @@ export type TestConnect = (
 export interface DataStorePlugin {
 	willCreateOne?: (
 		values: Record<string, any>
-	) => Promise<void | DataStorePluginHookResponse>
+	) => Promise<void | DataStorePluginWillCreateOneResponse>
+	didCreateOne?: (
+		record: Record<string, any>
+	) => Promise<void | DataStorePluginDidCreateOneResponse>
 	willUpdateOne?: (
 		query: Record<string, any>,
 		updates: Record<string, any>
@@ -94,8 +97,12 @@ export interface DataStorePlugin {
 	getName(): string
 }
 
-export interface DataStorePluginHookResponse {
+export interface DataStorePluginDidCreateOneResponse {
 	valuesToMixinBeforeReturning?: Record<string, any>
+}
+
+export interface DataStorePluginWillCreateOneResponse {
+	valuesToMixinBeforeCreate?: Record<string, any>
 }
 
 export interface DataStorePluginWillUpdateOneResponse {

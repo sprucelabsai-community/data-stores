@@ -16,25 +16,61 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 	}
 
 	@test()
-	protected static async createOneGetsExpectedParams() {
-		const { created, values } = await this.createOne()
-
-		this.plugin.assertWillCreateOneParameters({
-			id: created.id,
-			...values,
-		})
+	protected static async didCreateOneGetsExpectedParams() {
+		const { created } = await this.createOne()
+		this.plugin.assertDidCreateOneParameters(created)
 	}
 
 	@test()
-	protected static async handlesMultiplePluginsOnCreateOne() {
+	protected static async handlesMultiplePluginsOnDidCreateOne() {
 		const plugin = this.addNewPlugin()
+		const { created } = await this.createOne()
+		plugin.assertDidCreateOneParameters(created)
+	}
 
-		const { created, values } = await this.createOne()
+	@test()
+	protected static async willCreateOneGetsExpectedParams() {
+		const { values } = await this.createOne()
+		this.plugin.assertWillCreateOneParameters(values)
+	}
 
-		plugin.assertWillCreateOneParameters({
-			id: created.id,
-			...values,
-		})
+	@test()
+	protected static async handlesMultiplePluginsOnWillCreateOne() {
+		const plugin = this.addNewPlugin()
+		const { values } = await this.createOne()
+		plugin.assertWillCreateOneParameters(values)
+	}
+
+	@test()
+	protected static async canMixinValuesNotInSchemaToSave() {
+		const values = {
+			test: generateId(),
+			world: generateId(),
+		}
+		this.plugin.setValuesToMixinBeforeCreate(values)
+		await this.createOne()
+		await this.assertFirstSaveIncludes(values)
+	}
+
+	@test()
+	protected static async mixesInMultipleWillCreateValues() {
+		const values = {
+			taco: generateId(),
+			bravo: generateId(),
+		}
+
+		this.plugin.setValuesToMixinBeforeCreate(values)
+
+		const plugin = this.addNewPlugin()
+		const values2 = {
+			cheesy: generateId(),
+			burritor: generateId(),
+		}
+
+		plugin.setValuesToMixinBeforeCreate(values2)
+
+		await this.createOne()
+		await this.assertFirstSaveIncludes({ ...values, ...values2 })
 	}
 
 	@test()
@@ -46,9 +82,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 	@test()
 	protected static async handlesMultiplePluginsOnUpdateOne() {
 		const plugin = this.addNewPlugin()
-
 		const { query, updates } = await this.randomlyUpdateOne()
-
 		plugin.assertWillUpdateOneParameters(query, updates)
 	}
 
@@ -58,10 +92,10 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 	@test('can mixin values to return on create one 2', {
 		taco: 'bravo',
 	})
-	protected static async pluginCanMixinValuesToReturnOnCreateOne(
+	protected static async pluginCanMixinValuesToReturnOnWillCreateOne(
 		values: Record<string, any>
 	) {
-		this.plugin.setMixinOnCreateValues(values)
+		this.plugin.setValuesToMixinAfterCreate(values)
 
 		const { created } = await this.createOne()
 
@@ -73,7 +107,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		const values1 = {
 			what: 'the?',
 		}
-		this.plugin.setMixinOnCreateValues(values1)
+		this.plugin.setValuesToMixinAfterCreate(values1)
 
 		const plugin = this.addNewPlugin()
 
@@ -81,7 +115,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 			easy: 'peasy',
 		}
 
-		plugin.setMixinOnCreateValues(values2)
+		plugin.setValuesToMixinAfterCreate(values2)
 
 		const { created } = await this.createOne()
 
@@ -89,6 +123,16 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 			...values1,
 			...values2,
 		})
+	}
+
+	@test()
+	protected static async mixinAfterCreateActuallyHappensAfterCreate() {
+		const values = this.generateRandomSpyValues()
+
+		this.db.createOne = async () => values
+		await this.createOne()
+
+		this.plugin.assertDidCreateOneParameters(values)
 	}
 
 	@test()
@@ -246,6 +290,11 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		})
 	}
 
+	private static async assertFirstSaveIncludes(values: Record<string, any>) {
+		const match = await this.db.findOne(this.collectionName)
+		assert.doesInclude(match, values)
+	}
+
 	private static async findOne(query: { id: string }) {
 		return await this.spyStore.findOne(query)
 	}
@@ -263,7 +312,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 
 	private static async randomlyUpdateOne() {
 		const { created } = await this.createOne()
-		const updates = this.generateRandomValues()
+		const updates = this.generateRandomSpyValues()
 
 		const query = {
 			id: created.id!,
@@ -274,12 +323,12 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 	}
 
 	private static async createOne(v?: Partial<SpyRecord>) {
-		const values = this.generateRandomValues()
+		const values = this.generateRandomSpyValues()
 		const created = await this.spyStore.createOne({ ...values, ...v })
 		return { created, values }
 	}
 
-	private static generateRandomValues() {
+	private static generateRandomSpyValues() {
 		return {
 			firstName: generateId(),
 			lastName: generateId(),

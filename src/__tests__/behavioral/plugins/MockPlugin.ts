@@ -2,13 +2,14 @@ import { assert } from '@sprucelabs/test-utils'
 import {
 	DataStorePlugin,
 	DataStorePluginDidFindOneResponse,
-	DataStorePluginHookResponse,
+	DataStorePluginDidCreateOneResponse,
 	DataStorePluginWillDeleteOneResponse,
 	DataStorePluginWillUpdateOneResponse,
 } from '../../../types/database.types'
 import generateId from '../../../utilities/generateId'
 
 export default class MockPlugin implements DataStorePlugin {
+	private didCreateOneRecord?: Record<string, any>
 	private willCreateOneValues?: Record<string, any>
 	private willUpdateOneParams?: {
 		query: Record<string, any>
@@ -18,20 +19,32 @@ export default class MockPlugin implements DataStorePlugin {
 		query: Record<string, any>
 		record: Record<string, any>
 	}
-	private mixinValuesOnCreate?: Record<string, any>
+	private valuesToMixinAfterCreate?: Record<string, any>
 	private queryToReturnOnWillUpdateOne?: Record<string, any>
 	private willDeleteOneQuery?: Record<string, any>
 	private queryToReturnOnWillDeleteOne?: Record<string, any>
 
 	private name = 'mock'
+	private valuesToMixinBeforeCreate?: Record<string, any>
 
-	public async willCreateOne(
-		values: Record<string, any>
-	): Promise<void | DataStorePluginHookResponse> {
+	public async didCreateOne(
+		record: Record<string, any>
+	): Promise<void | DataStorePluginDidCreateOneResponse> {
+		this.didCreateOneRecord = record
+		return {
+			valuesToMixinBeforeReturning: this.valuesToMixinAfterCreate,
+		}
+	}
+
+	public async willCreateOne(values: Record<string, any>) {
 		this.willCreateOneValues = values
 		return {
-			valuesToMixinBeforeReturning: this.mixinValuesOnCreate,
+			valuesToMixinBeforeCreate: this.valuesToMixinBeforeCreate,
 		}
+	}
+
+	public async setValuesToMixinBeforeCreate(values: Record<string, any>) {
+		this.valuesToMixinBeforeCreate = values
 	}
 
 	public async willDeleteOne(
@@ -52,7 +65,7 @@ export default class MockPlugin implements DataStorePlugin {
 			record,
 		}
 		return {
-			valuesToMixinBeforeReturning: this.mixinValuesOnCreate,
+			valuesToMixinBeforeReturning: this.valuesToMixinAfterCreate,
 		}
 	}
 
@@ -82,9 +95,14 @@ export default class MockPlugin implements DataStorePlugin {
 		assert.isEqualDeep(this.willUpdateOneParams?.updates, updates)
 	}
 
+	public assertDidCreateOneParameters(record: Record<string, any>) {
+		assert.isEqualDeep(this.didCreateOneRecord, {
+			...record,
+		})
+	}
+
 	public assertWillCreateOneParameters(values: Record<string, any>) {
 		assert.isEqualDeep(this.willCreateOneValues, {
-			extraField: undefined,
 			...values,
 		})
 	}
@@ -111,8 +129,8 @@ export default class MockPlugin implements DataStorePlugin {
 		this.name = generateId()
 	}
 
-	public setMixinOnCreateValues(mixinValues: Record<string, any>) {
-		this.mixinValuesOnCreate = mixinValues
+	public setValuesToMixinAfterCreate(mixinValues: Record<string, any>) {
+		this.valuesToMixinAfterCreate = mixinValues
 	}
 
 	public setQueryToReturnOnWillUpdateOne(query: Record<string, any>) {
@@ -120,6 +138,6 @@ export default class MockPlugin implements DataStorePlugin {
 	}
 
 	public setMixinOnFindOneValues(values: Record<string, any>) {
-		this.mixinValuesOnCreate = values
+		this.valuesToMixinAfterCreate = values
 	}
 }

@@ -228,6 +228,8 @@ export default abstract class AbstractStore<
 		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
 		try {
+			let valuesToMixinBeforeCreate = await this.handleWillCreatePlugins(values)
+
 			//@ts-ignore
 			validateSchemaValues(this.createSchema, values)
 
@@ -246,15 +248,20 @@ export default abstract class AbstractStore<
 				this.databaseSchema,
 				//@ts-ignore
 				databaseRecord,
+
 				{ shouldCreateEntityInstances: false }
 			)
 
-			const mixinValuesOnReturn = await this.handleWillCreateForPlugins(toSave)
-
-			const record = await this.db.createOne(this.collectionName, toSave)
+			const record = await this.db.createOne(this.collectionName, {
+				...toSave,
+				...valuesToMixinBeforeCreate,
+			})
 			await this.didCreate?.(record as any)
 
 			const normalized = await this.prepareAndNormalizeRecord(record, options)
+
+			const mixinValuesOnReturn =
+				await this.handleDidCreateForPlugins(normalized)
 
 			return { ...normalized, ...mixinValuesOnReturn }
 		} catch (err: any) {
@@ -271,11 +278,26 @@ export default abstract class AbstractStore<
 		}
 	}
 
-	private async handleWillCreateForPlugins(toSave: Record<string, any>) {
+	private async handleWillCreatePlugins(values: CreateRecord) {
+		let valuesToMixinBeforeCreate = {}
+		for (const plugin of this.plugins) {
+			const r = await plugin.willCreateOne?.(values as Record<string, any>)
+			const { valuesToMixinBeforeCreate: v } = r ?? {}
+			if (v) {
+				valuesToMixinBeforeCreate = {
+					...valuesToMixinBeforeCreate,
+					...v,
+				}
+			}
+		}
+		return valuesToMixinBeforeCreate
+	}
+
+	private async handleDidCreateForPlugins(record: Record<string, any>) {
 		let mixinValuesOnReturn = {}
 
 		for (const plugin of this.plugins) {
-			const r = await plugin.willCreateOne?.(toSave)
+			const r = await plugin.didCreateOne?.(record)
 			mixinValuesOnReturn = {
 				...mixinValuesOnReturn,
 				...r?.valuesToMixinBeforeReturning,
