@@ -495,12 +495,17 @@ export default abstract class AbstractStore<
 	> {
 		const { ops, updates: initialUpdates } = this.pluckOperations(updates)
 		let q = query
+		let shouldUpdate = true
 
 		try {
 			const isScrambled = this.isScrambled(initialUpdates)
 
 			for (const plugin of this.plugins) {
 				const results = await plugin.willUpdateOne?.(q, initialUpdates)
+
+				if (results?.shouldUpdate === false) {
+					shouldUpdate = false
+				}
 
 				if (results?.query) {
 					q = results.query
@@ -527,6 +532,10 @@ export default abstract class AbstractStore<
 			if (!isScrambled) {
 				//@ts-ignore
 				validateSchemaValues(this.updateSchema, initialUpdates)
+			}
+
+			if (!shouldUpdate) {
+				return current
 			}
 
 			const cleanedUpdates =

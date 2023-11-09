@@ -26,6 +26,7 @@ export default class MockPlugin implements DataStorePlugin {
 
 	private name = 'mock'
 	private valuesToMixinBeforeCreate?: Record<string, any>
+	private shouldAllowUpdateOne: boolean = true
 
 	public async didCreateOne(
 		record: Record<string, any>
@@ -73,6 +74,10 @@ export default class MockPlugin implements DataStorePlugin {
 		this.queryToReturnOnWillDeleteOne = query
 	}
 
+	public async setShouldAllowUpdateOne(shouldAllow: boolean) {
+		this.shouldAllowUpdateOne = shouldAllow
+	}
+
 	public async willUpdateOne(
 		query: Record<string, any>,
 		updates: Record<string, any>
@@ -84,6 +89,7 @@ export default class MockPlugin implements DataStorePlugin {
 
 		return {
 			query: this.queryToReturnOnWillUpdateOne,
+			shouldUpdate: !!this.shouldAllowUpdateOne,
 		}
 	}
 

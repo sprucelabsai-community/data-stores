@@ -169,6 +169,23 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 	}
 
 	@test()
+	protected static async pluginCanBlockUpdateOne() {
+		this.plugin.setShouldAllowUpdateOne(false)
+
+		const { created } = await this.createOne()
+		const updated = await this.updateOne(
+			{
+				id: created.id!,
+			},
+			{
+				...this.generateRandomSpyValues(),
+			}
+		)
+
+		assert.isEqualDeep(updated, created)
+	}
+
+	@test()
 	protected static async throwsNotFoundIfQueryReturnedReturnsNoResults() {
 		this.plugin.setQueryToReturnOnWillUpdateOne({
 			firstName: generateId(),
