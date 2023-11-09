@@ -1,3 +1,10 @@
+# [25.13.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.12.0...v25.13.0) (2023-11-09)
+
+
+### Features
+
+* plugin can block ([b0b566c](https://github.com/sprucelabsai-community/data-stores/commit/b0b566c))
+
 # [25.12.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.11.2...v25.12.0) (2023-11-09)
 
 
