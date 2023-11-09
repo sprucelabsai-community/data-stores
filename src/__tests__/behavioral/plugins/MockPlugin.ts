@@ -43,7 +43,7 @@ export default class MockPlugin implements DataStorePlugin {
 		}
 	}
 
-	public async setValuesToMixinBeforeCreate(values: Record<string, any>) {
+	public setValuesToMixinBeforeCreate(values: Record<string, any>) {
 		this.valuesToMixinBeforeCreate = values
 	}
 
