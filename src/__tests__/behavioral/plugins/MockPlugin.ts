@@ -75,7 +75,7 @@ export default class MockPlugin implements DataStorePlugin {
 		this.queryToReturnOnWillDeleteOne = query
 	}
 
-	public async setShouldAllowUpdateOne(shouldAllow: boolean) {
+	public setShouldAllowUpdateOne(shouldAllow: boolean) {
 		this.shouldAllowUpdateOne = shouldAllow
 	}
 
