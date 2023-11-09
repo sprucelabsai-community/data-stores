@@ -29,6 +29,7 @@ export interface UniversalStoreOptions {
 export interface DataStore {
 	initialize?(): Promise<void>
 	getCollectionName?(): string
+	getDb?(): Database
 }
 /**
  * @deprecated SimplifiedStoreFactory -> SimpleStoreFactory
@@ -59,3 +60,45 @@ export type StoreOptions<Name extends StoreName> =
 	Name extends keyof StoreOptionsMap
 		? StoreOptionsMap[Name]
 		: Record<string, never>
+
+export interface DataStorePlugin {
+	willCreateOne?: (
+		values: Record<string, any>
+	) => Promise<void | DataStorePluginWillCreateOneResponse>
+	didCreateOne?: (
+		record: Record<string, any>
+	) => Promise<void | DataStorePluginDidCreateOneResponse>
+	willUpdateOne?: (
+		query: Record<string, any>,
+		updates: Record<string, any>
+	) => Promise<void | DataStorePluginWillUpdateOneResponse>
+	willDeleteOne?: (
+		query: Record<string, any>
+	) => Promise<void | DataStorePluginWillDeleteOneResponse>
+	didFindOne?: (
+		query: Record<string, any>,
+		record: Record<string, any>
+	) => Promise<void | DataStorePluginDidFindOneResponse>
+	getName(): string
+}
+
+export interface DataStorePluginDidCreateOneResponse {
+	valuesToMixinBeforeReturning?: Record<string, any>
+}
+
+export interface DataStorePluginWillCreateOneResponse {
+	valuesToMixinBeforeCreate?: Record<string, any>
+}
+
+export interface DataStorePluginWillUpdateOneResponse {
+	query?: Record<string, any>
+	shouldUpdate?: boolean
+}
+
+export interface DataStorePluginWillDeleteOneResponse {
+	query?: Record<string, any>
+}
+
+export interface DataStorePluginDidFindOneResponse {
+	valuesToMixinBeforeReturning?: Record<string, any>
+}
