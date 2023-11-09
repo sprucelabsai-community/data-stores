@@ -281,7 +281,6 @@ export default abstract class AbstractStore<
 	}
 
 	private async handleWillCreatePlugins(values: CreateRecord) {
-		debugger
 		let valuesToMixinBeforeCreate = {}
 		for (const plugin of this.plugins) {
 			const r = await plugin.willCreateOne?.(values as Record<string, any>)
@@ -298,8 +297,6 @@ export default abstract class AbstractStore<
 
 	private async handleDidCreateForPlugins(record: Record<string, any>) {
 		let mixinValuesOnReturn = {}
-
-		debugger
 
 		for (const plugin of this.plugins) {
 			const r = await plugin.didCreateOne?.(record)
