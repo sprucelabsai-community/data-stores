@@ -12,7 +12,7 @@ import { SCRAMBLE_VALUE } from '../constants'
 import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
-import { DataStorePlugin, Database } from '../types/database.types'
+import { Database } from '../types/database.types'
 import { QueryBuilder, QueryOptions } from '../types/query.types'
 import {
 	PrepareOptions,
@@ -20,6 +20,7 @@ import {
 	SaveOperations,
 	DataStore,
 	saveOperations,
+	DataStorePlugin,
 } from '../types/stores.types'
 import errorUtil from '../utilities/error.utility'
 
