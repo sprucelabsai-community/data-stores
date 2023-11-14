@@ -282,7 +282,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 	}
 
 	@test()
-	protected `static async canMixinValuesFromMultiplePluginsOnFindOne() {
+	protected static async canMixinValuesFromMultiplePluginsOnFindOne() {
 		const { created } = await this.createOne()
 
 		const values1 = {
