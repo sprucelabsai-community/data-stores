@@ -1,11 +1,11 @@
 import { assert } from '@sprucelabs/test-utils'
 import {
 	DataStorePlugin,
-	DataStorePluginDidFindOneResponse,
 	DataStorePluginDidCreateOneResponse,
+	DataStorePluginDidFindOneResponse,
 	DataStorePluginWillDeleteOneResponse,
 	DataStorePluginWillUpdateOneResponse,
-} from '../../../types/database.types'
+} from '../../../types/stores.types'
 import generateId from '../../../utilities/generateId'
 
 export default class MockPlugin implements DataStorePlugin {
