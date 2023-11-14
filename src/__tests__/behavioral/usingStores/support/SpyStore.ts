@@ -1,8 +1,11 @@
 import { buildSchema, SchemaValues } from '@sprucelabs/schema'
 import StoreFactory from '../../../../factories/StoreFactory'
 import AbstractStore from '../../../../stores/AbstractStore'
-import { Database, DataStorePlugin } from '../../../../types/database.types'
-import { UniversalStoreOptions } from '../../../../types/stores.types'
+import { Database } from '../../../../types/database.types'
+import {
+	DataStorePlugin,
+	UniversalStoreOptions,
+} from '../../../../types/stores.types'
 
 export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 	public db!: Database
