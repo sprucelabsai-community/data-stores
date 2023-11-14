@@ -1136,15 +1136,15 @@ export interface FSyncOptions extends CommonOptions {
 type EnhancedOmit<T, K> = string | number extends keyof T
 	? T // T has indexed type e.g. { _id: string; [k: string]: any; } or it is "any"
 	: T extends any
-	? Pick<T, Exclude<keyof T, K>> // discriminated unions
-	: never
+	  ? Pick<T, Exclude<keyof T, K>> // discriminated unions
+	  : never
 
 type ExtractIdType<TSchema> = TSchema extends { _id: infer U } // user has defined a type for _id
 	? {} extends U
 		? Exclude<U, {}>
 		: unknown extends U
-		? ObjectId
-		: U
+		  ? ObjectId
+		  : U
 	: ObjectId // user has not defined _id on schema
 
 // this makes _id optional
