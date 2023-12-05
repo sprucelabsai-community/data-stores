@@ -1,3 +1,10 @@
+# [26.0.0](https://github.com/sprucelabsai-community/data-stores/compare/v25.13.14...v26.0.0) (2023-12-05)
+
+
+### Breaking Changes
+
+* no longer generates primary key value unless database returns true from shouldAutoGenerateId() ([689993e](https://github.com/sprucelabsai-community/data-stores/commit/689993e))
+
 ## [25.13.14](https://github.com/sprucelabsai-community/data-stores/compare/v25.13.13...v25.13.14) (2023-11-28)
 
 ## [25.13.13](https://github.com/sprucelabsai-community/data-stores/compare/v25.13.12...v25.13.13) (2023-11-24)
