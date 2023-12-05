@@ -533,7 +533,7 @@ export default abstract class AbstractStore<
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord
 	): Promise<number> {
-		return this.db.update(this.collectionName, q, updates as any)
+		return this.db.update(this.collectionName, query, updates as any)
 	}
 
 	private async findOneAndUpdate<
