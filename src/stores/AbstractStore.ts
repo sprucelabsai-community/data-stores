@@ -658,7 +658,7 @@ export default abstract class AbstractStore<
 	}
 
 	public async deleteOne(query: QueryBuilder<QueryRecord>): Promise<number> {
-		let q = {
+		let q = (await this.willQuery?.({ ...query })) ?? {
 			...query,
 		}
 
@@ -673,7 +673,8 @@ export default abstract class AbstractStore<
 	}
 
 	public async delete(query: QueryBuilder<QueryRecord>): Promise<number> {
-		return await this.db.delete(this.collectionName, query)
+		const q = (await this.willQuery?.({ ...query })) ?? { ...query }
+		return await this.db.delete(this.collectionName, q)
 	}
 }
 
