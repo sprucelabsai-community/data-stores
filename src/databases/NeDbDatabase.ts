@@ -72,6 +72,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return undefinedToPlaceholder
 	}
 
+	public getShouldAutoGenerateId(): boolean {
+		return true
+	}
+
 	public async setShouldAutoGenerateIds(
 		collection: string,
 		shouldAutoGenerateIds: boolean

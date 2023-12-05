@@ -18,6 +18,7 @@ export interface Database {
 	generateId(): string
 	connect(): Promise<void>
 	close(): Promise<void>
+	getShouldAutoGenerateId?(): boolean
 	createOne(
 		collection: string,
 		values: Record<string, any>

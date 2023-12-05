@@ -6,7 +6,8 @@ export default class CustomPrimaryStore2 extends AbstractStore<
 	typeof fullRecordSchema,
 	typeof createRecordSchema,
 	typeof updateRecordSchema,
-	DatabaseRecordSchema
+	DatabaseRecordSchema,
+	'anotherCustomId'
 > {
 	public name = 'CustomPrimary2'
 	protected scrambleFields = []
@@ -16,7 +17,7 @@ export default class CustomPrimaryStore2 extends AbstractStore<
 	protected updateSchema = updateRecordSchema
 	protected databaseSchema = databaseRecordSchema
 	protected willScramble = undefined
-	protected primaryFieldNames: string[] = ['anotherCustomId']
+	protected primaryFieldNames = ['anotherCustomId' as const]
 
 	public willUpdateUpdates?: any
 	public willUpdateValues?: any

@@ -7,6 +7,7 @@ import SchemaEntity, {
 	SchemaPublicFieldNames,
 	SchemaValues,
 	validateSchemaValues,
+	dropFields,
 } from '@sprucelabs/schema'
 import { SCRAMBLE_VALUE } from '../constants'
 import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
@@ -29,6 +30,7 @@ export default abstract class AbstractStore<
 		CreateSchema extends Schema = FullSchema,
 		UpdateSchema extends Schema = CreateSchema,
 		DatabaseSchema extends Schema = FullSchema,
+		PrimaryFieldName extends SchemaFieldNames<DatabaseSchema> | 'id' = 'id',
 		DatabaseRecord = SchemaValues<DatabaseSchema>,
 		QueryRecord = SchemaPartialValues<FullSchema>,
 		FullRecord = SchemaValues<FullSchema>,
@@ -47,7 +49,7 @@ export default abstract class AbstractStore<
 	protected abstract databaseSchema: DatabaseSchema
 	protected scrambleFields?: string[]
 	protected db: Database
-	protected primaryFieldNames: string[] = ['id']
+	protected primaryFieldNames: PrimaryFieldName[] = ['id'] as PrimaryFieldName[]
 	protected shouldMapLowerCaseToCamelCase = false
 	protected plugins: DataStorePlugin[] = []
 
@@ -65,7 +67,7 @@ export default abstract class AbstractStore<
 
 	protected willCreate?(
 		values: CreateRecord
-	): Promise<Omit<DatabaseRecord, 'id'>>
+	): Promise<Omit<DatabaseRecord, PrimaryFieldName>>
 
 	protected didCreate?(values: CreateRecord): Promise<void>
 
@@ -184,20 +186,8 @@ export default abstract class AbstractStore<
 				values.map(async (v) => (this.willCreate ? this.willCreate(v) : v))
 			)
 
-			const databaseRecords = cleanedValues.map((v) => ({
-				...v,
-				[this.primaryFieldName]:
-					//@ts-ignore
-					v[this.primaryFieldName] ?? this.db.generateId(),
-			}))
-
-			const toSave = databaseRecords.map((r) =>
-				normalizeSchemaValues(
-					this.databaseSchema,
-					//@ts-ignore
-					r,
-					{ shouldCreateEntityInstances: false }
-				)
+			const toSave = cleanedValues.map((v) =>
+				this.normalizeBeforeSave(v as CreateRecord)
 			)
 
 			const records = await this.db.create(this.collectionName, toSave)
@@ -238,20 +228,7 @@ export default abstract class AbstractStore<
 				? await this.willCreate(values)
 				: values
 
-			const databaseRecord = {
-				...cleanedValues,
-				[this.primaryFieldName]:
-					//@ts-ignore
-					cleanedValues[this.primaryFieldName] ?? this.db.generateId(),
-			}
-
-			const toSave = normalizeSchemaValues(
-				this.databaseSchema,
-				//@ts-ignore
-				databaseRecord,
-
-				{ shouldCreateEntityInstances: false }
-			)
+			const toSave = this.normalizeBeforeSave(cleanedValues as CreateRecord)
 
 			const record = await this.db.createOne(this.collectionName, {
 				...toSave,
@@ -279,6 +256,36 @@ export default abstract class AbstractStore<
 
 			throw coded[0]
 		}
+	}
+
+	private normalizeBeforeSave(cleanedValues: CreateRecord) {
+		const shouldAutoGenerateId = this.db.getShouldAutoGenerateId?.()
+
+		const databaseRecord = !shouldAutoGenerateId
+			? cleanedValues
+			: {
+					...cleanedValues,
+					[this.primaryFieldName]:
+						//@ts-ignore
+						cleanedValues[this.primaryFieldName] ?? this.db.generateId(),
+			  }
+
+		const fields = shouldAutoGenerateId
+			? undefined
+			: Object.keys(
+					dropFields(this.databaseSchema.fields ?? {}, this.primaryFieldNames)
+			  )
+
+		const toSave = normalizeSchemaValues(
+			this.databaseSchema,
+			//@ts-ignore
+			databaseRecord,
+			{
+				shouldCreateEntityInstances: false,
+				fields,
+			}
+		)
+		return toSave
 	}
 
 	private async handleWillCreatePlugins(values: CreateRecord) {

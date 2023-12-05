@@ -26,11 +26,6 @@ export default class StoreFactory {
 		return new this(db)
 	}
 
-	/**
-	 * @deprecated stores.Store(..) -> stores.getStore(...)
-	 * This change has big speed improvements. This factory method
-	 * will never be removed, but hopefully won't be needed often.
-	 */
 	public async Store<
 		Name extends StoreName,
 		Options extends StoreOptions<Name>,
@@ -84,7 +79,7 @@ export default class StoreFactory {
 		if (!this.stores[name]) {
 			this.stores[name] = await this.Store(name)
 		}
-		return this.stores[name]
+		return this.stores[name] as StoreMap[Name]
 	}
 
 	public static reset() {
