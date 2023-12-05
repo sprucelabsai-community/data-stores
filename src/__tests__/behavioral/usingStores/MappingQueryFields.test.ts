@@ -45,6 +45,42 @@ export default class MappingQueryFieldsTest extends AbstractStoreTest {
 		await this.assertRecordDeleted(created.id)
 	}
 
+	@test()
+	protected static async canUpdateOneMappingField() {
+		const created = await this.createOne()
+
+		const serialNumber = generateId()
+		await this.store.updateOne(
+			{
+				id: created.id,
+			},
+			{
+				serialNumber,
+			}
+		)
+
+		const found = await this.findOne(created.id)
+		assert.isEqual(found?.serialNumber, serialNumber)
+	}
+
+	@test.skip('have to figure out how to dig willUpdate fired for each record')
+	protected static async canUpdateManyMappingField() {
+		const created = await this.createOne()
+
+		const serialNumber = generateId()
+		await this.store.update(
+			{
+				id: created.id,
+			},
+			{
+				serialNumber,
+			}
+		)
+
+		const found = await this.findOne(created.id)
+		assert.isEqual(found?.serialNumber, serialNumber)
+	}
+
 	private static async assertRecordDeleted(id: string) {
 		const found = await this.findOne(id)
 		assert.isNull(found)

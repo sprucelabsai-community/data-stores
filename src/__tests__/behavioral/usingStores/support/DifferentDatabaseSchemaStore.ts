@@ -44,6 +44,11 @@ export default class DifferentDatabaseSchemaStore extends AbstractStore<
 	}
 
 	protected async willUpdate(values: UpdateUnit) {
+		if (values.serialNumber) {
+			//@ts-ignore
+			values.unitcode = values.serialNumber
+			delete values.serialNumber
+		}
 		return values as Partial<DatabaseUnit>
 	}
 
@@ -65,6 +70,7 @@ export default class DifferentDatabaseSchemaStore extends AbstractStore<
 		return {
 			description: record.unitdescription,
 			id: record.unitid,
+			serialNumber: record.unitcode,
 		} as PrepareResults<FullSchema, IncludePrivateFields>
 	}
 }

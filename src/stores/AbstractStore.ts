@@ -331,7 +331,26 @@ export default abstract class AbstractStore<
 		query: QueryBuilder<QueryRecord>,
 		options: PrepareOptions<CreateEntityInstances, FullSchema, F> = {}
 	) {
-		const results = await this.find(query, { limit: 1 }, options)
+		return this._findOne(query, options)
+	}
+
+	private async _findOne<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
+	>(
+		query: QueryBuilder<QueryRecord>,
+		options: PrepareOptions<CreateEntityInstances, FullSchema, F> = {},
+		internalOptions: InternalFindOptions = {
+			shouldTriggerWillQuery: true,
+		}
+	) {
+		const results = await this._find(
+			query,
+			{ limit: 1 },
+			options,
+			internalOptions
+		)
+
 		let match = results[0]
 
 		if (match) {
@@ -370,11 +389,36 @@ export default abstract class AbstractStore<
 		queryOptions?: Omit<QueryOptions, 'includeFields'>,
 		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
-		const mappedQuery = (await this.willQuery?.(query)) ?? query
-		const results = await this.db.find(this.collectionName, mappedQuery, {
-			...queryOptions,
-			includeFields: options?.includeFields,
-		})
+		return this._find(query, queryOptions, options)
+	}
+
+	private async _find<
+		CreateEntityInstances extends boolean,
+		F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
+	>(
+		query: QueryBuilder<QueryRecord>,
+		queryOptions?: Omit<QueryOptions, 'includeFields'>,
+		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>,
+		internalOptions: InternalFindOptions = {
+			shouldTriggerWillQuery: true,
+		}
+	) {
+		let mappedQuery = query
+		const { shouldTriggerWillQuery } = internalOptions
+
+		if (shouldTriggerWillQuery) {
+			mappedQuery = ((await this.willQuery?.(query)) ??
+				query) as QueryBuilder<QueryRecord>
+		}
+
+		const results = await this.db.find(
+			this.collectionName,
+			mappedQuery as any,
+			{
+				...queryOptions,
+				includeFields: options?.includeFields,
+			}
+		)
 
 		if (results) {
 			const all = results.map((result) =>
@@ -489,7 +533,7 @@ export default abstract class AbstractStore<
 		query: QueryBuilder<QueryRecord>,
 		updates: UpdateRecord
 	): Promise<number> {
-		return this.db.update(this.collectionName, query, updates as any)
+		return this.db.update(this.collectionName, q, updates as any)
 	}
 
 	private async findOneAndUpdate<
@@ -507,7 +551,7 @@ export default abstract class AbstractStore<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
 		const { ops, updates: initialUpdates } = this.pluckOperations(updates)
-		let q = query
+		let q = (await this.willQuery?.({ ...query })) ?? query
 		let shouldUpdate = true
 
 		try {
@@ -525,10 +569,14 @@ export default abstract class AbstractStore<
 				}
 			}
 
-			let current: any = await this.findOne(q, {
-				...options,
-				shouldIncludePrivateFields: true,
-			})
+			let current: any = await this._findOne(
+				q as any,
+				{
+					...options,
+					shouldIncludePrivateFields: true,
+				},
+				{ shouldTriggerWillQuery: false }
+			)
 
 			if (!current) {
 				current = await notFoundHandler()
@@ -595,6 +643,7 @@ export default abstract class AbstractStore<
 			throw coded[0]
 		}
 	}
+
 	private pluckOperations(updates: UpdateRecord): { ops: any; updates: any } {
 		const { ...initialUpdates } = updates
 		const ops = saveOperations
@@ -692,3 +741,7 @@ type Response<
 	F,
 	PF
 >
+
+interface InternalFindOptions {
+	shouldTriggerWillQuery: boolean
+}
