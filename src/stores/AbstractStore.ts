@@ -85,6 +85,10 @@ export default abstract class AbstractStore<
 		values: Partial<DatabaseRecord> & { _isScrambled: true }
 	): Promise<Partial<DatabaseRecord>>
 
+	protected willQuery?(
+		query: QueryBuilder<QueryRecord>
+	): Promise<QueryBuilder<Partial<DatabaseRecord>>>
+
 	protected constructor(db: Database, collectionName?: string) {
 		super()
 
@@ -366,7 +370,8 @@ export default abstract class AbstractStore<
 		queryOptions?: Omit<QueryOptions, 'includeFields'>,
 		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
-		const results = await this.db.find(this.collectionName, query, {
+		const mappedQuery = (await this.willQuery?.(query)) ?? query
+		const results = await this.db.find(this.collectionName, mappedQuery, {
 			...queryOptions,
 			includeFields: options?.includeFields,
 		})

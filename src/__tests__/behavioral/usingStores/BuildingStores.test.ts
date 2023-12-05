@@ -89,6 +89,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
 				| 'customPrimary2'
 				| 'simple'
 				| 'customPrimaryWithFieldNamedId'
+				| 'differentDatabaseSchema'
 			)[]
 		>(true)
 	}
