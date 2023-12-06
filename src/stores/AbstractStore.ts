@@ -123,9 +123,14 @@ export default abstract class AbstractStore<
 	): Promise<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
-		const preparedRecord = this.prepareRecord
+		let preparedRecord = this.prepareRecord
 			? await this.prepareRecord(record, options)
 			: record
+
+		const pluginResults = await this.plugins[0]?.prepareRecord?.(preparedRecord)
+		if (pluginResults?.newValues) {
+			preparedRecord = pluginResults.newValues
+		}
 
 		const isScrambled = this.isScrambled(preparedRecord)
 
@@ -223,8 +228,6 @@ export default abstract class AbstractStore<
 		options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
 	) {
 		try {
-			let valuesToMixinBeforeCreate = await this.handleWillCreatePlugins(values)
-
 			//@ts-ignore
 			validateSchemaValues(this.createSchema, values)
 
@@ -232,12 +235,23 @@ export default abstract class AbstractStore<
 				? await this.willCreate(values)
 				: values
 
-			const toSave = this.normalizeBeforeSave(cleanedValues as CreateRecord)
+			let { valuesToMixinBeforeCreate, values: nv } =
+				await this.handleWillCreatePlugins(cleanedValues)
 
-			const record = await this.db.createOne(this.collectionName, {
-				...toSave,
-				...valuesToMixinBeforeCreate,
-			})
+			const newValues = (nv ?? cleanedValues) as DatabaseRecord
+
+			const toSave = this.normalizeBeforeSave(newValues)
+
+			const record = await this.db.createOne(
+				this.collectionName,
+				{
+					...toSave,
+					...valuesToMixinBeforeCreate,
+				},
+				{
+					primaryFieldNames: this.primaryFieldNames,
+				}
+			)
 
 			await this.didCreate?.(record as any)
 
@@ -262,7 +276,7 @@ export default abstract class AbstractStore<
 		}
 	}
 
-	private normalizeBeforeSave(cleanedValues: CreateRecord) {
+	private normalizeBeforeSave(cleanedValues: CreateRecord | DatabaseRecord) {
 		const shouldAutoGenerateId = this.db.getShouldAutoGenerateId?.()
 
 		const databaseRecord = !shouldAutoGenerateId
@@ -292,11 +306,16 @@ export default abstract class AbstractStore<
 		return toSave
 	}
 
-	private async handleWillCreatePlugins(values: CreateRecord) {
+	private async handleWillCreatePlugins(values: Record<string, any>) {
 		let valuesToMixinBeforeCreate = {}
+		let newValues: Record<string, any> | undefined
+
 		for (const plugin of this.plugins) {
 			const r = await plugin.willCreateOne?.(values as Record<string, any>)
-			const { valuesToMixinBeforeCreate: v } = r ?? {}
+			const { valuesToMixinBeforeCreate: v, newValues: nv } = r ?? {}
+			if (nv) {
+				newValues = nv
+			}
 			if (v) {
 				valuesToMixinBeforeCreate = {
 					...valuesToMixinBeforeCreate,
@@ -304,7 +323,7 @@ export default abstract class AbstractStore<
 				}
 			}
 		}
-		return valuesToMixinBeforeCreate
+		return { valuesToMixinBeforeCreate, values: newValues }
 	}
 
 	private async handleDidCreateForPlugins(record: Record<string, any>) {

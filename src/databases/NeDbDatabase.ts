@@ -7,7 +7,7 @@ import uniqBy from 'lodash/uniqBy'
 import Datastore from 'nedb'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
-import { Database, UniqueIndex } from '../types/database.types'
+import { CreateOptions, Database, UniqueIndex } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
@@ -98,7 +98,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return this._isConnected
 	}
 
-	private normalizeRecord(record: Record<string, any>) {
+	private normalizeRecord(
+		record: Record<string, any>,
+		options?: CreateOptions
+	) {
 		const { _id, ...rest } = record
 
 		let values = this.handlePlaceholders(
@@ -107,7 +110,9 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 			(val: any) => val === null || val === NULL_PLACEHOLDER
 		)
 
-		if (!_id) {
+		const { primaryFieldNames = ['id'] } = options ?? {}
+
+		if (!_id || !primaryFieldNames.includes('id')) {
 			return values
 		}
 
@@ -169,27 +174,32 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 	public async createOne(
 		collection: string,
-		values: Record<string, any>
+		values: Record<string, any>,
+		options?: CreateOptions
 	): Promise<Record<string, any>> {
 		await this.randomDelay()
-		const all = await this.create(collection, [values])
+		const all = await this.create(collection, [values], options)
 		return all[0]
 	}
 
 	public async create(
 		collection: string,
-		values: Record<string, any>[]
+		values: Record<string, any>[],
+		options?: CreateOptions
 	): Promise<Record<string, any>[]> {
 		const mutexName = 'createMutex'
 
 		await this.lock(mutexName)
-
 		await this.randomDelay()
+
+		const { primaryFieldNames = ['id'] } = options ?? {}
+		const firstPrimaryFieldName =
+			primaryFieldNames[0] === 'id' ? '_id' : primaryFieldNames[0]
 
 		const col = this.loadCollection(collection)
 		const mapped = values
 			.map((v) => this.valuesToDocument(v))
-			.map((v) => ({ _id: this.generateId(), ...v }))
+			.map((v) => ({ [firstPrimaryFieldName]: this.generateId(), ...v }))
 
 		try {
 			await Promise.all(
@@ -210,7 +220,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				if (err) {
 					reject(err)
 				} else {
-					resolve(docs.map((doc) => this.normalizeRecord(doc)))
+					resolve(docs.map((doc) => this.normalizeRecord(doc, options)))
 				}
 			})
 		})

@@ -1,4 +1,4 @@
-import { buildSchema, SchemaValues } from '@sprucelabs/schema'
+import { buildSchema, Schema, SchemaValues } from '@sprucelabs/schema'
 import StoreFactory from '../../../../factories/StoreFactory'
 import AbstractStore from '../../../../stores/AbstractStore'
 import { Database } from '../../../../types/database.types'
@@ -54,6 +54,18 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 
 	public addPlugin(plugin: DataStorePlugin) {
 		this.plugins.push(plugin)
+	}
+
+	public setFullSchema(schema: Schema) {
+		this.fullSchema = schema as any
+	}
+
+	public setDatabaseSchema(schema: Schema) {
+		this.databaseSchema = schema as any
+	}
+
+	public setPrimaryFieldNames(fieldNames: string[]) {
+		this.primaryFieldNames = fieldNames as any
 	}
 }
 

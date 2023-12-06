@@ -80,6 +80,13 @@ export interface DataStorePlugin {
 		record: Record<string, any>
 	) => Promise<void | DataStorePluginDidFindOneResponse>
 	getName(): string
+	prepareRecord?: (
+		record: Record<string, any>
+	) => Promise<void | DataStorePluginPrepareResponse>
+}
+
+export interface DataStorePluginPrepareResponse {
+	newValues?: Record<string, any>
 }
 
 export interface DataStorePluginDidCreateOneResponse {
@@ -88,6 +95,7 @@ export interface DataStorePluginDidCreateOneResponse {
 
 export interface DataStorePluginWillCreateOneResponse {
 	valuesToMixinBeforeCreate?: Record<string, any>
+	newValues?: Record<string, any>
 }
 
 export interface DataStorePluginWillUpdateOneResponse {

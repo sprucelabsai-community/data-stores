@@ -1,9 +1,6 @@
 import { Log } from '@sprucelabs/spruce-skill-utils'
 import { QueryOptions } from './query.types'
 
-export type UniqueIndex = string[]
-export type Index = string[]
-
 export interface Database {
 	[x: string]: any
 	syncUniqueIndexes(
@@ -21,7 +18,8 @@ export interface Database {
 	getShouldAutoGenerateId?(): boolean
 	createOne(
 		collection: string,
-		values: Record<string, any>
+		values: Record<string, any>,
+		options?: CreateOptions
 	): Promise<Record<string, any>>
 	create(
 		collection: string,
@@ -76,3 +74,10 @@ export type TestConnect = (
 	connectionStringWithRandomBadDatabaseName: string
 	badDatabaseName: string
 }>
+
+export type UniqueIndex = string[]
+export type Index = string[]
+
+export interface CreateOptions {
+	primaryFieldNames?: string[]
+}
