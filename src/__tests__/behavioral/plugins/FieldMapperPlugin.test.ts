@@ -138,6 +138,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
 		const first = await this.createOneRandom()
 		const firstName = generateId()
 		const lastName = generateId()
+
 		await this.spyStore.updateOne(
 			{
 				id: first.id!,

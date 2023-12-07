@@ -444,6 +444,9 @@ export default abstract class AbstractStore<
 			{
 				...resolvedOptions,
 				includeFields: options?.includeFields,
+			},
+			{
+				primaryFieldNames: this.primaryFieldNames,
 			}
 		)
 

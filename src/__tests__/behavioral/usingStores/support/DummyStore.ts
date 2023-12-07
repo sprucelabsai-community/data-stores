@@ -88,7 +88,14 @@ export default class DummyStore extends AbstractStore<
 	}
 
 	public async findOneRaw(query: { id: string }) {
-		return this.db.findOne(this.collectionName, query)
+		return this.db.findOne(
+			this.collectionName,
+			query,
+			{},
+			{
+				primaryFieldNames: ['id'],
+			}
+		)
 	}
 }
 

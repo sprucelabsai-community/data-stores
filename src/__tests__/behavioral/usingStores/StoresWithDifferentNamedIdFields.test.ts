@@ -36,7 +36,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
 	@test()
 	protected static async canUpdateRecordWithDifferentId1() {
 		const created = await this.createOne()
-		await this.customPrimaryStore.updateOne(
+		const updated = await this.customPrimaryStore.updateOne(
 			{
 				customId1: created.customId1,
 			},
@@ -44,6 +44,9 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
 				name: generateId(),
 			}
 		)
+
+		//@ts-ignore
+		assert.isFalsy(updated.id)
 	}
 
 	@test()
@@ -80,13 +83,29 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
 		assert.isFalsy(created.id)
 	}
 
-	@test.skip('is this worth it for nedb?')
+	@test()
 	protected static async canSaveWithDifferentIdEvenIfHasFieldNamedId() {
 		const created = await this.customPrimaryStoreWithFieldNamedId.createOne(
 			this.generateValues()
 		)
 
 		assert.isFalsy(created.id)
+	}
+
+	@test()
+	protected static async passesPrimaryKeysToFind() {
+		this.customPrimaryStore.getDb().find = async (
+			_collectionName: string,
+			_query: Record<string, any>,
+			_options: any,
+			dbOptions: any
+		) => {
+			assert.isTruthy(dbOptions)
+			assert.isEqualDeep(dbOptions.primaryFieldNames, ['customId1'])
+			return []
+		}
+
+		await this.customPrimaryStore.find({})
 	}
 
 	private static async createOne() {

@@ -30,12 +30,14 @@ export interface Database {
 	findOne(
 		collection: string,
 		query?: Record<string, any>,
-		options?: QueryOptions
+		options?: QueryOptions,
+		dbOptions?: DatabaseInternalOptions
 	): Promise<Record<string, any> | null>
 	find(
 		collection: string,
 		query?: Record<string, any>,
-		options?: QueryOptions
+		options?: QueryOptions,
+		dbOptions?: DatabaseInternalOptions
 	): Promise<Record<string, any>[]>
 	updateOne(
 		collection: string,
@@ -78,6 +80,8 @@ export type TestConnect = (
 export type UniqueIndex = string[]
 export type Index = string[]
 
-export interface CreateOptions {
+export interface CreateOptions extends DatabaseInternalOptions {}
+
+export interface DatabaseInternalOptions {
 	primaryFieldNames?: string[]
 }

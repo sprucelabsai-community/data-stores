@@ -7,7 +7,12 @@ import uniqBy from 'lodash/uniqBy'
 import Datastore from 'nedb'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
-import { CreateOptions, Database, UniqueIndex } from '../types/database.types'
+import {
+	CreateOptions,
+	Database,
+	DatabaseInternalOptions,
+	UniqueIndex,
+} from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
@@ -178,6 +183,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		options?: CreateOptions
 	): Promise<Record<string, any>> {
 		await this.randomDelay()
+
 		const all = await this.create(collection, [values], options)
 		return all[0]
 	}
@@ -251,20 +257,29 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	public async findOne(
 		collection: string,
 		query?: Record<string, any>,
-		options?: QueryOptions
+		options?: QueryOptions,
+		dbOptions?: DatabaseInternalOptions
 	): Promise<Record<string, any> | null> {
-		const results = await this.find(collection, this.prepQuery(query ?? {}), {
-			limit: 1,
-			...(options || {}),
-		})
+		const results = await this.find(
+			collection,
+			query ?? {},
+			{
+				limit: 1,
+				...(options || {}),
+			},
+			dbOptions
+		)
 
-		return results[0]
+		const match = results[0]
+
+		return match
 	}
 
 	public async find(
 		collection: string,
 		query?: Record<string, any>,
-		options?: QueryOptions
+		options?: QueryOptions,
+		dbOptions?: DatabaseInternalOptions
 	): Promise<Record<string, any>[]> {
 		await this.randomDelay()
 
@@ -295,7 +310,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 				if (err) {
 					reject(err)
 				} else {
-					resolve(results.map((r) => this.normalizeRecord(r)))
+					resolve(results.map((r) => this.normalizeRecord(r, dbOptions)))
 				}
 			})
 		})
