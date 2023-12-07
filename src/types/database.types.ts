@@ -42,7 +42,8 @@ export interface Database {
 	updateOne(
 		collection: string,
 		query: Record<string, any>,
-		updates: Record<string, any>
+		updates: Record<string, any>,
+		dbOptions?: DatabaseInternalOptions
 	): Promise<Record<string, any>>
 	update(
 		collection: string,

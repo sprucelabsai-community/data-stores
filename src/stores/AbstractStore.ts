@@ -423,20 +423,21 @@ export default abstract class AbstractStore<
 		}
 	) {
 		let resolvedQuery = query
+		let resolvedOptions = queryOptions
 
 		const { shouldTriggerWillQuery } = internalOptions
 
 		if (shouldTriggerWillQuery) {
 			resolvedQuery = ((await this.willFind?.(query)) ??
 				query) as QueryBuilder<QueryRecord>
-		}
 
-		const { query: q, options: o } = await this.handleWillFindPlugins(
-			resolvedQuery,
-			queryOptions
-		)
-		resolvedQuery = q
-		const resolvedOptions = o ?? queryOptions
+			const { query: q, options: o } = await this.handleWillFindPlugins(
+				resolvedQuery,
+				queryOptions
+			)
+			resolvedQuery = q
+			resolvedOptions = o
+		}
 
 		const results = await this.db.find(
 			this.collectionName,
@@ -666,7 +667,10 @@ export default abstract class AbstractStore<
 			const results = await this.db.updateOne(
 				this.collectionName,
 				q,
-				normalizedValues
+				normalizedValues,
+				{
+					primaryFieldNames: this.primaryFieldNames,
+				}
 			)
 
 			await this.didUpdate?.(current, results as any)

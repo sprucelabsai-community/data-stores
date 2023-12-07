@@ -379,7 +379,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 							})
 						)
 					} else {
-						resolve(docs ? this.normalizeRecord(docs) : numUpdated)
+						resolve(docs ? this.normalizeRecord(docs, neDbOptions) : numUpdated)
 					}
 				}
 			)
