@@ -1,3 +1,10 @@
+# [26.2.0](https://github.com/sprucelabsai-community/data-stores/compare/v26.1.7...v26.2.0) (2023-12-07)
+
+
+### Features
+
+* database field mapper plugin! ([d06cd9e](https://github.com/sprucelabsai-community/data-stores/commit/d06cd9e))
+
 ## [26.1.7](https://github.com/sprucelabsai-community/data-stores/compare/v26.1.6...v26.1.7) (2023-12-07)
 
 ## [26.1.6](https://github.com/sprucelabsai-community/data-stores/compare/v26.1.5...v26.1.6) (2023-12-07)
