@@ -26,6 +26,7 @@ export default class MockPlugin implements DataStorePlugin {
 
 	private name = 'mock'
 	private valuesToMixinBeforeCreate?: Record<string, any>
+	private newValuesWillCreateOne?: Record<string, any>
 	private shouldAllowUpdateOne: boolean = true
 
 	public async didCreateOne(
@@ -41,7 +42,12 @@ export default class MockPlugin implements DataStorePlugin {
 		this.willCreateOneValues = values
 		return {
 			valuesToMixinBeforeCreate: this.valuesToMixinBeforeCreate,
+			newValues: this.newValuesWillCreateOne,
 		}
+	}
+
+	public setNewValuesWillCreateOne(values: Record<string, any>) {
+		this.newValuesWillCreateOne = values
 	}
 
 	public setValuesToMixinBeforeCreate(values: Record<string, any>) {

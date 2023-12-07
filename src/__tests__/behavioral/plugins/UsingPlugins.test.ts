@@ -42,6 +42,17 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 	}
 
 	@test()
+	protected static async pluginsGetTheLastPluginsNewValues() {
+		const expected = {
+			hello: 'worlds',
+		}
+		this.plugin.setNewValuesWillCreateOne(expected)
+		const plugin = this.addNewPlugin()
+		await this.createOne()
+		plugin.assertWillCreateOneParameters(expected)
+	}
+
+	@test()
 	protected static async canMixinValuesNotInSchemaToSave() {
 		const values = {
 			test: generateId(),

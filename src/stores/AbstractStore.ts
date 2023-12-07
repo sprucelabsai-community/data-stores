@@ -238,7 +238,7 @@ export default abstract class AbstractStore<
 			let { valuesToMixinBeforeCreate, values: nv } =
 				await this.handleWillCreatePlugins(cleanedValues)
 
-			const newValues = (nv ?? cleanedValues) as DatabaseRecord
+			const newValues = nv as DatabaseRecord
 
 			const toSave = this.normalizeBeforeSave(newValues)
 
@@ -308,10 +308,10 @@ export default abstract class AbstractStore<
 
 	private async handleWillCreatePlugins(values: Record<string, any>) {
 		let valuesToMixinBeforeCreate = {}
-		let newValues: Record<string, any> | undefined
+		let newValues: Record<string, any> = values
 
 		for (const plugin of this.plugins) {
-			const r = await plugin.willCreateOne?.(values as Record<string, any>)
+			const r = await plugin.willCreateOne?.(newValues as Record<string, any>)
 			const { valuesToMixinBeforeCreate: v, newValues: nv } = r ?? {}
 			if (nv) {
 				newValues = nv
