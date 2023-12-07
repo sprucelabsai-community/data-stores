@@ -20,6 +20,7 @@ export { default as CursorPager } from './cursors/CursorPager'
 export * from './cursors/CursorPager'
 export { default as CursorPagerFaker } from './cursors/CursorPagerFaker'
 export * from './cursors/CursorPager'
+export { default as DatabaseFieldMapperPlugin } from './plugins/DatabaseFieldMapperPlugin'
 
 /**
  * @deprecated databaseAssertUtil -> databaseAssert
