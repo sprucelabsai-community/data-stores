@@ -266,9 +266,13 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
 	@test()
 	protected static async throwsWhenCantFindCreated() {
 		const id = this.db.generateId()
-		const err = (await assert.doesThrowAsync(
-			//@ts-ignore
-			() => this.store.updateOne({ id }, {})
+		const err = (await assert.doesThrowAsync(() =>
+			this.store.updateOne(
+				{ id },
+				{
+					requiredForUpdate: 'for update!',
+				}
+			)
 		)) as SpruceError
 
 		errorAssert.assertError(err, 'RECORD_NOT_FOUND', {

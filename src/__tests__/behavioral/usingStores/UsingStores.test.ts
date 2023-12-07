@@ -94,9 +94,13 @@ export default class UsingStoresTest extends AbstractStoreTest {
 	@test()
 	protected static async throwsWhenCantFindCreated() {
 		const id = this.db.generateId()
-		const err = (await assert.doesThrowAsync(
-			//@ts-ignore
-			() => this.dummyStore.updateOne({ id }, {})
+		const err = (await assert.doesThrowAsync(() =>
+			this.dummyStore.updateOne(
+				{ id },
+				{
+					requiredForUpdate: 'hey',
+				}
+			)
 		)) as SpruceError
 
 		errorAssert.assertError(err, 'RECORD_NOT_FOUND', {

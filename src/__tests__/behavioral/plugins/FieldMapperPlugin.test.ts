@@ -133,13 +133,32 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
 		await this.assertFindHonorsLimit(2)
 	}
 
+	@test()
+	protected static async canMapUpdates() {
+		const first = await this.createOneRandom()
+		const firstName = generateId()
+		const lastName = generateId()
+		await this.spyStore.updateOne(
+			{
+				id: first.id!,
+			},
+			{
+				firstName,
+				lastName,
+			}
+		)
+
+		await this.assertSearchByFieldMatches('firstName', firstName)
+		await this.assertSearchByFieldMatches('lastName', lastName)
+	}
+
 	private static async assertFindHonorsLimit(limit: number) {
 		const matches = await this.spyStore.find({}, { limit })
 		assert.isLength(matches, limit)
 	}
 
 	private static async createOneRandom() {
-		await this.createOne({
+		return await this.createOne({
 			firstName: generateId(),
 			lastName: generateId(),
 		})

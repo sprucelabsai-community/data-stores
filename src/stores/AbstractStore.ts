@@ -593,24 +593,25 @@ export default abstract class AbstractStore<
 	): Promise<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
-		const { ops, updates: initialUpdates } = this.pluckOperations(updates)
+		let { ops, updates: initialUpdates } = this.pluckOperations(updates)
 		let q = (await this.willFind?.({ ...query })) ?? query
-		let shouldUpdate = true
 
 		try {
 			const isScrambled = this.isScrambled(initialUpdates)
 
-			for (const plugin of this.plugins) {
-				const results = await plugin.willUpdateOne?.(q, initialUpdates)
-
-				if (results?.shouldUpdate === false) {
-					shouldUpdate = false
-				}
-
-				if (results?.query) {
-					q = results.query
-				}
+			if (!isScrambled) {
+				//@ts-ignore
+				validateSchemaValues(this.updateSchema, initialUpdates)
 			}
+
+			const {
+				query: qPlugins,
+				shouldUpdate,
+				updates: qUpdates,
+			} = await this.handleWillUpdateOnePlugins(q, initialUpdates)
+
+			q = qPlugins
+			initialUpdates = qUpdates
 
 			let current: any = await this._findOne(
 				q as any,
@@ -631,11 +632,6 @@ export default abstract class AbstractStore<
 						'Make sure your notFoundHandler returns a record or throws'
 					)
 				}
-			}
-
-			if (!isScrambled) {
-				//@ts-ignore
-				validateSchemaValues(this.updateSchema, initialUpdates)
 			}
 
 			if (!shouldUpdate) {
@@ -685,6 +681,32 @@ export default abstract class AbstractStore<
 			)
 			throw coded[0]
 		}
+	}
+
+	private async handleWillUpdateOnePlugins(
+		query: QueryBuilder<QueryRecord> | QueryBuilder<Partial<DatabaseRecord>>,
+		updates: Record<string, any>
+	) {
+		let shouldUpdate = true
+		let resolvedQuery = query
+		let resolvedUpdates = updates
+
+		for (const plugin of this.plugins) {
+			const results = await plugin.willUpdateOne?.(query, updates)
+
+			if (results?.shouldUpdate === false) {
+				shouldUpdate = false
+			}
+
+			if (results?.query) {
+				resolvedQuery = results.query
+			}
+
+			if (results?.newValues) {
+				resolvedUpdates = results.newValues
+			}
+		}
+		return { query: resolvedQuery, shouldUpdate, updates: resolvedUpdates }
 	}
 
 	private pluckOperations(updates: UpdateRecord): { ops: any; updates: any } {

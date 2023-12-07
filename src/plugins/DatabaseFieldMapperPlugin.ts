@@ -5,6 +5,7 @@ import {
 	DataStorePluginPrepareResponse,
 	DataStorePluginWillCreateOneResponse,
 	DataStorePluginWillFindResponse,
+	DataStorePluginWillUpdateOneResponse,
 } from '../types/stores.types'
 
 export default class DatabaseFieldMapperPlugin implements DataStorePlugin {
@@ -29,6 +30,16 @@ export default class DatabaseFieldMapperPlugin implements DataStorePlugin {
 	): Promise<void | DataStorePluginPrepareResponse> {
 		return {
 			newValues: this.mapper.mapFrom(record),
+		}
+	}
+
+	public async willUpdateOne(
+		query: Record<string, any>,
+		updates: Record<string, any>
+	): Promise<void | DataStorePluginWillUpdateOneResponse> {
+		return {
+			query: this.mapper.mapTo(query),
+			newValues: this.mapper.mapTo(updates),
 		}
 	}
 
