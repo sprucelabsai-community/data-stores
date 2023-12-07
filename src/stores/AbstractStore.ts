@@ -85,7 +85,7 @@ export default abstract class AbstractStore<
 		values: Partial<DatabaseRecord> & { _isScrambled: true }
 	): Promise<Partial<DatabaseRecord>>
 
-	protected willQuery?(
+	protected willFind?(
 		query: QueryBuilder<QueryRecord>
 	): Promise<QueryBuilder<Partial<DatabaseRecord>>>
 
@@ -422,19 +422,27 @@ export default abstract class AbstractStore<
 			shouldTriggerWillQuery: true,
 		}
 	) {
-		let mappedQuery = query
+		let resolvedQuery = query
+
 		const { shouldTriggerWillQuery } = internalOptions
 
 		if (shouldTriggerWillQuery) {
-			mappedQuery = ((await this.willQuery?.(query)) ??
+			resolvedQuery = ((await this.willFind?.(query)) ??
 				query) as QueryBuilder<QueryRecord>
 		}
 
+		const { query: q, options: o } = await this.handleWillFindPlugins(
+			resolvedQuery,
+			queryOptions
+		)
+		resolvedQuery = q
+		const resolvedOptions = o ?? queryOptions
+
 		const results = await this.db.find(
 			this.collectionName,
-			mappedQuery as any,
+			resolvedQuery as any,
 			{
-				...queryOptions,
+				...resolvedOptions,
 				includeFields: options?.includeFields,
 			}
 		)
@@ -453,6 +461,22 @@ export default abstract class AbstractStore<
 		}
 
 		return []
+	}
+
+	private async handleWillFindPlugins(
+		query: QueryBuilder<QueryRecord>,
+		queryOptions: Omit<QueryOptions, 'includeFields'> | undefined
+	) {
+		const plugin = this.plugins[0]
+
+		const { query: pluginQuery, options: pluginOptions } =
+			(await plugin?.willFind?.(query, queryOptions)) ?? {}
+
+		query = pluginQuery ?? query
+
+		const options = pluginOptions ?? queryOptions
+
+		return { options, query }
 	}
 
 	public async findBatch<
@@ -570,7 +594,7 @@ export default abstract class AbstractStore<
 		Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
 	> {
 		const { ops, updates: initialUpdates } = this.pluckOperations(updates)
-		let q = (await this.willQuery?.({ ...query })) ?? query
+		let q = (await this.willFind?.({ ...query })) ?? query
 		let shouldUpdate = true
 
 		try {
@@ -726,7 +750,7 @@ export default abstract class AbstractStore<
 	}
 
 	public async deleteOne(query: QueryBuilder<QueryRecord>): Promise<number> {
-		let q = (await this.willQuery?.({ ...query })) ?? {
+		let q = (await this.willFind?.({ ...query })) ?? {
 			...query,
 		}
 
@@ -741,7 +765,7 @@ export default abstract class AbstractStore<
 	}
 
 	public async delete(query: QueryBuilder<QueryRecord>): Promise<number> {
-		const q = (await this.willQuery?.({ ...query })) ?? { ...query }
+		const q = (await this.willFind?.({ ...query })) ?? { ...query }
 		return await this.db.delete(this.collectionName, q)
 	}
 }

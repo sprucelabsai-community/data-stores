@@ -6,6 +6,7 @@ import {
 } from '@sprucelabs/schema'
 import StoreFactory from '../factories/StoreFactory'
 import { Database } from './database.types'
+import { QueryOptions } from './query.types'
 
 export const saveOperations = [
 	'$push',
@@ -83,6 +84,10 @@ export interface DataStorePlugin {
 	prepareRecord?: (
 		record: Record<string, any>
 	) => Promise<void | DataStorePluginPrepareResponse>
+	willFind?: (
+		query: Record<string, any>,
+		options?: QueryOptions
+	) => Promise<void | DataStorePluginWillFindResponse>
 }
 
 export interface DataStorePluginPrepareResponse {
@@ -109,4 +114,9 @@ export interface DataStorePluginWillDeleteOneResponse {
 
 export interface DataStorePluginDidFindOneResponse {
 	valuesToMixinBeforeReturning?: Record<string, any>
+}
+
+export interface DataStorePluginWillFindResponse {
+	query?: Record<string, any>
+	options?: QueryOptions
 }

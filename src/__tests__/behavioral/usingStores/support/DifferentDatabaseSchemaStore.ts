@@ -52,7 +52,7 @@ export default class DifferentDatabaseSchemaStore extends AbstractStore<
 		return values as Partial<DatabaseUnit>
 	}
 
-	protected async willQuery(
+	protected async willFind(
 		query: QueryBuilder<Unit>
 	): Promise<Partial<DatabaseUnit>> {
 		return {

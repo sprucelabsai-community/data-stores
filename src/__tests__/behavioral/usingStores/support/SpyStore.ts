@@ -56,8 +56,16 @@ export default class SpyStore extends AbstractStore<SpyRecordSchema> {
 		this.plugins.push(plugin)
 	}
 
+	public clearPlugins() {
+		this.plugins = []
+	}
+
 	public setFullSchema(schema: Schema) {
 		this.fullSchema = schema as any
+	}
+
+	public setCreateSchema(schema: Schema) {
+		this.createSchema = schema as any
 	}
 
 	public setDatabaseSchema(schema: Schema) {
