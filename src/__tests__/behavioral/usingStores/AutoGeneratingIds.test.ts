@@ -34,7 +34,7 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
 	) {
 		const store = await this.stores.getStore(storeName)
 		const id = generateId()
-		this.disableAutoIdGeneration(store)
+		this.disableAutoIdGeneration(store as AbstractStore<Schema>)
 
 		//@ts-ignore
 		store.willCreate = async (values) => {
@@ -77,7 +77,7 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
 		})
 	}
 
-	private static disableAutoIdGeneration(store) {
+	private static disableAutoIdGeneration(store: AbstractStore<Schema>) {
 		const db = store.getDb()
 		db.getShouldAutoGenerateId = () => false
 		return db
