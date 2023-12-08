@@ -7,7 +7,6 @@ import SchemaEntity, {
 	SchemaPublicFieldNames,
 	SchemaValues,
 	validateSchemaValues,
-	dropFields,
 } from '@sprucelabs/schema'
 import { SCRAMBLE_VALUE } from '../constants'
 import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
@@ -288,19 +287,12 @@ export default abstract class AbstractStore<
 						cleanedValues[this.primaryFieldName] ?? this.db.generateId(),
 			  }
 
-		const fields = shouldAutoGenerateId
-			? undefined
-			: Object.keys(
-					dropFields(this.databaseSchema.fields ?? {}, this.primaryFieldNames)
-			  )
-
 		const toSave = normalizeSchemaValues(
 			this.databaseSchema,
 			//@ts-ignore
 			databaseRecord,
 			{
 				shouldCreateEntityInstances: false,
-				fields,
 			}
 		)
 		return toSave
