@@ -26,6 +26,34 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
 		)
 	}
 
+	@test('can pass own custom id 1', 'customPrimary', 'customId1')
+	@test('can pass own custom id 2', 'customPrimary2', 'anotherCustomId')
+	protected static async canPassOwnCustomId(
+		storeName: StoreName,
+		primaryFieldName: string
+	) {
+		const store = await this.stores.getStore(storeName)
+		const id = generateId()
+		this.disableAutoIdGeneration(store)
+
+		//@ts-ignore
+		store.willCreate = async (values) => {
+			return {
+				...values,
+				[primaryFieldName]: id,
+			}
+		}
+
+		//@ts-ignore
+		await store.createOne({
+			name: generateId(),
+		})
+
+		//@ts-ignore
+		const match = await store.findOne({ [primaryFieldName]: id })
+		assert.isTruthy(match)
+	}
+
 	private static async assertDoesNotGeneratePrimaryField(
 		storeName: StoreName,
 		fieldName: string
@@ -33,8 +61,9 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
 		const store = (await this.stores.getStore(
 			storeName
 		)) as AbstractStore<Schema>
-		const db = store.getDb()
-		db.getShouldAutoGenerateId = () => false
+		const db = this.disableAutoIdGeneration(store)
+
+		//@ts-ignore
 		db.createOne = async (_collectionName, values) => {
 			assert.isFalsy(values[fieldName])
 			return {
@@ -46,5 +75,11 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
 		await store.createOne({
 			name: generateId(),
 		})
+	}
+
+	private static disableAutoIdGeneration(store) {
+		const db = store.getDb()
+		db.getShouldAutoGenerateId = () => false
+		return db
 	}
 }

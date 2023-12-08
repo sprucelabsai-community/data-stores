@@ -7,6 +7,7 @@ import SchemaEntity, {
 	SchemaPublicFieldNames,
 	SchemaValues,
 	validateSchemaValues,
+	dropFields,
 } from '@sprucelabs/schema'
 import { SCRAMBLE_VALUE } from '../constants'
 import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
@@ -195,7 +196,7 @@ export default abstract class AbstractStore<
 			)
 
 			const toSave = cleanedValues.map((v) =>
-				this.normalizeBeforeSave(v as CreateRecord)
+				this.normalizeBeforeCreate(v as CreateRecord)
 			)
 
 			const records = await this.db.create(this.collectionName, toSave)
@@ -239,7 +240,7 @@ export default abstract class AbstractStore<
 
 			const newValues = nv as DatabaseRecord
 
-			const toSave = this.normalizeBeforeSave(newValues)
+			const toSave = this.normalizeBeforeCreate(newValues)
 
 			const record = await this.db.createOne(
 				this.collectionName,
@@ -275,7 +276,7 @@ export default abstract class AbstractStore<
 		}
 	}
 
-	private normalizeBeforeSave(cleanedValues: CreateRecord | DatabaseRecord) {
+	private normalizeBeforeCreate(cleanedValues: CreateRecord | DatabaseRecord) {
 		const shouldAutoGenerateId = this.db.getShouldAutoGenerateId?.()
 
 		const databaseRecord = !shouldAutoGenerateId
@@ -287,12 +288,23 @@ export default abstract class AbstractStore<
 						cleanedValues[this.primaryFieldName] ?? this.db.generateId(),
 			  }
 
+		const shouldExcludePrimaryKeyField =
+			//@ts-ignore
+			shouldAutoGenerateId || cleanedValues[this.primaryFieldName]
+
+		const fields = shouldExcludePrimaryKeyField
+			? undefined
+			: Object.keys(
+					dropFields(this.databaseSchema.fields ?? {}, this.primaryFieldNames)
+			  )
+
 		const toSave = normalizeSchemaValues(
 			this.databaseSchema,
 			//@ts-ignore
 			databaseRecord,
 			{
 				shouldCreateEntityInstances: false,
+				fields,
 			}
 		)
 		return toSave
