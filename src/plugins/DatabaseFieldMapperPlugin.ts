@@ -29,7 +29,7 @@ export default class DatabaseFieldMapperPlugin implements DataStorePlugin {
 		record: Record<string, any>
 	): Promise<void | DataStorePluginPrepareResponse> {
 		return {
-			newValues: this.mapper.mapFrom(record),
+			newValues: this.mapper.mapFrom(record, { shouldThrowOnUnmapped: false }),
 		}
 	}
 

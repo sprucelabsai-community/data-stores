@@ -153,6 +153,25 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
 		await this.assertSearchByFieldMatches('lastName', lastName)
 	}
 
+	@test()
+	protected static async databaseReturningMoreFieldsThanExpectedDoesntCrash() {
+		const expected = {
+			firstName: generateId(),
+			lastName: generateId(),
+		}
+
+		const extra = generateId()
+
+		this.db.createOne = async (_, values) => {
+			return {
+				...values,
+				extra,
+			}
+		}
+
+		await this.spyStore.createOne(expected)
+	}
+
 	private static async assertFindHonorsLimit(limit: number) {
 		const matches = await this.spyStore.find({}, { limit })
 		assert.isLength(matches, limit)
