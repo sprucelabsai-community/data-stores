@@ -147,7 +147,9 @@ export default abstract class AbstractStore<
 			fields: options.includeFields,
 			shouldIncludePrivateFields: options.shouldIncludePrivateFields === true,
 			shouldCreateEntityInstances: false as CreateEntityInstances,
-			shouldIncludeNullAndUndefinedFields: false,
+			shouldIncludeNullAndUndefinedFields: !(
+				options.shouldStripUndefinedAndNullValues ?? true
+			),
 		} as unknown as SchemaGetValuesOptions<
 			FullSchema,
 			SchemaFieldNames<FullSchema>,
@@ -459,7 +461,8 @@ export default abstract class AbstractStore<
 			const all = results.map((result) =>
 				this.prepareAndNormalizeRecord(result, {
 					...options,
-					shouldStripUndefinedAndNullValues: true,
+					shouldStripUndefinedAndNullValues:
+						options?.shouldStripUndefinedAndNullValues ?? true,
 				})
 			)
 

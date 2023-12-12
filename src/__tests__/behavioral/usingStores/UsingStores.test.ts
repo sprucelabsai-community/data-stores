@@ -783,6 +783,55 @@ export default class UsingStoresTest extends AbstractStoreTest {
 			arrayOfNumbers: [1, 2, 3],
 			id: dummy.id,
 		})
+
+		const all = await this.operationsStore.find({
+			id: dummy.id,
+		})
+
+		assert.isEqualDeep(all[0], {
+			arrayOfNumbers: [1, 2, 3],
+			id: dummy.id,
+		})
+	}
+
+	@test()
+	protected static async canDisableStrippingUndefinedAndNullValuesWhenLoading() {
+		const dummy = await this.operationsStore.createOne({
+			arrayOfNumbers: [1, 2, 3],
+		})
+
+		const match = await this.operationsStore.findOne(
+			{
+				id: dummy.id,
+			},
+			{
+				shouldStripUndefinedAndNullValues: false,
+			}
+		)
+
+		assert.isEqualDeep(match, {
+			arrayOfNumbers: [1, 2, 3],
+			id: dummy.id,
+			score: null,
+			arrayOfStrings: null,
+		})
+
+		const all = await this.operationsStore.find(
+			{
+				id: dummy.id,
+			},
+			{},
+			{
+				shouldStripUndefinedAndNullValues: false,
+			}
+		)
+
+		assert.isEqualDeep(all[0], {
+			arrayOfNumbers: [1, 2, 3],
+			id: dummy.id,
+			score: null,
+			arrayOfStrings: null,
+		})
 	}
 
 	private static async createRandomRecord() {
