@@ -288,7 +288,7 @@ export default abstract class AbstractStore<
 					[this.primaryFieldName]:
 						//@ts-ignore
 						cleanedValues[this.primaryFieldName] ?? this.db.generateId(),
-			  }
+				}
 
 		const shouldExcludePrimaryKeyField =
 			//@ts-ignore
@@ -298,7 +298,7 @@ export default abstract class AbstractStore<
 			? undefined
 			: Object.keys(
 					dropFields(this.databaseSchema.fields ?? {}, this.primaryFieldNames)
-			  )
+				)
 
 		const toSave = normalizeSchemaValues(
 			this.databaseSchema,
@@ -665,7 +665,7 @@ export default abstract class AbstractStore<
 						fields: Object.keys(
 							cleanedUpdates
 						) as SchemaFieldNames<DatabaseSchema>[],
-				  })
+					})
 
 			for (const { name, value } of ops) {
 				normalizedValues[name] = value

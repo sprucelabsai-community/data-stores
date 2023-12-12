@@ -22,7 +22,7 @@ const errorUtil = {
 								code: 'UNKNOWN_ERROR',
 								originalError: err,
 							}),
-				  ]
+					]
 
 		return fallback
 	},
