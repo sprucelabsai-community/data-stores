@@ -140,6 +140,10 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 				message = 'A Not implemented just happened!'
 				break
 
+			case 'QUERY_NOT_FAKED':
+				message = `The query '${options.query}' was not faked. Try this.stores.fakeQuery(...).`
+				break
+
 			default:
 				message = super.friendlyMessage()
 		}

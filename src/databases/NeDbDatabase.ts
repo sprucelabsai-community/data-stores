@@ -32,6 +32,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		[name: string]: Datastore
 	} = {}
 	private _isConnected = false
+	private fakedQueries: Record<string, FakeQueryHandler<any>> = {}
 
 	public generateId(): string {
 		return generateId()
@@ -663,9 +664,25 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		}
 	}
 
-	public async query<T>(): Promise<T> {
+	public async query<T>(
+		query: string,
+		params?: Record<string, any>
+	): Promise<T> {
+		const cb = this.fakedQueries[query]
+		if (cb) {
+			return cb(params)
+		}
 		throw new SpruceError({
-			code: 'NOT_IMPLEMENTED',
+			code: 'QUERY_NOT_FAKED',
+			query,
 		})
 	}
+
+	public fakeQuery<T>(query: string, cb: FakeQueryHandler<T>) {
+		this.fakedQueries[query] = cb
+	}
 }
+
+export type FakeQueryHandler<T> = (
+	params?: Record<string, any>
+) => Promise<T> | T

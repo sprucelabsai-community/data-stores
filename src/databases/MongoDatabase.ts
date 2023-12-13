@@ -650,6 +650,7 @@ export default class MongoDatabase implements Database {
 	public async query<T>(): Promise<T> {
 		throw new SpruceError({
 			code: 'NOT_IMPLEMENTED',
+			friendlyMessage: `You cannot run a query using mongodb. Try a different database adapter!`,
 		})
 	}
 }

@@ -522,7 +522,6 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 	}
 
 	@test('throws when trying raw query (mongo)', mongoConnect)
-	@test('throws when trying raw query (neDb)', neDbConnect)
 	protected static async cantRunRawQuery(connect: TestConnect) {
 		const { db } = await connect()
 		const err = await assert.doesThrowAsync(() =>

@@ -206,6 +206,42 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface QueryNotFaked {
+		
+			
+			'query': string
+			
+			'params'?: (Record<string, any>)| undefined | null
+	}
+
+	export interface QueryNotFakedSchema extends SpruceSchema.Schema {
+		id: 'queryNotFaked',
+		namespace: 'DataStores',
+		name: 'Query not faked',
+		    fields: {
+		            /** . */
+		            'query': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		            /** . */
+		            'params': {
+		                type: 'raw',
+		                options: {valueType: `Record<string, any>`,}
+		            },
+		    }
+	}
+
+	export type QueryNotFakedEntity = SchemaEntity<SpruceErrors.DataStores.QueryNotFakedSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface NotImplemented {
 		
 	}

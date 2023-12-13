@@ -19,6 +19,9 @@ export interface ScrambleNotConfiguredErrorOptions extends SpruceErrors.DataStor
 export interface RecordNotFoundErrorOptions extends SpruceErrors.DataStores.RecordNotFound, ISpruceErrorOptions {
 	code: 'RECORD_NOT_FOUND'
 }
+export interface QueryNotFakedErrorOptions extends SpruceErrors.DataStores.QueryNotFaked, ISpruceErrorOptions {
+	code: 'QUERY_NOT_FAKED'
+}
 export interface NotImplementedErrorOptions extends SpruceErrors.DataStores.NotImplemented, ISpruceErrorOptions {
 	code: 'NOT_IMPLEMENTED'
 }
@@ -62,6 +65,6 @@ export interface DatabaseNotConnectedErrorOptions extends SpruceErrors.DataStore
 	code: 'DATABASE_NOT_CONNECTED'
 }
 
-type ErrorOptions =  | UnknownStoreErrorErrorOptions  | UnknownErrorErrorOptions  | UnknownDatabaseErrorErrorOptions  | UnableToConnectToDbErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | NotImplementedErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | InvalidDbConnectionStringErrorOptions  | InvalidDatabaseNameErrorOptions  | InvalidConnectionStringSchemeErrorOptions  | IndexNotFoundErrorOptions  | IndexExistsErrorOptions  | FailedToLoadStoresErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DuplicateKeyErrorOptions  | DatabaseNotConnectedErrorOptions 
+type ErrorOptions =  | UnknownStoreErrorErrorOptions  | UnknownErrorErrorOptions  | UnknownDatabaseErrorErrorOptions  | UnableToConnectToDbErrorOptions  | ScrambleNotConfiguredErrorOptions  | RecordNotFoundErrorOptions  | QueryNotFakedErrorOptions  | NotImplementedErrorOptions  | MongoIdMappingErrorErrorOptions  | InvalidStoreNameErrorOptions  | InvalidStoreErrorOptions  | InvalidDbConnectionStringErrorOptions  | InvalidDatabaseNameErrorOptions  | InvalidConnectionStringSchemeErrorOptions  | IndexNotFoundErrorOptions  | IndexExistsErrorOptions  | FailedToLoadStoresErrorOptions  | FailedToLoadStoreErrorOptions  | DuplicateRecordErrorOptions  | DuplicateKeyErrorOptions  | DatabaseNotConnectedErrorOptions 
 
 export default ErrorOptions
