@@ -18,10 +18,7 @@ export default class DatabaseFactory {
 		this.Adapters[scheme] = Adapter
 	}
 
-	public static Database(options: {
-		dbName?: string
-		dbConnectionString: string
-	}): Database {
+	public static Database(options: DatabaseFactoryOptions): Database {
 		const { dbName, dbConnectionString } = options
 		let database
 
@@ -81,3 +78,8 @@ export type DatabaseConstructor = new (
 ) => Database
 
 type AdapterMap = Record<string, DatabaseConstructor>
+
+interface DatabaseFactoryOptions {
+	dbName?: string
+	dbConnectionString: string
+}

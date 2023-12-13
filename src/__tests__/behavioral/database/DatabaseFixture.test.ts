@@ -1,9 +1,10 @@
-import { test, assert } from '@sprucelabs/test-utils'
+import { test, assert, generateId, errorAssert } from '@sprucelabs/test-utils'
 import { MongoClient } from 'mongodb'
-import { MongoDatabase } from '../..'
-import DatabaseFactory from '../../factories/DatabaseFactory'
-import DatabaseFixture from '../../fixtures/DatabaseFixture'
-import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
+import MongoDatabase from '../../../databases/MongoDatabase'
+import NeDbDatabase, { FakeQueryHandler } from '../../../databases/NeDbDatabase'
+import DatabaseFactory from '../../../factories/DatabaseFactory'
+import DatabaseFixture from '../../../fixtures/DatabaseFixture'
+import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 
 require('dotenv').config()
 
@@ -80,5 +81,40 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 			dbConnectionString: process.env.TEST_DB_CONNECTION_STRING,
 			dbName: 'testing',
 		})
+	}
+
+	@test()
+	protected static async cantFakeUntilConnectedToDatabase() {
+		const fixture = new DatabaseFixture()
+		const err = assert.doesThrow(() =>
+			fixture.fakeQuery(generateId(), () => [])
+		)
+		errorAssert.assertError(err, 'DATABASE_NOT_CONNECTED', {
+			operationAttempted: 'fakeQuery',
+		})
+	}
+
+	protected static async canFakeAfterConnect() {
+		const fixture = new DatabaseFixture({
+			dbConnectionString: 'memory://',
+		})
+		const db = (await fixture.connectToDatabase()) as NeDbDatabase
+
+		let passedQuery: string | undefined
+		let passedCb: FakeQueryHandler<any> | undefined
+
+		db.fakeQuery = (query, cb) => {
+			passedQuery = query
+			passedCb = cb
+		}
+
+		const query = generateId()
+
+		const cb = () => []
+
+		fixture.fakeQuery(generateId(), cb)
+
+		assert.isEqual(passedQuery, query)
+		assert.isEqual(passedCb, cb)
 	}
 }

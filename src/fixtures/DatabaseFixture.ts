@@ -1,5 +1,7 @@
 import { SchemaError } from '@sprucelabs/schema'
 import { MONGO_TEST_URI } from '../databases/MongoDatabase'
+import NeDbDatabase, { FakeQueryHandler } from '../databases/NeDbDatabase'
+import SpruceError from '../errors/SpruceError'
 import DatabaseFactory from '../factories/DatabaseFactory'
 import { Database } from '../types/database.types'
 
@@ -61,6 +63,21 @@ export default class DatabaseFixture {
 
 		DatabaseFixture.activeDatabases.push(database)
 		return database
+	}
+
+	public fakeQuery<T>(query: string, cb: FakeQueryHandler<T>) {
+		const db = DatabaseFixture.activeDatabases[0] as NeDbDatabase | undefined
+
+		if (!db) {
+			throw new SpruceError({
+				code: 'DATABASE_NOT_CONNECTED',
+				operationAttempted: 'fakeQuery',
+				friendlyMessage:
+					"You can't fake a query until you connect to a database.",
+			})
+		}
+
+		db.fakeQuery(query, cb)
 	}
 
 	public static setDefaultConnectOptions(options: DatabaseFixtureOptions) {

@@ -152,7 +152,7 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 				message = super.friendlyMessage()
 		}
 
-		const fullMessage = message ?? options.friendlyMessage
+		const fullMessage = options.friendlyMessage ?? message
 
 		return fullMessage
 	}
