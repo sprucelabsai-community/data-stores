@@ -141,7 +141,11 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 				break
 
 			case 'QUERY_NOT_FAKED':
-				message = `The query '${options.query}' was not faked. Try this.stores.fakeQuery(...).`
+				message = `The query '${options.query}' was not faked. Try this.db.fakeQuery(...).`
+				break
+
+			case 'INVALID_FAKE_QUERY_RESPONSE':
+				message = `The query '${options.query}' was faked but the response was not an array. Make sure this.db.fakeQuery('${options.query}', () => []) returns an array.`
 				break
 
 			default:

@@ -343,6 +343,43 @@ export declare namespace SpruceErrors.DataStores {
 export declare namespace SpruceErrors.DataStores {
 
 	
+	export interface InvalidFakeQueryResponse {
+		
+			
+			'query': string
+			
+			'response': (any)
+	}
+
+	export interface InvalidFakeQueryResponseSchema extends SpruceSchema.Schema {
+		id: 'invalidFakeQueryResponse',
+		namespace: 'DataStores',
+		name: 'Invalid fake query response',
+		    fields: {
+		            /** . */
+		            'query': {
+		                type: 'text',
+		                isRequired: true,
+		                options: undefined
+		            },
+		            /** . */
+		            'response': {
+		                type: 'raw',
+		                isRequired: true,
+		                options: {valueType: `any`,}
+		            },
+		    }
+	}
+
+	export type InvalidFakeQueryResponseEntity = SchemaEntity<SpruceErrors.DataStores.InvalidFakeQueryResponseSchema>
+
+}
+
+
+
+export declare namespace SpruceErrors.DataStores {
+
+	
 	export interface InvalidDbConnectionString {
 		
 	}

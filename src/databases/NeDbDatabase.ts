@@ -664,18 +664,29 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		}
 	}
 
-	public async query<T>(
-		query: string,
-		params?: Record<string, any>
-	): Promise<T> {
+	public async query<T>(query: string, params?: any[]): Promise<T[]> {
 		const cb = this.fakedQueries[query]
 		if (cb) {
-			return cb(params)
+			const results = await cb(params)
+			this.assertValidFakedQueryResponse(results, query)
+
+			return results
 		}
+
 		throw new SpruceError({
 			code: 'QUERY_NOT_FAKED',
 			query,
 		})
+	}
+
+	private assertValidFakedQueryResponse(results: any[], query: string) {
+		if (!Array.isArray(results)) {
+			throw new SpruceError({
+				code: 'INVALID_FAKE_QUERY_RESPONSE',
+				query,
+				response: results,
+			})
+		}
 	}
 
 	public fakeQuery<T>(query: string, cb: FakeQueryHandler<T>) {
@@ -685,4 +696,4 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
 export type FakeQueryHandler<T> = (
 	params?: Record<string, any>
-) => Promise<T> | T
+) => Promise<T[]> | T[]

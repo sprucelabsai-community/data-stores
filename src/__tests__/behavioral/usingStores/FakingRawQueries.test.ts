@@ -16,9 +16,25 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
 		await this.assertThrowsQueryNotFaked(query)
 	}
 
-	@test('can fake query 1', { hello: 'world' })
-	@test('can fake query 2', { goodbye: 'taco' })
-	protected static async canFakeQuery(expected: Record<string, any>) {
+	@test('throws if does not return array 1', { hello: 'world' })
+	@test('throws if does not return array 2', { goodbye: 'taco' })
+	protected static async throwsIfFakeDoesNotReturnArray(
+		response: Record<string, any>
+	) {
+		const query = generateId()
+
+		this.fakeQuery(query, () => response as any)
+
+		const err = await assert.doesThrowAsync(() => this.query(query))
+		errorAssert.assertError(err, 'INVALID_FAKE_QUERY_RESPONSE', {
+			query,
+			response,
+		})
+	}
+
+	@test('can fake query 1', [{ hello: 'world' }])
+	@test('can fake query 2', [{ goodbye: 'taco' }])
+	protected static async canFakeQuery(expected: Record<string, any>[]) {
 		const query = generateId()
 
 		const cb = async () => {
@@ -43,13 +59,14 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
 		await this.query('select * from cars')
 	}
 
-	@test('passes through params 1', { hello: 'world' })
-	@test('passes through params 2', { goodbye: 'taco' })
-	protected static async passesThroughParams(expected: Record<string, any>) {
+	@test('passes through params 1', ['hello'])
+	@test('passes through params 2', ['world'])
+	protected static async passesThroughParams(expected: any[]) {
 		const query = generateId()
 
 		this.fakeQuery(query, (params) => {
 			assert.isEqualDeep(params, expected)
+			return []
 		})
 
 		await this.query(query, expected)
@@ -64,7 +81,7 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
 		errorAssert.assertError(err, 'QUERY_NOT_FAKED', { query })
 	}
 
-	private static query(query: string, params?: Record<string, any>) {
+	private static query(query: string, params?: any[]) {
 		return this.db.query(query, params)
 	}
 }
