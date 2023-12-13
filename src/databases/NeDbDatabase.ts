@@ -694,6 +694,4 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 	}
 }
 
-export type FakeQueryHandler<T> = (
-	params?: Record<string, any>
-) => Promise<T[]> | T[]
+export type FakeQueryHandler<T> = (params?: any[]) => Promise<T[]> | T[]
