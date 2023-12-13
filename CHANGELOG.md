@@ -1,3 +1,10 @@
+# [26.3.0](https://github.com/sprucelabsai-community/data-stores/compare/v26.2.9...v26.3.0) (2023-12-13)
+
+
+### Features
+
+* can fake queries ([fe23125](https://github.com/sprucelabsai-community/data-stores/commit/fe23125))
+
 ## [26.2.9](https://github.com/sprucelabsai-community/data-stores/compare/v26.2.8...v26.2.9) (2023-12-12)
 
 ## [26.2.8](https://github.com/sprucelabsai-community/data-stores/compare/v26.2.7...v26.2.8) (2023-12-08)
