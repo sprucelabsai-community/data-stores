@@ -19,7 +19,7 @@ export default class DatabaseFixture {
 	private static defaultOptions?: DatabaseFixtureOptions
 
 	public constructor(options?: DatabaseFixtureOptions) {
-		const { dbConnectionString = MEMORY, dbName } = {
+		const { dbConnectionString = MEMORY, dbName = 'memory' } = {
 			...DatabaseFixture.defaultOptions,
 			...options,
 		}

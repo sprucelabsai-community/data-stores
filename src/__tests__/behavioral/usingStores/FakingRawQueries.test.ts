@@ -72,6 +72,12 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
 		await this.query(query, expected)
 	}
 
+	@test()
+	protected static async inMemoryDatabaseNameDefaultsToMemory() {
+		const { dbFixture } = await this.DatabaseConnection()
+		assert.isEqual(dbFixture.getDbName(), 'memory')
+	}
+
 	private static fakeQuery<T>(query: string, cb: FakeQueryHandler<T>) {
 		this.db.fakeQuery(query, cb)
 	}

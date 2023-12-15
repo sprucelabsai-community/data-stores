@@ -35,13 +35,18 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
 
 	protected static async connectToDatabase() {
 		if (!this.db) {
-			const dbFixture = await this.DatabaseFixture()
-			const db = await dbFixture.connectToDatabase()
+			const { dbFixture, db } = await this.DatabaseConnection()
 
 			this.DB_NAME = this.shouldUseInMemoryDatabase ? '' : dbFixture.getDbName()
 			this.db = db
 		}
 
 		return this.db
+	}
+
+	protected static async DatabaseConnection() {
+		const dbFixture = await this.DatabaseFixture()
+		const db = await dbFixture.connectToDatabase()
+		return { dbFixture, db }
 	}
 }

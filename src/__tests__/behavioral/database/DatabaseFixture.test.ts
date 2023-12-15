@@ -89,6 +89,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
 		const err = assert.doesThrow(() =>
 			fixture.fakeQuery(generateId(), () => [])
 		)
+
 		errorAssert.assertError(err, 'DATABASE_NOT_CONNECTED', {
 			operationAttempted: 'fakeQuery',
 		})
