@@ -1,3 +1,10 @@
+# [26.4.0](https://github.com/sprucelabsai-community/data-stores/compare/v26.3.10...v26.4.0) (2023-12-17)
+
+
+### Features
+
+* faking queries is now agnostic to spaces, tabs, and newlines ([d082cd2](https://github.com/sprucelabsai-community/data-stores/commit/d082cd2))
+
 ## [26.3.10](https://github.com/sprucelabsai-community/data-stores/compare/v26.3.9...v26.3.10) (2023-12-16)
 
 ## [26.3.9](https://github.com/sprucelabsai-community/data-stores/compare/v26.3.8...v26.3.9) (2023-12-16)
