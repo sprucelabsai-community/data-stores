@@ -73,9 +73,37 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
 	}
 
 	@test()
-	protected static async inMemoryDatabaseNameDefaultsToMemory() {
+	protected static async inMemoryDatabaseNameDefaultsToMemoryDatabaseName() {
 		const { dbFixture } = await this.DatabaseConnection()
 		assert.isEqual(dbFixture.getDbName(), 'memory')
+	}
+
+	@test(
+		'faking does not consider case',
+		'select * from people',
+		'SELECT * FROM people'
+	)
+	@test(
+		'faking does not consider whitespace',
+		'select * from people',
+		'select*from people'
+	)
+	@test(
+		'faking does not consider newlines',
+		'select * from people',
+		'select\n*\nfrom\npeople'
+	)
+	@test(
+		'faking does not consider tabs',
+		'select * from people',
+		'select\t*\tfrom\tpeople'
+	)
+	protected static async fakingDoesNotConsiderCaseNorNewlines(
+		faked: string,
+		query: string
+	) {
+		this.fakeQuery(faked, () => [])
+		await this.query(query)
 	}
 
 	private static fakeQuery<T>(query: string, cb: FakeQueryHandler<T>) {
