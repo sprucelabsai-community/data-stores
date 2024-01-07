@@ -1,4 +1,4 @@
-import { assert, errorAssert, test } from '@sprucelabs/test-utils'
+import { assert, errorAssert, generateId, test } from '@sprucelabs/test-utils'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import databaseAssertUtil from '../../../tests/databaseAssertUtil'
 import { TestConnect } from '../../../types/database.types'
@@ -529,6 +529,17 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 		)
 
 		errorAssert.assertError(err, 'NOT_IMPLEMENTED')
+	}
+
+	@test()
+	protected static async neDbCanSaveIdFieldAsNumber() {
+		const { db } = await neDbConnect()
+		const created = await db.createOne(generateId(), {
+			id: 1,
+			firstName: 'test',
+		})
+
+		assert.isEqual(created.id, 1)
 	}
 }
 

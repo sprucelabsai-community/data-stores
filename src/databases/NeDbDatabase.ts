@@ -59,8 +59,17 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 		return this.valuesToDocument(this.toMongoId(query))
 	}
 
-	private valuesToDocument(values: Record<string, any>) {
-		const withId = this.toMongoId(values)
+	private valuesToDocument(
+		values: Record<string, any>,
+		firstPrimaryFieldName?: string
+	) {
+		const withId =
+			typeof values.id === 'number' ? values : this.toMongoId(values)
+
+		if (firstPrimaryFieldName === 'id') {
+			withId._id = withId.id
+			delete withId.id
+		}
 
 		const nullsToPlaceholder: Record<string, any> = this.handlePlaceholders(
 			withId,

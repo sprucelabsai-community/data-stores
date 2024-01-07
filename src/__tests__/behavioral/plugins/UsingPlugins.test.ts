@@ -46,7 +46,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		const expected = {
 			hello: 'worlds',
 		}
-		this.plugin.setNewValuesWillCreateOne(expected)
+		this.setNewValuesWillCreateOne(expected)
 		const plugin = this.addNewPlugin()
 		await this.createOne()
 		plugin.assertWillCreateOneParameters(expected)
@@ -58,7 +58,17 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 			test: generateId(),
 			world: generateId(),
 		}
-		this.plugin.setValuesToMixinBeforeCreate(values)
+		this.setValuesToMixinBeforeCreate(values)
+		await this.createOne()
+		await this.assertFirstSaveIncludes(values)
+	}
+
+	@test.only()
+	protected static async canOverrideFirstPrimaryKeyWithNumber() {
+		const values = {
+			id: 1,
+		}
+		this.setValuesToMixinBeforeCreate(values)
 		await this.createOne()
 		await this.assertFirstSaveIncludes(values)
 	}
@@ -340,6 +350,10 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 		return await this.spyStore.updateOne(query as any, updates)
 	}
 
+	private static setNewValuesWillCreateOne(expected: { hello: string }) {
+		this.plugin.setNewValuesWillCreateOne(expected)
+	}
+
 	private static async randomlyUpdateOne() {
 		const { created } = await this.createOne()
 		const updates = this.generateRandomSpyValues()
@@ -350,6 +364,10 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 
 		await this.updateOne(query, updates)
 		return { query, updates }
+	}
+
+	private static setValuesToMixinBeforeCreate(values: Record<string, any>) {
+		this.plugin.setValuesToMixinBeforeCreate(values)
 	}
 
 	private static async createOne(v?: Partial<SpyRecord>) {
