@@ -2332,9 +2332,8 @@ type BitwiseQuery =
 // string types can be searched using a regex in mongo
 // array types can be searched using their element type
 type RegExpForString<T> = T extends string ? RegExp | T : T
-type MongoAltQuery<T> = T extends ReadonlyArray<infer U>
-	? T | RegExpForString<U>
-	: RegExpForString<T>
+type MongoAltQuery<T> =
+	T extends ReadonlyArray<infer U> ? T | RegExpForString<U> : RegExpForString<T>
 
 /**
  * Available query selector types
