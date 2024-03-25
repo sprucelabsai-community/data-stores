@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@sprucelabs/error": "^5.1.82",
-    "@sprucelabs/globby": "^1.0.21",
+    "@sprucelabs/globby": "^1.0.22",
     "@sprucelabs/schema": "^29.4.31",
     "@sprucelabs/spruce-skill-utils": "^30.3.27",
     "just-clone": "^6.2.0",
