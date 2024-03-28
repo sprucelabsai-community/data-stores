@@ -39,11 +39,12 @@ node_modules/
 # Rejected "git apply" patch files
 *.rej
 
-build/
+/build/
 esm/
 
 tmp/
 
 yarn.lock
 package-lock.json
-.ssh
+
+**/.spruce/*cache.json
