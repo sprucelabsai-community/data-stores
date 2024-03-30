@@ -1,3 +1,5 @@
+## [26.4.74](https://github.com/sprucelabsai-community/data-stores/compare/v26.4.73...v26.4.74) (2024-03-30)
+
 ## [26.4.73](https://github.com/sprucelabsai-community/data-stores/compare/v26.4.72...v26.4.73) (2024-03-29)
 
 ## [26.4.72](https://github.com/sprucelabsai-community/data-stores/compare/v26.4.71...v26.4.72) (2024-03-29)
