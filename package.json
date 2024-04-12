@@ -83,11 +83,11 @@
     "@sprucelabs/jest-sheets-reporter": "^3.0.26",
     "@sprucelabs/resolve-path-aliases": "^1.1.304",
     "@sprucelabs/semantic-release": "^4.0.8",
-    "@sprucelabs/test": "^8.0.50",
+    "@sprucelabs/test": "^8.0.51",
     "@sprucelabs/test-utils": "^4.0.157",
     "@types/lodash": "^4.17.0",
     "@types/nedb": "^1.8.16",
-    "@types/node": "^20.12.4",
+    "@types/node": "^20.12.7",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
@@ -99,7 +99,7 @@
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=12",
