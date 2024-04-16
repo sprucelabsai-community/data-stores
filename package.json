@@ -120,17 +120,6 @@
     ],
     "moduleNameMapper": {
       "^#spruce/(.*)$": "<rootDir>/build/.spruce/$1"
-    },
-    "reporters": [
-      "default",
-      [
-        "@sprucelabs/jest-sheets-reporter",
-        {
-          "sheetId": "1DoWM7mYgGDa-PJXptLomrZmbIBZiuxS1YiAsRXU2Gm0",
-          "worksheetId": 843037832,
-          "testMap": {}
-        }
-      ]
-    ]
+    }
   }
 }
