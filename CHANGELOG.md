@@ -1,3 +1,10 @@
+# [27.0.0](https://github.com/sprucelabsai-community/data-stores/compare/v26.4.89...v27.0.0) (2024-04-16)
+
+
+### Breaking Changes
+
+* upgrade ([0a12861](https://github.com/sprucelabsai-community/data-stores/commit/0a12861))
+
 ## [26.4.89](https://github.com/sprucelabsai-community/data-stores/compare/v26.4.88...v26.4.89) (2024-04-05)
 
 ## [26.4.88](https://github.com/sprucelabsai-community/data-stores/compare/v26.4.87...v26.4.88) (2024-04-04)
