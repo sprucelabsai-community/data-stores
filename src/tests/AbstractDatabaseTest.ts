@@ -1,52 +1,54 @@
 import { SchemaRegistry } from '@sprucelabs/schema'
 import AbstractSpruceTest from '@sprucelabs/test-utils'
 import DatabaseFixture, {
-	DatabaseFixtureOptions,
+    DatabaseFixtureOptions,
 } from '../fixtures/DatabaseFixture'
 import { Database } from '../types/database.types'
 
 export default class AbstractDatabaseTest extends AbstractSpruceTest {
-	protected static db: Database
-	protected static shouldUseInMemoryDatabase = true
-	protected static DB_NAME: string
+    protected static db: Database
+    protected static shouldUseInMemoryDatabase = true
+    protected static DB_NAME: string
 
-	protected static async beforeEach() {
-		await super.beforeEach()
-		SchemaRegistry.getInstance().forgetAllSchemas()
-	}
+    protected static async beforeEach() {
+        await super.beforeEach()
+        SchemaRegistry.getInstance().forgetAllSchemas()
+    }
 
-	protected static async afterEach() {
-		await super.afterEach()
-		await DatabaseFixture.destroy()
+    protected static async afterEach() {
+        await super.afterEach()
+        await DatabaseFixture.destroy()
 
-		//@ts-ignore
-		this.db = undefined
-		//@ts-ignore
-		this.DB_NAME = undefined
-	}
+        //@ts-ignore
+        this.db = undefined
+        //@ts-ignore
+        this.DB_NAME = undefined
+    }
 
-	protected static async DatabaseFixture(options?: DatabaseFixtureOptions) {
-		const d = new DatabaseFixture({
-			...options,
-		})
+    protected static async DatabaseFixture(options?: DatabaseFixtureOptions) {
+        const d = new DatabaseFixture({
+            ...options,
+        })
 
-		return d
-	}
+        return d
+    }
 
-	protected static async connectToDatabase() {
-		if (!this.db) {
-			const { dbFixture, db } = await this.DatabaseConnection()
+    protected static async connectToDatabase() {
+        if (!this.db) {
+            const { dbFixture, db } = await this.DatabaseConnection()
 
-			this.DB_NAME = this.shouldUseInMemoryDatabase ? '' : dbFixture.getDbName()
-			this.db = db
-		}
+            this.DB_NAME = this.shouldUseInMemoryDatabase
+                ? ''
+                : dbFixture.getDbName()
+            this.db = db
+        }
 
-		return this.db
-	}
+        return this.db
+    }
 
-	protected static async DatabaseConnection() {
-		const dbFixture = await this.DatabaseFixture()
-		const db = await dbFixture.connectToDatabase()
-		return { dbFixture, db }
-	}
+    protected static async DatabaseConnection() {
+        const dbFixture = await this.DatabaseFixture()
+        const db = await dbFixture.connectToDatabase()
+        return { dbFixture, db }
+    }
 }

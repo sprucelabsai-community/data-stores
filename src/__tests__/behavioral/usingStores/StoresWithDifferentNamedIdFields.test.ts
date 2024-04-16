@@ -5,116 +5,116 @@ import CustomPrimaryStore2 from './support/CustomPrimaryStore2'
 import CustomPrimaryStoreWithFieldNamedId from './support/CustomPrimaryWithFieldNamedId'
 
 export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreTest {
-	private static customPrimaryStoreWithFieldNamedId: CustomPrimaryStoreWithFieldNamedId
-	private static customPrimaryStore: CustomPrimaryStore
-	private static customPrimaryStore2: CustomPrimaryStore2
+    private static customPrimaryStoreWithFieldNamedId: CustomPrimaryStoreWithFieldNamedId
+    private static customPrimaryStore: CustomPrimaryStore
+    private static customPrimaryStore2: CustomPrimaryStore2
 
-	protected static async beforeEach(): Promise<void> {
-		await super.beforeEach()
-		this.stores.setStoreClass('customPrimary', CustomPrimaryStore)
-		this.stores.setStoreClass('customPrimary2', CustomPrimaryStore2)
-		this.stores.setStoreClass(
-			'customPrimaryWithFieldNamedId',
-			CustomPrimaryStoreWithFieldNamedId
-		)
+    protected static async beforeEach(): Promise<void> {
+        await super.beforeEach()
+        this.stores.setStoreClass('customPrimary', CustomPrimaryStore)
+        this.stores.setStoreClass('customPrimary2', CustomPrimaryStore2)
+        this.stores.setStoreClass(
+            'customPrimaryWithFieldNamedId',
+            CustomPrimaryStoreWithFieldNamedId
+        )
 
-		this.customPrimaryStore = await this.stores.getStore('customPrimary')
-		this.customPrimaryStore2 = await this.stores.getStore('customPrimary2')
-		this.customPrimaryStoreWithFieldNamedId = await this.stores.getStore(
-			'customPrimaryWithFieldNamedId'
-		)
-	}
+        this.customPrimaryStore = await this.stores.getStore('customPrimary')
+        this.customPrimaryStore2 = await this.stores.getStore('customPrimary2')
+        this.customPrimaryStoreWithFieldNamedId = await this.stores.getStore(
+            'customPrimaryWithFieldNamedId'
+        )
+    }
 
-	@test()
-	protected static async canSaveRecordWithDifferentId1() {
-		const created = await this.createOne()
-		assert.isTruthy(created.customId1)
-		//@ts-ignore
-		assert.isFalsy(created.id)
-	}
+    @test()
+    protected static async canSaveRecordWithDifferentId1() {
+        const created = await this.createOne()
+        assert.isTruthy(created.customId1)
+        //@ts-ignore
+        assert.isFalsy(created.id)
+    }
 
-	@test()
-	protected static async canUpdateRecordWithDifferentId1() {
-		const created = await this.createOne()
-		const updated = await this.customPrimaryStore.updateOne(
-			{
-				customId1: created.customId1,
-			},
-			{
-				name: generateId(),
-			}
-		)
+    @test()
+    protected static async canUpdateRecordWithDifferentId1() {
+        const created = await this.createOne()
+        const updated = await this.customPrimaryStore.updateOne(
+            {
+                customId1: created.customId1,
+            },
+            {
+                name: generateId(),
+            }
+        )
 
-		//@ts-ignore
-		assert.isFalsy(updated.id)
-	}
+        //@ts-ignore
+        assert.isFalsy(updated.id)
+    }
 
-	@test()
-	protected static async canCreateManyWithCustomId() {
-		await this.customPrimaryStore.create([
-			this.generateValues(),
-			this.generateValues(),
-		])
-	}
+    @test()
+    protected static async canCreateManyWithCustomId() {
+        await this.customPrimaryStore.create([
+            this.generateValues(),
+            this.generateValues(),
+        ])
+    }
 
-	@test()
-	protected static async canUpsertWithCustomId() {
-		const created = await this.createOne()
-		const upserted = await this.customPrimaryStore.upsertOne(
-			{
-				customId1: created.customId1,
-			},
-			{
-				name: generateId(),
-			}
-		)
-		assert.isTruthy(upserted.customId1)
-		assert.isEqual(upserted.customId1, created.customId1)
-	}
+    @test()
+    protected static async canUpsertWithCustomId() {
+        const created = await this.createOne()
+        const upserted = await this.customPrimaryStore.upsertOne(
+            {
+                customId1: created.customId1,
+            },
+            {
+                name: generateId(),
+            }
+        )
+        assert.isTruthy(upserted.customId1)
+        assert.isEqual(upserted.customId1, created.customId1)
+    }
 
-	@test()
-	protected static async canSaveRecordWithDifferentId2() {
-		const created = await this.customPrimaryStore2.createOne(
-			this.generateValues()
-		)
+    @test()
+    protected static async canSaveRecordWithDifferentId2() {
+        const created = await this.customPrimaryStore2.createOne(
+            this.generateValues()
+        )
 
-		assert.isTruthy(created.anotherCustomId)
-		//@ts-ignore
-		assert.isFalsy(created.id)
-	}
+        assert.isTruthy(created.anotherCustomId)
+        //@ts-ignore
+        assert.isFalsy(created.id)
+    }
 
-	@test()
-	protected static async canSaveWithDifferentIdEvenIfHasFieldNamedId() {
-		const created = await this.customPrimaryStoreWithFieldNamedId.createOne(
-			this.generateValues()
-		)
+    @test()
+    protected static async canSaveWithDifferentIdEvenIfHasFieldNamedId() {
+        const created = await this.customPrimaryStoreWithFieldNamedId.createOne(
+            this.generateValues()
+        )
 
-		assert.isFalsy(created.id)
-	}
+        assert.isFalsy(created.id)
+    }
 
-	@test()
-	protected static async passesPrimaryKeysToFind() {
-		this.customPrimaryStore.getDb().find = async (
-			_collectionName: string,
-			_query: Record<string, any>,
-			_options: any,
-			dbOptions: any
-		) => {
-			assert.isTruthy(dbOptions)
-			assert.isEqualDeep(dbOptions.primaryFieldNames, ['customId1'])
-			return []
-		}
+    @test()
+    protected static async passesPrimaryKeysToFind() {
+        this.customPrimaryStore.getDb().find = async (
+            _collectionName: string,
+            _query: Record<string, any>,
+            _options: any,
+            dbOptions: any
+        ) => {
+            assert.isTruthy(dbOptions)
+            assert.isEqualDeep(dbOptions.primaryFieldNames, ['customId1'])
+            return []
+        }
 
-		await this.customPrimaryStore.find({})
-	}
+        await this.customPrimaryStore.find({})
+    }
 
-	private static async createOne() {
-		return await this.customPrimaryStore.createOne(this.generateValues())
-	}
+    private static async createOne() {
+        return await this.customPrimaryStore.createOne(this.generateValues())
+    }
 
-	private static generateValues() {
-		return {
-			name: generateId(),
-		}
-	}
+    private static generateValues() {
+        return {
+            name: generateId(),
+        }
+    }
 }

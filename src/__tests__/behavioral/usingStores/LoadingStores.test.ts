@@ -6,186 +6,186 @@ import DatabaseFixture from '../../../fixtures/DatabaseFixture'
 import StoreLoader from '../../../loaders/StoreLoader'
 
 export default class LoadingStoresTest extends AbstractSpruceTest {
-	@test()
-	protected static async canCreateLoadingStores() {
-		const loadingStores = await LoadingStoresTest.Loader()
-		assert.isTruthy(loadingStores)
-	}
+    @test()
+    protected static async canCreateLoadingStores() {
+        const loadingStores = await LoadingStoresTest.Loader()
+        assert.isTruthy(loadingStores)
+    }
 
-	@test()
-	protected static async loadsNoStoresWithDirWithNoStores() {
-		const loader = await this.Loader(diskUtil.createRandomTempDir())
-		const factory = await loader.loadStores()
-		assert.isTrue(factory instanceof StoreFactory)
-		assert.isLength(factory.getStoreNames(), 0)
-	}
+    @test()
+    protected static async loadsNoStoresWithDirWithNoStores() {
+        const loader = await this.Loader(diskUtil.createRandomTempDir())
+        const factory = await loader.loadStores()
+        assert.isTrue(factory instanceof StoreFactory)
+        assert.isLength(factory.getStoreNames(), 0)
+    }
 
-	@test('loads good stores without trailing slash', '')
-	@test('loads good stores with trailing slash', '/')
-	protected static async loadsStoresWithGoodDir(pathSuffix = '') {
-		this.setCwd(pathSuffix)
+    @test('loads good stores without trailing slash', '')
+    @test('loads good stores with trailing slash', '/')
+    protected static async loadsStoresWithGoodDir(pathSuffix = '') {
+        this.setCwd(pathSuffix)
 
-		const loader = await this.loaderWithCwd()
-		const factory = await loader.loadStores()
+        const loader = await this.loaderWithCwd()
+        const factory = await loader.loadStores()
 
-		assert.isLength(factory.getStoreNames(), 1)
-		assert.isEqualDeep(factory.getStoreNames(), ['good'])
-	}
+        assert.isLength(factory.getStoreNames(), 1)
+        assert.isEqualDeep(factory.getStoreNames(), ['good'])
+    }
 
-	@test()
-	protected static async loadsSameStoreWithAndWithoutTrailingSlash() {
-		const fixture = new DatabaseFixture()
-		const db = await fixture.connectToDatabase()
+    @test()
+    protected static async loadsSameStoreWithAndWithoutTrailingSlash() {
+        const fixture = new DatabaseFixture()
+        const db = await fixture.connectToDatabase()
 
-		this.setCwd('')
+        this.setCwd('')
 
-		const loader1 = await StoreLoader.getInstance(
-			this.resolvePath(this.cwd),
-			db
-		)
+        const loader1 = await StoreLoader.getInstance(
+            this.resolvePath(this.cwd),
+            db
+        )
 
-		const loader2 = await StoreLoader.getInstance(
-			this.resolvePath(this.cwd) + '/',
-			db
-		)
+        const loader2 = await StoreLoader.getInstance(
+            this.resolvePath(this.cwd) + '/',
+            db
+        )
 
-		assert.isEqual(loader1, loader2)
-	}
+        assert.isEqual(loader1, loader2)
+    }
 
-	@test()
-	protected static async throwsWithBadStore() {
-		this.setCwd(undefined, 'bad')
+    @test()
+    protected static async throwsWithBadStore() {
+        this.setCwd(undefined, 'bad')
 
-		const loader = await this.Loader(this.resolvePath(this.cwd))
-		const err = await assert.doesThrowAsync(() => loader.loadStores())
+        const loader = await this.Loader(this.resolvePath(this.cwd))
+        const err = await assert.doesThrowAsync(() => loader.loadStores())
 
-		errorAssert.assertError(err, 'FAILED_TO_LOAD_STORES')
-		//@ts-ignore
-		assert.isLength(err.options.errors, 1)
-	}
+        errorAssert.assertError(err, 'FAILED_TO_LOAD_STORES')
+        //@ts-ignore
+        assert.isLength(err.options.errors, 1)
+    }
 
-	@test()
-	protected static async canGetSharedInstance() {
-		const fixture = new DatabaseFixture()
-		const db = await fixture.connectToDatabase()
+    @test()
+    protected static async canGetSharedInstance() {
+        const fixture = new DatabaseFixture()
+        const db = await fixture.connectToDatabase()
 
-		const loader = await StoreLoader.getInstance(this.cwd, db)
-		//@ts-ignore
-		loader._monkeyPatched = true
+        const loader = await StoreLoader.getInstance(this.cwd, db)
+        //@ts-ignore
+        loader._monkeyPatched = true
 
-		const loader2 = await StoreLoader.getInstance(this.cwd, db)
-		//@ts-ignore
-		assert.isTrue(loader2._monkeyPatched)
-	}
+        const loader2 = await StoreLoader.getInstance(this.cwd, db)
+        //@ts-ignore
+        assert.isTrue(loader2._monkeyPatched)
+    }
 
-	@test()
-	protected static async getsNewInstanceWithDifferentCwd() {
-		const fixture = new DatabaseFixture()
-		const db = await fixture.connectToDatabase()
+    @test()
+    protected static async getsNewInstanceWithDifferentCwd() {
+        const fixture = new DatabaseFixture()
+        const db = await fixture.connectToDatabase()
 
-		const loader = await StoreLoader.getInstance(this.cwd, db)
-		//@ts-ignore
-		loader._monkeyPatched = true
+        const loader = await StoreLoader.getInstance(this.cwd, db)
+        //@ts-ignore
+        loader._monkeyPatched = true
 
-		const loader2 = await StoreLoader.getInstance(this.cwd + '/testing', db)
-		//@ts-ignore
-		assert.isUndefined(loader2._monkeyPatched)
-	}
+        const loader2 = await StoreLoader.getInstance(this.cwd + '/testing', db)
+        //@ts-ignore
+        assert.isUndefined(loader2._monkeyPatched)
+    }
 
-	@test()
-	protected static async instanceThrowsIfCwdAndDbNotSet() {
-		const err = await assert.doesThrowAsync(() => StoreLoader.getInstance())
-		errorAssert.assertError(err, 'MISSING_PARAMETERS', {
-			parameters: ['cwd', 'database'],
-		})
-	}
+    @test()
+    protected static async instanceThrowsIfCwdAndDbNotSet() {
+        const err = await assert.doesThrowAsync(() => StoreLoader.getInstance())
+        errorAssert.assertError(err, 'MISSING_PARAMETERS', {
+            parameters: ['cwd', 'database'],
+        })
+    }
 
-	@test()
-	protected static async canSetStoreDirForInstance() {
-		this.setCwd(undefined, 'good')
+    @test()
+    protected static async canSetStoreDirForInstance() {
+        this.setCwd(undefined, 'good')
 
-		const fixture = new DatabaseFixture()
-		const db = await fixture.connectToDatabase()
+        const fixture = new DatabaseFixture()
+        const db = await fixture.connectToDatabase()
 
-		StoreLoader.setStoreDir(this.cwd)
+        StoreLoader.setStoreDir(this.cwd)
 
-		const loader = await StoreLoader.getInstance(undefined, db)
+        const loader = await StoreLoader.getInstance(undefined, db)
 
-		const factory = await loader.loadStores()
-		const names = factory.getStoreNames()
-		assert.isLength(names, 1)
-		assert.isEqual(names[0], 'good')
-	}
+        const factory = await loader.loadStores()
+        const names = factory.getStoreNames()
+        assert.isLength(names, 1)
+        assert.isEqual(names[0], 'good')
+    }
 
-	@test()
-	protected static async canSetDbForInstance() {
-		this.setCwd(undefined, 'good')
+    @test()
+    protected static async canSetDbForInstance() {
+        this.setCwd(undefined, 'good')
 
-		const fixture = new DatabaseFixture()
-		const db = await fixture.connectToDatabase()
+        const fixture = new DatabaseFixture()
+        const db = await fixture.connectToDatabase()
 
-		StoreLoader.setStoreDir(this.cwd)
-		StoreLoader.setDatabase(db)
+        StoreLoader.setStoreDir(this.cwd)
+        StoreLoader.setDatabase(db)
 
-		const loader = await StoreLoader.getInstance(undefined, undefined)
+        const loader = await StoreLoader.getInstance(undefined, undefined)
 
-		const factory = await loader.loadStores()
-		const names = factory.getStoreNames()
+        const factory = await loader.loadStores()
+        const names = factory.getStoreNames()
 
-		assert.isLength(names, 1)
-		assert.isEqual(names[0], 'good')
-	}
+        assert.isLength(names, 1)
+        assert.isEqual(names[0], 'good')
+    }
 
-	@test()
-	protected static async onlyLoadsStoresOnce() {
-		const loader = await this.loaderWithCwd()
+    @test()
+    protected static async onlyLoadsStoresOnce() {
+        const loader = await this.loaderWithCwd()
 
-		const { factory: factory1 } = await loader.loadStoresAndErrors()
-		const { factory: factory2 } = await loader.loadStoresAndErrors()
+        const { factory: factory1 } = await loader.loadStoresAndErrors()
+        const { factory: factory2 } = await loader.loadStoresAndErrors()
 
-		assert.isEqual(factory1, factory2)
-	}
+        assert.isEqual(factory1, factory2)
+    }
 
-	@test()
-	protected static async loadingWithErrorsDoesNotCacheInstance() {
-		const loader = await this.loaderWithCwd()
-		//@ts-ignore
-		loader.loadStoreClassesWithErrors = async () => {
-			return {
-				stores: [],
-				errors: [new Error('test')],
-			}
-		}
+    @test()
+    protected static async loadingWithErrorsDoesNotCacheInstance() {
+        const loader = await this.loaderWithCwd()
+        //@ts-ignore
+        loader.loadStoreClassesWithErrors = async () => {
+            return {
+                stores: [],
+                errors: [new Error('test')],
+            }
+        }
 
-		const { factory } = await loader.loadStoresAndErrors()
+        const { factory } = await loader.loadStoresAndErrors()
 
-		//@ts-ignore
-		assert.isFalsy(loader.factory)
-		assert.isTruthy(factory)
-	}
+        //@ts-ignore
+        assert.isFalsy(loader.factory)
+        assert.isTruthy(factory)
+    }
 
-	private static async loaderWithCwd() {
-		return await this.Loader(this.resolvePath(this.cwd))
-	}
+    private static async loaderWithCwd() {
+        return await this.Loader(this.resolvePath(this.cwd))
+    }
 
-	private static async Loader(storesDir?: string) {
-		const fixture = new DatabaseFixture()
-		const db = await fixture.connectToDatabase()
+    private static async Loader(storesDir?: string) {
+        const fixture = new DatabaseFixture()
+        const db = await fixture.connectToDatabase()
 
-		return StoreLoader.Loader(storesDir ?? this.cwd, db)
-	}
+        return StoreLoader.Loader(storesDir ?? this.cwd, db)
+    }
 
-	protected static setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {
-		this.cwd =
-			this.resolvePath(
-				__dirname,
-				'..',
-				'..',
-				'/testDirsAndFiles/',
-				`one-${goodOrBad}-store-skill`,
-				'src'
-			) + suffix
+    protected static setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {
+        this.cwd =
+            this.resolvePath(
+                __dirname,
+                '..',
+                '..',
+                '/testDirsAndFiles/',
+                `one-${goodOrBad}-store-skill`,
+                'src'
+            ) + suffix
 
-		return this.cwd
-	}
+        return this.cwd
+    }
 }
