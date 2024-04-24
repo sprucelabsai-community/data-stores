@@ -64,7 +64,8 @@
     "watch.tsc": "tsc -w",
     "upgrade.packages": "yarn-upgrade-all && rm -f yarn.lock ; yarn ; yarn fix.lint ; true",
     "upgrade.packages.all": "yarn install && yarn upgrade.packages",
-    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
+    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test",
+    "watch.lint": "concurrently 'yarn run lint' \"chokidar 'src/**/*' -c 'yarn run lint.tsc'\""
   },
   "dependencies": {
     "@sprucelabs/error": "^6.0.11",
@@ -87,6 +88,7 @@
     "@types/nedb": "^1.8.16",
     "@types/node": "^20.12.7",
     "chokidar-cli": "^3.0.0",
+    "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "eslint": "^9.1.1",
     "eslint-config-spruce": "^11.2.13",
