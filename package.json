@@ -68,10 +68,10 @@
     "watch.lint": "concurrently 'yarn run lint' \"chokidar 'src/**/*' -c 'yarn run lint.tsc'\""
   },
   "dependencies": {
-    "@sprucelabs/error": "^6.0.14",
+    "@sprucelabs/error": "^6.0.15",
     "@sprucelabs/globby": "^2.0.11",
-    "@sprucelabs/schema": "^30.0.22",
-    "@sprucelabs/spruce-skill-utils": "^31.0.24",
+    "@sprucelabs/schema": "^30.0.23",
+    "@sprucelabs/spruce-skill-utils": "^31.0.25",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.5.0",
@@ -79,11 +79,11 @@
   },
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "^6.0.13",
-    "@sprucelabs/jest-json-reporter": "^8.0.16",
+    "@sprucelabs/jest-json-reporter": "^8.0.17",
     "@sprucelabs/resolve-path-aliases": "^2.0.15",
     "@sprucelabs/semantic-release": "^5.0.1",
     "@sprucelabs/test": "^9.0.11",
-    "@sprucelabs/test-utils": "^5.0.14",
+    "@sprucelabs/test-utils": "^5.0.15",
     "@types/lodash": "^4.17.0",
     "@types/nedb": "^1.8.16",
     "@types/node": "^20.12.7",
