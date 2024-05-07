@@ -1,3 +1,10 @@
+# [28.0.0](https://github.com/sprucelabsai-community/data-stores/compare/v27.0.26...v28.0.0) (2024-05-07)
+
+
+### Breaking Changes
+
+* plugin interface change ([b480f16](https://github.com/sprucelabsai-community/data-stores/commit/b480f16))
+
 ## [27.0.26](https://github.com/sprucelabsai-community/data-stores/compare/v27.0.25...v27.0.26) (2024-05-07)
 
 ## [27.0.25](https://github.com/sprucelabsai-community/data-stores/compare/v27.0.24...v27.0.25) (2024-05-06)
