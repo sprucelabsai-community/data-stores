@@ -64,5 +64,8 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "always"
 	},
-	"circleci.persistedProjectSelection": []
+	"circleci.persistedProjectSelection": [
+		"gh/sprucelabsai-community/data-stores"
+	],
+	"circleci.filters.branchFilter": "allBranches"
 }
