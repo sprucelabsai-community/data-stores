@@ -750,8 +750,8 @@ export default abstract class AbstractStore<
                 resolvedQuery = results.query
             }
 
-            if (results?.newValues) {
-                resolvedUpdates = results.newValues
+            if (results?.newUpdates) {
+                resolvedUpdates = results.newUpdates
             }
         }
         return { query: resolvedQuery, shouldUpdate, updates: resolvedUpdates }

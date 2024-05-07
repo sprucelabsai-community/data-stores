@@ -106,7 +106,7 @@ export interface DataStorePluginWillCreateOneResponse {
 export interface DataStorePluginWillUpdateOneResponse {
     query?: Record<string, any>
     shouldUpdate?: boolean
-    newValues?: Record<string, any>
+    newUpdates?: Record<string, any>
 }
 
 export interface DataStorePluginWillDeleteOneResponse {

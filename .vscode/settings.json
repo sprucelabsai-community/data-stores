@@ -63,5 +63,6 @@
 	"editor.formatOnSave": false,
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "always"
-	}
+	},
+	"circleci.persistedProjectSelection": []
 }

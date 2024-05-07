@@ -41,7 +41,7 @@ export default class DatabaseFieldMapperPlugin implements DataStorePlugin {
     ): Promise<void | DataStorePluginWillUpdateOneResponse> {
         return {
             query: this.mapper.mapTo(query),
-            newValues: this.mapper.mapTo(updates),
+            newUpdates: this.mapper.mapTo(updates),
         }
     }
 
