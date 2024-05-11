@@ -64,8 +64,7 @@
     "watch.tsc": "tsc -w",
     "upgrade.packages": "yarn-upgrade-all && rm -f yarn.lock ; yarn ; yarn fix.lint ; true",
     "upgrade.packages.all": "yarn install && yarn upgrade.packages",
-    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test",
-    "watch.lint": "concurrently 'yarn run lint' \"chokidar 'src/**/*' -c 'yarn run lint.tsc'\""
+    "upgrade.packages.test": "yarn upgrade.packages.all && yarn lint && yarn build.dev && yarn test"
   },
   "dependencies": {
     "@sprucelabs/error": "^6.0.23",
