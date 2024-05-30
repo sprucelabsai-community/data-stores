@@ -30,7 +30,7 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
             }
 
             case 'UNKNOWN_STORE_ERROR':
-                message = `An unknown error occurred in the ${options.storeName} store. The original error is: \n\n${options.originalError?.stack}`
+                message = `An unknown error occurred in the ${options.storeName} store. The original error is: \n\n${options.originalError?.stack ?? options.originalError?.message}`
                 break
 
             case 'RECORD_NOT_FOUND':
@@ -130,7 +130,9 @@ If you are on a mac, using brew is recommended: https://brew.sh`
 
             case 'DUPLICATE_KEY':
                 message = `An index was trying to be created that exists. Original error is:\n\n${
-                    options.friendlyMessage ?? '**missing**'
+                    options.friendlyMessage ??
+                    options.originalError?.stack ??
+                    options.originalError?.message
                 }`
                 break
 
