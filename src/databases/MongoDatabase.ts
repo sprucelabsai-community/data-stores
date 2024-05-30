@@ -1,17 +1,25 @@
 import { buildLog } from '@sprucelabs/spruce-skill-utils'
 import differenceWith from 'lodash/differenceWith'
 import isEqual from 'lodash/isEqual'
-import { MongoClientOptions, MongoClient, Db, MongoError } from 'mongodb'
+import {
+    MongoClientOptions,
+    MongoClient,
+    Db,
+    MongoError,
+    CreateIndexesOptions,
+} from 'mongodb'
 import SpruceError from '../errors/SpruceError'
 import {
     Database,
     DatabaseOptions,
     Index,
+    IndexWithFilter,
     UniqueIndex,
 } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
+import normalizeIndex from './normalizeIndex'
 
 export const MONGO_TEST_URI = 'mongodb://localhost:27017'
 
@@ -438,7 +446,7 @@ export default class MongoDatabase implements Database {
     }
 
     private assertIndexDoesNotExist(
-        currentIndexes: UniqueIndex[] | Index[],
+        currentIndexes: UniqueIndex[] | Index[] | IndexWithFilter[],
         fields: string[],
         collectionName: string
     ) {
@@ -452,11 +460,12 @@ export default class MongoDatabase implements Database {
     }
 
     private doesIndexExist(
-        currentIndexes: UniqueIndex[] | Index[],
+        currentIndexes: UniqueIndex[] | Index[] | IndexWithFilter[],
         fields: string[]
     ) {
         for (const index of currentIndexes ?? []) {
-            if (isEqual(index, fields)) {
+            const { fields: normalizedFields } = this.normalizeIndex(index)
+            if (isEqual(normalizedFields, fields)) {
                 return true
             }
         }
@@ -487,23 +496,31 @@ export default class MongoDatabase implements Database {
 
     public async createUniqueIndex(
         collection: string,
-        fields: string[]
+        index: string[] | IndexWithFilter
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collection)
-        await this.assertIndexDoesNotExist(currentIndexes, fields, collection)
 
-        const index: Record<string, any> = {}
+        const { fields, filter } = this.normalizeIndex(index)
+
+        this.assertIndexDoesNotExist(currentIndexes, fields, collection)
+
+        const created: Record<string, any> = {}
+
         fields.forEach((name) => {
-            index[name] = 1
+            created[name] = 1
         })
 
         try {
+            const options: CreateIndexesOptions = { unique: true }
+            if (filter) {
+                options.partialFilterExpression = filter
+            }
             await this.assertDbWhileAttempingTo(
                 'create a unique index.',
                 collection
             )
                 .collection(collection)
-                .createIndex(index, { unique: true })
+                .createIndex(created, options)
         } catch (err: any) {
             if (err?.code === 11000) {
                 throw new SpruceError({
@@ -518,16 +535,28 @@ export default class MongoDatabase implements Database {
         }
     }
 
+    private normalizeIndex(index: string[] | IndexWithFilter) {
+        const { fields, filter } = normalizeIndex(index)
+        return { fields, filter }
+    }
+
     public async syncUniqueIndexes(
         collectionName: string,
-        indexes: string[][]
+        indexes: UniqueIndex[]
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collectionName)
         const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
 
         for (const index of indexes) {
-            if (!this.doesIndexExist(currentIndexes, index)) {
-                await this.createUniqueIndex(collectionName, index)
+            const { fields } = this.normalizeIndex(index)
+            if (!this.doesIndexExist(currentIndexes, fields)) {
+                try {
+                    await this.createUniqueIndex(collectionName, index)
+                } catch (err: any) {
+                    if (err.options?.code !== 'INDEX_EXISTS') {
+                        throw err
+                    }
+                }
             }
         }
         for (const extra of extraIndexes) {

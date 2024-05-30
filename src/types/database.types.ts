@@ -78,7 +78,12 @@ export type TestConnect = (
     badDatabaseName: string
 }>
 
-export type UniqueIndex = string[]
+export interface IndexWithFilter {
+    fields: string[]
+    filter: Record<string, any>
+}
+
+export type UniqueIndex = string[] | IndexWithFilter
 export type Index = string[]
 
 export interface CreateOptions extends DatabaseInternalOptions {}

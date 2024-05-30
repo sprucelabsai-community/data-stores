@@ -235,11 +235,11 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     }
 
     @test(
-        'syncUniqueIndexes multiple times with different keys (mongo)',
+        'syncUniqueIndexes with different keys handles race conditions (mongo)',
         mongoConnect
     )
     @test(
-        'syncUniqueIndexes multiple times with different keys (neDb)',
+        'syncUniqueIndexes with different keys handles race conditions (neDb)',
         neDbConnect
     )
     protected static async syncUniqueIndexesMultipleUpdates(
@@ -416,6 +416,19 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
         connect: TestConnect
     ) {
         await databaseAssertUtil.assertSyncIndexesDoesNotRemoveExisting(connect)
+    }
+
+    @test('can syncIndexes with partialFilterExpresson (mongo)', mongoConnect)
+    @test.skip(
+        'can syncIndexes with partialFilterExpresson (neDb)',
+        neDbConnect
+    )
+    protected static async canSyncIndexesWithPartialFilterExpression(
+        connect: TestConnect
+    ) {
+        await databaseAssertUtil.assertCanSyncUniqueIndexesWithFilterExpression(
+            connect
+        )
     }
 
     @test(

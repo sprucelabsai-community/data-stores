@@ -54,6 +54,7 @@ const databaseAssertUtil = {
             'assertCanUpsertOne',
             'assertCanUpsertNull',
             'assertCanPushToArrayOnUpsert',
+            'assertCanSyncUniqueIndexesWithFilterExpression',
 
             //finding
             'assertEmptyDatabaseReturnsEmptyArray',
@@ -126,10 +127,13 @@ const databaseAssertUtil = {
     },
 
     async _getFilteredIndexes(db: Database) {
-        return this._filterIdIndex(await db.getIndexes(this.collectionName))
+        return this._filterIdIndex(
+            await db.getIndexes(this.collectionName)
+        ) as string[][]
     },
 
     _filterIdIndex(allIndexes: UniqueIndex[] | Index[]) {
+        //@ts-ignore
         return allIndexes.filter((i) => i[0] !== '_id') as
             | UniqueIndex[]
             | Index[]
@@ -343,7 +347,9 @@ const databaseAssertUtil = {
     async assertCanCreateUniqueIndex(connect: TestConnect) {
         const db = await connectToDabatase(connect)
         await db.createUniqueIndex(this.collectionName, ['uniqueField'])
-        let indexes = await db.getUniqueIndexes(this.collectionName)
+        let indexes = (await db.getUniqueIndexes(
+            this.collectionName
+        )) as string[][]
 
         assert.isLength(
             indexes,
@@ -362,7 +368,7 @@ const databaseAssertUtil = {
         )
 
         await db.createUniqueIndex(this.collectionName, ['uniqueField2'])
-        indexes = await db.getUniqueIndexes(this.collectionName)
+        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
 
         assert.isLength(indexes, 2)
         assert.isEqual(
@@ -374,7 +380,7 @@ const databaseAssertUtil = {
             'uniqueField3',
             'uniqueField4',
         ])
-        indexes = await db.getUniqueIndexes(this.collectionName)
+        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
 
         assert.isLength(indexes, 3)
         assert.isEqual(
@@ -1067,7 +1073,9 @@ const databaseAssertUtil = {
             ['someField'],
             ['otherField', 'otherField2'],
         ])
-        let indexes = await db.getUniqueIndexes(this.collectionName)
+        let indexes = (await db.getUniqueIndexes(
+            this.collectionName
+        )) as string[][]
         assert.isLength(
             indexes,
             3,
@@ -1076,7 +1084,7 @@ const databaseAssertUtil = {
 
         await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
-        indexes = await db.getUniqueIndexes(this.collectionName)
+        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
         assert.isLength(indexes, 1)
         assert.isEqual(indexes[0][0].toLowerCase(), 'uniquefield')
         await this.shutdown(db)
@@ -2028,6 +2036,100 @@ const databaseAssertUtil = {
             ['someField'],
             ['otherField'],
         ])
+        await this.shutdown(db)
+    },
+
+    async assertCanSyncUniqueIndexesWithFilterExpression(connect: TestConnect) {
+        const db = await connectToDabatase(connect)
+
+        try {
+            await db.syncUniqueIndexes(this.collectionName, [
+                {
+                    fields: ['username', 'dateScrambled'],
+                    filter: {
+                        username: { $exists: true },
+                    },
+                },
+            ])
+        } catch (err: any) {
+            assert.fail(
+                `syncUniqueIndexes() should not have thrown an error when syncing a unique index with a filter expression.\n\n` +
+                    err.stack ?? err.message
+            )
+        }
+
+        try {
+            await db.createOne(this.collectionName, {
+                username: 'test',
+                phone: null,
+                dateScrambled: 'test',
+            })
+        } catch (err: any) {
+            assert.fail(
+                `Creating a record should not have thrown an error after syncing a unique index with a filter expression.\n\n` +
+                    err.stack ?? err.message
+            )
+        }
+
+        await assert.doesThrowAsync(() =>
+            db.createOne(this.collectionName, {
+                username: 'test',
+                phone: null,
+                dateScrambled: 'test',
+            })
+        )
+
+        await db.createOne(this.collectionName, {
+            phone: '555-000-0000',
+            dateScrambled: 'test',
+        })
+
+        await db.createOne(this.collectionName, {
+            phone: '555-000-0001',
+            dateScrambled: 'test',
+        })
+
+        try {
+            await db.syncUniqueIndexes(this.collectionName, [
+                {
+                    fields: ['username', 'dateScrambled'],
+                    filter: {
+                        username: { $exists: true },
+                    },
+                },
+                {
+                    fields: ['phone', 'dateScrambled'],
+                    filter: {
+                        phone: { $exists: true, $type: 'string' },
+                    },
+                },
+            ])
+        } catch (err: any) {
+            assert.fail(
+                `syncUniqueIndexes() should not have thrown an error when syncing multiple unique indexes with filter expressions.\n\n` +
+                    err.stack ?? err.message
+            )
+        }
+
+        await db.createOne(this.collectionName, {
+            username: 'test',
+            phone: null,
+            dateScrambled: 'next',
+        })
+
+        try {
+            await db.createOne(this.collectionName, {
+                username: 'test2',
+                phone: null,
+                dateScrambled: 'next',
+            })
+        } catch (err: any) {
+            assert.fail(
+                `createOne() should not throw if index has filter { \$exists: true, \$type: 'string' }.\n\n` +
+                    err.stack ?? err.message
+            )
+        }
+
         await this.shutdown(db)
     },
 

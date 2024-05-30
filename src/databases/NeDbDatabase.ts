@@ -16,6 +16,7 @@ import {
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
+import normalizeIndex from './normalizeIndex'
 dotenv.config()
 
 const NULL_PLACEHOLDER = '_____NULL_____'
@@ -252,9 +253,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         })
     }
 
-    private loadCollection(
-        collection: string
-    ): Datastore<any> & { _uniqueIndexes?: string[][]; _indexes?: string[][] } {
+    private loadCollection(collection: string): Datastore<any> & {
+        _uniqueIndexes?: UniqueIndex[]
+        _indexes?: string[][]
+    } {
         if (!this.collections[collection]) {
             this.collections[collection] = new Datastore()
         }
@@ -485,7 +487,11 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         await this.randomDelay()
 
         if (col._uniqueIndexes) {
-            for (const fields of col._uniqueIndexes) {
+            for (const index of col._uniqueIndexes) {
+                const { fields, filter } = normalizeIndex(index)
+                if (filter) {
+                    return
+                }
                 const existing = query
                     ? await this.findOne(collection, query)
                     : null
@@ -530,8 +536,9 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         return col._indexes ?? []
     }
 
-    public async dropIndex(collection: string, fields: string[]) {
+    public async dropIndex(collection: string, index: UniqueIndex) {
         const col = this.loadCollection(collection)
+        const { fields } = normalizeIndex(index)
 
         await this.randomDelay()
 
@@ -598,23 +605,26 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
     public async createUniqueIndex(
         collection: string,
-        fields: string[]
+        index: UniqueIndex
     ): Promise<void> {
         const col = this.loadCollection(collection)
         if (!col._uniqueIndexes) {
             col._uniqueIndexes = []
         }
 
+        const { fields, filter } = normalizeIndex(index)
+
         await this.randomDelay()
         this.assertIndexDoesNotExist(col._uniqueIndexes, fields, collection)
 
-        if (col._uniqueIndexes) {
+        if (col._uniqueIndexes && !filter) {
             const tempUniqueIndexes = [...col._uniqueIndexes]
             tempUniqueIndexes.push(fields)
 
-            const documents = (await this.find(collection, {})) || []
+            const documents = (await this.find(collection)) || []
 
-            for (const uniqueFields of tempUniqueIndexes) {
+            for (const index of tempUniqueIndexes) {
+                const { fields: uniqueFields } = normalizeIndex(index)
                 let parsedExisting = []
 
                 for (const doc of documents) {
@@ -630,7 +640,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
                 if (parsedExisting.length != uniqued.length) {
                     throw new SpruceError({
                         code: 'DUPLICATE_KEY',
-                        friendlyMessage: `Could not create index! Unique index on '${collection}' has duplicate key for "${fields.join(
+                        friendlyMessage: `Could not create index! Unique index on '${collection}' has duplicate key for "${uniqueFields.join(
                             ','
                         )}"`,
                     })
@@ -638,7 +648,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
             }
         }
 
-        col._uniqueIndexes.push(fields)
+        col._uniqueIndexes.push(index)
     }
 
     public async createIndex(
@@ -658,13 +668,15 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 
     public async syncUniqueIndexes(
         collectionName: string,
-        indexes: string[][]
+        indexes: UniqueIndex[]
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collectionName)
         const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
 
         for (const index of indexes) {
-            if (!this.doesIndexExist(currentIndexes, index)) {
+            const { fields } = normalizeIndex(index)
+
+            if (!this.doesIndexExist(currentIndexes, fields)) {
                 try {
                     await this.createUniqueIndex(collectionName, index)
                 } catch (err: any) {
