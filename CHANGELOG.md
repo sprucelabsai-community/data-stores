@@ -1,3 +1,10 @@
+# [28.1.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.0.26...v28.1.0) (2024-05-30)
+
+
+### Features
+
+* basic index with filter support (mongo only) ([67a9bc8](https://github.com/sprucelabsai-community/data-stores/commit/67a9bc8))
+
 ## [28.0.26](https://github.com/sprucelabsai-community/data-stores/compare/v28.0.25...v28.0.26) (2024-05-24)
 
 ## [28.0.25](https://github.com/sprucelabsai-community/data-stores/compare/v28.0.24...v28.0.25) (2024-05-24)
