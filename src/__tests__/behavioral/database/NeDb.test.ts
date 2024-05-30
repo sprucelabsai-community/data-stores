@@ -1,4 +1,5 @@
 import { test, assert, generateId } from '@sprucelabs/test-utils'
+import mapIndexFilterToNeDbQuery from '../../../databases/mapIndexFilterToNeDbQuery'
 import NeDbDatabase from '../../../databases/NeDbDatabase'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import neDbConnect from '../../support/neDbConnect'
@@ -53,6 +54,44 @@ export default class NeDbTest extends AbstractDatabaseTest {
         assert.isLength(all, 2)
         assert.isFalsy(all[0].id)
         assert.isFalsy(all[1].id)
+    }
+
+    @test()
+    protected static async mapsIndexFiltersToQuery() {
+        this.assertQueryFromFilterEquals(
+            {
+                firstName: 'test',
+            },
+            {
+                firstName: 'test',
+            }
+        )
+
+        this.assertQueryFromFilterEquals(
+            {
+                username: { $type: 'string' },
+            },
+            {
+                username: { $ne: null },
+            }
+        )
+
+        this.assertQueryFromFilterEquals(
+            {
+                firstName: { $exists: true },
+            },
+            {
+                firstName: { $exists: true },
+            }
+        )
+    }
+
+    private static assertQueryFromFilterEquals(
+        filter: Record<string, any>,
+        expected: Record<string, any>
+    ) {
+        const actual = mapIndexFilterToNeDbQuery(filter)
+        assert.isEqualDeep(actual, expected)
     }
 
     private static async createOne(first?: string) {

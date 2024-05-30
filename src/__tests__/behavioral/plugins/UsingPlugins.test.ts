@@ -63,7 +63,7 @@ export default class UsingPluginsTest extends AbstractPluginTest {
         await this.assertFirstSaveIncludes(values)
     }
 
-    @test.only()
+    @test()
     protected static async canOverrideFirstPrimaryKeyWithNumber() {
         const values = {
             id: 1,

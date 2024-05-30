@@ -16,17 +16,9 @@ import {
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
+import mapIndexFilterToNeDbQuery from './mapIndexFilterToNeDbQuery'
 import normalizeIndex from './normalizeIndex'
 dotenv.config()
-
-const NULL_PLACEHOLDER = '_____NULL_____'
-const UNDEFINED_PLACEHOLDER = '_____UNDEFINED_____'
-const SHOULD_SIMULATE_SLOW_QUERIES =
-    process.env.SHOULD_SIMULATE_SLOW_QUERIES === 'true'
-const SLOW_QUERY_MAX_RANDOM_DELAY_MS = parseInt(
-    `${process.env.SLOW_QUERY_MAX_RANDOM_DELAY_MS ?? 100}`,
-    10
-)
 
 export default class NeDbDatabase extends AbstractMutexer implements Database {
     private collections: Record<string, Datastore> = {}
@@ -489,18 +481,23 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         if (col._uniqueIndexes) {
             for (const index of col._uniqueIndexes) {
                 const { fields, filter } = normalizeIndex(index)
-                if (filter) {
-                    return
-                }
+
                 const existing = query
                     ? await this.findOne(collection, query)
                     : null
-                const q: Record<string, any> = {}
+                let q: Record<string, any> = filter
+                    ? mapIndexFilterToNeDbQuery(filter)
+                    : {}
+
                 const duplicateFields: string[] = []
                 const duplicateValues: string[] = []
 
                 fields.forEach((f) => {
-                    q[f] = get(values, f)
+                    let value = get(values, f)
+                    if (value === NULL_PLACEHOLDER && q[f]) {
+                        value = q[f]
+                    }
+                    q[f] = value
                     duplicateFields.push(f)
                     duplicateValues.push(q[f])
                 })
@@ -593,9 +590,9 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         }
     }
 
-    private doesIndexExist(currentIndexes: UniqueIndex[], fields: string[]) {
-        for (const index of currentIndexes ?? []) {
-            if (isEqual(index, fields)) {
+    private doesIndexExist(currentIndexes: UniqueIndex[], index: UniqueIndex) {
+        for (const existing of currentIndexes ?? []) {
+            if (isEqual(existing, index)) {
                 return true
             }
         }
@@ -671,12 +668,16 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         indexes: UniqueIndex[]
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collectionName)
-        const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
+        const toDelete: UniqueIndex[] = []
+
+        for (const index of currentIndexes) {
+            if (!this.doesIndexExist(indexes, index)) {
+                toDelete.push(index)
+            }
+        }
 
         for (const index of indexes) {
-            const { fields } = normalizeIndex(index)
-
-            if (!this.doesIndexExist(currentIndexes, fields)) {
+            if (!this.doesIndexExist(currentIndexes, index)) {
                 try {
                     await this.createUniqueIndex(collectionName, index)
                 } catch (err: any) {
@@ -686,7 +687,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
                 }
             }
         }
-        for (const extra of extraIndexes) {
+
+        for (const extra of toDelete) {
             await this.dropIndex(collectionName, extra)
         }
     }
@@ -749,3 +751,12 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
 }
 
 export type FakeQueryHandler<T> = (params?: any[]) => Promise<T[]> | T[]
+
+const NULL_PLACEHOLDER = '_____NULL_____'
+const UNDEFINED_PLACEHOLDER = '_____UNDEFINED_____'
+const SHOULD_SIMULATE_SLOW_QUERIES =
+    process.env.SHOULD_SIMULATE_SLOW_QUERIES === 'true'
+const SLOW_QUERY_MAX_RANDOM_DELAY_MS = parseInt(
+    `${process.env.SLOW_QUERY_MAX_RANDOM_DELAY_MS ?? 100}`,
+    10
+)

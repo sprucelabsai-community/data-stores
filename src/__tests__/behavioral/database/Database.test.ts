@@ -419,10 +419,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     }
 
     @test('can syncIndexes with partialFilterExpresson (mongo)', mongoConnect)
-    @test.skip(
-        'can syncIndexes with partialFilterExpresson (neDb)',
-        neDbConnect
-    )
+    @test('can syncIndexes with partialFilterExpresson (neDb)', neDbConnect)
     protected static async canSyncIndexesWithPartialFilterExpression(
         connect: TestConnect
     ) {

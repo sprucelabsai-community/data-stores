@@ -353,23 +353,23 @@ export default class MongoDatabase implements Database {
         }
     }
 
-    public async dropIndex(collection: string, fields: string[]) {
+    public async dropIndex(collection: string, index: UniqueIndex) {
         const indexes = await this.listIndexes(collection)
 
         let found = false
 
-        for (const index of indexes) {
-            if (isEqual(Object.keys(index.key), fields)) {
+        for (const thisIndex of indexes) {
+            if (isEqual(Object.keys(thisIndex.key), index)) {
                 await this.assertDbWhileAttempingTo('drop a index.', collection)
                     .collection(collection)
-                    .dropIndex(index.name)
+                    .dropIndex(thisIndex.name)
                 found = true
             }
         }
         if (!found) {
             throw new SpruceError({
                 code: 'INDEX_NOT_FOUND',
-                missingIndex: fields,
+                missingIndex: normalizeIndex(index).fields,
                 collectionName: collection,
             })
         }
@@ -486,7 +486,13 @@ export default class MongoDatabase implements Database {
 
         for (const index of indexes) {
             if (!this.doesIndexExist(currentIndexes, index)) {
-                await this.createIndex(collectionName, index)
+                try {
+                    await this.createIndex(collectionName, index)
+                } catch (err: any) {
+                    if (err.options?.code !== 'INDEX_EXISTS') {
+                        throw err
+                    }
+                }
             }
         }
         for (const extra of extraIndexes) {
@@ -545,7 +551,13 @@ export default class MongoDatabase implements Database {
         indexes: UniqueIndex[]
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collectionName)
-        const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
+        const toDelete: UniqueIndex[] = []
+
+        for (const index of currentIndexes) {
+            if (!this.doesIndexExist(indexes, index)) {
+                toDelete.push(index)
+            }
+        }
 
         for (const index of indexes) {
             const { fields } = this.normalizeIndex(index)
@@ -559,7 +571,7 @@ export default class MongoDatabase implements Database {
                 }
             }
         }
-        for (const extra of extraIndexes) {
+        for (const extra of toDelete) {
             await this.dropIndex(collectionName, extra)
         }
     }

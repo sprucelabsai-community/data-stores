@@ -1087,6 +1087,32 @@ const databaseAssertUtil = {
         indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
         assert.isLength(indexes, 1)
         assert.isEqual(indexes[0][0].toLowerCase(), 'uniquefield')
+
+        await db.syncUniqueIndexes(this.collectionName, [
+            {
+                fields: ['username'],
+                filter: { isActive: true },
+            },
+        ])
+
+        await db.syncUniqueIndexes(this.collectionName, [
+            {
+                fields: ['otherField', 'otherField2'],
+                filter: { otherField: { $exists: true } },
+            },
+            {
+                fields: ['username'],
+                filter: { isActive: true },
+            },
+        ])
+
+        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
+        assert.isLength(
+            indexes,
+            2,
+            `Syncing unique indexs with filter is not removing extra indexes.`
+        )
+
         await this.shutdown(db)
     },
 
@@ -2071,12 +2097,15 @@ const databaseAssertUtil = {
             )
         }
 
-        await assert.doesThrowAsync(() =>
-            db.createOne(this.collectionName, {
-                username: 'test',
-                phone: null,
-                dateScrambled: 'test',
-            })
+        await assert.doesThrowAsync(
+            () =>
+                db.createOne(this.collectionName, {
+                    username: 'test',
+                    phone: null,
+                    dateScrambled: 'test',
+                }),
+            undefined,
+            `Creating a duplicate record with should throw an error.`
         )
 
         await db.createOne(this.collectionName, {
