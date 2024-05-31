@@ -2201,6 +2201,38 @@ const databaseAssertUtil = {
             `createOne() should throw since index has filter { slug: { \$type: 'string' } }.`
         )
 
+        await db.createOne(this.collectionName, {
+            name: generateId(),
+            uniqueField: undefined,
+            slug: '555-000-0004',
+            someField3: undefined,
+        })
+
+        await db.createOne(this.collectionName, {
+            name: generateId(),
+            uniqueField: undefined,
+            slug: '555-000-0003',
+            someField3: undefined,
+        })
+
+        const name = generateId()
+        await db.createOne(this.collectionName, {
+            name,
+            uniqueField: generateId(),
+            slug: undefined,
+            someField3: undefined,
+        })
+
+        await db.updateOne(
+            this.collectionName,
+            {
+                name,
+            },
+            {
+                someField2: 'hey',
+            }
+        )
+
         await this.shutdown(db)
     },
 

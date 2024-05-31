@@ -484,7 +484,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
                 if (filter) {
                     let shouldSkip = false
                     for (const key in filter) {
-                        if (values[key] === NULL_PLACEHOLDER) {
+                        if (
+                            values[key] === NULL_PLACEHOLDER ||
+                            typeof values[key] === 'undefined'
+                        ) {
                             shouldSkip = true
                             break
                         }
