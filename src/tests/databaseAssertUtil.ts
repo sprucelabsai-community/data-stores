@@ -1100,7 +1100,7 @@ const databaseAssertUtil = {
 
         await db.syncUniqueIndexes(this.collectionName, [
             {
-                fields: ['username'],
+                fields: ['uniqueField'],
                 filter: { isActive: true },
             },
         ])
@@ -1111,7 +1111,7 @@ const databaseAssertUtil = {
                 filter: { otherField: { $exists: true } },
             },
             {
-                fields: ['username'],
+                fields: ['uniqueField'],
                 filter: { isActive: true },
             },
         ])
@@ -2081,9 +2081,9 @@ const databaseAssertUtil = {
         try {
             await db.syncUniqueIndexes(this.collectionName, [
                 {
-                    fields: ['username', 'dateScrambled'],
+                    fields: ['uniqueField', 'dateScrambled'],
                     filter: {
-                        username: { $exists: true },
+                        uniqueField: { $exists: true },
                     },
                 },
             ])
@@ -2096,8 +2096,8 @@ const databaseAssertUtil = {
 
         try {
             await db.createOne(this.collectionName, {
-                username: 'test',
-                phone: null,
+                uniqueField: 'test',
+                slug: null,
                 dateScrambled: 'test',
             })
         } catch (err: any) {
@@ -2110,8 +2110,8 @@ const databaseAssertUtil = {
         await assert.doesThrowAsync(
             () =>
                 db.createOne(this.collectionName, {
-                    username: 'test',
-                    phone: null,
+                    uniqueField: 'test',
+                    slug: null,
                     dateScrambled: 'test',
                 }),
             undefined,
@@ -2119,27 +2119,27 @@ const databaseAssertUtil = {
         )
 
         await db.createOne(this.collectionName, {
-            phone: '555-000-0000',
+            slug: '555-000-0000',
             dateScrambled: 'test',
         })
 
         await db.createOne(this.collectionName, {
-            phone: '555-000-0001',
+            slug: '555-000-0001',
             dateScrambled: 'test',
         })
 
         try {
             await db.syncUniqueIndexes(this.collectionName, [
                 {
-                    fields: ['username', 'dateScrambled'],
+                    fields: ['uniqueField', 'dateScrambled'],
                     filter: {
-                        username: { $exists: true },
+                        uniqueField: { $exists: true },
                     },
                 },
                 {
-                    fields: ['phone', 'dateScrambled'],
+                    fields: ['slug', 'dateScrambled'],
                     filter: {
-                        phone: { $exists: true, $type: 'string' },
+                        slug: { $exists: true, $type: 'string' },
                     },
                 },
             ])
@@ -2151,15 +2151,15 @@ const databaseAssertUtil = {
         }
 
         await db.createOne(this.collectionName, {
-            username: 'test',
-            phone: null,
+            uniqueField: 'test',
+            slug: null,
             dateScrambled: 'next',
         })
 
         try {
             await db.createOne(this.collectionName, {
-                username: 'test2',
-                phone: null,
+                uniqueField: 'test2',
+                slug: null,
                 dateScrambled: 'next',
             })
         } catch (err: any) {
