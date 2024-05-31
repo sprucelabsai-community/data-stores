@@ -2083,7 +2083,7 @@ const databaseAssertUtil = {
                 {
                     fields: ['uniqueField', 'someField3'],
                     filter: {
-                        uniqueField: { $exists: true },
+                        uniqueField: { $type: 'string' },
                     },
                 },
             ])
@@ -2137,13 +2137,13 @@ const databaseAssertUtil = {
                 {
                     fields: ['uniqueField', 'someField3'],
                     filter: {
-                        uniqueField: { $exists: true },
+                        uniqueField: { $type: 'string' },
                     },
                 },
                 {
                     fields: ['slug', 'someField3'],
                     filter: {
-                        slug: { $exists: true, $type: 'string' },
+                        slug: { $type: 'string' },
                     },
                 },
             ])
@@ -2170,10 +2170,36 @@ const databaseAssertUtil = {
             })
         } catch (err: any) {
             assert.fail(
-                `createOne() should not throw if index has filter { \$exists: true, \$type: 'string' }.\n\n` +
+                `createOne() should not throw since index has filter { slug: { \$type: 'string' } }.\n\n` +
                     err.stack ?? err.message
             )
         }
+
+        try {
+            await db.createOne(this.collectionName, {
+                name: generateId(),
+                uniqueField: null,
+                slug: '555-000-0002',
+                someField3: 'next',
+            })
+        } catch (err: any) {
+            assert.fail(
+                `createOne() should not throw since index has filter {uniqueField: { \$type: 'string' } }.\n\n` +
+                    err.stack ?? err.message
+            )
+        }
+
+        await assert.doesThrowAsync(
+            () =>
+                db.createOne(this.collectionName, {
+                    name: generateId(),
+                    uniqueField: null,
+                    slug: '555-000-0002',
+                    someField3: 'next',
+                }),
+            undefined,
+            `createOne() should throw since index has filter { slug: { \$type: 'string' } }.`
+        )
 
         await this.shutdown(db)
     },

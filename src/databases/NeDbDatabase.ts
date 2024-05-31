@@ -16,7 +16,6 @@ import {
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
-import mapIndexFilterToNeDbQuery from './mapIndexFilterToNeDbQuery'
 import normalizeIndex from './normalizeIndex'
 dotenv.config()
 
@@ -482,24 +481,33 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
             for (const index of col._uniqueIndexes) {
                 const { fields, filter } = normalizeIndex(index)
 
+                if (filter) {
+                    let shouldSkip = false
+                    for (const key in filter) {
+                        if (values[key] === NULL_PLACEHOLDER) {
+                            shouldSkip = true
+                            break
+                        }
+                    }
+                    if (shouldSkip) {
+                        continue
+                    }
+                }
+
                 const existing = query
                     ? await this.findOne(collection, query)
                     : null
-                let q: Record<string, any> = filter
-                    ? mapIndexFilterToNeDbQuery(filter)
-                    : {}
+
+                let q: Record<string, any> = {}
 
                 const duplicateFields: string[] = []
                 const duplicateValues: string[] = []
 
                 fields.forEach((f) => {
                     let value = get(values, f)
-                    if (value === NULL_PLACEHOLDER && q[f]) {
-                        value = q[f]
-                    }
-                    q[f] = value
                     duplicateFields.push(f)
-                    duplicateValues.push(q[f])
+                    duplicateValues.push(value)
+                    q[f] = value
                 })
 
                 const destination = await this.findOne(collection, q)
