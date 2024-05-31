@@ -694,7 +694,17 @@ const databaseAssertUtil = {
             id: created!.id,
         })
 
-        assert.isEqualDeep(matched!.target, target)
+        assert.isTruthy(
+            matched,
+            `findOne() with id ${created.id} returned null`
+        )
+
+        assert.isEqualDeep(
+            matched!.target,
+            target,
+            `field called "target" which is an object was not updated as expected.`,
+            true
+        )
 
         await this.shutdown(db)
     },
