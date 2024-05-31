@@ -2081,7 +2081,7 @@ const databaseAssertUtil = {
         try {
             await db.syncUniqueIndexes(this.collectionName, [
                 {
-                    fields: ['uniqueField', 'dateScrambled'],
+                    fields: ['uniqueField', 'someField3'],
                     filter: {
                         uniqueField: { $exists: true },
                     },
@@ -2098,7 +2098,7 @@ const databaseAssertUtil = {
             await db.createOne(this.collectionName, {
                 uniqueField: 'test',
                 slug: null,
-                dateScrambled: 'test',
+                someField3: 'test',
             })
         } catch (err: any) {
             assert.fail(
@@ -2112,7 +2112,7 @@ const databaseAssertUtil = {
                 db.createOne(this.collectionName, {
                     uniqueField: 'test',
                     slug: null,
-                    dateScrambled: 'test',
+                    someField3: 'test',
                 }),
             undefined,
             `Creating a duplicate record with should throw an error.`
@@ -2120,24 +2120,24 @@ const databaseAssertUtil = {
 
         await db.createOne(this.collectionName, {
             slug: '555-000-0000',
-            dateScrambled: 'test',
+            someField3: 'test',
         })
 
         await db.createOne(this.collectionName, {
             slug: '555-000-0001',
-            dateScrambled: 'test',
+            someField3: 'test',
         })
 
         try {
             await db.syncUniqueIndexes(this.collectionName, [
                 {
-                    fields: ['uniqueField', 'dateScrambled'],
+                    fields: ['uniqueField', 'someField3'],
                     filter: {
                         uniqueField: { $exists: true },
                     },
                 },
                 {
-                    fields: ['slug', 'dateScrambled'],
+                    fields: ['slug', 'someField3'],
                     filter: {
                         slug: { $exists: true, $type: 'string' },
                     },
@@ -2153,14 +2153,14 @@ const databaseAssertUtil = {
         await db.createOne(this.collectionName, {
             uniqueField: 'test',
             slug: null,
-            dateScrambled: 'next',
+            someField3: 'next',
         })
 
         try {
             await db.createOne(this.collectionName, {
                 uniqueField: 'test2',
                 slug: null,
-                dateScrambled: 'next',
+                someField3: 'next',
             })
         } catch (err: any) {
             assert.fail(
