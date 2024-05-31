@@ -2096,6 +2096,7 @@ const databaseAssertUtil = {
 
         try {
             await db.createOne(this.collectionName, {
+                name: generateId(),
                 uniqueField: 'test',
                 slug: null,
                 someField3: 'test',
@@ -2110,6 +2111,7 @@ const databaseAssertUtil = {
         await assert.doesThrowAsync(
             () =>
                 db.createOne(this.collectionName, {
+                    name: generateId(),
                     uniqueField: 'test',
                     slug: null,
                     someField3: 'test',
@@ -2119,11 +2121,13 @@ const databaseAssertUtil = {
         )
 
         await db.createOne(this.collectionName, {
+            name: generateId(),
             slug: '555-000-0000',
             someField3: 'test',
         })
 
         await db.createOne(this.collectionName, {
+            name: generateId(),
             slug: '555-000-0001',
             someField3: 'test',
         })
@@ -2151,6 +2155,7 @@ const databaseAssertUtil = {
         }
 
         await db.createOne(this.collectionName, {
+            name: generateId(),
             uniqueField: 'test',
             slug: null,
             someField3: 'next',
@@ -2158,6 +2163,7 @@ const databaseAssertUtil = {
 
         try {
             await db.createOne(this.collectionName, {
+                name: generateId(),
                 uniqueField: 'test2',
                 slug: null,
                 someField3: 'next',
