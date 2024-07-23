@@ -64,22 +64,22 @@
     "watch.tsc": "tsc -w"
   },
   "dependencies": {
-    "@sprucelabs/error": "^6.0.167",
-    "@sprucelabs/globby": "^2.0.125",
-    "@sprucelabs/schema": "^30.0.214",
-    "@sprucelabs/spruce-skill-utils": "^31.0.230",
+    "@sprucelabs/error": "^6.0.168",
+    "@sprucelabs/globby": "^2.0.126",
+    "@sprucelabs/schema": "^30.0.215",
+    "@sprucelabs/spruce-skill-utils": "^31.0.231",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^6.0.152",
-    "@sprucelabs/jest-json-reporter": "^8.0.170",
-    "@sprucelabs/resolve-path-aliases": "^2.0.148",
+    "@sprucelabs/esm-postbuild": "^6.0.153",
+    "@sprucelabs/jest-json-reporter": "^8.0.171",
+    "@sprucelabs/resolve-path-aliases": "^2.0.149",
     "@sprucelabs/semantic-release": "^5.0.2",
-    "@sprucelabs/test": "^9.0.38",
-    "@sprucelabs/test-utils": "^5.1.105",
+    "@sprucelabs/test": "^9.0.39",
+    "@sprucelabs/test-utils": "^5.1.106",
     "@types/lodash": "^4.17.7",
     "@types/nedb": "^1.8.16",
     "@types/node": "^20.14.11",
@@ -94,7 +94,7 @@
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "engines": {
     "node": ">=12",
