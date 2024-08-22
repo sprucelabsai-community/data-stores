@@ -1,9 +1,9 @@
-import { Schema, assertOptions } from '@sprucelabs/schema'
+import { assertOptions } from '@sprucelabs/schema'
 import { assert } from '@sprucelabs/test-utils'
-import AbstractStore from '../stores/AbstractStore'
+import { DataStore, DataStorePlugin } from '../types/stores.types'
 
 const storePluginAssert = {
-    storeHasPlugin: (store: AbstractStore<Schema>, pluginName: string) => {
+    storeHasPlugin: (store: DataStore, pluginName: string) => {
         assertOptions(
             {
                 store,
@@ -13,7 +13,7 @@ const storePluginAssert = {
         )
 
         //@ts-ignore
-        const { plugins } = store
+        const { plugins } = store as { plugins: DataStorePlugin[] }
 
         if (!plugins?.length) {
             assert.fail(
