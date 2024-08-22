@@ -139,7 +139,7 @@ If you are on a mac, using brew is recommended: https://brew.sh`
             case 'INVALID_CONNECTION_STRING_SCHEME':
                 message = `There is no database adapter setup for: ${
                     options.connectionString.split('://')[0]
-                }`
+                }. You may need to install a plugin to support this database using env.DB_ADAPTER and 'yarn add ...'`
                 break
 
             case 'NOT_IMPLEMENTED':
