@@ -17,7 +17,7 @@ const storePluginAssert = {
 
         if (!plugins?.length) {
             assert.fail(
-                `The store you passed has no plugins. Add one to 'protected plugins: DataStorePlugin[] = [...]' or add it in the constructor of your store with 'this.plugins[...]'`
+                `The store you passed has no plugins. Add one to 'protected plugins: DataStorePlugin[] = [...]' or add it in the constructor of your store with 'this.plugins.push(...)'`
             )
         }
 
@@ -25,7 +25,7 @@ const storePluginAssert = {
 
         if (plugin?.getName() !== pluginName) {
             assert.fail(
-                `I could not find the plugin '${pluginName}' in the store you passed. Make sure you added it to 'protected plugins: DataStorePlugin[] = [...]' or added it in the constructor of your store with 'this.plugins[...]'`
+                `I could not find the plugin '${pluginName}' in the store you passed. Make sure you added it to 'protected plugins: DataStorePlugin[] = [...]' or added it in the constructor of your store with 'this.plugins.push(...)'`
             )
         }
 
