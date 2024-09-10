@@ -1429,7 +1429,7 @@ const databaseAssertUtil = {
         } catch (err: any) {
             assert.fail(
                 `Trying to create a unique index on target.organizationId and slug failed.\n\n` +
-                    err.stack ?? err.message
+                    (err.stack ?? err.message)
             )
         }
 
@@ -2090,7 +2090,7 @@ const databaseAssertUtil = {
         } catch (err: any) {
             assert.fail(
                 `syncUniqueIndexes() should not have thrown an error when syncing a unique index with a filter expression.\n\n` +
-                    err.stack ?? err.message
+                    (err.stack ?? err.message)
             )
         }
 
@@ -2104,7 +2104,7 @@ const databaseAssertUtil = {
         } catch (err: any) {
             assert.fail(
                 `Creating a record should not have thrown an error after syncing a unique index with a filter expression.\n\n` +
-                    err.stack ?? err.message
+                    (err.stack ?? err.message)
             )
         }
 
@@ -2150,7 +2150,7 @@ const databaseAssertUtil = {
         } catch (err: any) {
             assert.fail(
                 `syncUniqueIndexes() should not have thrown an error when syncing multiple unique indexes with filter expressions.\n\n` +
-                    err.stack ?? err.message
+                    (err.stack ?? err.message)
             )
         }
 
@@ -2171,7 +2171,7 @@ const databaseAssertUtil = {
         } catch (err: any) {
             assert.fail(
                 `createOne() should not throw since index has filter { slug: { \$type: 'string' } }.\n\n` +
-                    err.stack ?? err.message
+                    (err.stack ?? err.message)
             )
         }
 
@@ -2185,7 +2185,7 @@ const databaseAssertUtil = {
         } catch (err: any) {
             assert.fail(
                 `createOne() should not throw since index has filter {uniqueField: { \$type: 'string' } }.\n\n` +
-                    err.stack ?? err.message
+                    (err.stack ?? err.message)
             )
         }
 
