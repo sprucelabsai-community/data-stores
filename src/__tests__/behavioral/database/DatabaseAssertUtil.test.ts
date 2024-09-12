@@ -1,7 +1,9 @@
 import { cloneDeep } from '@sprucelabs/schema'
 import { test, assert, errorAssert } from '@sprucelabs/test-utils'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
-import databaseAssertUtil from '../../../tests/databaseAssertUtil'
+import databaseAssertUtil, {
+    DatabaseAssertionName,
+} from '../../../tests/databaseAssertUtil'
 import pluckAssertionMethods from '../../../tests/pluckAssertionMethods'
 import mongoConnect from '../../support/mongoConnect'
 
@@ -36,7 +38,7 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
             }
         }
 
-        let tests = ['assertCanSortDesc']
+        let tests: DatabaseAssertionName[] = ['assertCanSortDesc']
         await utilClone.runSuite(mongoConnect, tests)
         assert.isEqualDeep(hits, tests)
 

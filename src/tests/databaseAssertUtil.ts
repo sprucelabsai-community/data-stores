@@ -6,103 +6,105 @@ import { Database, IndexWithFilter, TestConnect } from '../types/database.types'
 import { DataStore } from '../types/stores.types'
 import generateId from '../utilities/generateId'
 
+const methods = [
+    //connecting
+    'assertThrowsWithInvalidConnectionString',
+    'assertThrowsWhenCantConnect',
+    'assertThrowsWithBadDatabaseName',
+
+    //inserting
+    'assertEmptyDatabaseReturnsEmptyArray',
+    'assertKnowsIfConnectionClosed',
+    'assertFindOneOnEmptyDatabaseReturnsNull',
+    'assertCanSortDesc',
+    'assertCanSortAsc',
+    'assertCanSortById',
+    'assertCanQueryWithOr',
+    'generateIdDifferentEachTime',
+    'assertInsertingGeneratesId',
+    'assertCanCreateMany',
+    'assertCanLimitResults',
+    'assertCanCreateWithObjectField',
+
+    //counting
+    'assertCanCountOnId',
+    'assertCanCount',
+
+    //updating
+    'assertThrowsWhenUpdatingRecordNotFound',
+    'assertCanUpdate',
+    'assertCanUpdateMany',
+    'assertCanPushOntoArrayValue',
+    'assertCanUpdateWithObjectField',
+    'assertCanUpdateFieldInObjectFieldWithTargettedWhere',
+    'assertCanSaveAndGetNullAndUndefined',
+
+    //upserting
+    'assertCanUpsertOne',
+    'assertCanUpsertNull',
+    'assertCanPushToArrayOnUpsert',
+    'assertCanSyncUniqueIndexesWithFilterExpression',
+
+    //finding
+    'assertEmptyDatabaseReturnsEmptyArray',
+    'assertFindOneOnEmptyDatabaseReturnsNull',
+    'assertCanLimitResults',
+    'assertCanLimitResultsToZero',
+    'assertCanFindWithBooleanField',
+    'assertCanQueryByGtLtGteLteNe',
+    'assertCanQueryPathWithDotSyntax',
+    'assertCanReturnOnlySelectFields',
+    'assertCanSearchByRegex',
+    'assertCanFindWithNe',
+    'assertCanFindWithIn',
+
+    //deleting
+    'assertCanDeleteRecord',
+    'assertCanDeleteOne',
+
+    //indexing
+    'assertHasNoUniqueIndexToStart',
+    'assertCanCreateUniqueIndex',
+    'assertCanCreateMultiFieldUniqueIndex',
+    'assertCantCreateUniqueIndexTwice',
+    'assertCanDropUniqueIndex',
+    'assertCanDropCompoundUniqueIndex',
+    'assertCantDropUniqueIndexThatDoesntExist',
+    'assertCantDropIndexWhenNoIndexExists',
+    'assertCantDropCompoundUniqueIndexThatDoesntExist',
+    'assertSyncingUniqueIndexsAddsMissingIndexes',
+    'assertSyncingUniqueIndexsSkipsExistingIndexs',
+    'assertSyncingUniqueIndexesRemovesExtraIndexes',
+    'assertSyncingUniqueIndexesIsRaceProof',
+    'assertSyncingIndexesDoesNotAddAndRemove',
+    'assertUniqueIndexBlocksDuplicates',
+    'assertDuplicateKeyThrowsOnInsert',
+    'assertSettingUniqueIndexViolationThrowsSpruceError',
+    'assertCanCreateUniqueIndexOnNestedField',
+    'assertUpsertWithUniqueIndex',
+    'assertNestedFieldIndexUpdates',
+    'assertHasNoIndexToStart',
+    'assertCanCreateIndex',
+    'assertCantCreateSameIndexTwice',
+    'assertCanCreateMultiFieldIndex',
+    'assertCanDropIndex',
+    'assertCanDropCompoundIndex',
+    'assertCantDropCompoundIndexThatDoesNotExist',
+    'assertSyncIndexesSkipsExisting',
+    'assertSyncIndexesRemovesExtraIndexes',
+    'assertSyncIndexesHandlesRaceConditions',
+    'assertSyncIndexesDoesNotRemoveExisting',
+    'assertDuplicateFieldsWithMultipleUniqueIndexesWorkAsExpected',
+    'assertCanSyncIndexesWithoutPartialThenAgainWithProperlyUpdates',
+] as const
+
+export type DatabaseAssertionName = (typeof methods)[number]
+
 const databaseAssertUtil = {
     collectionName: 'test_collection',
 
-    async runSuite(connect: TestConnect, tests?: string[]) {
+    async runSuite(connect: TestConnect, tests?: DatabaseAssertionName[]) {
         assertOptions({ connect }, ['connect'])
-
-        const methods = [
-            //connecting
-            'assertThrowsWithInvalidConnectionString',
-            'assertThrowsWhenCantConnect',
-            'assertThrowsWithBadDatabaseName',
-
-            //inserting
-            'assertEmptyDatabaseReturnsEmptyArray',
-            'assertKnowsIfConnectionClosed',
-            'assertFindOneOnEmptyDatabaseReturnsNull',
-            'assertCanSortDesc',
-            'assertCanSortAsc',
-            'assertCanSortById',
-            'assertCanQueryWithOr',
-            'generateIdDifferentEachTime',
-            'assertInsertingGeneratesId',
-            'assertCanCreateMany',
-            'assertCanLimitResults',
-            'assertCanCreateWithObjectField',
-
-            //counting
-            'assertCanCountOnId',
-            'assertCanCount',
-
-            //updating
-            'assertThrowsWhenUpdatingRecordNotFound',
-            'assertCanUpdate',
-            'assertCanUpdateMany',
-            'assertCanPushOntoArrayValue',
-            'assertCanUpdateWithObjectField',
-            'assertCanUpdateFieldInObjectFieldWithTargettedWhere',
-            'assertCanSaveAndGetNullAndUndefined',
-
-            //upserting
-            'assertCanUpsertOne',
-            'assertCanUpsertNull',
-            'assertCanPushToArrayOnUpsert',
-            'assertCanSyncUniqueIndexesWithFilterExpression',
-
-            //finding
-            'assertEmptyDatabaseReturnsEmptyArray',
-            'assertFindOneOnEmptyDatabaseReturnsNull',
-            'assertCanLimitResults',
-            'assertCanLimitResultsToZero',
-            'assertCanFindWithBooleanField',
-            'assertCanQueryByGtLtGteLteNe',
-            'assertCanQueryPathWithDotSyntax',
-            'assertCanReturnOnlySelectFields',
-            'assertCanSearchByRegex',
-            'assertCanFindWithNe',
-            'assertCanFindWithIn',
-
-            //deleting
-            'assertCanDeleteRecord',
-            'assertCanDeleteOne',
-
-            //indexing
-            'assertHasNoUniqueIndexToStart',
-            'assertCanCreateUniqueIndex',
-            'assertCanCreateMultiFieldUniqueIndex',
-            'assertCantCreateUniqueIndexTwice',
-            'assertCanDropUniqueIndex',
-            'assertCanDropCompoundUniqueIndex',
-            'assertCantDropUniqueIndexThatDoesntExist',
-            'assertCantDropIndexWhenNoIndexExists',
-            'assertCantDropCompoundUniqueIndexThatDoesntExist',
-            'assertSyncingUniqueIndexsAddsMissingIndexes',
-            'assertSyncingUniqueIndexsSkipsExistingIndexs',
-            'assertSyncingUniqueIndexesRemovesExtraIndexes',
-            'assertSyncingUniqueIndexesIsRaceProof',
-            'assertSyncingIndexesDoesNotAddAndRemove',
-            'assertUniqueIndexBlocksDuplicates',
-            'assertDuplicateKeyThrowsOnInsert',
-            'assertSettingUniqueIndexViolationThrowsSpruceError',
-            'assertCanCreateUniqueIndexOnNestedField',
-            'assertUpsertWithUniqueIndex',
-            'assertNestedFieldIndexUpdates',
-            'assertHasNoIndexToStart',
-            'assertCanCreateIndex',
-            'assertCantCreateSameIndexTwice',
-            'assertCanCreateMultiFieldIndex',
-            'assertCanDropIndex',
-            'assertCanDropCompoundIndex',
-            'assertCantDropCompoundIndexThatDoesNotExist',
-            'assertSyncIndexesSkipsExisting',
-            'assertSyncIndexesRemovesExtraIndexes',
-            'assertSyncIndexesHandlesRaceConditions',
-            'assertSyncIndexesDoesNotRemoveExisting',
-            'assertDuplicateFieldsWithMultipleUniqueIndexesWorkAsExpected',
-            'assertCanSyncIndexesWithoutPartialThenAgainWithProperlyUpdates',
-        ]
 
         const db = await connectToDabatase(connect)
         await db.dropDatabase()
