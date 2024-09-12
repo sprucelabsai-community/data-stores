@@ -1279,7 +1279,7 @@ const databaseAssertUtil = {
         await assertCantCreateUniqueIndexTwice(
             db,
             this.collectionName,
-            ['uniqueField', 'anotherField'],
+            ['uniqueField', 'someField2'],
             2
         )
 
