@@ -1092,7 +1092,7 @@ const databaseAssertUtil = {
         await db.syncUniqueIndexes(this.collectionName, [
             {
                 fields: ['uniqueField'],
-                filter: { isActive: true },
+                filter: { isPublic: true },
             },
         ])
 
@@ -1103,7 +1103,7 @@ const databaseAssertUtil = {
             },
             {
                 fields: ['uniqueField'],
-                filter: { isActive: true },
+                filter: { isPublic: true },
             },
         ])
 
