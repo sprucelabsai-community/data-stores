@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "28.1.336",
+  "version": "28.1.339",
   "files": [
     "build/**/*",
     "!build/__tests__",
@@ -64,27 +64,27 @@
     "watch.tsc": "tsc -w"
   },
   "dependencies": {
-    "@sprucelabs/error": "^6.0.336",
-    "@sprucelabs/globby": "^2.0.297",
-    "@sprucelabs/schema": "^30.0.384",
-    "@sprucelabs/spruce-skill-utils": "^31.0.403",
+    "@sprucelabs/error": "^6.0.338",
+    "@sprucelabs/globby": "^2.0.299",
+    "@sprucelabs/schema": "^30.0.386",
+    "@sprucelabs/spruce-skill-utils": "^31.0.405",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.8.1",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^6.0.320",
-    "@sprucelabs/jest-json-reporter": "^8.0.337",
-    "@sprucelabs/resolve-path-aliases": "^2.0.315",
+    "@sprucelabs/esm-postbuild": "^6.0.322",
+    "@sprucelabs/jest-json-reporter": "^8.0.339",
+    "@sprucelabs/resolve-path-aliases": "^2.0.317",
     "@sprucelabs/semantic-release": "^5.0.2",
     "@sprucelabs/test": "^9.0.44",
-    "@sprucelabs/test-utils": "^5.1.282",
+    "@sprucelabs/test-utils": "^5.1.284",
     "@types/lodash": "^4.17.7",
     "@types/nedb": "^1.8.16",
     "@types/node": "^22.5.4",
     "chokidar-cli": "^3.0.0",
-    "concurrently": "^9.0.0",
+    "concurrently": "^9.0.1",
     "dotenv": "^16.4.5",
     "eslint": "^9.10.0",
     "eslint-config-spruce": "^11.2.26",
