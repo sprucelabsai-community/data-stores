@@ -1160,7 +1160,7 @@ const databaseAssertUtil = {
         assert.isLength(
             indexes,
             2,
-            'There should still be 2 indexes after syncing.'
+            'There should still be 2 indexes after this syncUniqueIndexs(). First sync was a single field unique index, second sync was two indexes, but one was already there. So one should have been ignored, one should have been added.'
         )
         await this.shutdown(db)
     },
