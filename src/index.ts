@@ -21,7 +21,7 @@ export * from './cursors/CursorPager'
 export { default as CursorPagerFaker } from './cursors/CursorPagerFaker'
 export * from './cursors/CursorPager'
 export { default as DatabaseFieldMapperPlugin } from './plugins/DatabaseFieldMapperPlugin'
-export { default as normalizeIndex } from './databases/normalizeIndex'
+export * from './databases/database.utilities'
 
 /**
  * @deprecated databaseAssertUtil -> databaseAssert

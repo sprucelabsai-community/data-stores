@@ -2,12 +2,7 @@ import { assertOptions } from '@sprucelabs/schema'
 import { assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import SpruceError from '../errors/SpruceError'
-import {
-    Database,
-    Index,
-    TestConnect,
-    UniqueIndex,
-} from '../types/database.types'
+import { Database, IndexWithFilter, TestConnect } from '../types/database.types'
 import { DataStore } from '../types/stores.types'
 import generateId from '../utilities/generateId'
 
@@ -106,6 +101,7 @@ const databaseAssertUtil = {
             'assertSyncIndexesHandlesRaceConditions',
             'assertSyncIndexesDoesNotRemoveExisting',
             'assertDuplicateFieldsWithMultipleUniqueIndexesWorkAsExpected',
+            'assertCanSyncIndexesWithoutPartialThenAgainWithProperlyUpdates',
         ]
 
         const db = await connectToDabatase(connect)
@@ -126,17 +122,12 @@ const databaseAssertUtil = {
         }
     },
 
-    async _getFilteredIndexes(db: Database) {
-        return this._filterIdIndex(
-            await db.getIndexes(this.collectionName)
-        ) as string[][]
+    async _getIndexesWith_IdFilteredOut(db: Database) {
+        return this._filterOut_Id(await db.getIndexes(this.collectionName))
     },
 
-    _filterIdIndex(allIndexes: UniqueIndex[] | Index[]) {
-        //@ts-ignore
-        return allIndexes.filter((i) => i[0] !== '_id') as
-            | UniqueIndex[]
-            | Index[]
+    _filterOut_Id(allIndexes: IndexWithFilter[]) {
+        return allIndexes.filter((i) => i.fields[0] !== '_id')
     },
     async _assertUpdateUpdatedRightNumberOfRecords(
         db: Database,
@@ -349,7 +340,7 @@ const databaseAssertUtil = {
         await db.createUniqueIndex(this.collectionName, ['uniqueField'])
         let indexes = (await db.getUniqueIndexes(
             this.collectionName
-        )) as string[][]
+        )) as IndexWithFilter[]
 
         assert.isLength(
             indexes,
@@ -357,22 +348,22 @@ const databaseAssertUtil = {
             'getUniqueIndexes() did not return the unique index I tried to create!'
         )
         assert.isLength(
-            indexes[0],
+            indexes[0].fields,
             1,
-            'getUniqueIndexes() needs to return an array of arrays. Each item in the array should be an array of fields that make up the unique index.'
+            'getUniqueIndexes() needs to return an array of IndexWithFilters. Each item in the array should be an array of fields that make up the unique index.'
         )
         assert.isEqual(
-            indexes[0][0].toLowerCase(),
+            indexes[0].fields[0].toLowerCase(),
             'uniqueField'.toLowerCase(),
             'getUniqueIndexes() did not add the expected field to the first unique index.'
         )
 
         await db.createUniqueIndex(this.collectionName, ['uniqueField2'])
-        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
+        indexes = await db.getUniqueIndexes(this.collectionName)
 
         assert.isLength(indexes, 2)
         assert.isEqual(
-            indexes[1][0].toLowerCase(),
+            indexes[1].fields[0].toLowerCase(),
             'uniqueField2'.toLowerCase()
         )
 
@@ -380,15 +371,15 @@ const databaseAssertUtil = {
             'uniqueField3',
             'uniqueField4',
         ])
-        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
+        indexes = await db.getUniqueIndexes(this.collectionName)
 
         assert.isLength(indexes, 3)
         assert.isEqual(
-            indexes[2][0].toLowerCase(),
+            indexes[2].fields[0].toLowerCase(),
             'uniqueField3'.toLowerCase()
         )
         assert.isEqual(
-            indexes[2][1].toLowerCase(),
+            indexes[2].fields[1].toLowerCase(),
             'uniqueField4'.toLowerCase()
         )
         await this.shutdown(db)
@@ -1083,9 +1074,7 @@ const databaseAssertUtil = {
             ['someField'],
             ['otherField', 'otherField2'],
         ])
-        let indexes = (await db.getUniqueIndexes(
-            this.collectionName
-        )) as string[][]
+        let indexes = await db.getUniqueIndexes(this.collectionName)
         assert.isLength(
             indexes,
             3,
@@ -1094,9 +1083,9 @@ const databaseAssertUtil = {
 
         await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
-        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
+        indexes = await db.getUniqueIndexes(this.collectionName)
         assert.isLength(indexes, 1)
-        assert.isEqual(indexes[0][0].toLowerCase(), 'uniquefield')
+        assert.isEqual(indexes[0].fields[0].toLowerCase(), 'uniquefield')
 
         await db.syncUniqueIndexes(this.collectionName, [
             {
@@ -1116,7 +1105,7 @@ const databaseAssertUtil = {
             },
         ])
 
-        indexes = (await db.getUniqueIndexes(this.collectionName)) as string[][]
+        indexes = await db.getUniqueIndexes(this.collectionName)
         assert.isLength(
             indexes,
             2,
@@ -1157,7 +1146,7 @@ const databaseAssertUtil = {
         assert.isLength(
             indexes,
             1,
-            'There should now be 2 indexes after syncing.'
+            'syncUniqueIndexes() should have removed the index that was set before it that was different.'
         )
 
         await db.syncUniqueIndexes(this.collectionName, [
@@ -1184,14 +1173,14 @@ const databaseAssertUtil = {
         ])
 
         const err = await assert.doesThrowAsync(() =>
-            db.dropIndex(this.collectionName, ['uniqueField', 'someOtherField'])
+            db.dropIndex(this.collectionName, ['someOtherField', 'uniqueField'])
         )
 
         lowerCaseMissingIndexValues(err)
 
         errorAssert.assertError(err, 'INDEX_NOT_FOUND', {
             collectionName: this.collectionName,
-            missingIndex: ['uniquefield', 'someotherfield'],
+            missingIndex: ['someotherfield', 'uniquefield'],
         })
         await this.shutdown(db)
     },
@@ -1285,6 +1274,13 @@ const databaseAssertUtil = {
             this.collectionName,
             ['uniqueField'],
             1
+        )
+
+        await assertCantCreateUniqueIndexTwice(
+            db,
+            this.collectionName,
+            ['uniqueField', 'anotherField'],
+            2
         )
 
         await this.shutdown(db)
@@ -1455,8 +1451,8 @@ const databaseAssertUtil = {
 
         errorAssert.assertError(err, 'DUPLICATE_RECORD', {
             collectionName: this.collectionName,
-            duplicateFields: ['target.organizationId', 'slug'],
-            duplicateValues: ['go!', 'a slug'],
+            duplicateFields: ['slug', 'target.organizationId'],
+            duplicateValues: ['a slug', 'go!'],
             action: 'create',
         })
 
@@ -2117,7 +2113,7 @@ const databaseAssertUtil = {
                     someField3: 'test',
                 }),
             undefined,
-            `Creating a duplicate record with should throw an error.`
+            `Creating a duplicate record with should throw an error with a uniqueIndex with filter. Make sure syncUniqueIndexes() is actually created the index honoring the filter.`
         )
 
         await db.createOne(this.collectionName, {
@@ -2236,6 +2232,67 @@ const databaseAssertUtil = {
         await this.shutdown(db)
     },
 
+    async assertCanSyncIndexesWithoutPartialThenAgainWithProperlyUpdates(
+        connect: TestConnect
+    ) {
+        const db = await connectToDabatase(connect)
+
+        await db.syncUniqueIndexes(this.collectionName, [
+            ['uniqueField', 'someField3'],
+        ])
+
+        await db.syncUniqueIndexes(this.collectionName, [
+            {
+                fields: ['uniqueField', 'someField3'],
+                filter: {
+                    uniqueField: { $type: 'string' },
+                },
+            },
+        ])
+
+        await db.createOne(this.collectionName, {
+            name: generateId(),
+            uniqueField: 1,
+            slug: null,
+            someField3: 'test',
+        })
+
+        try {
+            await db.createOne(this.collectionName, {
+                name: generateId(),
+                uniqueField: 1,
+                slug: null,
+                someField3: 'test',
+            })
+        } catch {
+            assert.fail(
+                `An error was thrown trying to create a record that should not have matched on a unique index with a filter. Make sure your database adapter is properly syncing indexes. In this case, it should remove an index without a filter with an index with a filter.`
+            )
+        }
+
+        await db.createOne(this.collectionName, {
+            name: generateId(),
+            uniqueField: 'hey there',
+            slug: null,
+            someField3: 'how are you?',
+        })
+
+        try {
+            await assert.doesThrowAsync(() =>
+                db.createOne(this.collectionName, {
+                    name: generateId(),
+                    uniqueField: 'hey there',
+                    slug: null,
+                    someField3: 'how are you?',
+                })
+            )
+        } catch {
+            assert.fail(
+                `A record was created that should have been blocked by a unique index with a filter`
+            )
+        }
+    },
+
     async assertSyncIndexesRemovesExtraIndexes(connect: TestConnect) {
         const db = await connectToDabatase(connect)
 
@@ -2244,14 +2301,14 @@ const databaseAssertUtil = {
             ['someField'],
             ['otherField', 'otherField2'],
         ])
-        let indexes = await this._getFilteredIndexes(db)
+        let indexes = await this._getIndexesWith_IdFilteredOut(db)
         assert.isLength(indexes, 3)
 
         await db.syncIndexes(this.collectionName, [['name']])
 
-        indexes = await this._getFilteredIndexes(db)
+        indexes = await this._getIndexesWith_IdFilteredOut(db)
         assert.isLength(indexes, 1)
-        assert.isEqual(indexes[0][0], 'name')
+        assert.isEqual(indexes[0].fields[0], 'name')
         await this.shutdown(db)
     },
 
@@ -2259,8 +2316,9 @@ const databaseAssertUtil = {
         const db = await connectToDabatase(connect)
         await db.syncIndexes(this.collectionName, [['name']])
 
-        let indexes = await this._getFilteredIndexes(db)
+        let indexes = await this._getIndexesWith_IdFilteredOut(db)
         assert.isLength(indexes, 1)
+        assert.isLength(indexes[0].fields, 1)
 
         await db.syncIndexes(this.collectionName, [
             ['name'],
@@ -2268,8 +2326,12 @@ const databaseAssertUtil = {
             ['otherField', 'otherField2'],
         ])
 
-        indexes = await this._getFilteredIndexes(db)
-        assert.isLength(indexes, 3)
+        indexes = await this._getIndexesWith_IdFilteredOut(db)
+        assert.isLength(
+            indexes,
+            3,
+            'There should be 3 indexes after the last sync. 1 would have been skipped, the other 2 should have been added'
+        )
         await this.shutdown(db)
     },
 
@@ -2285,7 +2347,7 @@ const databaseAssertUtil = {
         )
         errorAssert.assertError(err, 'INDEX_NOT_FOUND', {
             collectionName: this.collectionName,
-            missingIndex: ['uniqueField', 'someOtherField'],
+            missingIndex: ['someOtherField', 'uniqueField'],
         })
         await this.shutdown(db)
     },
@@ -2295,14 +2357,22 @@ const databaseAssertUtil = {
         await db.createIndex(this.collectionName, ['someField', 'otherField'])
         await db.dropIndex(this.collectionName, ['someField', 'otherField'])
 
-        let indexes = await this._getFilteredIndexes(db)
-        assert.isLength(indexes, 0)
+        let indexes = await this._getIndexesWith_IdFilteredOut(db)
+        assert.isLength(
+            indexes,
+            0,
+            `The one index I created should have been dropped`
+        )
 
         await db.createIndex(this.collectionName, ['someField', 'someField2'])
         await db.createIndex(this.collectionName, ['someField', 'someField3'])
         await db.dropIndex(this.collectionName, ['someField', 'someField3'])
-        indexes = await this._getFilteredIndexes(db)
-        assert.isLength(indexes, 1)
+        indexes = await this._getIndexesWith_IdFilteredOut(db)
+        assert.isLength(
+            indexes,
+            1,
+            `I created 2 compound indexes, then dropped one, and expected 1 to remain.`
+        )
         await this.shutdown(db)
     },
 
@@ -2311,13 +2381,13 @@ const databaseAssertUtil = {
         await db.createIndex(this.collectionName, ['someField'])
         await db.dropIndex(this.collectionName, ['someField'])
 
-        let indexes = await this._getFilteredIndexes(db)
+        let indexes = await this._getIndexesWith_IdFilteredOut(db)
         assert.isLength(indexes, 0)
 
         await db.createIndex(this.collectionName, ['someField2'])
         await db.createIndex(this.collectionName, ['someField3'])
         await db.dropIndex(this.collectionName, ['someField3'])
-        indexes = await this._getFilteredIndexes(db)
+        indexes = await this._getIndexesWith_IdFilteredOut(db)
         assert.isLength(indexes, 1)
         await this.shutdown(db)
     },
@@ -2343,8 +2413,9 @@ const databaseAssertUtil = {
 
     async assertCantCreateSameIndexTwice(connect: TestConnect) {
         const db = await connectToDabatase(connect)
+
         await db.createIndex(this.collectionName, ['name'])
-        let indexes = await this._getFilteredIndexes(db)
+        let indexes = await this._getIndexesWith_IdFilteredOut(db)
         assert.isLength(indexes, 1)
 
         const err = await assert.doesThrowAsync(() =>
@@ -2357,7 +2428,7 @@ const databaseAssertUtil = {
     async assertCanCreateIndex(connect: TestConnect) {
         const db = await connectToDabatase(connect)
         await db.createIndex(this.collectionName, ['uniqueField'])
-        let indexes = await this._getFilteredIndexes(db)
+        let indexes = await this._getIndexesWith_IdFilteredOut(db)
 
         assert.isArray(indexes, 'getIndexes() should return an array!')
         assert.isLength(
@@ -2366,18 +2437,21 @@ const databaseAssertUtil = {
             'getIndexes() should return the one index that was created!'
         )
         assert.isLength(
-            indexes[0],
+            indexes[0].fields,
             1,
-            'getIndexes() should return an array of arrays! It should be returing the first index I created!'
+            'getIndexes() should return an array of IndexWithFilter! It should be returing the first index I created with the first field!'
         )
-        assert.isEqual(indexes[0][0].toLowerCase(), 'uniqueField'.toLowerCase())
+        assert.isEqual(
+            indexes[0].fields[0].toLowerCase(),
+            'uniqueField'.toLowerCase()
+        )
 
         await db.createIndex(this.collectionName, ['uniqueField2'])
-        indexes = await this._getFilteredIndexes(db)
+        indexes = await this._getIndexesWith_IdFilteredOut(db)
 
         assert.isLength(indexes, 2)
         assert.isEqual(
-            indexes[1][0].toLowerCase(),
+            indexes[1].fields[0].toLowerCase(),
             'uniqueField2'.toLowerCase()
         )
 
@@ -2385,15 +2459,15 @@ const databaseAssertUtil = {
             'uniqueField3',
             'uniqueField4',
         ])
-        indexes = await this._getFilteredIndexes(db)
+        indexes = await this._getIndexesWith_IdFilteredOut(db)
 
         assert.isLength(indexes, 3)
         assert.isEqual(
-            indexes[2][0].toLowerCase(),
+            indexes[2].fields[0].toLowerCase(),
             'uniqueField3'.toLowerCase()
         )
         assert.isEqual(
-            indexes[2][1].toLowerCase(),
+            indexes[2].fields[1].toLowerCase(),
             'uniqueField4'.toLowerCase()
         )
 
@@ -2600,7 +2674,7 @@ const databaseAssertUtil = {
         const db = await connectToDabatase(connect)
 
         await db.createIndex(this.collectionName, fields)
-        const indexes = await this._getFilteredIndexes(db)
+        const indexes = await this._getIndexesWith_IdFilteredOut(db)
         assert.isLength(
             indexes,
             1,
@@ -2608,7 +2682,7 @@ const databaseAssertUtil = {
         )
 
         assert.isEqualDeep(
-            indexes[0].map((i) => i.toLowerCase()),
+            indexes[0].fields.map((i) => i.toLowerCase()),
             fields.map((f) => f.toLowerCase())
         )
 
@@ -2637,17 +2711,18 @@ async function assertCantCreateUniqueIndexTwice(
     assert.isLength(
         indexes,
         expectedTotalUniqueIndexes,
-        'getUniqueIndexes() should return total unique indexs'
+        'getUniqueIndexes() should return all unique indexes'
     )
 
     const err = await assert.doesThrowAsync(
-        () => db.createUniqueIndex(collectionName, ['uniqueField']),
+        () => db.createUniqueIndex(collectionName, fields),
         undefined,
         'createUniqueIndex() should throw a DataStoreError({code: "INDEX_EXISTS"}) error.'
     )
+
     errorAssert.assertError(err, 'INDEX_EXISTS', {
         collectionName,
-        index: ['uniqueField'],
+        index: fields,
     })
 }
 

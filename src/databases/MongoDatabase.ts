@@ -1,6 +1,4 @@
 import { buildLog } from '@sprucelabs/spruce-skill-utils'
-import differenceWith from 'lodash/differenceWith'
-import isEqual from 'lodash/isEqual'
 import {
     MongoClientOptions,
     MongoClient,
@@ -14,12 +12,16 @@ import {
     DatabaseOptions,
     Index,
     IndexWithFilter,
-    UniqueIndex,
 } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
-import normalizeIndex from './normalizeIndex'
+import {
+    doesIndexesInclude,
+    generateIndexName,
+    normalizeIndex,
+    pluckMissingIndexes,
+} from './database.utilities'
 
 export const MONGO_TEST_URI = 'mongodb://localhost:27017'
 
@@ -341,25 +343,27 @@ export default class MongoDatabase implements Database {
 
     private async listIndexes(collection: string) {
         try {
-            return await this.assertDbWhileAttempingTo(
+            const indexes = await this.assertDbWhileAttempingTo(
                 'get indexes.',
                 collection
             )
                 .collection(collection)
                 .listIndexes()
                 .toArray()
+
+            return indexes.filter((index) => index.name !== '_id_')
         } catch (err) {
             return []
         }
     }
 
-    public async dropIndex(collection: string, index: UniqueIndex) {
+    public async dropIndex(collection: string, index: Index) {
         const indexes = await this.listIndexes(collection)
-
+        const name = this.generateIndexName(this.normalizeIndex(index))
         let found = false
 
         for (const thisIndex of indexes) {
-            if (isEqual(Object.keys(thisIndex.key), index)) {
+            if (thisIndex.name === name) {
                 await this.assertDbWhileAttempingTo('drop a index.', collection)
                     .collection(collection)
                     .dropIndex(thisIndex.name)
@@ -378,12 +382,14 @@ export default class MongoDatabase implements Database {
     public async getUniqueIndexes(collection: string) {
         try {
             const indexes = await this.listIndexes(collection)
-
-            const uniqueIndexes: string[][] = []
+            const uniqueIndexes: IndexWithFilter[] = []
 
             for (const index of indexes) {
                 if (index.unique) {
-                    uniqueIndexes.push(Object.keys(index.key))
+                    uniqueIndexes.push({
+                        fields: Object.keys(index.key),
+                        filter: index.partialFilterExpression,
+                    })
                 }
             }
 
@@ -398,14 +404,20 @@ export default class MongoDatabase implements Database {
             const indexes = await this.listIndexes(collection)
 
             if (shouldIncludeUnique) {
-                return indexes
+                return indexes.map((index) => ({
+                    fields: Object.keys(index.key),
+                    filter: index.partialFilterExpression,
+                }))
             }
 
-            const nonUniqueIndexes: string[][] = []
+            const nonUniqueIndexes: IndexWithFilter[] = []
 
             for (const index of indexes) {
                 if (!index.unique) {
-                    nonUniqueIndexes.push(Object.keys(index.key))
+                    nonUniqueIndexes.push({
+                        fields: Object.keys(index.key),
+                        filter: undefined,
+                    })
                 }
             }
 
@@ -415,29 +427,29 @@ export default class MongoDatabase implements Database {
         }
     }
 
-    public async createIndex(
-        collection: string,
-        fields: string[]
-    ): Promise<void> {
+    public async createIndex(collection: string, index: Index): Promise<void> {
         const currentIndexes = await this.getIndexes(collection)
-        await this.assertIndexDoesNotExist(currentIndexes, fields, collection)
+        this.assertIndexDoesNotExist(currentIndexes, index, collection)
 
-        const index: Record<string, any> = {}
-        fields.forEach((name) => {
-            index[name] = 1
+        const indexSpec: Record<string, any> = {}
+
+        this.normalizeIndex(index).fields.forEach((name) => {
+            indexSpec[name] = 1
         })
 
         try {
             await this.assertDbWhileAttempingTo('create an index.', collection)
                 .collection(collection)
-                .createIndex(index)
+                .createIndex(indexSpec, {
+                    name: this.generateIndexName(index),
+                })
         } catch (err: any) {
             if (err?.code === 11000) {
                 throw new SpruceError({
                     code: 'DUPLICATE_KEY',
-                    friendlyMessage: `Could not create index! Index on '${collection}' has duplicate key for "${fields.join(
-                        ','
-                    )}"`,
+                    friendlyMessage: `Could not create index! Index on '${collection}' has duplicate key for "${this.normalizeIndex(
+                        index
+                    ).fields.join(',')}"`,
                 })
             } else {
                 throw err
@@ -446,48 +458,46 @@ export default class MongoDatabase implements Database {
     }
 
     private assertIndexDoesNotExist(
-        currentIndexes: UniqueIndex[] | Index[] | IndexWithFilter[],
-        fields: string[],
+        currentIndexes: Index[],
+        index: Index,
         collectionName: string
     ) {
-        if (this.doesIndexExist(currentIndexes, fields)) {
+        if (this.doesInclude(currentIndexes, index)) {
             throw new SpruceError({
                 code: 'INDEX_EXISTS',
-                index: fields,
+                index: this.normalizeIndex(index).fields,
                 collectionName,
             })
         }
     }
 
-    private doesIndexExist(
-        currentIndexes: UniqueIndex[] | Index[] | IndexWithFilter[],
-        fields: string[]
-    ) {
-        for (const index of currentIndexes ?? []) {
-            const { fields: normalizedFields } = this.normalizeIndex(index)
-            if (isEqual(normalizedFields, fields)) {
-                return true
-            }
-        }
-
-        return false
+    private doesInclude(haystack: Index[], needle: Index) {
+        return doesIndexesInclude(haystack, needle)
     }
 
     public async syncIndexes(
         collectionName: string,
-        indexes: string[][]
+        indexes: Index[]
     ): Promise<void> {
-        const currentIndexes = await this.getIndexes(collectionName)
-        const extraIndexes = differenceWith(
-            currentIndexes,
-            indexes,
-            isEqual
-        ).filter((i) => !(i.length === 1 && i[0] === '_id'))
+        await this._syncIndexes(collectionName, indexes, 'createIndex')
+    }
+
+    private async _syncIndexes(
+        collectionName: string,
+        indexes: Index[],
+        func: CreateIndexFuncName,
+        shouldIncludeUnique = false
+    ) {
+        const currentIndexes = await this.getIndexes(
+            collectionName,
+            shouldIncludeUnique
+        )
+        const indexesToDelete = pluckMissingIndexes(currentIndexes, indexes)
 
         for (const index of indexes) {
-            if (!this.doesIndexExist(currentIndexes, index)) {
+            if (!this.doesInclude(currentIndexes, this.normalizeIndex(index))) {
                 try {
-                    await this.createIndex(collectionName, index)
+                    await this[func](collectionName, index)
                 } catch (err: any) {
                     if (err.options?.code !== 'INDEX_EXISTS') {
                         throw err
@@ -495,7 +505,8 @@ export default class MongoDatabase implements Database {
                 }
             }
         }
-        for (const extra of extraIndexes) {
+
+        for (const extra of indexesToDelete) {
             await this.dropIndex(collectionName, extra)
         }
     }
@@ -505,22 +516,30 @@ export default class MongoDatabase implements Database {
         index: string[] | IndexWithFilter
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collection)
+        const indexWithFilter = this.normalizeIndex(index)
 
-        const { fields, filter } = this.normalizeIndex(index)
-
-        this.assertIndexDoesNotExist(currentIndexes, fields, collection)
+        this.assertIndexDoesNotExist(
+            currentIndexes,
+            indexWithFilter,
+            collection
+        )
 
         const created: Record<string, any> = {}
 
-        fields.forEach((name) => {
+        indexWithFilter.fields.forEach((name) => {
             created[name] = 1
         })
 
         try {
-            const options: CreateIndexesOptions = { unique: true }
-            if (filter) {
-                options.partialFilterExpression = filter
+            const options: CreateIndexesOptions = {
+                unique: true,
+                name: this.generateIndexName(indexWithFilter),
             }
+
+            if (indexWithFilter.filter) {
+                options.partialFilterExpression = indexWithFilter.filter
+            }
+
             await this.assertDbWhileAttempingTo(
                 'create a unique index.',
                 collection
@@ -531,9 +550,10 @@ export default class MongoDatabase implements Database {
             if (err?.code === 11000) {
                 throw new SpruceError({
                     code: 'DUPLICATE_KEY',
-                    friendlyMessage: `Could not create index! Unique index on '${collection}' has duplicate key for "${fields.join(
+                    originalError: err,
+                    friendlyMessage: `Could not create index! Unique index on '${collection}' has duplicate key for "${indexWithFilter.fields.join(
                         ','
-                    )}"`,
+                    )}"\n\nOriginal error:\n\n${err.message}`,
                 })
             } else {
                 throw err
@@ -541,39 +561,25 @@ export default class MongoDatabase implements Database {
         }
     }
 
-    private normalizeIndex(index: string[] | IndexWithFilter) {
+    private generateIndexName(indexWithFilter: Index) {
+        return generateIndexName(this.normalizeIndex(indexWithFilter))
+    }
+
+    private normalizeIndex(index: string[] | IndexWithFilter): IndexWithFilter {
         const { fields, filter } = normalizeIndex(index)
         return { fields, filter }
     }
 
     public async syncUniqueIndexes(
         collectionName: string,
-        indexes: UniqueIndex[]
+        indexes: Index[]
     ): Promise<void> {
-        const currentIndexes = await this.getUniqueIndexes(collectionName)
-        const toDelete: UniqueIndex[] = []
-
-        for (const index of currentIndexes) {
-            if (!this.doesIndexExist(indexes, index)) {
-                toDelete.push(index)
-            }
-        }
-
-        for (const index of indexes) {
-            const { fields } = this.normalizeIndex(index)
-            if (!this.doesIndexExist(currentIndexes, fields)) {
-                try {
-                    await this.createUniqueIndex(collectionName, index)
-                } catch (err: any) {
-                    if (err.options?.code !== 'INDEX_EXISTS') {
-                        throw err
-                    }
-                }
-            }
-        }
-        for (const extra of toDelete) {
-            await this.dropIndex(collectionName, extra)
-        }
+        await this._syncIndexes(
+            collectionName,
+            indexes,
+            'createUniqueIndex',
+            true
+        )
     }
 
     public async update(
@@ -707,3 +713,5 @@ export default class MongoDatabase implements Database {
         })
     }
 }
+
+type CreateIndexFuncName = 'createIndex' | 'createUniqueIndex'

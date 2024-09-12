@@ -358,8 +358,8 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
         await databaseAssertUtil.assertCanCreateMultiFieldIndex(connect)
     }
 
-    @test('can drop a index (mongo)', mongoConnect)
-    @test('can drop a index (neDb)', neDbConnect)
+    @test('can drop an index (mongo)', mongoConnect)
+    @test('can drop an index (neDb)', neDbConnect)
     protected static async canDropIndex(connect: TestConnect) {
         await databaseAssertUtil.assertCanDropIndex(connect)
     }
@@ -370,8 +370,8 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
         await databaseAssertUtil.assertCanDropCompoundIndex(connect)
     }
 
-    @test("can't drop compound  index that doesn't exist (mongo)", mongoConnect)
-    @test("can't drop compound  index that doesn't exist (neDb)", neDbConnect)
+    @test("can't drop compound index that doesn't exist (mongo)", mongoConnect)
+    @test("can't drop compound index that doesn't exist (neDb)", neDbConnect)
     protected static async cantDropCompoundIndexThatDoesntExist(
         connect: TestConnect
     ) {
@@ -424,6 +424,18 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
         connect: TestConnect
     ) {
         await databaseAssertUtil.assertCanSyncUniqueIndexesWithFilterExpression(
+            connect
+        )
+    }
+
+    @test(
+        'can syncIndexes without partial then again with properly updates (mongo)',
+        mongoConnect
+    )
+    protected static async canSyncIndexesWithoutPartialThenAgainWithProperlyUpdates(
+        connect: TestConnect
+    ) {
+        await databaseAssertUtil.assertCanSyncIndexesWithoutPartialThenAgainWithProperlyUpdates(
             connect
         )
     }

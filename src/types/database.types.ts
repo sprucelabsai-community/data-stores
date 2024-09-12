@@ -3,14 +3,11 @@ import { QueryOptions } from './query.types'
 
 export interface Database {
     [x: string]: any
-    syncUniqueIndexes(
-        collectionName: string,
-        indexes: UniqueIndex[]
-    ): Promise<void>
+    syncUniqueIndexes(collectionName: string, indexes: Index[]): Promise<void>
     syncIndexes(collectionName: string, indexes: Index[]): Promise<void>
-    dropIndex(collectionName: string, fields: UniqueIndex): Promise<void>
-    getUniqueIndexes(collectionName: string): Promise<UniqueIndex[]>
-    getIndexes(collectionName: string): Promise<Index[] | UniqueIndex[]>
+    dropIndex(collectionName: string, index: Index): Promise<void>
+    getUniqueIndexes(collectionName: string): Promise<IndexWithFilter[]>
+    getIndexes(collectionName: string): Promise<IndexWithFilter[]>
     isConnected(): boolean
     generateId(): string
     connect(): Promise<void>
@@ -58,8 +55,8 @@ export interface Database {
     delete(collection: string, query: Record<string, any>): Promise<number>
     deleteOne(collection: string, query: Record<string, any>): Promise<number>
     count(collection: string, query?: Record<string, any>): Promise<number>
-    createUniqueIndex(collection: string, fields: UniqueIndex): Promise<void>
-    createIndex(collection: string, fields: Index): Promise<void>
+    createUniqueIndex(collection: string, index: Index): Promise<void>
+    createIndex(collection: string, index: Index): Promise<void>
     query<T>(query: string, params?: any[]): Promise<T[]>
 }
 
@@ -80,11 +77,10 @@ export type TestConnect = (
 
 export interface IndexWithFilter {
     fields: string[]
-    filter: Record<string, any>
+    filter?: Record<string, any>
 }
 
-export type UniqueIndex = string[] | IndexWithFilter
-export type Index = string[]
+export type Index = string[] | IndexWithFilter
 
 export interface CreateOptions extends DatabaseInternalOptions {}
 

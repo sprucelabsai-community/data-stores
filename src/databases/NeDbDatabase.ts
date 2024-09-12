@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import differenceWith from 'lodash/differenceWith'
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 import isObject from 'lodash/isObject'
@@ -11,12 +10,17 @@ import {
     CreateOptions,
     Database,
     DatabaseInternalOptions,
-    UniqueIndex,
+    Index,
+    IndexWithFilter,
 } from '../types/database.types'
 import { QueryOptions } from '../types/query.types'
 import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
-import normalizeIndex from './normalizeIndex'
+import {
+    doesIndexesInclude,
+    normalizeIndex,
+    pluckMissingIndexes,
+} from './database.utilities'
 dotenv.config()
 
 export default class NeDbDatabase extends AbstractMutexer implements Database {
@@ -245,8 +249,8 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
     }
 
     private loadCollection(collection: string): Datastore<any> & {
-        _uniqueIndexes?: UniqueIndex[]
-        _indexes?: string[][]
+        _uniqueIndexes?: IndexWithFilter[]
+        _indexes?: IndexWithFilter[]
     } {
         if (!this.collections[collection]) {
             this.collections[collection] = new Datastore()
@@ -544,7 +548,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         return col._indexes ?? []
     }
 
-    public async dropIndex(collection: string, index: UniqueIndex) {
+    public async dropIndex(collection: string, index: Index) {
         const col = this.loadCollection(collection)
         const { fields } = normalizeIndex(index)
 
@@ -554,7 +558,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         let newIndexes = []
 
         for (const uniq of col._uniqueIndexes ?? []) {
-            if (!isEqual(uniq, fields)) {
+            if (!isEqual(uniq.fields, fields)) {
                 newIndexes.push(uniq)
             } else {
                 found = true
@@ -568,7 +572,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
             newIndexes = []
 
             for (const index of col._indexes ?? []) {
-                if (!isEqual(index, fields)) {
+                if (!isEqual(index.fields, fields)) {
                     newIndexes.push(index)
                 } else {
                     found = true
@@ -588,46 +592,44 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
     }
 
     private assertIndexDoesNotExist(
-        currentIndexes: UniqueIndex[],
-        fields: string[],
+        currentIndexes: IndexWithFilter[],
+        index: IndexWithFilter,
         collectionName: string
     ) {
-        if (this.doesIndexExist(currentIndexes, fields)) {
+        if (this.doesInclude(currentIndexes, index)) {
             throw new SpruceError({
                 code: 'INDEX_EXISTS',
-                index: fields,
+                index: index.fields,
                 collectionName,
             })
         }
     }
 
-    private doesIndexExist(currentIndexes: UniqueIndex[], index: UniqueIndex) {
-        for (const existing of currentIndexes ?? []) {
-            if (isEqual(existing, index)) {
-                return true
-            }
-        }
-
-        return false
+    private doesInclude(haystack: Index[], needle: Index) {
+        return doesIndexesInclude(haystack, needle)
     }
 
     public async createUniqueIndex(
         collection: string,
-        index: UniqueIndex
+        index: Index
     ): Promise<void> {
         const col = this.loadCollection(collection)
         if (!col._uniqueIndexes) {
             col._uniqueIndexes = []
         }
 
-        const { fields, filter } = normalizeIndex(index)
+        const indexWithFilter = normalizeIndex(index)
 
         await this.randomDelay()
-        this.assertIndexDoesNotExist(col._uniqueIndexes, fields, collection)
+        this.assertIndexDoesNotExist(
+            col._uniqueIndexes,
+            indexWithFilter,
+            collection
+        )
 
-        if (col._uniqueIndexes && !filter) {
+        if (col._uniqueIndexes && !indexWithFilter.filter) {
             const tempUniqueIndexes = [...col._uniqueIndexes]
-            tempUniqueIndexes.push(fields)
+            tempUniqueIndexes.push(indexWithFilter)
 
             const documents = (await this.find(collection)) || []
 
@@ -656,7 +658,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
             }
         }
 
-        col._uniqueIndexes.push(index)
+        col._uniqueIndexes.push(indexWithFilter)
     }
 
     public async createIndex(
@@ -669,26 +671,29 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         }
 
         await this.randomDelay()
-        this.assertIndexDoesNotExist(col._indexes, fields, collection)
+        this.assertIndexDoesNotExist(
+            col._indexes,
+            this.normalizeIndex(fields),
+            collection
+        )
 
-        col._indexes.push(fields)
+        col._indexes.push({ fields })
+    }
+
+    private normalizeIndex(index: string[] | IndexWithFilter): IndexWithFilter {
+        const { fields, filter } = normalizeIndex(index)
+        return { fields, filter }
     }
 
     public async syncUniqueIndexes(
         collectionName: string,
-        indexes: UniqueIndex[]
+        indexes: Index[]
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collectionName)
-        const toDelete: UniqueIndex[] = []
-
-        for (const index of currentIndexes) {
-            if (!this.doesIndexExist(indexes, index)) {
-                toDelete.push(index)
-            }
-        }
+        const toDelete: Index[] = pluckMissingIndexes(currentIndexes, indexes)
 
         for (const index of indexes) {
-            if (!this.doesIndexExist(currentIndexes, index)) {
+            if (!this.doesInclude(currentIndexes, index)) {
                 try {
                     await this.createUniqueIndex(collectionName, index)
                 } catch (err: any) {
@@ -709,10 +714,10 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         indexes: string[][]
     ): Promise<void> {
         const currentIndexes = await this.getIndexes(collectionName)
-        const extraIndexes = differenceWith(currentIndexes, indexes, isEqual)
+        const extraIndexes = pluckMissingIndexes(currentIndexes, indexes)
 
         for (const index of indexes) {
-            if (!this.doesIndexExist(currentIndexes, index)) {
+            if (!this.doesInclude(currentIndexes, index)) {
                 try {
                     await this.createIndex(collectionName, index)
                 } catch (err: any) {
