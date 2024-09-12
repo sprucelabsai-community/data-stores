@@ -2291,6 +2291,8 @@ const databaseAssertUtil = {
                 `A record was created that should have been blocked by a unique index with a filter`
             )
         }
+
+        await this.shutdown(db)
     },
 
     async assertSyncIndexesRemovesExtraIndexes(connect: TestConnect) {
