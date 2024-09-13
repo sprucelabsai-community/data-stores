@@ -1,3 +1,10 @@
+# [28.3.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.2.0...v28.3.0) (2024-09-13)
+
+
+### Features
+
+* can ignore tests in test suite ([a6cbf6b](https://github.com/sprucelabsai-community/data-stores/commit/a6cbf6b))
+
 # [28.2.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.1.349...v28.2.0) (2024-09-13)
 
 
