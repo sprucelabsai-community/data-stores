@@ -1,3 +1,10 @@
+# [28.2.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.1.349...v28.2.0) (2024-09-13)
+
+
+### Features
+
+* index names honored and can be set at creation ([cf7af84](https://github.com/sprucelabsai-community/data-stores/commit/cf7af84))
+
 ## [28.1.349](https://github.com/sprucelabsai-community/data-stores/compare/v28.1.348...v28.1.349) (2024-09-13)
 
 ## [28.1.348](https://github.com/sprucelabsai-community/data-stores/compare/v28.1.347...v28.1.348) (2024-09-13)
