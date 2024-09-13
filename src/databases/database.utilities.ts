@@ -18,6 +18,9 @@ export function areIndexesEqual(left: Index, right: Index) {
 }
 
 export function generateIndexName(indexWithFilter: IndexWithFilter) {
+    if (indexWithFilter.name) {
+        return indexWithFilter.name
+    }
     let name = indexWithFilter.fields.join('_')
     if (indexWithFilter.filter) {
         name += '_filtered'
@@ -29,7 +32,11 @@ export function normalizeIndex(index: Index): IndexWithFilter {
     const fields = Array.isArray(index) ? index : index.fields
     const filter = Array.isArray(index) ? undefined : index.filter
     fields.sort()
-    return { fields, filter }
+    return {
+        fields,
+        filter,
+        name: (index as IndexWithFilter).name ?? undefined,
+    }
 }
 
 export function pluckMissingIndexes(left: Index[], right: Index[]) {

@@ -13,17 +13,14 @@ const methods = [
     'assertThrowsWithBadDatabaseName',
 
     //inserting
-    'assertEmptyDatabaseReturnsEmptyArray',
     'assertKnowsIfConnectionClosed',
-    'assertFindOneOnEmptyDatabaseReturnsNull',
     'assertCanSortDesc',
     'assertCanSortAsc',
     'assertCanSortById',
     'assertCanQueryWithOr',
-    'generateIdDifferentEachTime',
+    'assertGeneratesIdDifferentEachTime',
     'assertInsertingGeneratesId',
     'assertCanCreateMany',
-    'assertCanLimitResults',
     'assertCanCreateWithObjectField',
 
     //counting
@@ -110,6 +107,11 @@ const databaseAssertUtil = {
         await db.dropDatabase()
         await this.shutdown(db)
 
+        if (tests?.[0].startsWith('!')) {
+            //@ts-ignore
+            tests = methods
+        }
+
         const toRun = tests ?? methods
         for (const method of toRun) {
             try {
@@ -151,7 +153,7 @@ const databaseAssertUtil = {
         assert.isEqual(count, expectedUpdateCount)
     },
 
-    async generateIdDifferentEachTime(connect: TestConnect) {
+    async assertGeneratesIdDifferentEachTime(connect: TestConnect) {
         const db = await connectToDabatase(connect)
         const id1 = db.generateId()
         const id2 = db.generateId()

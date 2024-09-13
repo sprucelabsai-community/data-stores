@@ -343,7 +343,7 @@ export default class MongoDatabase implements Database {
 
     private async listIndexes(collection: string) {
         try {
-            const indexes = await this.assertDbWhileAttempingTo(
+            const indexes: MongoIndex[] = await this.assertDbWhileAttempingTo(
                 'get indexes.',
                 collection
             )
@@ -404,26 +404,32 @@ export default class MongoDatabase implements Database {
             const indexes = await this.listIndexes(collection)
 
             if (shouldIncludeUnique) {
-                return indexes.map((index) => ({
-                    fields: Object.keys(index.key),
-                    filter: index.partialFilterExpression,
-                }))
+                return indexes.map((index) =>
+                    this.mongoIndexToIndexWithFilter(index)
+                )
             }
 
             const nonUniqueIndexes: IndexWithFilter[] = []
 
             for (const index of indexes) {
                 if (!index.unique) {
-                    nonUniqueIndexes.push({
-                        fields: Object.keys(index.key),
-                        filter: undefined,
-                    })
+                    nonUniqueIndexes.push(
+                        this.mongoIndexToIndexWithFilter(index)
+                    )
                 }
             }
 
             return nonUniqueIndexes
         } catch (err) {
             return []
+        }
+    }
+
+    private mongoIndexToIndexWithFilter(index: MongoIndex): IndexWithFilter {
+        return {
+            fields: Object.keys(index.key),
+            filter: index.partialFilterExpression,
+            name: index.name,
         }
     }
 
@@ -566,8 +572,7 @@ export default class MongoDatabase implements Database {
     }
 
     private normalizeIndex(index: string[] | IndexWithFilter): IndexWithFilter {
-        const { fields, filter } = normalizeIndex(index)
-        return { fields, filter }
+        return normalizeIndex(index)
     }
 
     public async syncUniqueIndexes(
@@ -715,3 +720,11 @@ export default class MongoDatabase implements Database {
 }
 
 type CreateIndexFuncName = 'createIndex' | 'createUniqueIndex'
+
+interface MongoIndex {
+    v: string
+    key: Record<string, number>
+    name: string
+    unique?: boolean
+    partialFilterExpression?: Record<string, any>
+}

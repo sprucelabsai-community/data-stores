@@ -78,6 +78,7 @@ export type TestConnect = (
 export interface IndexWithFilter {
     fields: string[]
     filter?: Record<string, any>
+    name?: string
 }
 
 export type Index = string[] | IndexWithFilter

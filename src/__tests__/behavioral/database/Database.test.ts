@@ -17,7 +17,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     @test('inserting generates id (mongo)', mongoConnect)
     @test('inserting generates id (neDb)', neDbConnect)
     protected static async insertingGeneratesId(connect: TestConnect) {
-        await databaseAssertUtil.generateIdDifferentEachTime(connect)
+        await databaseAssertUtil.assertGeneratesIdDifferentEachTime(connect)
         await databaseAssertUtil.assertInsertingGeneratesId(connect)
     }
 
