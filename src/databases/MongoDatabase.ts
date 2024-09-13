@@ -500,6 +500,10 @@ export default class MongoDatabase implements Database {
         )
         const indexesToDelete = pluckMissingIndexes(currentIndexes, indexes)
 
+        for (const extra of indexesToDelete) {
+            await this.dropIndex(collectionName, extra)
+        }
+
         for (const index of indexes) {
             if (!this.doesInclude(currentIndexes, this.normalizeIndex(index))) {
                 try {
@@ -510,10 +514,6 @@ export default class MongoDatabase implements Database {
                     }
                 }
             }
-        }
-
-        for (const extra of indexesToDelete) {
-            await this.dropIndex(collectionName, extra)
         }
     }
 

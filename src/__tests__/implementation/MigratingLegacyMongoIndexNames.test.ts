@@ -48,9 +48,8 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
         name: string
     ) {
         await this.createIndexRaw({ name: 1 }, { name })
-        await this.adapter.syncIndexes(this.collectionName, [
-            ['name', 'butter'],
-        ])
+        const index = ['name', 'butter']
+        await this.syncIndexes(index)
     }
 
     @test()
@@ -63,6 +62,16 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
         await this.adapter.syncUniqueIndexes(this.collectionName, [
             ['firstName'],
         ])
+    }
+
+    @test()
+    protected static async syncingWithSameFieldsButDifferentNamesDoesNotThrow() {
+        await this.createIndexRaw({ name: 1 }, { name: 'name_1' })
+        await this.syncIndexes(['name'])
+    }
+
+    private static async syncIndexes(index: string[]) {
+        await this.adapter.syncIndexes(this.collectionName, [index])
     }
 
     private static async createIndexRaw(
