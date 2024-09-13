@@ -14,6 +14,8 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
     private static collectionName: string
     private static adapter: MongoDatabase
     private static collection: Collection<Document>
+    private static mongo: MongoClient
+
     protected static async beforeEach(): Promise<void> {
         await super.beforeEach()
 
@@ -23,11 +25,18 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
         const { db: adapter } = await mongoConnect(MONGO_TEST_URI, dbName)
         this.adapter = adapter as MongoDatabase
 
-        const mongo = new MongoClient(MONGO_TEST_URI, {})
-        const dabatase = mongo.db(dbName)
+        this.mongo = new MongoClient(MONGO_TEST_URI, {})
+        const dabatase = this.mongo.db(dbName)
         const collection = dabatase.collection(this.collectionName)
 
         this.collection = collection
+    }
+
+    protected static async afterEach() {
+        await super.afterEach()
+        await this.mongo.close()
+        await this.adapter.dropDatabase()
+        await this.adapter.close()
     }
 
     @test('can sync indexes when already has name_1', 'name_1')

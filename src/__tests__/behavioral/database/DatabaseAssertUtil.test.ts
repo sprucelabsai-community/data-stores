@@ -64,29 +64,59 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
         assert.isEqualDeep(hits, expected)
     }
 
-    @test.skip('wip')
-    protected static async canIgnoreTests() {
+    @test('can ignore single test "assertCanUpdate"', 'assertCanUpdate')
+    @test('can ignore single test "assertCanCount"', 'assertCanCount')
+    protected static async canIgnoreTests(
+        assertionName: DatabaseAssertionName
+    ) {
         this.attachHitCounter()
-        const expected = this.pluckTests('assertCanUpdate')
-
+        const expected = this.pluckTests([assertionName])
         //@ts-ignore
-        await this.runSuite(['!assertCanUpdate'])
-
-        const all = pluckAssertionMethods(this.dbAssert).filter(
-            (p) => p !== 'assertHasLowerCaseToCamelCaseMappingEnabled'
-        )
-
-        assert.isEqualDeep(expected, all)
-
-        debugger
-
+        await this.runSuite([`!${assertionName}`])
         this.assertTestsRun(expected)
     }
 
-    private static pluckTests(ignore?: string): DatabaseAssertionName[] {
+    @test('throws when ignoring expcept for 2nd test', [
+        '!assertCanUpdate',
+        'assertCanCreateIndex',
+    ])
+    @test('throws when ignoring expcept for 1st test', [
+        'assertCanUpdate',
+        '!assertCanCreateIndex',
+    ])
+    protected static async throwsWithIgnoredAndIncludedTests(
+        assertionNames: DatabaseAssertionName[]
+    ) {
+        const err = await assert.doesThrowAsync(() =>
+            this.runSuite(assertionNames)
+        )
+
+        errorAssert.assertError(err, 'INVALID_PARAMETERS', {
+            parameters: ['tests'],
+        })
+    }
+
+    @test()
+    protected static async canIgnoreMultipleTests() {
+        this.attachHitCounter()
+        const expected = this.pluckTests([
+            'assertCanCreateMany',
+            'assertCanCreateUniqueIndex',
+        ])
+        await this.runSuite([
+            '!assertCanCreateMany',
+            '!assertCanCreateUniqueIndex',
+        ])
+        this.assertTestsRun(expected)
+    }
+
+    private static pluckTests(
+        ignore?: DatabaseAssertionName[]
+    ): DatabaseAssertionName[] {
         return pluckAssertionMethods(this.dbAssert).filter(
             (key) =>
-                (!ignore || key !== ignore) &&
+                (!ignore ||
+                    ignore.indexOf(key as DatabaseAssertionName) === -1) &&
                 key !== 'assertHasLowerCaseToCamelCaseMappingEnabled'
         ) as DatabaseAssertionName[]
     }

@@ -1,4 +1,4 @@
-import { assertOptions } from '@sprucelabs/schema'
+import { assertOptions, SchemaError } from '@sprucelabs/schema'
 import { assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import SpruceError from '../errors/SpruceError'
@@ -95,7 +95,9 @@ const methods = [
     'assertCanSyncIndexesWithoutPartialThenAgainWithProperlyUpdates',
 ] as const
 
-export type DatabaseAssertionName = (typeof methods)[number]
+type OriginalMethods = (typeof methods)[number]
+type BangMethods = `!${OriginalMethods}`
+export type DatabaseAssertionName = OriginalMethods | BangMethods
 
 const databaseAssertUtil = {
     collectionName: 'test_collection',
@@ -107,9 +109,23 @@ const databaseAssertUtil = {
         await db.dropDatabase()
         await this.shutdown(db)
 
-        if (tests?.[0].startsWith('!')) {
-            //@ts-ignore
-            tests = methods
+        const hasIgnore = tests?.find((t) => t.startsWith('!'))
+
+        if (hasIgnore && tests) {
+            for (const method of tests) {
+                if (!method.startsWith('!')) {
+                    throw new SchemaError({
+                        code: 'INVALID_PARAMETERS',
+                        parameters: ['tests'],
+                    })
+                }
+            }
+
+            const doesMatch = (m: DatabaseAssertionName) => {
+                return !!tests!.find((t) => t.substring(1) === m)
+            }
+            const filtered = methods.filter((m) => !doesMatch(m))
+            tests = filtered as DatabaseAssertionName[]
         }
 
         const toRun = tests ?? methods
