@@ -64,10 +64,10 @@
     "watch.tsc": "tsc -w"
   },
   "dependencies": {
-    "@sprucelabs/error": "^6.0.379",
+    "@sprucelabs/error": "^6.0.380",
     "@sprucelabs/globby": "^2.0.340",
-    "@sprucelabs/schema": "^30.0.427",
-    "@sprucelabs/spruce-skill-utils": "^31.0.446",
+    "@sprucelabs/schema": "^30.0.428",
+    "@sprucelabs/spruce-skill-utils": "^31.0.447",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.9.0",
@@ -75,11 +75,11 @@
   },
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "^6.0.363",
-    "@sprucelabs/jest-json-reporter": "^8.0.378",
+    "@sprucelabs/jest-json-reporter": "^8.0.379",
     "@sprucelabs/resolve-path-aliases": "^2.0.358",
     "@sprucelabs/semantic-release": "^5.0.2",
     "@sprucelabs/test": "^9.0.47",
-    "@sprucelabs/test-utils": "^5.1.325",
+    "@sprucelabs/test-utils": "^5.1.326",
     "@types/lodash": "^4.17.9",
     "@types/nedb": "^1.8.16",
     "@types/node": "^22.7.0",
