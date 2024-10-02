@@ -71,7 +71,7 @@ export default abstract class AbstractStore<
         values: CreateRecord
     ): Promise<Omit<DatabaseRecord, PrimaryFieldName>>
 
-    protected didCreate?(values: CreateRecord): Promise<void>
+    protected didCreate?(values: DatabaseRecord): Promise<void>
 
     protected willUpdate?(
         updates: UpdateRecord,
