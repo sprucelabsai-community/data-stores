@@ -1,9 +1,9 @@
+import Datastore from '@seald-io/nedb'
 import dotenv from 'dotenv'
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 import isObject from 'lodash/isObject'
 import uniqBy from 'lodash/uniqBy'
-import Datastore from 'nedb'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import {
@@ -312,17 +312,21 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
             const cursor = col.find(q, mapped.projection)
 
             if (mapped.sort) {
+                //@ts-ignore
                 cursor.sort(mapped.sort)
             }
 
             if (typeof mapped.limit === 'number') {
+                //@ts-ignore
                 cursor.limit(mapped.limit)
             }
 
             if (mapped.skip) {
+                //@ts-ignore
                 cursor.skip(mapped.skip)
             }
 
+            //@ts-ignore
             cursor.exec((err: any, results: any[]) => {
                 if (err) {
                     reject(err)
