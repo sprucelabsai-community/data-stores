@@ -69,7 +69,6 @@
     "@sprucelabs/schema": "^30.0.483",
     "@sprucelabs/spruce-skill-utils": "^31.0.533",
     "just-clone": "^6.2.0",
-    "lodash": "^4.17.21",
     "mongodb": "^6.9.0",
     "nedb": "^1.8.0"
   },
