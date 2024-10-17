@@ -180,7 +180,9 @@ export default class UsingPluginsTest extends AbstractPluginTest {
 
         assert.isEqual(updated.id, created1.id)
 
-        const match = await this.spyStore.findOne({ lastName: 'Jay' })
+        const match = await this.spyStore.findOne({
+            lastName: 'Jay',
+        })
 
         assert.isEqual(match?.id, created1.id)
         assert.isEqual(match?.firstName, 'Tay')
