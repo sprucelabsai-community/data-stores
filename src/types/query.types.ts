@@ -69,7 +69,7 @@ type Paths<T, D extends number = 3> = [D] extends [never]
 type TypeAtPath<T, P extends string> = P extends `${infer K}.${infer Rest}`
     ? K extends keyof T
         ? TypeAtPath<T[K], Rest>
-        : never
+        : any
     : P extends keyof T
       ? T[P]
-      : never
+      : any
