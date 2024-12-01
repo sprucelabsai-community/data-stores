@@ -14,7 +14,11 @@ import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
-import { QueryBuilder, QueryOptions } from '../types/query.types'
+import {
+    QueryBuilder,
+    QueryOptions,
+    ValuesWithPaths,
+} from '../types/query.types'
 import {
     PrepareOptions,
     PrepareResults,
@@ -599,7 +603,7 @@ export default abstract class AbstractStore<
             SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
     >(
         query: QueryBuilder<QueryRecord>,
-        updates: UpdateRecord,
+        updates: ValuesWithPaths<UpdateRecord>,
         options?: PrepareOptions<IncludePrivateFields, FullSchema, F>
     ): Promise<
         Response<FullSchema, CreateEntityInstances, IncludePrivateFields, PF, F>
@@ -630,7 +634,7 @@ export default abstract class AbstractStore<
             SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
     >(
         query: QueryBuilder<QueryRecord>,
-        updates: UpdateRecord,
+        updates: ValuesWithPaths<UpdateRecord>,
         notFoundHandler: () => Promise<FullRecord>,
         options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
     ): Promise<
@@ -694,6 +698,7 @@ export default abstract class AbstractStore<
                 ? databaseRecord
                 : normalizeSchemaValues(this.databaseSchema, databaseRecord, {
                       shouldCreateEntityInstances: false,
+                      shouldRetainDotSyntaxKeys: true,
                       fields: Object.keys(
                           cleanedUpdates
                       ) as SchemaFieldNames<DatabaseSchema>[],
@@ -757,7 +762,10 @@ export default abstract class AbstractStore<
         return { query: resolvedQuery, shouldUpdate, updates: resolvedUpdates }
     }
 
-    private pluckOperations(updates: UpdateRecord): { ops: any; updates: any } {
+    private pluckOperations(updates: ValuesWithPaths<UpdateRecord>): {
+        ops: any
+        updates: any
+    } {
         const { ...initialUpdates } = updates
         const ops = saveOperations
             .map((name) => {

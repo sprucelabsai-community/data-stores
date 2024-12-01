@@ -587,6 +587,18 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
 
         assert.isEqual(created.id, 1)
     }
+
+    @test('can update nested value (mongo)', mongoConnect)
+    @test('can update nested value (neDb)', neDbConnect)
+    protected static async canUpdateUsingNestedKey(connect: TestConnect) {
+        await databaseAssertUtil.canUpdateNestedField(connect)
+    }
+
+    @test('can upsert nested value (mongo)', mongoConnect)
+    @test('can upsert nested value (neDb)', neDbConnect)
+    protected static async canUpsertUsingNestedKey(connect: TestConnect) {
+        await databaseAssertUtil.canUpsertNestedField(connect)
+    }
 }
 
 export let dbCount = 0

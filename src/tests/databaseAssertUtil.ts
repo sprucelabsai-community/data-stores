@@ -2711,6 +2711,90 @@ const databaseAssertUtil = {
         await this.shutdown(db)
     },
 
+    async canUpdateNestedField(connect: TestConnect) {
+        const db = await connectToDabatase(connect)
+
+        const locationId = generateId()
+        const values = {
+            name: 'first',
+            target: {
+                organizationId: generateId(),
+                locationId,
+            },
+        }
+
+        await db.createOne(this.collectionName, values)
+
+        const newOrganizationId = generateId()
+        const updated = await db.updateOne(
+            this.collectionName,
+            {},
+            {
+                'target.organizationId': newOrganizationId,
+            }
+        )
+
+        assert.isEqual(
+            updated.target.organizationId,
+            newOrganizationId,
+            'Could not update nested field target.organizationId using key "target.organizationId"'
+        )
+
+        const match = await db.findOne(this.collectionName, { id: updated.id })
+
+        assert.isEqualDeep(
+            match!.target,
+            {
+                organizationId: newOrganizationId,
+                locationId,
+            },
+            `Updating nested field lost existing key 'target.locationId'`
+        )
+
+        await this.shutdown(db)
+    },
+
+    async canUpsertNestedField(connect: TestConnect) {
+        const db = await connectToDabatase(connect)
+
+        const locationId = generateId()
+        const values = {
+            name: 'first',
+            target: {
+                organizationId: generateId(),
+                locationId,
+            },
+        }
+
+        const record = await db.createOne(this.collectionName, values)
+
+        const newOrganizationId = generateId()
+
+        await db.upsertOne(
+            this.collectionName,
+            { id: record.id },
+            {
+                'target.organizationId': newOrganizationId,
+            }
+        )
+
+        const match = await db.findOne(this.collectionName, { id: record.id })
+
+        assert.isEqual(
+            match!.target.organizationId,
+            newOrganizationId,
+            'Could not find updated record with key "target.organizationId" set'
+        )
+
+        assert.isEqual(
+            match!.target.locationId,
+            locationId,
+            `Upserting lost existing key 'target.locationId'`
+        )
+
+        await this.shutdown(db)
+    },
+
     assertHasLowerCaseToCamelCaseMappingEnabled(store: DataStore) {
         assert.isTrue(
             //@ts-ignore

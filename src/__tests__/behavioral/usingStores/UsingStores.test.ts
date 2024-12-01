@@ -838,6 +838,33 @@ export default class UsingStoresTest extends AbstractStoreTest {
         })
     }
 
+    @test()
+    protected static async canUpdateTargetedFieldWhileRetainingOtherValues() {
+        await this.dummyStore.createOne({
+            phoneNumber: DEMO_PHONE4_FORMATTED,
+            requiredForCreate: generateId(),
+            relatedSchema: {
+                boolField: true,
+                textField: generateId(),
+            },
+        })
+
+        const newTextFieldValue = generateId()
+
+        const results = await this.dummyStore.updateOne(
+            {},
+            {
+                requiredForUpdate: generateId(),
+                'relatedSchema.textField': newTextFieldValue,
+            }
+        )
+
+        assert.isEqualDeep(results.relatedSchema, {
+            textField: newTextFieldValue,
+            boolField: true,
+        })
+    }
+
     private static async createRandomRecord() {
         const record = {
             id: generateId(),
