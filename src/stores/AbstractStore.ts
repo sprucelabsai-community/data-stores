@@ -698,7 +698,7 @@ export default abstract class AbstractStore<
                 ? databaseRecord
                 : normalizeSchemaValues(this.databaseSchema, databaseRecord, {
                       shouldCreateEntityInstances: false,
-                      shouldRetainDotSyntaxKeys: true,
+                      shouldRetainDotNotationKeys: true,
                       fields: Object.keys(
                           cleanedUpdates
                       ) as SchemaFieldNames<DatabaseSchema>[],

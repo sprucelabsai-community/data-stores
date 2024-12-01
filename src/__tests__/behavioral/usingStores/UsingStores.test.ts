@@ -865,6 +865,9 @@ export default class UsingStoresTest extends AbstractStoreTest {
         })
     }
 
+    @test()
+    protected static async canUpdateWithDotNotation() {}
+
     private static async createRandomRecord() {
         const record = {
             id: generateId(),
