@@ -621,7 +621,7 @@ export default abstract class AbstractStore<
 
     public async update(
         query: QueryBuilder<QueryRecord>,
-        updates: UpdateRecord
+        updates: ValuesWithPaths<UpdateRecord>
     ): Promise<number> {
         return this.db.update(this.collectionName, query, updates as any)
     }

@@ -840,14 +840,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
 
     @test()
     protected static async canUpdateTargetedFieldWhileRetainingOtherValues() {
-        await this.dummyStore.createOne({
-            phoneNumber: DEMO_PHONE4_FORMATTED,
-            requiredForCreate: generateId(),
-            relatedSchema: {
-                boolField: true,
-                textField: generateId(),
-            },
-        })
+        await this.createRandomRecordWithRelatedSchema()
 
         const newTextFieldValue = generateId()
 
@@ -866,7 +859,35 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canUpdateWithDotNotation() {}
+    protected static async canUpdateOneManyDotNotation() {
+        const created = await this.createRandomRecordWithRelatedSchema()
+
+        await this.dummyStore.update(
+            {},
+            {
+                requiredForUpdate: generateId(),
+                'relatedSchema.boolField': false,
+            }
+        )
+
+        const match = await this.findOne()
+
+        assert.isEqualDeep(match.relatedSchema, {
+            boolField: false,
+            textField: created.relatedSchema?.textField,
+        })
+    }
+
+    private static async createRandomRecordWithRelatedSchema() {
+        return await this.dummyStore.createOne({
+            phoneNumber: DEMO_PHONE4_FORMATTED,
+            requiredForCreate: generateId(),
+            relatedSchema: {
+                boolField: true,
+                textField: generateId(),
+            },
+        })
+    }
 
     private static async createRandomRecord() {
         const record = {
