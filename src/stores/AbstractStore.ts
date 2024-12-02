@@ -8,17 +8,14 @@ import SchemaEntity, {
     SchemaValues,
     validateSchemaValues,
     dropFields,
+    ValuesWithPaths,
 } from '@sprucelabs/schema'
 import { SCRAMBLE_VALUE } from '../constants'
 import BatchCursorImpl, { FindBatchOptions } from '../cursors/BatchCursor'
 import SpruceError from '../errors/SpruceError'
 import AbstractMutexer from '../mutexers/AbstractMutexer'
 import { Database } from '../types/database.types'
-import {
-    QueryBuilder,
-    QueryOptions,
-    ValuesWithPaths,
-} from '../types/query.types'
+import { QueryBuilder, QueryOptions } from '../types/query.types'
 import {
     PrepareOptions,
     PrepareResults,
