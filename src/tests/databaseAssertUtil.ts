@@ -35,6 +35,7 @@ const methods = [
     'assertCanUpdateWithObjectField',
     'assertCanUpdateFieldInObjectFieldWithTargettedWhere',
     'assertCanSaveAndGetNullAndUndefined',
+    'assertUpdateReturnsMatchedAndUpdatedCounts',
 
     //upserting
     'assertCanUpsertOne',
@@ -155,16 +156,14 @@ const databaseAssertUtil = {
         updates: Record<string, any>,
         expectedUpdateCount: number
     ) {
-        const updatedCount = await db.update(
-            this.collectionName,
-            search,
-            updates
-        )
+        const updated = await db.update(this.collectionName, search, updates)
+
         assert.isEqual(
-            updatedCount,
+            updated,
             expectedUpdateCount,
             'db.update() did not update the expected amount of records! Make sure it returns an integer of the number of records updated.'
         )
+
         const count = await db.count(this.collectionName, updates)
         assert.isEqual(count, expectedUpdateCount)
     },
@@ -2790,6 +2789,58 @@ const databaseAssertUtil = {
             match!.target.locationId,
             locationId,
             `Upserting lost existing key 'target.locationId'`
+        )
+
+        await this.shutdown(db)
+    },
+
+    async assertUpdateReturnsMatchedAndUpdatedCounts(connect: TestConnect) {
+        const db = await connectToDabatase(connect)
+
+        const record = await db.createOne(this.collectionName, {
+            name: 'first',
+        })
+
+        let updated = await db.update(
+            this.collectionName,
+            { id: record.id },
+            {
+                name: 'second',
+            }
+        )
+
+        assert.isEqual(
+            updated,
+            1,
+            'update() should return the number of matched records (in this case 1)'
+        )
+
+        updated = await db.update(
+            this.collectionName,
+            { id: record.id },
+            {
+                name: 'second',
+            }
+        )
+
+        assert.isEqual(
+            updated,
+            1,
+            'update() did not return the correct number of matched records (in this case 1)'
+        )
+
+        updated = await db.update(
+            this.collectionName,
+            { id: generateId() },
+            {
+                name: 'second',
+            }
+        )
+
+        assert.isEqual(
+            updated,
+            0,
+            'update() did not return the correct number of matched records on an update (in this case 0).'
         )
 
         await this.shutdown(db)

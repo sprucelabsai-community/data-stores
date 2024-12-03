@@ -599,6 +599,16 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     protected static async canUpsertUsingNestedKey(connect: TestConnect) {
         await databaseAssertUtil.canUpsertNestedField(connect)
     }
+
+    @test('update returns proper matched and updated counts', mongoConnect)
+    @test('update returns proper matched and updated counts', neDbConnect)
+    protected static async updateReturnsMatchedAndUpdatedCounts(
+        connect: TestConnect
+    ) {
+        await databaseAssertUtil.assertUpdateReturnsMatchedAndUpdatedCounts(
+            connect
+        )
+    }
 }
 
 export let dbCount = 0

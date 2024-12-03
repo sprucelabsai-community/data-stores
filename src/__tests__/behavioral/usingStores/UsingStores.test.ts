@@ -878,6 +878,45 @@ export default class UsingStoresTest extends AbstractStoreTest {
         })
     }
 
+    @test()
+    protected static async canUpdateManyUsingDotNotationQuery() {
+        const created = await this.createRandomRecordWithRelatedSchema()
+
+        const updateValue = generateId()
+        const textValue = created.relatedSchema?.textField
+
+        let count = await this.dummyStore.update(
+            {
+                'relatedSchema.textField': textValue,
+            },
+            {
+                requiredForUpdate: updateValue,
+                'relatedSchema.boolField': false,
+            }
+        )
+
+        assert.isEqual(count, 1, 'first update should have updated 1 record')
+
+        count = await this.dummyStore.update(
+            {
+                'relatedSchema.textField': textValue,
+            },
+            {
+                requiredForUpdate: updateValue,
+                'relatedSchema.boolField': false,
+            }
+        )
+
+        assert.isEqual(
+            count,
+            1,
+            'second update should have matched 1 record, but not updated'
+        )
+
+        const totalRecords = await this.dummyStore.count()
+        assert.isEqual(totalRecords, 1)
+    }
+
     private static async createRandomRecordWithRelatedSchema() {
         return await this.dummyStore.createOne({
             phoneNumber: DEMO_PHONE4_FORMATTED,

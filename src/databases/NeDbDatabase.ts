@@ -345,7 +345,7 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         updates: Record<string, any>,
         neDbOptions?: Record<string, any>
     ) {
-        const results = this.updateOne(
+        const results = await this.updateOne(
             collection,
             query,
             updates,
