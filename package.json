@@ -68,7 +68,7 @@
     "@sprucelabs/error": "^6.0.551",
     "@sprucelabs/globby": "^2.0.499",
     "@sprucelabs/schema": "^30.0.583",
-    "@sprucelabs/spruce-skill-utils": "^31.0.646",
+    "@sprucelabs/spruce-skill-utils": "^31.0.647",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.11.0"
@@ -79,7 +79,7 @@
     "@sprucelabs/resolve-path-aliases": "^2.0.520",
     "@sprucelabs/semantic-release": "^5.0.2",
     "@sprucelabs/test": "^9.0.63",
-    "@sprucelabs/test-utils": "^5.1.519",
+    "@sprucelabs/test-utils": "^5.1.520",
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.1",
     "chokidar-cli": "^3.0.0",
