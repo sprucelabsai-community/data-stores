@@ -35,7 +35,7 @@ const methods = [
     'assertCanUpdateWithObjectField',
     'assertCanUpdateFieldInObjectFieldWithTargettedWhere',
     'assertCanSaveAndGetNullAndUndefined',
-    'assertUpdateReturnsMatchedAndUpdatedCounts',
+    'assertUpdateReturnsMatchedCounts',
 
     //upserting
     'assertCanUpsertOne',
@@ -2794,7 +2794,7 @@ const databaseAssertUtil = {
         await this.shutdown(db)
     },
 
-    async assertUpdateReturnsMatchedAndUpdatedCounts(connect: TestConnect) {
+    async assertUpdateReturnsMatchedCounts(connect: TestConnect) {
         const db = await connectToDabatase(connect)
 
         const record = await db.createOne(this.collectionName, {
@@ -2831,7 +2831,7 @@ const databaseAssertUtil = {
 
         updated = await db.update(
             this.collectionName,
-            { id: generateId() },
+            { name: 'thirty-two' },
             {
                 name: 'second',
             }
