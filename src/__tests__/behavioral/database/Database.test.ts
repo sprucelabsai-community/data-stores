@@ -605,9 +605,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     protected static async updateReturnsMatchedAndUpdatedCounts(
         connect: TestConnect
     ) {
-        await databaseAssertUtil.assertUpdateReturnsMatchedCounts(
-            connect
-        )
+        await databaseAssertUtil.assertUpdateReturnsMatchedCounts(connect)
     }
 }
 
