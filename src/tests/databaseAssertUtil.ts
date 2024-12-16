@@ -1643,9 +1643,7 @@ const databaseAssertUtil = {
     },
 
     async assertThrowsWithInvalidConnectionString(connect: TestConnect) {
-        const err = await assert.doesThrowAsync(() =>
-            connect('astnoehusantoheun')
-        )
+        const err = await assert.doesThrowAsync(() => connect(generateId()))
         errorAssert.assertError(err, 'INVALID_DB_CONNECTION_STRING')
     },
 
