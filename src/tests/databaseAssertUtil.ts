@@ -1619,13 +1619,13 @@ const databaseAssertUtil = {
         const {
             db,
             connectionStringWithRandomBadDatabaseName:
-                connectionStringWithRandomBadDatabaseeName,
+                connectionStringWithRandomBadDatabaseName,
             badDatabaseName,
         } = await connect()
         await this.shutdown(db)
 
         const err = await assert.doesThrowAsync(() =>
-            connect(connectionStringWithRandomBadDatabaseeName)
+            connect(connectionStringWithRandomBadDatabaseName)
         )
         errorAssert.assertError(err, 'INVALID_DATABASE_NAME', {
             suppliedName: badDatabaseName,
