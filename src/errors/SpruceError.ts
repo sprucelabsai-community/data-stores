@@ -86,7 +86,10 @@ export default class SpruceError extends AbstractSpruceError<ErrorOptions> {
                 break
 
             case 'UNABLE_TO_CONNECT_TO_DB':
-                message = `I could not connect to a dabatase. Installing mongo is a great first step to solving this!
+                message =
+                    options.originalError?.stack ??
+                    options.originalError?.message ??
+                    `I could not connect to a dabatase. Installing mongo is a great first step to solving this!
 
 https://www.mongodb.com/try/download/community 
 
