@@ -668,6 +668,11 @@ const databaseAssertUtil = {
             )
         }
 
+        assert.isTruthy(
+            created,
+            'createOne() did not return the record created!'
+        )
+
         const matched = await db.findOne(this.collectionName, {
             id: created!.id,
         })
