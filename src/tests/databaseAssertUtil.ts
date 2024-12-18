@@ -556,7 +556,7 @@ const databaseAssertUtil = {
 
         assert.isFalsy(
             matchedAfterDelete,
-            `Record with the id of ${created.id} was not deleted!`
+            `Record with the id of ${created.id} was not deleted with delete()!`
         )
 
         await db.create(this.collectionName, [
