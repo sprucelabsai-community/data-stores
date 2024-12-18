@@ -489,7 +489,7 @@ const databaseAssertUtil = {
         assert.isEqualDeep(
             match,
             upserted2,
-            'upsertOne() did not update the record!'
+            "upsertOne() did not update the record. I tried to findOne() based on my updates and it wasn't updated!"
         )
 
         await this.shutdown(db)
