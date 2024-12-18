@@ -897,8 +897,16 @@ const databaseAssertUtil = {
             `updateOne needs to return the record that was updated!`
         )
 
-        assert.isEqual(updated.id, inserted.id)
-        assert.isEqual(updated.name, 'updated')
+        assert.isEqual(
+            updated.id,
+            inserted.id,
+            "updateOne() needs to return the record that was updated! I checked the Id and it didn't match the record that was updated."
+        )
+        assert.isEqual(
+            updated.name,
+            'updated',
+            'updateOne() did not update the fields. I tried to update the name field to "updated".'
+        )
         assert.isEqual(
             updated.isPublic,
             true,
