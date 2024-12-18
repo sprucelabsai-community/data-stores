@@ -436,7 +436,11 @@ const databaseAssertUtil = {
             created,
             'upsertOne() should return the record it created!'
         )
-        assert.isEqual(created.name, 'first')
+        assert.isEqual(
+            created.name,
+            'first',
+            'upsertOne() did not create the record with the name i passed'
+        )
         assert.isEqual(`${created.id}`, `${id}`, 'ids do not match!')
 
         const upserted = await db.upsertOne(
@@ -452,9 +456,20 @@ const databaseAssertUtil = {
             { name: 'second', id: id2 }
         )
 
-        assert.isTruthy(upserted)
-        assert.isEqual(created.id, upserted.id)
-        assert.isEqual(upserted.name, 'second')
+        assert.isTruthy(
+            upserted,
+            'upsertOne() should return the record it updated!'
+        )
+        assert.isEqual(
+            created.id,
+            upserted.id,
+            'upsertOne() did return the expected id!'
+        )
+        assert.isEqual(
+            upserted.name,
+            'second',
+            'upsertOne() did not update name!'
+        )
 
         const upserted2 = await db.upsertOne(
             this.collectionName,
@@ -463,7 +478,11 @@ const databaseAssertUtil = {
         )
 
         assert.isTruthy(upserted2)
-        assert.isEqual(upserted2.name, 'third')
+        assert.isEqual(
+            upserted2.name,
+            'third',
+            'upsertOne() did not update the record!'
+        )
 
         const match = await db.findOne(this.collectionName, { id })
 
