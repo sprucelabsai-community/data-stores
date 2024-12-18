@@ -1801,7 +1801,11 @@ const databaseAssertUtil = {
             number: { $gte: created[2].number },
         })
 
-        assert.isLength(gteMatches, 2)
+        assert.isLength(
+            gteMatches,
+            2,
+            'find() did not return the expected 2 using $gte.'
+        )
         assert.isEqual(gteMatches[0].number, 3)
         assert.isEqual(gteMatches[1].number, 4)
 
@@ -1809,7 +1813,11 @@ const databaseAssertUtil = {
             number: { $lt: created[2].number },
         })
 
-        assert.isLength(ltMatches, 2)
+        assert.isLength(
+            ltMatches,
+            2,
+            'find() did not return the expected 2 using $lt.'
+        )
         assert.isEqual(ltMatches[0].number, 1)
         assert.isEqual(ltMatches[1].number, 2)
 
@@ -1817,7 +1825,11 @@ const databaseAssertUtil = {
             number: { $lte: created[2].number },
         })
 
-        assert.isLength(lteMatches, 3)
+        assert.isLength(
+            lteMatches,
+            3,
+            'find() did not return the expected 3 using $lte.'
+        )
         assert.isEqual(lteMatches[0].number, 1)
         assert.isEqual(lteMatches[1].number, 2)
         assert.isEqual(lteMatches[2].number, 3)
@@ -1828,8 +1840,16 @@ const databaseAssertUtil = {
             },
         })
 
-        assert.isNotEqual(notMatches[0].id, created[0].id)
-        assert.isLength(notMatches, created.length - 1)
+        assert.isNotEqual(
+            notMatches[0].id,
+            created[0].id,
+            '$ne did not return the expected results.'
+        )
+        assert.isLength(
+            notMatches,
+            created.length - 1,
+            '$ne did not return the expected results.'
+        )
 
         const notNull = await db.find(this.collectionName, {
             someField: {
@@ -1837,7 +1857,11 @@ const databaseAssertUtil = {
             },
         })
 
-        assert.isLength(notNull, created.length - 1)
+        assert.isLength(
+            notNull,
+            created.length - 1,
+            '$ne=null did not return the expected results.'
+        )
 
         await this.shutdown(db)
     },
