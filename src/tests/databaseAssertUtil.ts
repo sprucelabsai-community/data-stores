@@ -2049,7 +2049,7 @@ const databaseAssertUtil = {
 
         assert.isTrue(
             created.undefinedField === null || created.undefinedfield === null,
-            'undefinedField should be null'
+            'undefinedField should be null (undefined values should be stored as null)'
         )
         assert.isTrue(
             created.nullField === null || created.nullfield === null,
