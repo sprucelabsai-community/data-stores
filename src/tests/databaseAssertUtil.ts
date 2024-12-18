@@ -1998,10 +1998,14 @@ const databaseAssertUtil = {
             }
         )
 
-        assert.isTruthy(createdUndefined)
+        assert.isTruthy(
+            createdUndefined,
+            'upsertOne() should have returned a record.'
+        )
         assert.isTrue(
             createdUndefined.undefinedField === null ||
-                createdUndefined.undefinedfield === null
+                createdUndefined.undefinedfield === null,
+            'upsertOne() should make undefined values as null.'
         )
 
         const createdNull = await db.upsertOne(
@@ -2016,7 +2020,10 @@ const databaseAssertUtil = {
             }
         )
 
-        assert.isTruthy(createdNull)
+        assert.isTruthy(
+            createdNull,
+            'upsertOne() should have returned a record.'
+        )
 
         let all = await db.find(this.collectionName)
 
@@ -2030,10 +2037,15 @@ const databaseAssertUtil = {
             { undefinedField: 'now defined' }
         )
 
-        assert.isEqual(updatedUndefined.id, createdUndefined.id)
+        assert.isEqual(
+            updatedUndefined.id,
+            createdUndefined.id,
+            'upsertOne() should have returned the same record.'
+        )
         assert.isEqual(
             updatedUndefined.undefinedField ?? updatedUndefined.undefinedfield,
-            'now defined'
+            'now defined',
+            'upsertOne() should have made the updates i asked for.'
         )
 
         const updatedNull = await db.upsertOne(
@@ -2044,16 +2056,24 @@ const databaseAssertUtil = {
             { nullField: 'now defined' }
         )
 
-        assert.isEqual(updatedNull.id, createdNull.id)
+        assert.isEqual(
+            updatedNull.id,
+            createdNull.id,
+            "upsertOne() should have returned the same record. I'm querying based on a null value."
+        )
         assert.isEqual(
             updatedNull.nullField ?? updatedNull.nullfield,
             'now defined',
-            'nullField should have upserted to "now defined"'
+            'upsertOne() should have made the updates i asked for.'
         )
 
         all = await db.find(this.collectionName)
 
-        assert.isLength(all, 2)
+        assert.isLength(
+            all,
+            2,
+            'I expected to find 2 records after 2 upserts. Make sure queries are honoring null values.'
+        )
 
         await this.shutdown(db)
     },
