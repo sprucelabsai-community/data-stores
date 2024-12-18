@@ -895,6 +895,13 @@ const databaseAssertUtil = {
         assert.isEqual(updated.id, inserted.id)
         assert.isEqual(updated.name, 'updated')
 
+        const match = await db.findOne(this.collectionName, { id: updated.id })
+        assert.isEqualDeep(
+            match,
+            updated,
+            'The record in the database did not actually update!'
+        )
+
         await this.shutdown(db)
     },
 
