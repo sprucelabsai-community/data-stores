@@ -766,7 +766,11 @@ const databaseAssertUtil = {
 
         assert.isLength(results, values.length)
         for (const val of values) {
-            assert.doesInclude(results, val)
+            assert.doesInclude(
+                results,
+                val,
+                'Create many did not return the expected records!'
+            )
         }
 
         await this.shutdown(db)
@@ -2683,7 +2687,11 @@ const databaseAssertUtil = {
             $or,
         })
 
-        assert.isLength(matches, expected)
+        assert.isLength(
+            matches,
+            expected,
+            `Expected to find a specific number of records using $or: ${JSON.stringify($or)}`
+        )
     },
 
     async _assertCanCreateMultiFieldIndex(
