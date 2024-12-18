@@ -2005,7 +2005,7 @@ const databaseAssertUtil = {
         assert.isTrue(
             createdUndefined.undefinedField === null ||
                 createdUndefined.undefinedfield === null,
-            'upsertOne() should make undefined values as null.'
+            'upsertOne() should save undefined values as null.'
         )
 
         const createdNull = await db.upsertOne(
