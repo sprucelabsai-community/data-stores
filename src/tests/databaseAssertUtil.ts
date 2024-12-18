@@ -677,6 +677,11 @@ const databaseAssertUtil = {
             id: created!.id,
         })
 
+        assert.isTruthy(
+            matched,
+            `findOne() with id ${created.id} returned null`
+        )
+
         assert.isEqualDeep(matched, { ...created, id: matched!.id })
 
         await this.shutdown(db)
