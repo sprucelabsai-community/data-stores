@@ -530,14 +530,25 @@ const databaseAssertUtil = {
             id: created.id,
         })
 
-        assert.isTruthy(matchedBeforeDelete)
-        assert.isEqual(matchedBeforeDelete.id, created.id)
+        assert.isTruthy(
+            matchedBeforeDelete,
+            'findOne() did not return the record created!'
+        )
+        assert.isEqual(
+            matchedBeforeDelete.id,
+            created.id,
+            'findOne() returned id does not match what was sent to createOne'
+        )
 
         const numDeleted = await db.delete(this.collectionName, {
             id: matchedBeforeDelete.id,
         })
 
-        assert.isEqual(numDeleted, 1)
+        assert.isEqual(
+            numDeleted,
+            1,
+            'delete() did not return the total recrods deleted!'
+        )
 
         const matchedAfterDelete = await db.findOne(this.collectionName, {
             id: created.id,
@@ -550,7 +561,7 @@ const databaseAssertUtil = {
 
         await db.create(this.collectionName, [
             {
-                name: 'a record',
+                name: 'another record',
             },
             {
                 name: 'a record',
@@ -560,13 +571,18 @@ const databaseAssertUtil = {
             },
         ])
 
-        const manyDeleted = await db.delete(this.collectionName, {})
+        const manyDeleted = await db.delete(this.collectionName, {
+            name: 'another record',
+        })
 
         assert.isEqual(
             manyDeleted,
-            3,
-            `delete() did not return the total recrods deleted!`
+            1,
+            `delete() did not return the total records deleted!`
         )
+
+        const total = await db.count(this.collectionName)
+        assert.isEqual(total, 2, 'delete() did not delete all records')
 
         await this.shutdown(db)
     },
