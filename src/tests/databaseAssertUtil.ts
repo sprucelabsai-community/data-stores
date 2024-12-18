@@ -863,6 +863,7 @@ const databaseAssertUtil = {
         const inserted = await db.createOne(this.collectionName, {
             id: db.generateId(),
             name: 'first',
+            isPublic: true,
         })
 
         assert.isTruthy(
@@ -894,6 +895,11 @@ const databaseAssertUtil = {
 
         assert.isEqual(updated.id, inserted.id)
         assert.isEqual(updated.name, 'updated')
+        assert.isEqual(
+            updated.isPublic,
+            true,
+            'Make sure you return existing fields from updateOne()! So, the actual record.'
+        )
 
         const match = await db.findOne(this.collectionName, { id: updated.id })
         assert.isEqualDeep(
@@ -2888,6 +2894,7 @@ async function assertCantCreateUniqueIndexTwice(
 ) {
     await db.createUniqueIndex(collectionName, fields)
     let indexes = await db.getUniqueIndexes(collectionName)
+
     assert.isLength(
         indexes,
         expectedTotalUniqueIndexes,
