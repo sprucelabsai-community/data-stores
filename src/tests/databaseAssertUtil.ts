@@ -165,7 +165,11 @@ const databaseAssertUtil = {
         )
 
         const count = await db.count(this.collectionName, updates)
-        assert.isEqual(count, expectedUpdateCount)
+        assert.isEqual(
+            count,
+            expectedUpdateCount,
+            "db.count() did not actually update the records. I'm count()'ing the records based on a query that should match what I updated."
+        )
     },
 
     async assertGeneratesIdDifferentEachTime(connect: TestConnect) {
