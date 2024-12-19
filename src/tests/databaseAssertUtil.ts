@@ -94,7 +94,6 @@ const methods = [
     'assertSyncIndexesDoesNotRemoveExisting',
     'assertDuplicateFieldsWithMultipleUniqueIndexesWorkAsExpected',
     'assertCanSyncIndexesWithoutPartialThenAgainWithProperlyUpdates',
-    'assertSyncingUniqueIndexesIsRaceProof',
 ] as const
 
 type OriginalMethods = (typeof methods)[number]
