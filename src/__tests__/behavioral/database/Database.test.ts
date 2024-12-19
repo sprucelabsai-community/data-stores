@@ -209,7 +209,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     protected static async syncUniqueIndexesAddsMissingIndexes(
         connect: TestConnect
     ) {
-        await databaseAssertUtil.assertSyncingUniqueIndexsAddsMissingIndexes(
+        await databaseAssertUtil.assertSyncingUniqueIndexesAddsMissingIndexes(
             connect
         )
     }
@@ -219,7 +219,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     protected static async syncUniqueIndexesSkipsExistingIndexes(
         connect: TestConnect
     ) {
-        await databaseAssertUtil.assertSyncingUniqueIndexsSkipsExistingIndexs(
+        await databaseAssertUtil.assertSyncingUniqueIndexesSkipsExistingIndexes(
             connect
         )
     }

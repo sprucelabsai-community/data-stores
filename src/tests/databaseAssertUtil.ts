@@ -70,8 +70,8 @@ const methods = [
     'assertCantDropUniqueIndexThatDoesntExist',
     'assertCantDropIndexWhenNoIndexExists',
     'assertCantDropCompoundUniqueIndexThatDoesntExist',
-    'assertSyncingUniqueIndexsAddsMissingIndexes',
-    'assertSyncingUniqueIndexsSkipsExistingIndexs',
+    'assertSyncingUniqueIndexesAddsMissingIndexes',
+    'assertSyncingUniqueIndexesSkipsExistingIndexes',
     'assertSyncingUniqueIndexesRemovesExtraIndexes',
     'assertSyncingUniqueIndexesIsRaceProof',
     'assertSyncingIndexesDoesNotAddAndRemove',
@@ -1202,13 +1202,13 @@ const databaseAssertUtil = {
         assert.isLength(
             indexes,
             2,
-            `Syncing unique indexs with filter is not removing extra indexes.`
+            `Syncing unique indexes with filter is not removing extra indexes.`
         )
 
         await this.shutdown(db)
     },
 
-    async assertSyncingUniqueIndexsSkipsExistingIndexs(connect: TestConnect) {
+    async assertSyncingUniqueIndexesSkipsExistingIndexes(connect: TestConnect) {
         const db = await connectToDabatase(connect)
         await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
@@ -1226,7 +1226,7 @@ const databaseAssertUtil = {
         await this.shutdown(db)
     },
 
-    async assertSyncingUniqueIndexsAddsMissingIndexes(connect: TestConnect) {
+    async assertSyncingUniqueIndexesAddsMissingIndexes(connect: TestConnect) {
         const db = await connectToDabatase(connect)
         await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
@@ -1251,7 +1251,7 @@ const databaseAssertUtil = {
         assert.isLength(
             indexes,
             2,
-            'There should still be 2 indexes after this syncUniqueIndexs(). First sync was a single field unique index, second sync was two indexes, but one was already there. So one should have been ignored, one should have been added.'
+            'There should still be 2 indexes after this syncUniqueIndexes(). First sync was a single field unique index, second sync was two indexes, but one was already there. So one should have been ignored, one should have been added.'
         )
         await this.shutdown(db)
     },
