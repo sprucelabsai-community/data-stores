@@ -225,7 +225,7 @@ export declare namespace SpruceErrors.DataStores {
 			
 			'query': string
 			
-			'params'?: (Record<string, any>)| undefined | null
+			'params'?: (Record<string, any>) | undefined | null
 	}
 
 	export interface QueryNotFakedSchema extends SpruceSchema.Schema {
@@ -678,7 +678,7 @@ export declare namespace SpruceErrors.DataStores {
 			
 			'operationAttempted': string
 			
-			'collectionName'?: string| undefined | null
+			'collectionName'?: string | undefined | null
 	}
 
 	export interface DatabaseNotConnectedSchema extends SpruceSchema.Schema {
