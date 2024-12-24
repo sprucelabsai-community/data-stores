@@ -36,8 +36,14 @@ export default class DatabaseFactory {
         if (!this.cache[cacheKey]) {
             for (const [key, Adapter] of Object.entries(this.Adapters)) {
                 if (dbConnectionString.startsWith(key)) {
-                    database = new Adapter(dbConnectionString, { dbName })
-                    break
+                    const args: [string, DatabaseOptions] = [
+                        dbConnectionString,
+                        { dbName },
+                    ]
+                    database =
+                        'Database' in Adapter
+                            ? Adapter.Database(...args)
+                            : new Adapter(...args)
                 }
             }
 
@@ -74,11 +80,16 @@ export default class DatabaseFactory {
     }
 }
 
-export type DatabaseConstructor = new (
+export type DatabaseAdapterClass = new (
     connectionString: string,
     options: DatabaseOptions
 ) => Database
 
+export interface DatabaseAdapterBuilder {
+    Database(connectionString: string, options: DatabaseOptions): Database
+}
+
+export type DatabaseConstructor = DatabaseAdapterClass | DatabaseAdapterBuilder
 type AdapterMap = Record<string, DatabaseConstructor>
 
 interface DatabaseFactoryOptions {
