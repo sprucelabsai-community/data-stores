@@ -1,3 +1,10 @@
+# [28.4.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.3.281...v28.4.0) (2024-12-24)
+
+
+### Features
+
+* mock store factory ([2c2a90f](https://github.com/sprucelabsai-community/data-stores/commit/2c2a90f))
+
 ## [28.3.281](https://github.com/sprucelabsai-community/data-stores/compare/v28.3.280...v28.3.281) (2024-12-21)
 
 ## [28.3.280](https://github.com/sprucelabsai-community/data-stores/compare/v28.3.279...v28.3.280) (2024-12-21)
