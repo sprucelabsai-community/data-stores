@@ -1,3 +1,10 @@
+# [28.5.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.4.0...v28.5.0) (2024-12-24)
+
+
+### Features
+
+* can construct database instances by optionally using build methods ([15891c1](https://github.com/sprucelabsai-community/data-stores/commit/15891c1))
+
 # [28.4.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.3.281...v28.4.0) (2024-12-24)
 
 
