@@ -8,22 +8,23 @@ import {
     StoreOptions,
 } from '../types/stores.types'
 
-interface StoreContructor {
-    Store(o: any): Promise<DataStore> | DataStore
-}
-
 export default class StoreFactory {
-    private storeMap: Record<string, StoreContructor> = {}
-    private db: Database
+    public static Class?: new (db: Database) => StoreFactory
+
     private static initializations: Record<string, boolean> = {}
+
+    protected storeMap: Record<string, StoreContructor> = {}
+    protected databasesByStoreName: Record<string, Database> = {}
+
+    private db: Database
     private stores: Partial<Record<StoreName, any>> = {}
 
-    private constructor(db: Database) {
+    protected constructor(db: Database) {
         this.db = db
     }
 
     public static Factory(db: Database) {
-        return new this(db)
+        return new (this.Class ?? this)(db)
     }
 
     public async Store<
@@ -31,6 +32,7 @@ export default class StoreFactory {
         Options extends StoreOptions<Name>,
     >(name: Name, options?: Options): Promise<StoreMap[Name]> {
         const Store = this.storeMap[name]
+
         if (Store) {
             if (!Store.Store) {
                 throw new SpruceError({
@@ -40,8 +42,11 @@ export default class StoreFactory {
                     )}.Store(options: UniversalStoreOptions) factory method on your store that returns \`new this(...)\`.`,
                 })
             }
+
+            const db = this.databasesByStoreName[name] || this.db
+
             const instance = await Store.Store({
-                db: this.db,
+                db,
                 storeFactory: this,
                 ...options,
             })
@@ -85,4 +90,15 @@ export default class StoreFactory {
     public static reset() {
         this.initializations = {}
     }
+
+    public setDatabaseForStore<Name extends StoreName>(
+        name: Name,
+        db: Database
+    ) {
+        this.databasesByStoreName[name] = db
+    }
+}
+
+interface StoreContructor {
+    Store(o: any): Promise<DataStore> | DataStore
 }
