@@ -1,3 +1,5 @@
+## [28.5.7](https://github.com/sprucelabsai-community/data-stores/compare/v28.5.6...v28.5.7) (2025-01-02)
+
 ## [28.5.6](https://github.com/sprucelabsai-community/data-stores/compare/v28.5.5...v28.5.6) (2025-01-02)
 
 ## [28.5.5](https://github.com/sprucelabsai-community/data-stores/compare/v28.5.4...v28.5.5) (2025-01-02)
