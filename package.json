@@ -65,21 +65,21 @@
   },
   "dependencies": {
     "@seald-io/nedb": "^4.0.4",
-    "@sprucelabs/error": "^6.0.559",
+    "@sprucelabs/error": "^6.0.560",
     "@sprucelabs/globby": "^2.0.501",
-    "@sprucelabs/schema": "^31.0.9",
-    "@sprucelabs/spruce-skill-utils": "^31.1.16",
+    "@sprucelabs/schema": "^31.0.10",
+    "@sprucelabs/spruce-skill-utils": "^31.2.0",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.12.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^6.0.535",
-    "@sprucelabs/jest-json-reporter": "^8.0.561",
-    "@sprucelabs/resolve-path-aliases": "^2.0.524",
+    "@sprucelabs/esm-postbuild": "^6.0.536",
+    "@sprucelabs/jest-json-reporter": "^8.0.562",
+    "@sprucelabs/resolve-path-aliases": "^2.0.525",
     "@sprucelabs/semantic-release": "^5.0.2",
-    "@sprucelabs/test": "^9.0.65",
-    "@sprucelabs/test-utils": "^5.1.536",
+    "@sprucelabs/test": "^9.0.66",
+    "@sprucelabs/test-utils": "^5.1.537",
     "@types/lodash": "^4.17.14",
     "@types/node": "^22.10.5",
     "chokidar-cli": "^3.0.0",
@@ -93,7 +93,7 @@
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=12",
