@@ -62,7 +62,7 @@ export default class AssertingDatabasesAndStoresTest extends AbstractDatabaseTes
     }
 
     private static dropInSpy(name: string) {
-        this.factory.setStoreClass(name, SpyStore)
+        this.factory.setStoreClass(name as StoreName, SpyStore)
     }
 
     private static async assertInstanceOfThrows(name: string, Class: any) {

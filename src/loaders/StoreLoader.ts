@@ -11,6 +11,7 @@ import { FailedToLoadStoreErrorOptions } from '#spruce/errors/options.types'
 import SpruceError from '../errors/SpruceError'
 import StoreFactory from '../factories/StoreFactory'
 import { Database } from '../types/database.types'
+import { StoreName } from '../types/stores.types'
 
 type StoreLoadError = AbstractSpruceError<FailedToLoadStoreErrorOptions>
 
@@ -94,7 +95,7 @@ export default class StoreLoader {
 
             for (const store of stores) {
                 factory.setStoreClass(
-                    namesUtil.toCamel(store.namePascal),
+                    namesUtil.toCamel(store.namePascal) as StoreName,
                     store.Class
                 )
             }

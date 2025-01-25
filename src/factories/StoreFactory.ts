@@ -70,8 +70,9 @@ export default class StoreFactory {
         return Object.keys(this.storeMap) as any
     }
 
-    public setStoreClass(name: string, Class: StoreContructor) {
+    public setStoreClass(name: StoreName, Class: StoreContructor) {
         this.storeMap[name] = Class
+        delete this.stores[name]
     }
 
     public setStore(name: StoreName, store: DataStore | null) {

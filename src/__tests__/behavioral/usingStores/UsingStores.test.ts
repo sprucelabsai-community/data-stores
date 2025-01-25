@@ -933,6 +933,22 @@ export default class UsingStoresTest extends AbstractStoreTest {
         assert.isEqual(store, newStore)
     }
 
+    @test()
+    protected static async setStoreClassClearsCachedStoreInstance() {
+        const store = await this.stores.getStore('dummy')
+        this.stores.setStoreClass('dummy', DummySubClass)
+        const newStore = await this.stores.getStore('dummy')
+        assert.isNotEqual(store, newStore)
+    }
+
+    @test()
+    protected static async setStoreClassDoesNotClearOtherStoreInstances() {
+        const store = await this.stores.getStore('operations')
+        this.stores.setStoreClass('dummy', DummySubClass)
+        const newStore = await this.stores.getStore('operations')
+        assert.isEqual(store, newStore)
+    }
+
     private static async createRandomRecordWithRelatedSchema() {
         return await this.dummyStore.createOne({
             phoneNumber: DEMO_PHONE4_FORMATTED,
@@ -982,3 +998,5 @@ type RelatedSchemaType =
       }
     | null
     | undefined
+
+class DummySubClass extends DummyStore {}

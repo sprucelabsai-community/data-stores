@@ -179,6 +179,6 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     private static dropInSpyStore(name?: string) {
-        this.factory.setStoreClass(name ?? 'spy', SpyStore)
+        this.factory.setStoreClass((name ?? 'spy') as StoreName, SpyStore)
     }
 }
