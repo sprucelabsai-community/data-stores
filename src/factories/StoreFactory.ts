@@ -96,6 +96,7 @@ export default class StoreFactory {
         db: Database
     ) {
         this.databasesByStoreName[name] = db
+        delete this.stores[name]
     }
 }
 

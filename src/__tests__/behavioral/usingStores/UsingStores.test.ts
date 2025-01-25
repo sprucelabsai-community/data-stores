@@ -917,6 +917,22 @@ export default class UsingStoresTest extends AbstractStoreTest {
         assert.isEqual(totalRecords, 1)
     }
 
+    @test()
+    protected static async settingDatabaseForStoreClearsCachedStoreInstance() {
+        const store = await this.stores.getStore('dummy')
+        this.stores.setDatabaseForStore('dummy', this.db)
+        const newStore = await this.stores.getStore('dummy')
+        assert.isNotEqual(store, newStore)
+    }
+
+    @test()
+    protected static async settingDatabaseForStoreDoesNotClearOtherStoreInstances() {
+        const store = await this.stores.getStore('operations')
+        this.stores.setDatabaseForStore('dummy', this.db)
+        const newStore = await this.stores.getStore('operations')
+        assert.isEqual(store, newStore)
+    }
+
     private static async createRandomRecordWithRelatedSchema() {
         return await this.dummyStore.createOne({
             phoneNumber: DEMO_PHONE4_FORMATTED,
