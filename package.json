@@ -64,14 +64,14 @@
     "watch.tsc": "tsc -w"
   },
   "dependencies": {
-    "@seald-io/nedb": "^4.0.4",
+    "@seald-io/nedb": "^4.1.1",
     "@sprucelabs/error": "^6.0.586",
     "@sprucelabs/globby": "^2.0.502",
     "@sprucelabs/schema": "^31.0.63",
     "@sprucelabs/spruce-skill-utils": "^31.2.68",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
-    "mongodb": "^6.14.2"
+    "mongodb": "^6.15.0"
   },
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "^6.0.553",
