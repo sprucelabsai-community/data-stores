@@ -559,7 +559,8 @@ export default abstract class AbstractStore<
             const notFoundHandler = async (): Promise<FullRecord> => {
                 const created = await this.createOne(updates, {
                     ...options,
-                    shouldIncludePrivateFields: true,
+                    shouldIncludePrivateFields:
+                        options?.shouldIncludePrivateFields,
                 })
                 //@ts-ignore
                 return created

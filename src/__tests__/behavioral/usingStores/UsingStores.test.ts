@@ -949,6 +949,45 @@ export default class UsingStoresTest extends AbstractStoreTest {
         assert.isEqual(store, newStore)
     }
 
+    @test()
+    protected static async upsertShouldNotReturnPrivateFieldsByDefault() {
+        const created = await this.dummyStore.upsertOne(
+            {},
+            {
+                requiredForCreate: 'yes!',
+                privateField: 'private!',
+                requiredForUpdate: 'updated',
+                phoneNumber: DEMO_PHONE_FORMATTED,
+            }
+        )
+
+        assert.isFalsy(
+            created.privateField,
+            'should not have returned private fields'
+        )
+    }
+
+    @test()
+    protected static async upsertCanReturnPrivateFields() {
+        const privateValue = generateId()
+        const created = await this.dummyStore.upsertOne(
+            {},
+            {
+                requiredForCreate: 'yes!',
+                privateField: privateValue,
+                requiredForUpdate: 'updated',
+                phoneNumber: DEMO_PHONE_FORMATTED,
+            },
+            { shouldIncludePrivateFields: true }
+        )
+
+        assert.isEqual(
+            created.privateField,
+            privateValue,
+            'private field should have been returned'
+        )
+    }
+
     private static async createRandomRecordWithRelatedSchema() {
         return await this.dummyStore.createOne({
             phoneNumber: DEMO_PHONE4_FORMATTED,
