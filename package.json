@@ -65,10 +65,10 @@
   },
   "dependencies": {
     "@seald-io/nedb": "^4.1.1",
-    "@sprucelabs/error": "^6.0.595",
+    "@sprucelabs/error": "^6.0.596",
     "@sprucelabs/globby": "^2.0.502",
-    "@sprucelabs/schema": "^31.0.82",
-    "@sprucelabs/spruce-skill-utils": "^31.2.89",
+    "@sprucelabs/schema": "^31.0.83",
+    "@sprucelabs/spruce-skill-utils": "^31.2.90",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.15.0"
