@@ -1,3 +1,10 @@
+# [28.6.0](https://github.com/sprucelabsai-community/data-stores/compare/v28.5.115...v28.6.0) (2025-05-23)
+
+
+### Features
+
+* doing away with 3 args on find() and compining query and schema options ([a7bea0e](https://github.com/sprucelabsai-community/data-stores/commit/a7bea0e))
+
 ## [28.5.115](https://github.com/sprucelabsai-community/data-stores/compare/v28.5.114...v28.5.115) (2025-05-22)
 
 ## [28.5.114](https://github.com/sprucelabsai-community/data-stores/compare/v28.5.113...v28.5.114) (2025-05-22)
