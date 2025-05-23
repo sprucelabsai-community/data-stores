@@ -836,6 +836,27 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
+    protected static async canExcludeFields() {
+        const operation = await this.operationsStore.createOne({
+            arrayOfNumbers: [1, 2, 3],
+            arrayOfStrings: ['a', 'b', 'c'],
+        })
+
+        const match = await this.operationsStore.findOne(
+            {
+                id: operation.id,
+            },
+            {
+                excludeFields: ['arrayOfNumbers'],
+            }
+        )
+
+        delete operation.arrayOfNumbers
+
+        assert.isEqualDeep(match, operation, 'Did not exclude fields')
+    }
+
+    @test()
     protected static async canUpdateTargetedFieldWhileRetainingOtherValues() {
         await this.createRandomRecordWithRelatedSchema()
 
