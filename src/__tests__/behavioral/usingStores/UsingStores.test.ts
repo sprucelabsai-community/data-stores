@@ -416,7 +416,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 
         const matches = await this.dummyStore.find(
             {},
-            {},
             { shouldIncludePrivateFields: true }
         )
 
@@ -703,7 +702,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
 
         const matches = await this.dummyStore.find(
             {},
-            {},
             {
                 includeFields: ['id', 'phoneNumber', 'privateField'],
                 shouldIncludePrivateFields: true,
@@ -824,7 +822,6 @@ export default class UsingStoresTest extends AbstractStoreTest {
             {
                 id: dummy.id,
             },
-            {},
             {
                 shouldStripUndefinedAndNullValues: false,
             }

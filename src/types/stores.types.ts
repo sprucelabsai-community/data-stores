@@ -5,8 +5,8 @@ import {
     SchemaValues,
 } from '@sprucelabs/schema'
 import StoreFactory from '../factories/StoreFactory'
+import { FullQueryOptions } from '../stores/AbstractStore'
 import { Database } from './database.types'
-import { QueryOptions } from './query.types'
 
 export const saveOperations = [
     '$push',
@@ -86,7 +86,7 @@ export interface DataStorePlugin {
     ) => Promise<void | DataStorePluginPrepareResponse>
     willFind?: (
         query: Record<string, any>,
-        options?: QueryOptions
+        options?: FullQueryOptions
     ) => Promise<void | DataStorePluginWillFindResponse>
 }
 
@@ -119,5 +119,5 @@ export interface DataStorePluginDidFindOneResponse {
 
 export interface DataStorePluginWillFindResponse {
     query?: Record<string, any>
-    options?: QueryOptions
+    options?: FullQueryOptions
 }

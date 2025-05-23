@@ -395,8 +395,7 @@ export default abstract class AbstractStore<
     ) {
         const results = await this._find(
             query,
-            { limit: 1 },
-            options,
+            { limit: 1, ...options },
             internalOptions
         )
 
@@ -438,10 +437,11 @@ export default abstract class AbstractStore<
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
     >(
         query: QueryBuilder<QueryRecord>,
-        queryOptions?: Omit<QueryOptions, 'includeFields'>,
-        options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
+        options?: FullQueryOptions<CreateEntityInstances, FullSchema, F>,
+        // @deprecated - use parameter before this instead
+        legacyOptions?: PrepareOptions<CreateEntityInstances, FullSchema, F>
     ) {
-        return this._find(query, queryOptions, options)
+        return this._find(query, { ...options, ...legacyOptions })
     }
 
     private async _find<
@@ -449,14 +449,13 @@ export default abstract class AbstractStore<
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
     >(
         query: QueryBuilder<QueryRecord>,
-        queryOptions?: Omit<QueryOptions, 'includeFields'>,
-        options?: PrepareOptions<CreateEntityInstances, FullSchema, F>,
+        options?: FullQueryOptions<CreateEntityInstances, FullSchema, F>,
         internalOptions: InternalFindOptions = {
             shouldTriggerWillQuery: true,
         }
     ) {
         let resolvedQuery = query
-        let resolvedOptions = queryOptions
+        let resolvedOptions = options as FullQueryOptions | undefined
 
         const { shouldTriggerWillQuery } = internalOptions
 
@@ -466,7 +465,7 @@ export default abstract class AbstractStore<
 
             const { query: q, options: o } = await this.handleWillFindPlugins(
                 resolvedQuery,
-                queryOptions
+                resolvedOptions
             )
             resolvedQuery = q
             resolvedOptions = o
@@ -477,7 +476,7 @@ export default abstract class AbstractStore<
             resolvedQuery as any,
             {
                 ...resolvedOptions,
-                includeFields: options?.includeFields,
+                includeFields: resolvedOptions?.includeFields,
             },
             {
                 primaryFieldNames: this.primaryFieldNames,
@@ -503,7 +502,7 @@ export default abstract class AbstractStore<
 
     private async handleWillFindPlugins(
         query: QueryBuilder<QueryRecord>,
-        queryOptions: Omit<QueryOptions, 'includeFields'> | undefined
+        queryOptions?: FullQueryOptions
     ) {
         const plugin = this.plugins[0]
 
@@ -864,3 +863,10 @@ type Response<
 interface InternalFindOptions {
     shouldTriggerWillQuery: boolean
 }
+
+export type FullQueryOptions<
+    CreateEntityInstances extends boolean = boolean,
+    FullSchema extends Schema = Schema,
+    F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
+> = Omit<QueryOptions, 'includeFields'> &
+    PrepareOptions<CreateEntityInstances, FullSchema, F>

@@ -1,5 +1,5 @@
 import { KeyMapper } from '@sprucelabs/schema'
-import { QueryOptions } from '../types/query.types'
+import { FullQueryOptions } from '../stores/AbstractStore'
 import {
     DataStorePlugin,
     DataStorePluginPrepareResponse,
@@ -47,7 +47,7 @@ export default class DatabaseFieldMapperPlugin implements DataStorePlugin {
 
     public async willFind(
         query: Record<string, any>,
-        options?: QueryOptions
+        options?: FullQueryOptions
     ): Promise<void | DataStorePluginWillFindResponse> {
         let { sort } = options ?? {}
 

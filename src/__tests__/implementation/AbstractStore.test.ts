@@ -563,8 +563,17 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
         assert.isEqual(created, 0)
     }
 
-    @test()
-    protected static async canFindManyRecordAndKeepPrivateFields() {
+    @test(
+        'can find many with private fields using old api',
+        'findAllWithPrivateOldApi'
+    )
+    @test(
+        'can find many with private fields using new api',
+        'findAllWithPrivateNewApi'
+    )
+    protected static async canFindManyRecordAndKeepPrivateFields(
+        method: 'findAllWithPrivateOldApi' | 'findAllWithPrivateNewApi'
+    ) {
         const created1 = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -577,11 +586,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
             phoneNumber: DEMO_PHONE2_FORMATTED,
         })
 
-        const matches = await this.store.find(
-            {},
-            {},
-            { shouldIncludePrivateFields: true }
-        )
+        const matches = await this[method]()
 
         assert.isTruthy(matches)
         assert.isArray(matches)
@@ -629,6 +634,18 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
                 relatedSchema?: RelatedSchemaType
             }
         >(true)
+    }
+
+    private static async findAllWithPrivateOldApi() {
+        return await this.store.find(
+            {},
+            {},
+            { shouldIncludePrivateFields: true }
+        )
+    }
+
+    private static async findAllWithPrivateNewApi() {
+        return await this.store.find({}, { shouldIncludePrivateFields: true })
     }
 
     @test()
