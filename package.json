@@ -83,7 +83,7 @@
     "@types/lodash": "^4.17.18",
     "@types/node": "^24.0.3",
     "chokidar-cli": "^3.0.0",
-    "concurrently": "^9.1.2",
+    "concurrently": "^9.2.0",
     "dotenv": "^16.5.0",
     "eslint": "^9.29.0",
     "eslint-config-spruce": "^11.2.26",
