@@ -622,6 +622,7 @@ export default abstract class AbstractStore<
     ): Promise<number> {
         const { updates: pUpdates, query: pQuery } =
             await this.handleWillUpdatePlugins(query, updates)
+
         return this.db.update(this.collectionName, pQuery, pUpdates)
     }
 
