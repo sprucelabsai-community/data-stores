@@ -1,3 +1,10 @@
+# [30.0.0](https://github.com/sprucelabsai-community/data-stores/compare/v29.0.45...v30.0.0) (2025-07-21)
+
+
+### Breaking Changes
+
+* mapping started on update many ([6103358](https://github.com/sprucelabsai-community/data-stores/commit/6103358))
+
 ## [29.0.45](https://github.com/sprucelabsai-community/data-stores/compare/v29.0.44...v29.0.45) (2025-07-18)
 
 ## [29.0.44](https://github.com/sprucelabsai-community/data-stores/compare/v29.0.43...v29.0.44) (2025-07-18)
