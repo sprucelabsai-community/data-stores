@@ -201,6 +201,27 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
         )
     }
 
+    @test()
+    protected async canUpdateManyWithQuery() {
+        const created = await this.createOneRandom()
+
+        const firstName = generateId()
+        const count = await this.spyStore.update(
+            {
+                firstName: created.firstName,
+            },
+            {
+                firstName,
+            }
+        )
+
+        assert.isEqual(count, 1)
+
+        const found = await this.spyStore.findOne({ firstName })
+        assert.isTruthy(found)
+        assert.isEqual(found?.firstName, firstName, 'Did not update first name')
+    }
+
     private async assertFindHonorsLimit(limit: number) {
         const matches = await this.spyStore.find({}, { limit })
         assert.isLength(matches, limit)

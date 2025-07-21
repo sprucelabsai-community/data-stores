@@ -73,7 +73,7 @@ export interface DataStorePlugin {
     willUpdate?: (
         query: Record<string, any>,
         updates: Record<string, any>
-    ) => Promise<void | DataStorePluginWillUpdateOneResponse>
+    ) => Promise<void | DataStorePluginWillUpdateResponse>
     willDeleteOne?: (
         query: Record<string, any>
     ) => Promise<void | DataStorePluginWillDeleteOneResponse>
@@ -104,7 +104,7 @@ export interface DataStorePluginWillCreateOneResponse {
     newValues?: Record<string, any>
 }
 
-export interface DataStorePluginWillUpdateOneResponse {
+export interface DataStorePluginWillUpdateResponse {
     query?: Record<string, any>
     shouldUpdate?: boolean
     newUpdates?: Record<string, any>

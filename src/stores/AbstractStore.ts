@@ -620,11 +620,9 @@ export default abstract class AbstractStore<
         query: QueryBuilder<QueryRecord>,
         updates: ValuesWithPaths<UpdateRecord>
     ): Promise<number> {
-        const { updates: qUpdates } = await this.handleWillUpdateOnePlugins(
-            query,
-            updates
-        )
-        return this.db.update(this.collectionName, query, qUpdates as any)
+        const { updates: pUpdates, query: pQuery } =
+            await this.handleWillUpdatePlugins(query, updates)
+        return this.db.update(this.collectionName, pQuery, pUpdates)
     }
 
     private async findOneAndUpdate<
@@ -653,13 +651,13 @@ export default abstract class AbstractStore<
             }
 
             const {
-                query: qPlugins,
+                query: pQuery,
                 shouldUpdate,
-                updates: qUpdates,
-            } = await this.handleWillUpdateOnePlugins(q, initialUpdates)
+                updates: pUpdates,
+            } = await this.handleWillUpdatePlugins(q, initialUpdates)
 
-            q = qPlugins
-            initialUpdates = qUpdates
+            q = pQuery
+            initialUpdates = pUpdates
 
             let current: any = await this._findOne(
                 q as any,
@@ -735,7 +733,7 @@ export default abstract class AbstractStore<
         }
     }
 
-    private async handleWillUpdateOnePlugins(
+    private async handleWillUpdatePlugins(
         query:
             | QueryBuilder<QueryRecord>
             | QueryBuilder<Partial<DatabaseRecord>>,

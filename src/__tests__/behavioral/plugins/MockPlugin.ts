@@ -4,7 +4,7 @@ import {
     DataStorePluginDidCreateOneResponse,
     DataStorePluginDidFindOneResponse,
     DataStorePluginWillDeleteOneResponse,
-    DataStorePluginWillUpdateOneResponse,
+    DataStorePluginWillUpdateResponse,
 } from '../../../types/stores.types'
 import generateId from '../../../utilities/generateId'
 
@@ -88,7 +88,7 @@ export default class MockPlugin implements DataStorePlugin {
     public async willUpdate(
         query: Record<string, any>,
         updates: Record<string, any>
-    ): Promise<void | DataStorePluginWillUpdateOneResponse> {
+    ): Promise<void | DataStorePluginWillUpdateResponse> {
         this.willUpdateOneParams = {
             query,
             updates,
