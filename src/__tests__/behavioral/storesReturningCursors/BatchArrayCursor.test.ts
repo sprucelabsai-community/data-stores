@@ -1,13 +1,20 @@
-import { test, assert, errorAssert, generateId } from '@sprucelabs/test-utils'
+import {
+    test,
+    suite,
+    assert,
+    errorAssert,
+    generateId,
+} from '@sprucelabs/test-utils'
 import BatchArrayCursor, {
     BatchArrayCursorOptions,
 } from '../../../cursors/BatchArrayCursor'
 import AbstractStoreTest from '../usingStores/support/AbstractStoreTest'
 
+@suite()
 export default class BatchArrayCursorTest extends AbstractStoreTest {
-    private static cursor: BatchArrayCursor<Record<string, any>>
+    private cursor!: BatchArrayCursor<Record<string, any>>
     @test()
-    protected static async throwsWithMissing() {
+    protected async throwsWithMissing() {
         //@ts-ignore
         const err = assert.doesThrow(() => new BatchArrayCursor())
         errorAssert.assertError(err, 'MISSING_PARAMETERS', {
@@ -16,7 +23,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canReturnNoRecords() {
+    protected async canReturnNoRecords() {
         this.reload([])
 
         const results = await this.next()
@@ -26,7 +33,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canReturnOneRecord() {
+    protected async canReturnOneRecord() {
         const item = this.generateItemValues()
 
         this.reload([item])
@@ -38,21 +45,21 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async batchesBy10ByDefault() {
+    protected async batchesBy10ByDefault() {
         this.reloadWithTotalItems(11)
         await this.assertTotalInNextBatch(10)
         await this.assertTotalRecords(11)
     }
 
     @test()
-    protected static async canCustomizeBatchSize() {
+    protected async canCustomizeBatchSize() {
         this.reloadWithTotalItems(11, { batchSize: 5 })
         await this.assertTotalInNextBatch(5)
         await this.assertTotalRecords(11)
     }
 
     @test()
-    protected static async splitsUpSoSecondBatchHasLeftOvers() {
+    protected async splitsUpSoSecondBatchHasLeftOvers() {
         this.reloadWithTotalItems(6, { batchSize: 5 })
         await this.assertTotalInNextBatch(5)
         await this.assertTotalInNextBatch(1)
@@ -60,7 +67,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canSplitUpByDifferentBatchSize() {
+    protected async canSplitUpByDifferentBatchSize() {
         this.reloadWithTotalItems(6, { batchSize: 3 })
         await this.assertTotalInNextBatch(3)
         await this.assertTotalInNextBatch(3)
@@ -68,7 +75,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canSetOnNextResults() {
+    protected async canSetOnNextResults() {
         this.reloadWithTotalItems(1)
         let wasHit = false
         this.cursor.setOnNextResults(() => {
@@ -82,7 +89,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async onNextGetsItems() {
+    protected async onNextGetsItems() {
         const items = this.reloadWithTotalItems(1)
 
         this.cursor.setOnNextResults((results) => {
@@ -94,7 +101,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async onNextGetsItemsInBatches() {
+    protected async onNextGetsItemsInBatches() {
         const items = this.reloadWithTotalItems(11, { batchSize: 5 })
         const expected = [
             items.slice(0, 5),
@@ -117,7 +124,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async nextReturnsWhateverIsReturnedFromNextHandler() {
+    protected async nextReturnsWhateverIsReturnedFromNextHandler() {
         this.reloadWithTotalItems(1)
 
         this.cursor.setOnNextResults(() => {
@@ -129,7 +136,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async supportsIterator() {
+    protected async supportsIterator() {
         const items = this.reloadWithTotalItems(3)
 
         const results = []
@@ -141,7 +148,7 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async iteratesAcrossBatches() {
+    protected async iteratesAcrossBatches() {
         const items = this.reloadWithTotalItems(11, { batchSize: 5 })
 
         const results = []
@@ -154,12 +161,12 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
         assert.isEqualDeep(results[2], items.slice(10, 11))
     }
 
-    private static async assertTotalInNextBatch(expected: number) {
+    private async assertTotalInNextBatch(expected: number) {
         const results = await this.next()
         assert.isLength(results, expected)
     }
 
-    private static reloadWithTotalItems(
+    private reloadWithTotalItems(
         total: number,
         options?: BatchArrayCursorOptions
     ) {
@@ -170,21 +177,21 @@ export default class BatchArrayCursorTest extends AbstractStoreTest {
         return items
     }
 
-    private static generateItemValues() {
+    private generateItemValues() {
         return {
             id: generateId(),
         }
     }
 
-    private static async next() {
+    private async next() {
         return await this.cursor.next()
     }
 
-    private static async assertTotalRecords(expected: number) {
+    private async assertTotalRecords(expected: number) {
         assert.isEqual(await this.cursor.getTotalRecords(), expected)
     }
 
-    private static reload(
+    private reload(
         items: Record<string, any>[],
         options?: BatchArrayCursorOptions
     ) {

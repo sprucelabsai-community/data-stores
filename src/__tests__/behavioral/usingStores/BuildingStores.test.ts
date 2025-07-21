@@ -1,4 +1,4 @@
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import DatabaseFactory from '../../../factories/DatabaseFactory'
 import StoreFactory from '../../../factories/StoreFactory'
@@ -9,9 +9,10 @@ import SpyStore from './support/SpyStore'
 
 class BadTestStore {}
 
+@suite()
 export default class BuildingStoresTest extends AbstractDatabaseTest {
-    private static factory: StoreFactory
-    protected static async beforeEach() {
+    private factory!: StoreFactory
+    protected async beforeEach() {
         await this.connectToDatabase()
         this.factory = StoreFactory.Factory(this.db)
         SpyStore.initializeCount = 0
@@ -19,12 +20,12 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static canCreateStoreFactory() {
+    protected canCreateStoreFactory() {
         assert.isTruthy(this.factory)
     }
 
     @test()
-    protected static async throwsWithBadStore() {
+    protected async throwsWithBadStore() {
         this.dropInSpyStore()
 
         const err = await assert.doesThrowAsync(() =>
@@ -38,7 +39,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async throwsWithOutStoreFactoryMethod() {
+    protected async throwsWithOutStoreFactoryMethod() {
         //@ts-ignore
         this.factory.setStoreClass('spy', BadTestStore)
 
@@ -48,14 +49,14 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canSetStore() {
+    protected async canSetStore() {
         this.dropInSpyStore()
         const store = await this.Store()
         assert.isTrue(store instanceof SpyStore)
     }
 
     @test()
-    protected static async getsDatabaseToStoreAndFactory() {
+    protected async getsDatabaseToStoreAndFactory() {
         this.dropInSpyStore()
         const store = await this.Store()
         assert.isTruthy(store.db)
@@ -63,14 +64,14 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async storesGetAdditionalOptions() {
+    protected async storesGetAdditionalOptions() {
         this.dropInSpyStore()
         const store = await this.factory.Store('spy', { testOption: true })
         assert.isTrue(store.options.testOption)
     }
 
     @test()
-    protected static async factoryReturnsAllStoreNames() {
+    protected async factoryReturnsAllStoreNames() {
         let names = this.factory.getStoreNames()
 
         assert.isLength(names, 0)
@@ -98,14 +99,14 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async initializesStore() {
+    protected async initializesStore() {
         this.dropInSpyStore()
         const store = await this.Store()
         assert.isTrue(store.wasInitializedInvoked)
     }
 
     @test()
-    protected static async initializeIsOnlyTriggeredOncePerStoreWith1Factory() {
+    protected async initializeIsOnlyTriggeredOncePerStoreWith1Factory() {
         this.dropInSpyStore()
         await this.Store()
         await this.Store()
@@ -115,7 +116,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async initializeIsOnlyTriggeredOncePerStoreWithMultipleFactories() {
+    protected async initializeIsOnlyTriggeredOncePerStoreWithMultipleFactories() {
         this.dropInSpyStore()
         await this.Store()
         await this.Store()
@@ -134,7 +135,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canSetDatabaseBasedOnStoreName() {
+    protected async canSetDatabaseBasedOnStoreName() {
         this.dropInSpyStore()
         this.resetDatabaseCache()
         const db = await this.connectToDatabase()
@@ -144,7 +145,7 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async doesNoEffectOtherStores() {
+    protected async doesNoEffectOtherStores() {
         const storeName1 = generateId()
         const storeName2 = generateId()
 
@@ -162,23 +163,23 @@ export default class BuildingStoresTest extends AbstractDatabaseTest {
         assert.isEqual(store1.db, db2)
     }
 
-    private static async Store(name?: string) {
+    private async Store(name?: string) {
         return this.factory.Store(
             (name ?? 'spy') as StoreName
         ) as unknown as SpyStore
     }
 
-    private static setDatabaseForStore(db: Database, name?: string) {
+    private setDatabaseForStore(db: Database, name?: string) {
         this.factory.setDatabaseForStore((name ?? 'spy') as StoreName, db)
     }
 
-    private static resetDatabaseCache() {
+    private resetDatabaseCache() {
         DatabaseFactory.reset()
         //@ts-ignore
         delete this.db
     }
 
-    private static dropInSpyStore(name?: string) {
+    private dropInSpyStore(name?: string) {
         this.factory.setStoreClass((name ?? 'spy') as StoreName, SpyStore)
     }
 }

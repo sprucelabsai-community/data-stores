@@ -1,4 +1,4 @@
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
+import AbstractSpruceTest, { test, suite, assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import { ObjectId } from 'mongodb'
 import SpruceError from '../../errors/SpruceError'
@@ -7,9 +7,10 @@ import mongoUtil from '../../utilities/mongo.utility'
 const id1 = new ObjectId()
 const id2 = new ObjectId()
 
+@suite()
 export default class MappingMongoIdsTest extends AbstractSpruceTest {
     @test()
-    protected static async mapsSimpleQuery() {
+    protected async mapsSimpleQuery() {
         const id = new ObjectId()
         const results = mongoUtil.mapQuery({ id: id.toHexString() })
         assert.isEqualDeep(results, { _id: id })
@@ -152,7 +153,7 @@ export default class MappingMongoIdsTest extends AbstractSpruceTest {
         }
     )
     @test(`Doesn't bomb with undefined`, undefined, {})
-    protected static async mapsAsExpected(
+    protected async mapsAsExpected(
         query: Record<string, any>,
         expected: Record<string, any>
     ) {
@@ -170,7 +171,7 @@ export default class MappingMongoIdsTest extends AbstractSpruceTest {
         { id: { $in: undefined } },
         'MONGO_ID_MAPPING_ERROR'
     )
-    protected static async throwsAsExpected(query: any, expectedCode: string) {
+    protected async throwsAsExpected(query: any, expectedCode: string) {
         const err = assert.doesThrow(() =>
             mongoUtil.mapQuery(query)
         ) as SpruceError
@@ -178,7 +179,7 @@ export default class MappingMongoIdsTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async doesNotDestroyRegex() {
+    protected async doesNotDestroyRegex() {
         const results = mongoUtil.mapQuery({
             name: { $regex: /hey/ },
         })

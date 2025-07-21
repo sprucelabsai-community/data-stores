@@ -1,4 +1,4 @@
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import DatabaseFactory from '../../../factories/DatabaseFactory'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import {
@@ -10,9 +10,10 @@ import {
 } from '../../../types/database.types'
 import { QueryOptions } from '../../../types/query.types'
 
+@suite()
 export default class DatabaseBuilderMethodSupportTest extends AbstractDatabaseTest {
     @test()
-    protected static async canCreateUsingBuildMethod() {
+    protected async canCreateUsingBuildMethod() {
         const scheme = 'test://'
         DatabaseFactory.addAdapter(scheme, WithBuilder)
         const connectionString = scheme + generateId()
@@ -31,7 +32,7 @@ export default class DatabaseBuilderMethodSupportTest extends AbstractDatabaseTe
 }
 
 class WithBuilder implements Database {
-    public constructorOptions: any[]
+    public constructorOptions!: any[]
     public constructor(...options: any[]) {
         this.constructorOptions = options
     }

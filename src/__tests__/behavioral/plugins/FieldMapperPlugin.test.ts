@@ -1,12 +1,13 @@
 import { buildSchema } from '@sprucelabs/schema'
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import DatabaseFieldMapperPlugin from '../../../plugins/DatabaseFieldMapperPlugin'
 import { QuerySortField } from '../../../types/query.types'
 import AbstractStoreTest from '../usingStores/support/AbstractStoreTest'
 
+@suite()
 export default class FieldMapperPluginTest extends AbstractStoreTest {
-    private static plugin: DatabaseFieldMapperPlugin
-    protected static async beforeEach() {
+    private plugin!: DatabaseFieldMapperPlugin
+    protected async beforeEach() {
         await super.beforeEach()
         this.setupMapperPlugin({
             firstName: 'first',
@@ -20,12 +21,12 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async pluginHasExpectedName() {
+    protected async pluginHasExpectedName() {
         assert.isEqual(this.plugin.getName(), 'fieldMapper')
     }
 
     @test()
-    protected static async canMapFieldsOnCreate() {
+    protected async canMapFieldsOnCreate() {
         const firstName = generateId()
         const lastName = generateId()
 
@@ -43,7 +44,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canMapDifferentFieldsOnCreate() {
+    protected async canMapDifferentFieldsOnCreate() {
         this.setupMapperPlugin({
             id: 'carid',
             color: 'carcolor',
@@ -67,7 +68,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canMapFieldsInQuery() {
+    protected async canMapFieldsInQuery() {
         const firstName1 = 'Tay'
         const lastName1 = 'Jay'
 
@@ -91,7 +92,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canMapFieldsInSort() {
+    protected async canMapFieldsInSort() {
         await this.createOne({
             firstName: 'Tay',
             lastName: 'Jay',
@@ -124,7 +125,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async doesNotClobberExistingQueryOptions() {
+    protected async doesNotClobberExistingQueryOptions() {
         await this.createOneRandom()
         await this.createOneRandom()
         await this.createOneRandom()
@@ -134,7 +135,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canMapUpdates() {
+    protected async canMapUpdates() {
         const first = await this.createOneRandom()
         const firstName = generateId()
         const lastName = generateId()
@@ -154,7 +155,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async databaseReturningMoreFieldsThanExpectedDoesntCrash() {
+    protected async databaseReturningMoreFieldsThanExpectedDoesntCrash() {
         const expected = {
             firstName: generateId(),
             lastName: generateId(),
@@ -173,7 +174,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canMapFieldsWhenUpdatingMany() {
+    protected async canMapFieldsWhenUpdatingMany() {
         await this.createOneRandom()
         await this.createOneRandom()
 
@@ -200,19 +201,19 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
         )
     }
 
-    private static async assertFindHonorsLimit(limit: number) {
+    private async assertFindHonorsLimit(limit: number) {
         const matches = await this.spyStore.find({}, { limit })
         assert.isLength(matches, limit)
     }
 
-    private static async createOneRandom() {
+    private async createOneRandom() {
         return await this.createOne({
             firstName: generateId(),
             lastName: generateId(),
         })
     }
 
-    private static async assertFirstResultFirstNameEquals(
+    private async assertFirstResultFirstNameEquals(
         sort: QuerySortField[],
         expected: string
     ) {
@@ -226,18 +227,15 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
         assert.isEqual(first?.firstName, expected)
     }
 
-    private static async assertSearchByLastNameMatches(search: string) {
+    private async assertSearchByLastNameMatches(search: string) {
         await this.assertSearchByFieldMatches('lastName', search)
     }
 
-    private static async assertSearchByFirstNameMatches(search: string) {
+    private async assertSearchByFirstNameMatches(search: string) {
         await this.assertSearchByFieldMatches('firstName', search)
     }
 
-    private static async assertSearchByFieldMatches(
-        field: string,
-        search: string
-    ) {
+    private async assertSearchByFieldMatches(field: string, search: string) {
         const match = await this.spyStore.findOne({
             [field]: search,
         })
@@ -247,13 +245,13 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
         assert.isEqual(match?.[field], search)
     }
 
-    private static setupMapperPlugin(map: Record<string, any>) {
+    private setupMapperPlugin(map: Record<string, any>) {
         this.plugin = new DatabaseFieldMapperPlugin(map)
         this.spyStore.clearPlugins()
         this.spyStore.addPlugin(this.plugin)
     }
 
-    private static async createOneAndFind(values: Record<string, any>) {
+    private async createOneAndFind(values: Record<string, any>) {
         const created = await this.createOne(values)
         const actual = await this.db.findOne(
             this.spyStore.getCollectionName(),
@@ -265,7 +263,7 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
         return { actual, created }
     }
 
-    private static async createOne(values: Record<string, any>) {
+    private async createOne(values: Record<string, any>) {
         return await this.spyStore.createOne(values)
     }
 }

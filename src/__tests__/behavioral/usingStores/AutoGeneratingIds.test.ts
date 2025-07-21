@@ -1,20 +1,21 @@
 import { Schema } from '@sprucelabs/schema'
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import AbstractStore from '../../../stores/AbstractStore'
 import { StoreName } from '../../../types/stores.types'
 import AbstractStoreTest from './support/AbstractStoreTest'
 import CustomPrimaryStore from './support/CustomPrimaryStore'
 import CustomPrimaryStore2 from './support/CustomPrimaryStore2'
 
+@suite()
 export default class AutoGeneratingIdsTest extends AbstractStoreTest {
-    protected static async beforeEach() {
+    protected async beforeEach() {
         await super.beforeEach()
         this.stores.setStoreClass('customPrimary', CustomPrimaryStore)
         this.stores.setStoreClass('customPrimary2', CustomPrimaryStore2)
     }
 
     @test()
-    protected static async doesNotAutoPopulateIdIfDbReturnsFalseFromShouldAutoGenerateId() {
+    protected async doesNotAutoPopulateIdIfDbReturnsFalseFromShouldAutoGenerateId() {
         await this.assertDoesNotGeneratePrimaryField(
             'customPrimary',
             'customId1'
@@ -22,7 +23,7 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async doesNotAutoGenerateIdWithDifferentName() {
+    protected async doesNotAutoGenerateIdWithDifferentName() {
         await this.assertDoesNotGeneratePrimaryField(
             'customPrimary2',
             'anotherCustomId'
@@ -31,7 +32,7 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
 
     @test('can pass own custom id 1', 'customPrimary', 'customId1')
     @test('can pass own custom id 2', 'customPrimary2', 'anotherCustomId')
-    protected static async canPassOwnCustomId(
+    protected async canPassOwnCustomId(
         storeName: StoreName,
         primaryFieldName: string
     ) {
@@ -57,7 +58,7 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
         assert.isTruthy(match)
     }
 
-    private static async assertDoesNotGeneratePrimaryField(
+    private async assertDoesNotGeneratePrimaryField(
         storeName: StoreName,
         fieldName: string
     ) {
@@ -80,7 +81,7 @@ export default class AutoGeneratingIdsTest extends AbstractStoreTest {
         })
     }
 
-    private static disableAutoIdGeneration(store: AbstractStore<Schema>) {
+    private disableAutoIdGeneration(store: AbstractStore<Schema>) {
         const db = store.getDb()
         db.getShouldAutoGenerateId = () => false
         return db

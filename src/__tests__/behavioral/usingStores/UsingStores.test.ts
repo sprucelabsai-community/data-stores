@@ -1,19 +1,20 @@
 import { validationErrorAssert } from '@sprucelabs/schema'
-import { test, assert } from '@sprucelabs/test-utils'
+import { test, suite, assert } from '@sprucelabs/test-utils'
 import { errorAssert, generateId } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../../constants'
 import SpruceError from '../../../errors/SpruceError'
 import AbstractStoreTest from './support/AbstractStoreTest'
 import DummyStore, { TEST_COLLECTION_NAME } from './support/DummyStore'
 
+@suite()
 export default class UsingStoresTest extends AbstractStoreTest {
     @test()
-    protected static async canCreateTestStore() {
+    protected async canCreateTestStore() {
         assert.isTruthy(this.dummyStore)
     }
 
     @test()
-    protected static async throwsWhenMissingRequiredOnCreate() {
+    protected async throwsWhenMissingRequiredOnCreate() {
         const err = (await assert.doesThrowAsync(
             //@ts-ignore
             () => this.dummyStore.createOne({})
@@ -25,7 +26,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canCreateRecordAndDropPrivate() {
+    protected async canCreateRecordAndDropPrivate() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -58,7 +59,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canCreateRecordAndKeepPrivateFields() {
+    protected async canCreateRecordAndKeepPrivateFields() {
         const created = await this.dummyStore.createOne(
             {
                 requiredForCreate: 'yes!',
@@ -92,7 +93,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async throwsWhenCantFindCreated() {
+    protected async throwsWhenCantFindCreated() {
         const id = this.db.generateId()
         const err = (await assert.doesThrowAsync(() =>
             this.dummyStore.updateOne(
@@ -109,7 +110,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async throwsWhenMissingRequiredOnUpdate() {
+    protected async throwsWhenMissingRequiredOnUpdate() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             phoneNumber: DEMO_PHONE2_FORMATTED,
@@ -126,7 +127,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async updatesSuccessfullyDroppingPrivateFields() {
+    protected async updatesSuccessfullyDroppingPrivateFields() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -163,7 +164,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async updatesSuccessfullyKeeepingPrivateFields() {
+    protected async updatesSuccessfullyKeeepingPrivateFields() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -204,7 +205,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canFindOneRecordAndDropPrivateFields() {
+    protected async canFindOneRecordAndDropPrivateFields() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -249,7 +250,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canFindOneRecordAndKeepPrivateFields() {
+    protected async canFindOneRecordAndKeepPrivateFields() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -287,7 +288,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canFindManyRecordAndDropPrivateFields() {
+    protected async canFindManyRecordAndDropPrivateFields() {
         const created1 = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -345,7 +346,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canCreateMany() {
+    protected async canCreateMany() {
         const values = [
             {
                 requiredForCreate: '1 first',
@@ -376,7 +377,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async whenOneFailsValidationNothingIsWritten() {
+    protected async whenOneFailsValidationNothingIsWritten() {
         const values = [
             {
                 requiredForCreate: 'yes!',
@@ -401,7 +402,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canFindManyRecordAndKeepPrivateFields() {
+    protected async canFindManyRecordAndKeepPrivateFields() {
         const created1 = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -468,7 +469,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async scrambleWithoutScrambleDefinedThrows() {
+    protected async scrambleWithoutScrambleDefinedThrows() {
         //@ts-ignore
         this.dummyStore.scrambleFields = null
         const err = (await assert.doesThrowAsync(() =>
@@ -479,7 +480,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canScrambleRecord() {
+    protected async canScrambleRecord() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -498,7 +499,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async throwsWhenPassingFieldThatDoesNotExist() {
+    protected async throwsWhenPassingFieldThatDoesNotExist() {
         const err = (await assert.doesThrowAsync(() =>
             this.dummyStore.createOne({
                 //@ts-ignore
@@ -515,7 +516,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async normalizesOnCreate() {
+    protected async normalizesOnCreate() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -531,7 +532,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async normalizesOnUpdate() {
+    protected async normalizesOnUpdate() {
         const created = await this.dummyStore.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -555,7 +556,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async upsertCanCreateARecord() {
+    protected async upsertCanCreateARecord() {
         const upserted = await this.dummyStore.upsertOne(
             { phoneNumber: DEMO_PHONE_FORMATTED },
             {
@@ -579,7 +580,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async upsertCanUpdateRecord() {
+    protected async upsertCanUpdateRecord() {
         const id = this.db.generateId()
         const created = await this.dummyStore.upsertOne(
             { id },
@@ -614,7 +615,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canCountRecords() {
+    protected async canCountRecords() {
         await this.dummyStore.createOne({
             requiredForUpdate: 'created',
             requiredForCreate: 'created!',
@@ -657,7 +658,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async willUpdatePassesOriginalValues() {
+    protected async willUpdatePassesOriginalValues() {
         const created = await this.dummyStore.createOne({
             requiredForUpdate: 'created',
             requiredForCreate: 'created!',
@@ -683,7 +684,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canGetBackSelectedFields() {
+    protected async canGetBackSelectedFields() {
         await this.dummyStore.createOne({
             requiredForUpdate: 'created',
             requiredForCreate: 'created!',
@@ -716,7 +717,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async triggersDidCreateAfterCreating() {
+    protected async triggersDidCreateAfterCreating() {
         const expected = await this.createRandomRecord()
 
         delete this.dummyStore.didCreateValues.relatedSchema
@@ -726,7 +727,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async triggersDidUpdateAfterUpdating() {
+    protected async triggersDidUpdateAfterUpdating() {
         const created = await this.createRandomRecord()
         const updates = {
             phoneNumber: '+1 555-000-1111',
@@ -753,7 +754,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async getStoreGetsSameInstance() {
+    protected async getStoreGetsSameInstance() {
         const d1 = await this.stores.getStore('dummy')
         assert.isTrue(d1 instanceof DummyStore)
         const d2 = await this.stores.getStore('dummy')
@@ -763,7 +764,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canSetStore() {
+    protected async canSetStore() {
         await this.stores.getStore('dummy')
         const d2 = await this.stores.Store('dummy')
         this.stores.setStore('dummy', d2)
@@ -772,7 +773,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async byDefaultStripsUndefinedAndNullValuesWhenLoading() {
+    protected async byDefaultStripsUndefinedAndNullValuesWhenLoading() {
         const dummy = await this.operationsStore.createOne({
             arrayOfNumbers: [1, 2, 3],
         })
@@ -797,7 +798,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canDisableStrippingUndefinedAndNullValuesWhenLoading() {
+    protected async canDisableStrippingUndefinedAndNullValuesWhenLoading() {
         const dummy = await this.operationsStore.createOne({
             arrayOfNumbers: [1, 2, 3],
         })
@@ -836,7 +837,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canExcludeFields() {
+    protected async canExcludeFields() {
         const operation = await this.operationsStore.createOne({
             arrayOfNumbers: [1, 2, 3],
             arrayOfStrings: ['a', 'b', 'c'],
@@ -857,7 +858,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canUpdateTargetedFieldWhileRetainingOtherValues() {
+    protected async canUpdateTargetedFieldWhileRetainingOtherValues() {
         await this.createRandomRecordWithRelatedSchema()
 
         const newTextFieldValue = generateId()
@@ -877,7 +878,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canUpdateOneManyDotNotation() {
+    protected async canUpdateOneManyDotNotation() {
         const created = await this.createRandomRecordWithRelatedSchema()
 
         await this.dummyStore.update(
@@ -897,7 +898,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canUpdateManyUsingDotNotationQuery() {
+    protected async canUpdateManyUsingDotNotationQuery() {
         const created = await this.createRandomRecordWithRelatedSchema()
 
         const updateValue = generateId()
@@ -936,7 +937,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async settingDatabaseForStoreClearsCachedStoreInstance() {
+    protected async settingDatabaseForStoreClearsCachedStoreInstance() {
         const store = await this.stores.getStore('dummy')
         this.stores.setDatabaseForStore('dummy', this.db)
         const newStore = await this.stores.getStore('dummy')
@@ -944,7 +945,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async settingDatabaseForStoreDoesNotClearOtherStoreInstances() {
+    protected async settingDatabaseForStoreDoesNotClearOtherStoreInstances() {
         const store = await this.stores.getStore('operations')
         this.stores.setDatabaseForStore('dummy', this.db)
         const newStore = await this.stores.getStore('operations')
@@ -952,7 +953,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async setStoreClassClearsCachedStoreInstance() {
+    protected async setStoreClassClearsCachedStoreInstance() {
         const store = await this.stores.getStore('dummy')
         this.stores.setStoreClass('dummy', DummySubClass)
         const newStore = await this.stores.getStore('dummy')
@@ -960,7 +961,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async setStoreClassDoesNotClearOtherStoreInstances() {
+    protected async setStoreClassDoesNotClearOtherStoreInstances() {
         const store = await this.stores.getStore('operations')
         this.stores.setStoreClass('dummy', DummySubClass)
         const newStore = await this.stores.getStore('operations')
@@ -968,7 +969,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async upsertShouldNotReturnPrivateFieldsByDefault() {
+    protected async upsertShouldNotReturnPrivateFieldsByDefault() {
         const created = await this.dummyStore.upsertOne(
             {},
             {
@@ -986,7 +987,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async upsertCanReturnPrivateFields() {
+    protected async upsertCanReturnPrivateFields() {
         const privateValue = generateId()
         const created = await this.dummyStore.upsertOne(
             {},
@@ -1006,7 +1007,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
         )
     }
 
-    private static async createRandomRecordWithRelatedSchema() {
+    private async createRandomRecordWithRelatedSchema() {
         return await this.dummyStore.createOne({
             phoneNumber: DEMO_PHONE4_FORMATTED,
             requiredForCreate: generateId(),
@@ -1017,7 +1018,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
         })
     }
 
-    private static async createRandomRecord() {
+    private async createRandomRecord() {
         const record = {
             id: generateId(),
             phoneNumber: '555-555-0000',
@@ -1029,7 +1030,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
         return this.findOne()
     }
 
-    private static async findOne() {
+    private async findOne() {
         const expected = await this.dummyStore.findOne(
             {},
             { shouldIncludePrivateFields: true }

@@ -1,4 +1,4 @@
-import { test, generateId } from '@sprucelabs/test-utils'
+import { test, suite, generateId } from '@sprucelabs/test-utils'
 import {
     Collection,
     CreateIndexesOptions,
@@ -10,13 +10,14 @@ import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 import mongoConnect from '../support/mongoConnect'
 
+@suite()
 export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabaseTest {
-    private static collectionName: string
-    private static adapter: MongoDatabase
-    private static collection: Collection<Document>
-    private static mongo: MongoClient
+    private collectionName!: string
+    private adapter!: MongoDatabase
+    private collection!: Collection<Document>
+    private mongo!: MongoClient
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
 
         const dbName = 'migrating_legacy_index_names'
@@ -32,7 +33,7 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
         this.collection = collection
     }
 
-    protected static async afterEach() {
+    protected async afterEach() {
         await super.afterEach()
         await this.mongo.close()
         await this.adapter.dropDatabase()
@@ -44,7 +45,7 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
         'can sync indexes when already has name_1_filtered',
         'name_1_filtered'
     )
-    protected static async canSyncWithLegacyIndexNamesWhichHaveUnderscores(
+    protected async canSyncWithLegacyIndexNamesWhichHaveUnderscores(
         name: string
     ) {
         await this.createIndexRaw({ name: 1 }, { name })
@@ -53,7 +54,7 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
     }
 
     @test()
-    protected static async syncUniqueIndexesHonorsExistingName() {
+    protected async syncUniqueIndexesHonorsExistingName() {
         await this.createIndexRaw(
             { firstName: 1 },
             { name: 'firstName_1_bananas', unique: true }
@@ -65,16 +66,16 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
     }
 
     @test()
-    protected static async syncingWithSameFieldsButDifferentNamesDoesNotThrow() {
+    protected async syncingWithSameFieldsButDifferentNamesDoesNotThrow() {
         await this.createIndexRaw({ name: 1 }, { name: 'name_1' })
         await this.syncIndexes(['name'])
     }
 
-    private static async syncIndexes(index: string[]) {
+    private async syncIndexes(index: string[]) {
         await this.adapter.syncIndexes(this.collectionName, [index])
     }
 
-    private static async createIndexRaw(
+    private async createIndexRaw(
         spec: IndexSpecification,
         options: CreateIndexesOptions
     ) {

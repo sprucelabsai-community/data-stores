@@ -1,18 +1,19 @@
-import { test, assert } from '@sprucelabs/test-utils'
+import { test, suite, assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import CursorPager, { CursorQueryOptions } from '../../../cursors/CursorPager'
 import { QueryOptions } from '../../../types/query.types'
 import { SpyRecord } from '../usingStores/support/SpyStore'
 import AbstractCursorTest from './AbstractCursorTest'
 
+@suite()
 export default class PagingWithCursorsTest extends AbstractCursorTest {
     @test()
-    protected static async queryToCursor() {
+    protected async queryToCursor() {
         assert.isFunction(CursorPager.prepareQueryOptions)
     }
 
     @test()
-    protected static throwsWithoutLimit() {
+    protected throwsWithoutLimit() {
         //@ts-ignore
         const err = assert.doesThrow(() => CursorPager.prepareQueryOptions({}))
         errorAssert.assertError(err, 'MISSING_PARAMETERS', {
@@ -22,7 +23,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
 
     @test('throws with limit 0', 0)
     @test('throws with limit -1', -1)
-    protected static async throwsWithLimitLessThan1(limit: number) {
+    protected async throwsWithLimitLessThan1(limit: number) {
         const err = assert.doesThrow(() =>
             CursorPager.prepareQueryOptions({
                 limit,
@@ -36,7 +37,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static addsInIfSortExists() {
+    protected addsInIfSortExists() {
         this.assertPreppedOptionsEqualExpected({
             sort: [
                 {
@@ -48,7 +49,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static maintainsExistingQueryOptions() {
+    protected maintainsExistingQueryOptions() {
         this.assertPreppedOptionsEqualExpected({
             includeFields: [],
             sort: [
@@ -61,7 +62,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static doesNotAddIdFieldTwiceToQueryOptions() {
+    protected doesNotAddIdFieldTwiceToQueryOptions() {
         this.assertQueryOptionsNotChanged({
             sort: [{ field: 'id', direction: 'asc' }],
         })
@@ -74,13 +75,13 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static incrementsLimitBy1ForPeakAhead() {
+    protected incrementsLimitBy1ForPeakAhead() {
         const { limit } = this.prepare({ limit: 12 })
         assert.isEqual(limit, 13)
     }
 
     @test()
-    protected static async findReturnsEmptyCursorWithNoRecords() {
+    protected async findReturnsEmptyCursorWithNoRecords() {
         const results = await this.findWithOptions()
 
         assert.isEqualDeep(results, {
@@ -92,7 +93,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
 
     @test('passes expected params 1', { firstName: 'hello' })
     @test('passes expected params 2', { lastName: 'there!' })
-    protected static async callsFindOnTheStoreWithExpectedParams(
+    protected async callsFindOnTheStoreWithExpectedParams(
         query: Partial<SpyRecord>
     ) {
         await this.find(query)
@@ -102,7 +103,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async passesProperlyPreppedValues() {
+    protected async passesProperlyPreppedValues() {
         const options = {
             includeFields: ['firstName', 'lastName'],
             limit: 20,
@@ -113,14 +114,14 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async returnsRecordsFromSpy() {
+    protected async returnsRecordsFromSpy() {
         const first = await this.createRecord()
         const results = await this.findWithOptions()
         assert.isEqualDeep(results.records, [first])
     }
 
     @test()
-    protected static async returnsCorrectNumberOfRecords() {
+    protected async returnsCorrectNumberOfRecords() {
         const results = await this.createRecordsAndFind({
             toCreate: 2,
             limit: 1,
@@ -129,7 +130,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async nextIsStringIfMoreRecordsExist() {
+    protected async nextIsStringIfMoreRecordsExist() {
         const {
             next,
             records: [first],
@@ -145,7 +146,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async canUseNextToContinueGettingResults() {
+    protected async canUseNextToContinueGettingResults() {
         await this.createRecords(10)
 
         const {
@@ -161,7 +162,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async previousIsStringIfPastFirstPage() {
+    protected async previousIsStringIfPastFirstPage() {
         await this.createRecords(4)
         const { next } = await this.findWithOptions({ limit: 2 })
         const { previous } = await this.findWithOptions({ limit: 2, next })
@@ -169,7 +170,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async wontMissRecordAddedAfterPagingAsc() {
+    protected async wontMissRecordAddedAfterPagingAsc() {
         const options = this.generateSortByFirstNameLimit2('asc')
         const created = await this.createRecords(4)
 
@@ -181,7 +182,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async wontMissRecordAddedAfterPagingDesc() {
+    protected async wontMissRecordAddedAfterPagingDesc() {
         const options = this.generateSortByFirstNameLimit2('desc')
         const created = await this.createRecordsAndReverse(4)
 
@@ -194,7 +195,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async picksUpNewRecordsAfter2ndPage() {
+    protected async picksUpNewRecordsAfter2ndPage() {
         const options = this.generateSortByFirstNameLimit2('desc')
 
         const names = ['6', '5', '4', '3', '2', '1', '0']
@@ -216,7 +217,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async canPageWhenSortingByIdAsc() {
+    protected async canPageWhenSortingByIdAsc() {
         const expected = await this.createRecords(5)
 
         const options: CursorQueryOptions = this.mixinDefaultOptions({
@@ -243,7 +244,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
 
     @test('can sort all same name desc', 'desc')
     @test('can sort all same name asc', 'asc')
-    protected static async canSortAllSameNameDesc(direction: 'asc' | 'desc') {
+    protected async canSortAllSameNameDesc(direction: 'asc' | 'desc') {
         const { expected, options } =
             await this.generateSortOptionsCreateRecordsNameAllRyan(direction)
 
@@ -253,7 +254,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async canGoToPreviousPage() {
+    protected async canGoToPreviousPage() {
         await this.createRecordsNamed([
             '10',
             '9',
@@ -278,7 +279,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async canGoToPreviousSortingByNonIdField() {
+    protected async canGoToPreviousSortingByNonIdField() {
         await this.createRecordsNamed([
             '9',
             '8',
@@ -304,7 +305,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async canGoToPreviousSortingByNonIdFieldAsc() {
+    protected async canGoToPreviousSortingByNonIdFieldAsc() {
         await this.createRecordsNamed([
             '9',
             '8',
@@ -330,7 +331,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async canPageBackwordsWithSameName() {
+    protected async canPageBackwordsWithSameName() {
         const all = await this.createRecordsNamed([
             'ryan',
             'ryan',
@@ -366,7 +367,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async canUseNextAfterForwardAndBackwards() {
+    protected async canUseNextAfterForwardAndBackwards() {
         await this.createRecordsNamed([
             '9',
             '8',
@@ -397,7 +398,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         ])
     }
 
-    private static async assertExpectedResultsPagingForwardAndBackwards(
+    private async assertExpectedResultsPagingForwardAndBackwards(
         expectedFirst: string[],
         expectedNext1: string[],
         expectedNext2: string[],
@@ -432,7 +433,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         )
     }
 
-    private static async assert2PagesReturnExpectedResults(
+    private async assert2PagesReturnExpectedResults(
         options: CursorQueryOptions,
         expected: SpyRecord[]
     ) {
@@ -454,7 +455,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         )
     }
 
-    private static async generateSortOptionsCreateRecordsNameAllRyan(
+    private async generateSortOptionsCreateRecordsNameAllRyan(
         order: 'asc' | 'desc'
     ) {
         const options = this.generateSortByFirstNameLimit2(order)
@@ -463,13 +464,13 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         return { expected, options }
     }
 
-    private static async createRecordsAndReverse(total: number) {
+    private async createRecordsAndReverse(total: number) {
         const created = await this.createRecords(total)
         created.reverse()
         return created
     }
 
-    private static async assertMissedRecordPulledNextPage(
+    private async assertMissedRecordPulledNextPage(
         options: CursorQueryOptions,
         firstName: string
     ) {
@@ -481,7 +482,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         return { secondRecords: records }
     }
 
-    private static async assert2ResultsEqual(
+    private async assert2ResultsEqual(
         options: Partial<CursorQueryOptions>,
         expected: string[]
     ) {
@@ -494,13 +495,13 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         )
     }
 
-    private static async createRecordsNamed(names: string[]) {
+    private async createRecordsNamed(names: string[]) {
         return await Promise.all(
             names.map((n) => this.createRecord({ firstName: n }))
         )
     }
 
-    private static async assertFindResultsEqual(
+    private async assertFindResultsEqual(
         options: Partial<CursorQueryOptions>,
         expected: string[],
         fieldToCheck: 'firstName' | 'id' = 'firstName'
@@ -515,27 +516,22 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         return { next, previous, records }
     }
 
-    private static assertRecordsAreDifferent(
-        first: SpyRecord,
-        second: SpyRecord
-    ) {
+    private assertRecordsAreDifferent(first: SpyRecord, second: SpyRecord) {
         assert.isNotEqual(first.id, second.id)
     }
 
-    private static assertLastFindOptionsEqual(
-        options: Partial<CursorQueryOptions>
-    ) {
+    private assertLastFindOptionsEqual(options: Partial<CursorQueryOptions>) {
         assert.isEqualDeep(
             this.mixinDefaultOptions(this.lastFindArgs[1]),
             this.prepare(options)
         )
     }
 
-    private static assertQueryOptionsNotChanged(options: QueryOptions) {
+    private assertQueryOptionsNotChanged(options: QueryOptions) {
         this.assertPreppedOptionsEqual(options, options)
     }
 
-    private static assertPreppedOptionsEqualExpected(options: QueryOptions) {
+    private assertPreppedOptionsEqualExpected(options: QueryOptions) {
         this.assertPreppedOptionsEqual(options, {
             ...options,
             sort: [
@@ -548,7 +544,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         })
     }
 
-    private static assertPreppedOptionsEqual(
+    private assertPreppedOptionsEqual(
         options: QueryOptions,
         expected: QueryOptions
     ) {
@@ -561,7 +557,7 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         )
     }
 
-    private static prepare(options: QueryOptions) {
+    private prepare(options: QueryOptions) {
         return CursorPager.prepareQueryOptions(
             this.mixinDefaultOptions({
                 limit: 10,
@@ -570,11 +566,11 @@ export default class PagingWithCursorsTest extends AbstractCursorTest {
         )
     }
 
-    private static get lastFindArgs() {
+    private get lastFindArgs() {
         return this.spyStore.findArgs[0]
     }
 
-    private static generateSortByFirstNameLimit2(
+    private generateSortByFirstNameLimit2(
         direction: 'asc' | 'desc'
     ): CursorQueryOptions {
         return this.mixinDefaultOptions({

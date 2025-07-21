@@ -5,12 +5,12 @@ import OperationsStore from './OperationsDummyStore'
 import SpyStore from './SpyStore'
 
 export default abstract class AbstractStoreTest extends AbstractDatabaseTest {
-    protected static spyStore: SpyStore
-    protected static dummyStore: DummyStore
-    protected static stores: StoreFactory
-    protected static operationsStore: OperationsStore
+    protected spyStore!: SpyStore
+    protected dummyStore!: DummyStore
+    protected stores!: StoreFactory
+    protected operationsStore!: OperationsStore
 
-    protected static async beforeEach() {
+    protected async beforeEach() {
         await super.beforeEach()
         await this.connectToDatabase()
 

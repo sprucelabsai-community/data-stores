@@ -4,27 +4,27 @@ import AbstractStoreTest from '../usingStores/support/AbstractStoreTest'
 import { SpyRecord } from '../usingStores/support/SpyStore'
 
 export default abstract class AbstractCursorTest extends AbstractStoreTest {
-    protected static spyRecordCount = 0
+    protected spyRecordCount = 0
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         this.spyRecordCount = 0
     }
 
-    protected static async createRecords(total: number) {
+    protected async createRecords(total: number) {
         return await Promise.all(
             new Array(total).fill(0).map(() => this.createRecord())
         )
     }
 
-    protected static async createRecord(values?: SpyRecord) {
+    protected async createRecord(values?: SpyRecord) {
         return await this.spyStore.createOne({
             firstName: `Record ${this.spyRecordCount++}`,
             ...values,
         })
     }
 
-    protected static async find(
+    protected async find(
         query: Partial<SpyRecord>,
         options?: Partial<CursorQueryOptions>
     ) {
@@ -38,7 +38,7 @@ export default abstract class AbstractCursorTest extends AbstractStoreTest {
         )
     }
 
-    protected static mixinDefaultOptions(
+    protected mixinDefaultOptions(
         options: Partial<QueryOptions> & { limit: number }
     ): CursorQueryOptions {
         return {
@@ -48,7 +48,7 @@ export default abstract class AbstractCursorTest extends AbstractStoreTest {
         }
     }
 
-    protected static async createRecordsAndFind(options: {
+    protected async createRecordsAndFind(options: {
         toCreate: number
         limit: number
     }) {
@@ -58,9 +58,7 @@ export default abstract class AbstractCursorTest extends AbstractStoreTest {
         return results
     }
 
-    protected static async findWithOptions(
-        options?: Partial<CursorQueryOptions>
-    ) {
+    protected async findWithOptions(options?: Partial<CursorQueryOptions>) {
         return await this.find(
             {},
             {

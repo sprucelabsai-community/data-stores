@@ -1,10 +1,11 @@
-import { assert, generateId, test } from '@sprucelabs/test-utils'
+import { assert, generateId, test, suite } from '@sprucelabs/test-utils'
 import AbstractStoreTest from './support/AbstractStoreTest'
 import StoreWithDifferentDatabaseSchema from './support/DifferentDatabaseSchemaStore'
 
+@suite()
 export default class MappingQueryFieldsTest extends AbstractStoreTest {
-    private static store: StoreWithDifferentDatabaseSchema
-    protected static async beforeEach(): Promise<void> {
+    private store!: StoreWithDifferentDatabaseSchema
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         this.stores.setStoreClass(
             'differentDatabaseSchema',
@@ -14,7 +15,7 @@ export default class MappingQueryFieldsTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canCreateAndQueryAgainstId() {
+    protected async canCreateAndQueryAgainstId() {
         const created = await this.createOne()
         const found = await this.findOne(created.id)
 
@@ -22,7 +23,7 @@ export default class MappingQueryFieldsTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canDeleteOneMappingField() {
+    protected async canDeleteOneMappingField() {
         const created = await this.createOne()
 
         const count = await this.store.deleteOne({
@@ -34,7 +35,7 @@ export default class MappingQueryFieldsTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canDeleteManyMappingField() {
+    protected async canDeleteManyMappingField() {
         const created = await this.createOne()
 
         const count = await this.store.delete({
@@ -46,7 +47,7 @@ export default class MappingQueryFieldsTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canUpdateOneMappingField() {
+    protected async canUpdateOneMappingField() {
         const created = await this.createOne()
 
         const serialNumber = generateId()
@@ -63,8 +64,8 @@ export default class MappingQueryFieldsTest extends AbstractStoreTest {
         assert.isEqual(found?.serialNumber, serialNumber)
     }
 
-    @test.skip('have to figure out how to dig willUpdate fired for each record')
-    protected static async canUpdateManyMappingField() {
+    @test.skip('have to figure out how to get willUpdate fired for each record')
+    protected async canUpdateManyMappingField() {
         const created = await this.createOne()
 
         const serialNumber = generateId()
@@ -81,18 +82,18 @@ export default class MappingQueryFieldsTest extends AbstractStoreTest {
         assert.isEqual(found?.serialNumber, serialNumber)
     }
 
-    private static async assertRecordDeleted(id: string) {
+    private async assertRecordDeleted(id: string) {
         const found = await this.findOne(id)
         assert.isNull(found)
     }
 
-    private static async findOne(id: string) {
+    private async findOne(id: string) {
         return await this.store.findOne({
             id,
         })
     }
 
-    private static async createOne() {
+    private async createOne() {
         return await this.store.createOne({
             serialNumber: generateId(),
         })

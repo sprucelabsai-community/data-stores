@@ -1,10 +1,11 @@
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
+import AbstractSpruceTest, { test, suite, assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import DatabaseFactory from '../../../factories/DatabaseFactory'
 import DatabaseFixture, {
     DatabaseFixtureOptions,
 } from '../../../fixtures/DatabaseFixture'
 
+@suite()
 export default class TestingWithDatabasesTest extends AbstractSpruceTest {
     @test(
         'throws unexpected with in memory and just passing dbString',
@@ -14,7 +15,7 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
         'MISSING_PARAMETERS',
         ['dbConnectionString']
     )
-    protected static async cantPassDbValuesIfUsingInMemoryDatabase(
+    protected async cantPassDbValuesIfUsingInMemoryDatabase(
         options: DatabaseFixtureOptions,
         code: string,
         params: string[]
@@ -32,7 +33,7 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async databaseFixtureUsesConstructorParamsAndReturnsDifferenceInstance() {
+    protected async databaseFixtureUsesConstructorParamsAndReturnsDifferenceInstance() {
         const db1 = DatabaseFactory.Database({
             dbName: 'skill',
             dbConnectionString: 'memory://',
@@ -50,7 +51,7 @@ export default class TestingWithDatabasesTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async databaseFixtureReusesDatabaseInstanceWithSameConnectionDetails() {
+    protected async databaseFixtureReusesDatabaseInstanceWithSameConnectionDetails() {
         const db1 = DatabaseFactory.Database({
             dbName: 'skill',
             dbConnectionString: 'memory://',

@@ -1,17 +1,18 @@
-import { test, assert } from '@sprucelabs/test-utils'
+import { test, suite, assert } from '@sprucelabs/test-utils'
 import AbstractStoreTest from './support/AbstractStoreTest'
 import { OperationsRecord } from './support/OperationsDummyStore'
 
+@suite()
 export default class UsingOperatorsTest extends AbstractStoreTest {
-    private static record: OperationsRecord
+    private record!: OperationsRecord
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         await this.createOne()
     }
 
     @test()
-    protected static async can$pushOnUpdate() {
+    protected async can$pushOnUpdate() {
         await this.push({ arrayOfStrings: 'test' })
         this.assertArrayOfStringsEquals(['test'])
         await this.push({ arrayOfStrings: 'another' })
@@ -21,26 +22,26 @@ export default class UsingOperatorsTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canIncrement() {
+    protected async canIncrement() {
         await this.updateOne({ $inc: { score: 1 } })
         assert.isEqual(this.record.score, 1)
     }
 
-    private static assertArrayOfStringsEquals(expected: string[]) {
+    private assertArrayOfStringsEquals(expected: string[]) {
         assert.isEqualDeep(this.record.arrayOfStrings, expected)
     }
 
-    private static assertArrayOfNumbersEquals(expected: number[]) {
+    private assertArrayOfNumbersEquals(expected: number[]) {
         assert.isEqualDeep(this.record.arrayOfNumbers, expected)
     }
 
-    private static async push(push: Record<string, any>) {
+    private async push(push: Record<string, any>) {
         await this.updateOne({
             $push: push,
         })
     }
 
-    private static async updateOne(updates: Record<string, any>) {
+    private async updateOne(updates: Record<string, any>) {
         this.record = await this.operationsStore.updateOne(
             {
                 id: this.record.id,
@@ -49,7 +50,7 @@ export default class UsingOperatorsTest extends AbstractStoreTest {
         )
     }
 
-    private static async createOne() {
+    private async createOne() {
         this.record = await this.operationsStore.createOne({
             arrayOfStrings: [],
             arrayOfNumbers: [],

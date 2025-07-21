@@ -1,18 +1,25 @@
-import { test, assert, generateId, errorAssert } from '@sprucelabs/test-utils'
+import {
+    test,
+    suite,
+    assert,
+    generateId,
+    errorAssert,
+} from '@sprucelabs/test-utils'
 import BatchCursorImpl, { FindBatchOptions } from '../../../cursors/BatchCursor'
 import AbstractStoreTest from '../usingStores/support/AbstractStoreTest'
 
+@suite()
 export default class FindWithCursorTest extends AbstractStoreTest {
-    private static query?: undefined | Record<string, any>
+    private query?: undefined | Record<string, any>
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         this.query = undefined
         BatchCursorImpl.Class = SpyCursor
     }
 
     @test()
-    protected static async throwsWhenMissingRequired() {
+    protected async throwsWhenMissingRequired() {
         //@ts-ignore
         const err = await assert.doesThrowAsync(() => BatchCursorImpl.Cursor())
         errorAssert.assertError(err, 'MISSING_PARAMETERS', {
@@ -21,31 +28,31 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async nothingByDefailt() {
+    protected async nothingByDefailt() {
         const first = await this.firstBatch()
         assert.isFalsy(first)
     }
 
     @test()
-    protected static async returnsOne() {
+    protected async returnsOne() {
         await this.createOne()
         await this.assertFirstBatchSize(1)
     }
 
     @test()
-    protected static async returnsTwo() {
+    protected async returnsTwo() {
         await this.createMany(2)
         await this.assertFirstBatchSize(2)
     }
 
     @test()
-    protected static async canSetBatchSize() {
+    protected async canSetBatchSize() {
         await this.createMany(2)
         await this.assertFirstBatchSize(1, { batchSize: 1 })
     }
 
     @test()
-    protected static async passesQueryThrough() {
+    protected async passesQueryThrough() {
         const [first] = await this.createMany(2)
         this.query = {
             requiredForCreate: first.requiredForCreate,
@@ -54,13 +61,13 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async defaultsToBatchSizeOf10() {
+    protected async defaultsToBatchSizeOf10() {
         await this.createMany(11)
         await this.assertFirstBatchSize(10)
     }
 
     @test()
-    protected static async honorsIncludeFields() {
+    protected async honorsIncludeFields() {
         await this.createOne()
         //@ts-ignore
         const cursor = await this.findBatch({ includeFields: ['id'] })
@@ -70,13 +77,13 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async returnsAllfieldsByDefault() {
+    protected async returnsAllfieldsByDefault() {
         const { first, created } = await this.createOneAndFindFirst()
         assert.isEqualDeep(first, created)
     }
 
     @test()
-    protected static async honorsPrivateFields() {
+    protected async honorsPrivateFields() {
         const { first } = await this.createOneAndFindFirst({
             shouldIncludePrivateFields: true,
         })
@@ -89,7 +96,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async nextBatchFindsNextResults() {
+    protected async nextBatchFindsNextResults() {
         await this.createMany(11)
         const cursor = await this.findBatch()
         const first = await cursor.next()
@@ -100,7 +107,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async finds4Batches() {
+    protected async finds4Batches() {
         await this.createMany(31)
         const cursor = await this.findBatch()
         const first = await cursor.next()
@@ -116,7 +123,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
 
     @test('can map next results 1', [])
     @test('can map next results 2', [{ test: 1 }])
-    protected static async canMapNextResults(expected: Record<string, any>[]) {
+    protected async canMapNextResults(expected: Record<string, any>[]) {
         await this.createMany(1)
         const cursor = await this.findBatch()
 
@@ -129,7 +136,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async passesResultsToOnNextResults() {
+    protected async passesResultsToOnNextResults() {
         await this.createMany(11)
 
         const first = [this.generateDummyValues()]
@@ -150,7 +157,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async passesActualRecordsToOnNextResults() {
+    protected async passesActualRecordsToOnNextResults() {
         await this.createMany(2)
         const cursor = await this.findBatch()
 
@@ -168,7 +175,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canGetTotalRecords() {
+    protected async canGetTotalRecords() {
         await this.assertTotalRecords(0)
         await this.createOne()
         await this.assertTotalRecords(1)
@@ -177,7 +184,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async totalRecordsHonorsQuery() {
+    protected async totalRecordsHonorsQuery() {
         const created = await this.createOne()
         this.query = {
             requiredForCreate: generateId(),
@@ -190,7 +197,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async supportIteration() {
+    protected async supportIteration() {
         const items = await this.createMany(3)
         const cursor = await this.findBatch()
         const results = []
@@ -202,7 +209,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async supportIterationWithMultipleBatches() {
+    protected async supportIterationWithMultipleBatches() {
         const items = await this.createMany(11)
         const cursor = await this.findBatch()
         const results = []
@@ -215,7 +222,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async nextHonorsQueryWith$or() {
+    protected async nextHonorsQueryWith$or() {
         const [event, event2] = await this.createMany(4)
         this.query = {
             $or: [
@@ -237,7 +244,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async queryIsNotMutatedOnQuery() {
+    protected async queryIsNotMutatedOnQuery() {
         const [event] = await this.createMany(20)
 
         this.query = {
@@ -250,7 +257,7 @@ export default class FindWithCursorTest extends AbstractStoreTest {
         assert.isEqualDeep(this.query, cursor.getQuery())
     }
 
-    private static async assertTotalRecords(
+    private async assertTotalRecords(
         expected: number,
         options?: Partial<FindBatchOptions>
     ) {
@@ -259,16 +266,14 @@ export default class FindWithCursorTest extends AbstractStoreTest {
         assert.isEqual(total, expected)
     }
 
-    private static async createOneAndFindFirst(
-        options?: Partial<FindBatchOptions>
-    ) {
+    private async createOneAndFindFirst(options?: Partial<FindBatchOptions>) {
         const created = await this.createOne()
         const cursor = await this.findBatch(options)
         const [first] = (await cursor.next()) ?? []
         return { first, created }
     }
 
-    private static async assertFirstBatchSize(
+    private async assertFirstBatchSize(
         expected: number,
         options?: Partial<FindBatchOptions>
     ) {
@@ -276,31 +281,31 @@ export default class FindWithCursorTest extends AbstractStoreTest {
         assert.isLength(first, expected)
     }
 
-    private static async createOne() {
+    private async createOne() {
         const [one] = await this.createMany(1)
         return one
     }
 
-    private static async createMany(total: number) {
+    private async createMany(total: number) {
         return await this.dummyStore.create(
             new Array(total).fill(0).map(() => this.generateDummyValues())
         )
     }
 
-    private static generateDummyValues() {
+    private generateDummyValues() {
         return {
             phoneNumber: '555-555-5555',
             requiredForCreate: generateId(),
         }
     }
 
-    private static async findBatch(options?: Partial<FindBatchOptions>) {
+    private async findBatch(options?: Partial<FindBatchOptions>) {
         return (await this.dummyStore.findBatch(this.query, {
             ...options,
         })) as SpyCursor
     }
 
-    private static async firstBatch(options?: Partial<FindBatchOptions>) {
+    private async firstBatch(options?: Partial<FindBatchOptions>) {
         const cursor = await this.findBatch(options)
         const first = await cursor.next()
         return first

@@ -1,10 +1,17 @@
-import { test, assert, errorAssert, generateId } from '@sprucelabs/test-utils'
+import {
+    test,
+    suite,
+    assert,
+    errorAssert,
+    generateId,
+} from '@sprucelabs/test-utils'
 import storePluginAssert from '../../../tests/storePluginAssert'
 import AbstractPluginTest from './AbstractPluginTest'
 
+@suite()
 export default class AssertingPluginsTest extends AbstractPluginTest {
     @test()
-    protected static async throwsWithMissingRequired() {
+    protected async throwsWithMissingRequired() {
         //@ts-ignore
         const err = assert.doesThrow(() => storePluginAssert.storeHasPlugin())
         errorAssert.assertError(err, 'MISSING_PARAMETERS', {
@@ -13,25 +20,25 @@ export default class AssertingPluginsTest extends AbstractPluginTest {
     }
 
     @test()
-    protected static async passesIfPluginFound() {
+    protected async passesIfPluginFound() {
         const plugin = this.addNewPlugin()
         this.assertHasPlugin(plugin.getName())
     }
 
     @test()
-    protected static async throwsIfNoPlugins() {
+    protected async throwsIfNoPlugins() {
         const plugin = this.MockPlugin()
         this.assertHasPluginThrows(plugin.getName())
     }
 
     @test()
-    protected static async throwsIfPluginNotFound() {
+    protected async throwsIfPluginNotFound() {
         this.addNewPlugin()
         assert.doesThrow(() => this.assertHasPlugin(generateId()))
     }
 
     @test()
-    protected static async canFindSecondPlugin() {
+    protected async canFindSecondPlugin() {
         this.addNewPlugin()
         const plugin = this.addNewPlugin()
         plugin.randomizeName()
@@ -39,17 +46,17 @@ export default class AssertingPluginsTest extends AbstractPluginTest {
     }
 
     @test()
-    protected static async returnsPlugin() {
+    protected async returnsPlugin() {
         const plugin = this.addNewPlugin()
         const found = this.assertHasPlugin(plugin.getName())
         assert.isEqual(found, plugin)
     }
 
-    private static assertHasPluginThrows(name: string) {
+    private assertHasPluginThrows(name: string) {
         assert.doesThrow(() => this.assertHasPlugin(name))
     }
 
-    private static assertHasPlugin(name: string): any {
+    private assertHasPlugin(name: string): any {
         return storePluginAssert.storeHasPlugin(this.spyStore, name)
     }
 }

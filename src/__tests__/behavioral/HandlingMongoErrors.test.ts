@@ -1,10 +1,11 @@
-import { test } from '@sprucelabs/test-utils'
+import { test, suite } from '@sprucelabs/test-utils'
 import MongoDatabase, { MONGO_TEST_URI } from '../../databases/MongoDatabase'
 import AbstractDatabaseTest from '../../tests/AbstractDatabaseTest'
 
+@suite()
 export default class HandlingMongoErrorsTest extends AbstractDatabaseTest {
     @test()
-    protected static async canCreateHandlingMongoErrors() {
+    protected async canCreateHandlingMongoErrors() {
         const database = new ThrowingMongDatabase(MONGO_TEST_URI, {
             dbName: 'testing-lost-connections',
         })

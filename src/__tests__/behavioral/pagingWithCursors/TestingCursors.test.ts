@@ -1,23 +1,24 @@
-import { test, assert } from '@sprucelabs/test-utils'
+import { test, suite, assert } from '@sprucelabs/test-utils'
 import CursorPagerFaker from '../../../cursors/CursorPagerFaker'
 import generateId from '../../../utilities/generateId'
 import { SpyRecord } from '../usingStores/support/SpyStore'
 import AbstractCursorTest from './AbstractCursorTest'
 
+@suite()
 export default class TestingCursorsTest extends AbstractCursorTest {
-    protected static async beforeEach() {
+    protected async beforeEach() {
         await super.beforeEach()
         await CursorPagerFaker.beforeEach()
     }
 
     @test()
-    protected static async hasBeforeEach() {
+    protected async hasBeforeEach() {
         assert.isFunction(CursorPagerFaker.beforeEach)
         assert.isFunction(CursorPagerFaker.setResponse)
     }
 
     @test()
-    protected static async canForResponseToCursor() {
+    protected async canForResponseToCursor() {
         const next = generateId()
         const previous = generateId()
         const records: SpyRecord[] = [{ firstName: generateId() }]
@@ -43,7 +44,7 @@ export default class TestingCursorsTest extends AbstractCursorTest {
     }
 
     @test()
-    protected static async thingsNotSuppliedHaveDefaults() {
+    protected async thingsNotSuppliedHaveDefaults() {
         CursorPagerFaker.setResponse(async () => ({}))
         const response = await this.find({})
         assert.isEqualDeep(response, {
@@ -53,7 +54,7 @@ export default class TestingCursorsTest extends AbstractCursorTest {
         })
     }
 
-    private static async assertTotalRecords(expected: number) {
+    private async assertTotalRecords(expected: number) {
         const { records, next, previous } = await this.find({})
         assert.isLength(records, expected)
         return { records, next, previous }

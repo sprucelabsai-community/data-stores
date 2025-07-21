@@ -1,4 +1,10 @@
-import { test, assert, generateId, errorAssert } from '@sprucelabs/test-utils'
+import {
+    test,
+    suite,
+    assert,
+    generateId,
+    errorAssert,
+} from '@sprucelabs/test-utils'
 import { MongoClient } from 'mongodb'
 import MongoDatabase from '../../../databases/MongoDatabase'
 import NeDbDatabase, { FakeQueryHandler } from '../../../databases/NeDbDatabase'
@@ -8,9 +14,10 @@ import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 
 require('dotenv').config()
 
+@suite()
 export default class DatabaseFixtureTest extends AbstractDatabaseTest {
     @test()
-    protected static async fixtureClearsDatabaseCacheOnDestroy() {
+    protected async fixtureClearsDatabaseCacheOnDestroy() {
         const databaseFixture = new DatabaseFixture()
 
         await databaseFixture.connectToDatabase()
@@ -21,7 +28,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static hasSetDefaultConnectOptions() {
+    protected hasSetDefaultConnectOptions() {
         assert.isFunction(DatabaseFixture.setDefaultConnectOptions)
     }
 
@@ -30,7 +37,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
         'beforeEach'
     )
     @test('connects and remembers default settings with afterEach', 'afterEach')
-    protected static async usesDefaultConnectOptions(
+    protected async usesDefaultConnectOptions(
         method: 'beforeEach' | 'afterEach'
     ) {
         DatabaseFixture.setDefaultConnectOptions({
@@ -52,7 +59,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async cleansUpDatabaseWithDefaultConnectOptionsEvenWhenNeverConnected() {
+    protected async cleansUpDatabaseWithDefaultConnectOptionsEvenWhenNeverConnected() {
         const dbName = DatabaseFixture.generateDbName()
         const connectionString =
             process.env.TEST_DB_CONNECTION_STRING ?? '**missing**'
@@ -79,7 +86,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async passingConnectionStringThatStartsWithoutMemory() {
+    protected async passingConnectionStringThatStartsWithoutMemory() {
         new DatabaseFixture({
             dbConnectionString: process.env.TEST_DB_CONNECTION_STRING,
             dbName: 'testing',
@@ -87,7 +94,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async cantFakeUntilConnectedToDatabase() {
+    protected async cantFakeUntilConnectedToDatabase() {
         const fixture = new DatabaseFixture()
         const err = assert.doesThrow(() =>
             fixture.fakeQuery(generateId(), () => [])
@@ -98,7 +105,7 @@ export default class DatabaseFixtureTest extends AbstractDatabaseTest {
         })
     }
 
-    protected static async canFakeAfterConnect() {
+    protected async canFakeAfterConnect() {
         const fixture = new DatabaseFixture({
             dbConnectionString: 'memory://',
         })

@@ -1,18 +1,19 @@
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import databaseAssertUtil from '../../../tests/databaseAssertUtil'
 import AbstractStoreTest from './support/AbstractStoreTest'
 import SimpleStore from './support/SimpleStore'
 
+@suite()
 export default class LoadingRecordsWhithoutCasedFieldsTest extends AbstractStoreTest {
-    private static simple: SimpleStore
-    private static lowerCase: {
+    private simple!: SimpleStore
+    private lowerCase!: {
         id: string
         sensorname: string
         vendorid: string
         sensorcode: string
         isvalid?: boolean
     }
-    private static expected: {
+    private expected!: {
         id: string
         sensorName: string
         vendorId: string
@@ -20,7 +21,7 @@ export default class LoadingRecordsWhithoutCasedFieldsTest extends AbstractStore
         isValid?: boolean
     }
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         this.stores.setStoreClass('simple', SimpleStore)
         this.simple = await this.stores.getStore('simple')
@@ -47,19 +48,19 @@ export default class LoadingRecordsWhithoutCasedFieldsTest extends AbstractStore
     }
 
     @test()
-    protected static async canMapLowerToCamel() {
+    protected async canMapLowerToCamel() {
         await this.assertFindMatchesExpected()
     }
 
     @test()
-    protected static async canMapFalsyBooleanFieldToCamel() {
+    protected async canMapFalsyBooleanFieldToCamel() {
         this.lowerCase.isvalid = false
         this.expected.isValid = false
         await this.assertFindMatchesExpected()
     }
 
     @test()
-    protected static async mappingHonorsShouldMapSetting() {
+    protected async mappingHonorsShouldMapSetting() {
         this.simple.setShouldMap(false)
         const actual = await this.findOne()
         //@ts-ignore
@@ -69,7 +70,7 @@ export default class LoadingRecordsWhithoutCasedFieldsTest extends AbstractStore
     }
 
     @test()
-    protected static async canAssertMappingIsEnabled() {
+    protected async canAssertMappingIsEnabled() {
         assert.doesThrow(() =>
             databaseAssertUtil.assertHasLowerCaseToCamelCaseMappingEnabled(
                 this.dummyStore
@@ -81,12 +82,12 @@ export default class LoadingRecordsWhithoutCasedFieldsTest extends AbstractStore
         )
     }
 
-    private static async assertFindMatchesExpected() {
+    private async assertFindMatchesExpected() {
         const actual = await this.findOne()
         assert.isEqualDeep(actual, this.expected)
     }
 
-    private static async findOne() {
+    private async findOne() {
         return await this.simple.findOne({})
     }
 }

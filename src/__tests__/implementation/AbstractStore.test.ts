@@ -5,7 +5,7 @@ import {
     SchemaValues,
     validationErrorAssert,
 } from '@sprucelabs/schema'
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import { SCRAMBLE_VALUE } from '../../constants'
 import SpruceError from '../../errors/SpruceError'
@@ -174,22 +174,23 @@ type RelatedSchemaType =
     | null
     | undefined
 
+@suite()
 export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
-    private static store: TestStore
+    private store!: TestStore
 
-    protected static async beforeEach() {
+    protected async beforeEach() {
         await super.beforeEach()
         await this.connectToDatabase()
         this.store = TestStore.Store(this.db)
     }
 
     @test()
-    protected static async canCreateTestStore() {
+    protected async canCreateTestStore() {
         assert.isTruthy(this.store)
     }
 
     @test()
-    protected static async throwsWhenMissingRequiredOnCreate() {
+    protected async throwsWhenMissingRequiredOnCreate() {
         const err = (await assert.doesThrowAsync(
             //@ts-ignore
             () => this.store.createOne({})
@@ -201,7 +202,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canCreateRecordAndDropPrivate() {
+    protected async canCreateRecordAndDropPrivate() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -234,7 +235,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canCreateRecordAndKeepPrivateFields() {
+    protected async canCreateRecordAndKeepPrivateFields() {
         const created = await this.store.createOne(
             {
                 requiredForCreate: 'yes!',
@@ -268,7 +269,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async throwsWhenCantFindCreated() {
+    protected async throwsWhenCantFindCreated() {
         const id = this.db.generateId()
         const err = (await assert.doesThrowAsync(() =>
             this.store.updateOne(
@@ -285,7 +286,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async throwsWhenMissingRequiredOnUpdate() {
+    protected async throwsWhenMissingRequiredOnUpdate() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             phoneNumber: DEMO_PHONE2_FORMATTED,
@@ -302,7 +303,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async updatesSuccessfullyDroppingPrivateFields() {
+    protected async updatesSuccessfullyDroppingPrivateFields() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -339,7 +340,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async updatesSuccessfullyKeeepingPrivateFields() {
+    protected async updatesSuccessfullyKeeepingPrivateFields() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -380,7 +381,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canFindOneRecordAndDropPrivateFields() {
+    protected async canFindOneRecordAndDropPrivateFields() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -412,7 +413,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canFindOneRecordAndKeepPrivateFields() {
+    protected async canFindOneRecordAndKeepPrivateFields() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -450,7 +451,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canFindManyRecordAndDropPrivateFields() {
+    protected async canFindManyRecordAndDropPrivateFields() {
         const created1 = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -508,7 +509,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canCreateMany() {
+    protected async canCreateMany() {
         const values = [
             {
                 requiredForCreate: '1 first',
@@ -539,7 +540,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async whenOneFailsValidationNothingIsWritten() {
+    protected async whenOneFailsValidationNothingIsWritten() {
         const values = [
             {
                 requiredForCreate: 'yes!',
@@ -571,7 +572,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
         'can find many with private fields using new api',
         'findAllWithPrivateNewApi'
     )
-    protected static async canFindManyRecordAndKeepPrivateFields(
+    protected async canFindManyRecordAndKeepPrivateFields(
         method: 'findAllWithPrivateOldApi' | 'findAllWithPrivateNewApi'
     ) {
         const created1 = await this.store.createOne({
@@ -636,20 +637,8 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
         >(true)
     }
 
-    private static async findAllWithPrivateOldApi() {
-        return await this.store.find(
-            {},
-            {},
-            { shouldIncludePrivateFields: true }
-        )
-    }
-
-    private static async findAllWithPrivateNewApi() {
-        return await this.store.find({}, { shouldIncludePrivateFields: true })
-    }
-
     @test()
-    protected static async scrambleWithoutScrambleDefinedThrows() {
+    protected async scrambleWithoutScrambleDefinedThrows() {
         //@ts-ignore
         this.store.scrambleFields = null
         const err = (await assert.doesThrowAsync(() =>
@@ -660,7 +649,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canScrambleRecord() {
+    protected async canScrambleRecord() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -679,7 +668,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async throwsWhenPassingFieldThatDoesNotExist() {
+    protected async throwsWhenPassingFieldThatDoesNotExist() {
         const err = (await assert.doesThrowAsync(() =>
             this.store.createOne({
                 //@ts-ignore
@@ -696,7 +685,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async normalizesOnCreate() {
+    protected async normalizesOnCreate() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -712,7 +701,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async normalizesOnUpdate() {
+    protected async normalizesOnUpdate() {
         const created = await this.store.createOne({
             requiredForCreate: 'yes!',
             privateField: 'private!',
@@ -736,7 +725,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async upsertCanCreateARecord() {
+    protected async upsertCanCreateARecord() {
         const upserted = await this.store.upsertOne(
             { phoneNumber: DEMO_PHONE_FORMATTED },
             {
@@ -760,7 +749,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async upsertCanUpdateRecord() {
+    protected async upsertCanUpdateRecord() {
         const id = this.db.generateId()
         const created = await this.store.upsertOne(
             { id },
@@ -795,7 +784,7 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canCountRecords() {
+    protected async canCountRecords() {
         await this.store.createOne({
             requiredForUpdate: 'created',
             requiredForCreate: 'created!',
@@ -834,9 +823,21 @@ export default class StoreStripsPrivateFieldsTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canSetAndGetCollectionName() {
+    protected async canSetAndGetCollectionName() {
         const name = generateId()
         this.store.setCollectionName(name)
         assert.isEqual(this.store.getCollectionName(), name)
+    }
+
+    private async findAllWithPrivateOldApi() {
+        return await this.store.find(
+            {},
+            {},
+            { shouldIncludePrivateFields: true }
+        )
+    }
+
+    private async findAllWithPrivateNewApi() {
+        return await this.store.find({}, { shouldIncludePrivateFields: true })
     }
 }

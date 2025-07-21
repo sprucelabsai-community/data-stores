@@ -1,28 +1,29 @@
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import mapIndexFilterToNeDbQuery from '../../../databases/mapIndexFilterToNeDbQuery'
 import NeDbDatabase from '../../../databases/NeDbDatabase'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import neDbConnect from '../../support/neDbConnect'
 
+@suite()
 export default class NeDbTest extends AbstractDatabaseTest {
-    private static client: NeDbDatabase
+    private client!: NeDbDatabase
 
-    private static readonly collectionName = 'people'
+    private readonly collectionName = 'people'
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         const { db } = await neDbConnect()
         this.client = db
     }
 
     @test()
-    protected static async doesNotAddIdFieldWithDifferentPrimaryField() {
+    protected async doesNotAddIdFieldWithDifferentPrimaryField() {
         const created = await this.createOne()
         assert.isFalsy(created.id)
     }
 
     @test()
-    protected static async doesNotAddInIdFieldOnFindWithDifferentPrimaryField() {
+    protected async doesNotAddInIdFieldOnFindWithDifferentPrimaryField() {
         const created = await this.createOne()
         const found = await this.client.findOne(
             this.collectionName,
@@ -39,7 +40,7 @@ export default class NeDbTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async doesNotAddInIdFieldWithManyResults() {
+    protected async doesNotAddInIdFieldWithManyResults() {
         await this.createOne()
         await this.createOne()
 
@@ -57,7 +58,7 @@ export default class NeDbTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async mapsIndexFiltersToQuery() {
+    protected async mapsIndexFiltersToQuery() {
         this.assertQueryFromFilterEquals(
             {
                 firstName: 'test',
@@ -86,7 +87,7 @@ export default class NeDbTest extends AbstractDatabaseTest {
         )
     }
 
-    private static assertQueryFromFilterEquals(
+    private assertQueryFromFilterEquals(
         filter: Record<string, any>,
         expected: Record<string, any>
     ) {
@@ -94,7 +95,7 @@ export default class NeDbTest extends AbstractDatabaseTest {
         assert.isEqualDeep(actual, expected)
     }
 
-    private static async createOne(first?: string) {
+    private async createOne(first?: string) {
         return await this.client.createOne(
             this.collectionName,
             {

@@ -1,21 +1,22 @@
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
+import AbstractSpruceTest, { test, suite, assert } from '@sprucelabs/test-utils'
 import { ObjectId } from 'mongodb'
 import generateId from '../../utilities/generateId'
 
+@suite()
 export default class GeneratingIdsTest extends AbstractSpruceTest {
     @test()
-    protected static hasGenerateId() {
+    protected hasGenerateId() {
         assert.isFunction(generateId)
     }
 
     @test()
-    protected static generatesAString() {
+    protected generatesAString() {
         const value = generateId()
         assert.isString(value)
     }
 
     @test()
-    protected static generatesAnId() {
+    protected generatesAnId() {
         const value = generateId()
         new ObjectId(value)
     }

@@ -1,15 +1,16 @@
-import { test, assert, generateId } from '@sprucelabs/test-utils'
+import { test, suite, assert, generateId } from '@sprucelabs/test-utils'
 import AbstractStoreTest from './support/AbstractStoreTest'
 import CustomPrimaryStore from './support/CustomPrimaryStore'
 import CustomPrimaryStore2 from './support/CustomPrimaryStore2'
 import CustomPrimaryStoreWithFieldNamedId from './support/CustomPrimaryWithFieldNamedId'
 
+@suite()
 export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreTest {
-    private static customPrimaryStoreWithFieldNamedId: CustomPrimaryStoreWithFieldNamedId
-    private static customPrimaryStore: CustomPrimaryStore
-    private static customPrimaryStore2: CustomPrimaryStore2
+    private customPrimaryStoreWithFieldNamedId!: CustomPrimaryStoreWithFieldNamedId
+    private customPrimaryStore!: CustomPrimaryStore
+    private customPrimaryStore2!: CustomPrimaryStore2
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         this.stores.setStoreClass('customPrimary', CustomPrimaryStore)
         this.stores.setStoreClass('customPrimary2', CustomPrimaryStore2)
@@ -26,7 +27,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
     }
 
     @test()
-    protected static async canSaveRecordWithDifferentId1() {
+    protected async canSaveRecordWithDifferentId1() {
         const created = await this.createOne()
         assert.isTruthy(created.customId1)
         //@ts-ignore
@@ -34,7 +35,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
     }
 
     @test()
-    protected static async canUpdateRecordWithDifferentId1() {
+    protected async canUpdateRecordWithDifferentId1() {
         const created = await this.createOne()
         const updated = await this.customPrimaryStore.updateOne(
             {
@@ -50,7 +51,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
     }
 
     @test()
-    protected static async canCreateManyWithCustomId() {
+    protected async canCreateManyWithCustomId() {
         await this.customPrimaryStore.create([
             this.generateValues(),
             this.generateValues(),
@@ -58,7 +59,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
     }
 
     @test()
-    protected static async canUpsertWithCustomId() {
+    protected async canUpsertWithCustomId() {
         const created = await this.createOne()
         const upserted = await this.customPrimaryStore.upsertOne(
             {
@@ -73,7 +74,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
     }
 
     @test()
-    protected static async canSaveRecordWithDifferentId2() {
+    protected async canSaveRecordWithDifferentId2() {
         const created = await this.customPrimaryStore2.createOne(
             this.generateValues()
         )
@@ -84,7 +85,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
     }
 
     @test()
-    protected static async canSaveWithDifferentIdEvenIfHasFieldNamedId() {
+    protected async canSaveWithDifferentIdEvenIfHasFieldNamedId() {
         const created = await this.customPrimaryStoreWithFieldNamedId.createOne(
             this.generateValues()
         )
@@ -93,7 +94,7 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
     }
 
     @test()
-    protected static async passesPrimaryKeysToFind() {
+    protected async passesPrimaryKeysToFind() {
         this.customPrimaryStore.getDb().find = async (
             _collectionName: string,
             _query: Record<string, any>,
@@ -108,11 +109,11 @@ export default class StoresWithDifferentNamedIdFieldsTest extends AbstractStoreT
         await this.customPrimaryStore.find({})
     }
 
-    private static async createOne() {
+    private async createOne() {
         return await this.customPrimaryStore.createOne(this.generateValues())
     }
 
-    private static generateValues() {
+    private generateValues() {
         return {
             name: generateId(),
         }

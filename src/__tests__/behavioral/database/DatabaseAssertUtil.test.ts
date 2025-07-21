@@ -1,5 +1,5 @@
 import { cloneDeep } from '@sprucelabs/schema'
-import { test, assert, errorAssert } from '@sprucelabs/test-utils'
+import { test, suite, assert, errorAssert } from '@sprucelabs/test-utils'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 import databaseAssertUtil, {
     DatabaseAssertionName,
@@ -7,23 +7,24 @@ import databaseAssertUtil, {
 import pluckAssertionMethods from '../../../tests/pluckAssertionMethods'
 import mongoConnect from '../../support/mongoConnect'
 
+@suite()
 export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
-    private static dbAssert: typeof databaseAssertUtil
-    protected static hits: string[] = []
+    private dbAssert!: typeof databaseAssertUtil
+    protected hits: string[] = []
 
-    protected static async beforeEach() {
+    protected async beforeEach() {
         await super.beforeEach()
         this.hits = []
         this.dbAssert = cloneDeep(databaseAssertUtil)
     }
 
     @test()
-    protected static async canInvokeEveryTestWithOneConnect() {
+    protected async canInvokeEveryTestWithOneConnect() {
         assert.isFunction(databaseAssertUtil.runSuite)
     }
 
     @test()
-    protected static async throwsWhenMissingConnect() {
+    protected async throwsWhenMissingConnect() {
         const err = await assert.doesThrowAsync(() =>
             //@ts-ignore
             databaseAssertUtil.runSuite()
@@ -34,7 +35,7 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canSpecifyTests() {
+    protected async canSpecifyTests() {
         this.attachHitCounter()
 
         await this.runTestsAndAssertActuallyRun(['assertCanSortDesc'])
@@ -45,7 +46,7 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async runSuiteHitsAllAssertions() {
+    protected async runSuiteHitsAllAssertions() {
         const keys = this.pluckTests()
 
         const hits: Record<string, boolean> = {}
@@ -66,9 +67,7 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
 
     @test('can ignore single test "assertCanUpdate"', 'assertCanUpdate')
     @test('can ignore single test "assertCanCount"', 'assertCanCount')
-    protected static async canIgnoreTests(
-        assertionName: DatabaseAssertionName
-    ) {
+    protected async canIgnoreTests(assertionName: DatabaseAssertionName) {
         this.attachHitCounter()
         const expected = this.pluckTests([assertionName])
         //@ts-ignore
@@ -84,7 +83,7 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
         'assertCanUpdate',
         '!assertCanCreateIndex',
     ])
-    protected static async throwsWithIgnoredAndIncludedTests(
+    protected async throwsWithIgnoredAndIncludedTests(
         assertionNames: DatabaseAssertionName[]
     ) {
         const err = await assert.doesThrowAsync(() =>
@@ -97,7 +96,7 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
     }
 
     @test()
-    protected static async canIgnoreMultipleTests() {
+    protected async canIgnoreMultipleTests() {
         this.attachHitCounter()
         const expected = this.pluckTests([
             'assertCanCreateMany',
@@ -110,7 +109,7 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
         this.assertTestsRun(expected)
     }
 
-    private static pluckTests(
+    private pluckTests(
         ignore?: DatabaseAssertionName[]
     ): DatabaseAssertionName[] {
         return pluckAssertionMethods(this.dbAssert).filter(
@@ -121,26 +120,24 @@ export default class DatabaseAssertUtilTest extends AbstractDatabaseTest {
         ) as DatabaseAssertionName[]
     }
 
-    private static async runTestsAndAssertActuallyRun(
-        tests: DatabaseAssertionName[]
-    ) {
+    private async runTestsAndAssertActuallyRun(tests: DatabaseAssertionName[]) {
         await this.runSuite(tests)
         this.assertTestsRun(tests)
         this.hits = []
     }
 
-    private static assertTestsRun(tests: DatabaseAssertionName[]) {
+    private assertTestsRun(tests: DatabaseAssertionName[]) {
         this.hits.sort()
         tests.sort()
 
         assert.isEqualDeep(this.hits, tests)
     }
 
-    private static async runSuite(tests?: DatabaseAssertionName[]) {
+    private async runSuite(tests?: DatabaseAssertionName[]) {
         await this.dbAssert.runSuite(mongoConnect, tests)
     }
 
-    private static attachHitCounter() {
+    private attachHitCounter() {
         const keys = pluckAssertionMethods(this.dbAssert)
 
         for (const key of keys) {

@@ -1,24 +1,31 @@
-import { test, assert, errorAssert, generateId } from '@sprucelabs/test-utils'
+import {
+    test,
+    suite,
+    assert,
+    errorAssert,
+    generateId,
+} from '@sprucelabs/test-utils'
 import NeDbDatabase, { FakeQueryHandler } from '../../../databases/NeDbDatabase'
 import AbstractStoreTest from './support/AbstractStoreTest'
 
+@suite()
 export default class FakingRawQueriesTest extends AbstractStoreTest {
-    protected static db: NeDbDatabase
+    protected db!: NeDbDatabase
 
-    protected static async beforeEach(): Promise<void> {
+    protected async beforeEach(): Promise<void> {
         await super.beforeEach()
         await this.connectToDatabase()
     }
 
     @test()
-    protected static async throwsWhenQueryNotFaked() {
+    protected async throwsWhenQueryNotFaked() {
         const query = generateId()
         await this.assertThrowsQueryNotFaked(query)
     }
 
     @test('throws if does not return array 1', { hello: 'world' })
     @test('throws if does not return array 2', { goodbye: 'taco' })
-    protected static async throwsIfFakeDoesNotReturnArray(
+    protected async throwsIfFakeDoesNotReturnArray(
         response: Record<string, any>
     ) {
         const query = generateId()
@@ -34,7 +41,7 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
 
     @test('can fake query 1', [{ hello: 'world' }])
     @test('can fake query 2', [{ goodbye: 'taco' }])
-    protected static async canFakeQuery(expected: Record<string, any>[]) {
+    protected async canFakeQuery(expected: Record<string, any>[]) {
         const query = generateId()
 
         const cb = async () => {
@@ -51,7 +58,7 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async canFakeMoreThanOneQueryAtATime() {
+    protected async canFakeMoreThanOneQueryAtATime() {
         this.fakeQuery('select * from people', () => [])
         this.fakeQuery('select * from cars', () => [])
 
@@ -61,7 +68,7 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
 
     @test('passes through params 1', ['hello'])
     @test('passes through params 2', ['world'])
-    protected static async passesThroughParams(expected: any[]) {
+    protected async passesThroughParams(expected: any[]) {
         const query = generateId()
 
         this.fakeQuery(query, (params) => {
@@ -73,7 +80,7 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
     }
 
     @test()
-    protected static async inMemoryDatabaseNameDefaultsToMemoryDatabaseName() {
+    protected async inMemoryDatabaseNameDefaultsToMemoryDatabaseName() {
         const { dbFixture } = await this.DatabaseConnection()
         assert.isEqual(dbFixture.getDbName(), 'memory')
     }
@@ -98,7 +105,7 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
         'select * from people',
         'select\t*\tfrom\tpeople'
     )
-    protected static async fakingDoesNotConsiderCaseNorNewlines(
+    protected async fakingDoesNotConsiderCaseNorNewlines(
         faked: string,
         query: string
     ) {
@@ -106,16 +113,16 @@ export default class FakingRawQueriesTest extends AbstractStoreTest {
         await this.query(query)
     }
 
-    private static fakeQuery<T>(query: string, cb: FakeQueryHandler<T>) {
+    private fakeQuery<T>(query: string, cb: FakeQueryHandler<T>) {
         this.db.fakeQuery(query, cb)
     }
 
-    private static async assertThrowsQueryNotFaked(query: string) {
+    private async assertThrowsQueryNotFaked(query: string) {
         const err = await assert.doesThrowAsync(() => this.query(query))
         errorAssert.assertError(err, 'QUERY_NOT_FAKED', { query })
     }
 
-    private static query(query: string, params?: any[]) {
+    private query(query: string, params?: any[]) {
         return this.db.query(query, params)
     }
 }

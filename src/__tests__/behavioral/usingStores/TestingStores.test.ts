@@ -1,22 +1,23 @@
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
+import AbstractSpruceTest, { test, suite, assert } from '@sprucelabs/test-utils'
 import StoreFixture from '../../../fixtures/StoreFixture'
 
+@suite()
 export default class TestingStoresTest extends AbstractSpruceTest {
     @test()
-    protected static async canCreateTestingStores() {
+    protected async canCreateTestingStores() {
         const fixture = new StoreFixture(this.getActiveDir())
         assert.isTruthy(fixture)
     }
 
     @test()
-    protected static async canLoadStores() {
+    protected async canLoadStores() {
         const fixture = new StoreFixture(this.getActiveDir())
         const factory = await fixture.Factory()
         const names = factory.getStoreNames()
         assert.isLength(names, 1)
     }
 
-    protected static getActiveDir() {
+    protected getActiveDir() {
         this.cwd = this.resolvePath(
             __dirname,
             '..',

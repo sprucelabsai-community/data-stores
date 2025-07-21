@@ -6,16 +6,16 @@ import DatabaseFixture, {
 import { Database } from '../types/database.types'
 
 export default class AbstractDatabaseTest extends AbstractSpruceTest {
-    protected static db: Database
-    protected static shouldUseInMemoryDatabase = true
-    protected static DB_NAME: string
+    protected db!: Database
+    protected shouldUseInMemoryDatabase = true
+    protected DB_NAME!: string
 
-    protected static async beforeEach() {
+    protected async beforeEach() {
         await super.beforeEach()
         SchemaRegistry.getInstance().forgetAllSchemas()
     }
 
-    protected static async afterEach() {
+    protected async afterEach() {
         await super.afterEach()
         await DatabaseFixture.destroy()
 
@@ -25,7 +25,7 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
         this.DB_NAME = undefined
     }
 
-    protected static async DatabaseFixture(options?: DatabaseFixtureOptions) {
+    protected async DatabaseFixture(options?: DatabaseFixtureOptions) {
         const d = new DatabaseFixture({
             ...options,
         })
@@ -33,7 +33,7 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
         return d
     }
 
-    protected static async connectToDatabase() {
+    protected async connectToDatabase() {
         if (!this.db) {
             const { dbFixture, db } = await this.DatabaseConnection()
 
@@ -46,7 +46,7 @@ export default class AbstractDatabaseTest extends AbstractSpruceTest {
         return this.db
     }
 
-    protected static async DatabaseConnection() {
+    protected async DatabaseConnection() {
         const dbFixture = await this.DatabaseFixture()
         const db = await dbFixture.connectToDatabase()
         return { dbFixture, db }

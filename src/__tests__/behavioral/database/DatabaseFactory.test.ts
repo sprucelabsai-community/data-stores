@@ -1,5 +1,6 @@
 import AbstractSpruceTest, {
     test,
+    suite,
     assert,
     errorAssert,
 } from '@sprucelabs/test-utils'
@@ -10,9 +11,10 @@ import DatabaseFactory, {
 } from '../../../factories/DatabaseFactory'
 import generateId from '../../../utilities/generateId'
 
+@suite()
 export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
     @test()
-    protected static async sameSettingsSharesIntsanceWhenMemory() {
+    protected async sameSettingsSharesIntsanceWhenMemory() {
         this.assertSameInstanceReturned('memory', 'memory://')
         this.assertSameInstanceReturned(generateId(), 'memory://')
         this.assertSameInstanceReturned(undefined, 'memory://')
@@ -22,7 +24,7 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async twoInMemoryConnectionsShareInstances() {
+    protected async twoInMemoryConnectionsShareInstances() {
         const db1 = DatabaseFactory.Database({
             dbName: 'test1',
             dbConnectionString: 'memory://',
@@ -36,7 +38,7 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async doesNotConfuseMemoryForNotMemoryDbs() {
+    protected async doesNotConfuseMemoryForNotMemoryDbs() {
         const db1 = DatabaseFactory.Database({
             dbName: 'test1',
             dbConnectionString: 'mongodb://localhost:27017',
@@ -49,7 +51,7 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async supportsMongoSrvSchemes() {
+    protected async supportsMongoSrvSchemes() {
         const db = DatabaseFactory.Database({
             dbName: 'test1',
             dbConnectionString: 'mongodb+srv://localhost',
@@ -59,7 +61,7 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async throwsWithBadConnectionScheme() {
+    protected async throwsWithBadConnectionScheme() {
         const connectionString = `${generateId()}://localhost:27017`
         const err = assert.doesThrow(() => {
             DatabaseFactory.Database({
@@ -73,25 +75,22 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async canSetAdapterOnFactory() {
+    protected async canSetAdapterOnFactory() {
         this.assertCanSetAdapter('postgres://', MongoDatabase)
         this.assertCanSetAdapter('cheesey://', NeDbDatabase)
     }
 
-    private static assertCanSetAdapter(
-        schema: string,
-        Db: DatabaseConstructor
-    ) {
+    private assertCanSetAdapter(schema: string, Db: DatabaseConstructor) {
         DatabaseFactory.addAdapter(schema, Db)
         this.assertAdapterSet(schema, Db)
     }
 
-    private static assertAdapterSet(schema: string, Db: DatabaseConstructor) {
+    private assertAdapterSet(schema: string, Db: DatabaseConstructor) {
         //@ts-ignore
         assert.isEqual(DatabaseFactory.Adapters[schema], Db)
     }
 
-    private static assertSameInstanceReturned(
+    private assertSameInstanceReturned(
         dbName1: any,
         connection: any,
         dbName2?: any
@@ -101,7 +100,7 @@ export default class ConnectingToADatabaseTest extends AbstractSpruceTest {
         assert.isEqual(db1, db2)
     }
 
-    private static Database(dbName1: string, connection: string) {
+    private Database(dbName1: string, connection: string) {
         return DatabaseFactory.Database({
             dbName: dbName1,
             dbConnectionString: connection,

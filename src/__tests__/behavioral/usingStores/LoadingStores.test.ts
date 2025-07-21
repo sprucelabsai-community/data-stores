@@ -1,19 +1,20 @@
 import { diskUtil } from '@sprucelabs/spruce-skill-utils'
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
+import AbstractSpruceTest, { test, suite, assert } from '@sprucelabs/test-utils'
 import { errorAssert } from '@sprucelabs/test-utils'
 import StoreFactory from '../../../factories/StoreFactory'
 import DatabaseFixture from '../../../fixtures/DatabaseFixture'
 import StoreLoader from '../../../loaders/StoreLoader'
 
+@suite()
 export default class LoadingStoresTest extends AbstractSpruceTest {
     @test()
-    protected static async canCreateLoadingStores() {
-        const loadingStores = await LoadingStoresTest.Loader()
+    protected async canCreateLoadingStores() {
+        const loadingStores = await this.Loader()
         assert.isTruthy(loadingStores)
     }
 
     @test()
-    protected static async loadsNoStoresWithDirWithNoStores() {
+    protected async loadsNoStoresWithDirWithNoStores() {
         const loader = await this.Loader(diskUtil.createRandomTempDir())
         const factory = await loader.loadStores()
         assert.isTrue(factory instanceof StoreFactory)
@@ -22,7 +23,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
 
     @test('loads good stores without trailing slash', '')
     @test('loads good stores with trailing slash', '/')
-    protected static async loadsStoresWithGoodDir(pathSuffix = '') {
+    protected async loadsStoresWithGoodDir(pathSuffix = '') {
         this.setCwd(pathSuffix)
 
         const loader = await this.loaderWithCwd()
@@ -33,7 +34,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async loadsSameStoreWithAndWithoutTrailingSlash() {
+    protected async loadsSameStoreWithAndWithoutTrailingSlash() {
         const fixture = new DatabaseFixture()
         const db = await fixture.connectToDatabase()
 
@@ -53,7 +54,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async throwsWithBadStore() {
+    protected async throwsWithBadStore() {
         this.setCwd(undefined, 'bad')
 
         const loader = await this.Loader(this.resolvePath(this.cwd))
@@ -65,7 +66,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async canGetSharedInstance() {
+    protected async canGetSharedInstance() {
         const fixture = new DatabaseFixture()
         const db = await fixture.connectToDatabase()
 
@@ -79,7 +80,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async getsNewInstanceWithDifferentCwd() {
+    protected async getsNewInstanceWithDifferentCwd() {
         const fixture = new DatabaseFixture()
         const db = await fixture.connectToDatabase()
 
@@ -93,7 +94,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async instanceThrowsIfCwdAndDbNotSet() {
+    protected async instanceThrowsIfCwdAndDbNotSet() {
         const err = await assert.doesThrowAsync(() => StoreLoader.getInstance())
         errorAssert.assertError(err, 'MISSING_PARAMETERS', {
             parameters: ['cwd', 'database'],
@@ -101,7 +102,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async canSetStoreDirForInstance() {
+    protected async canSetStoreDirForInstance() {
         this.setCwd(undefined, 'good')
 
         const fixture = new DatabaseFixture()
@@ -118,7 +119,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async canSetDbForInstance() {
+    protected async canSetDbForInstance() {
         this.setCwd(undefined, 'good')
 
         const fixture = new DatabaseFixture()
@@ -137,7 +138,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async onlyLoadsStoresOnce() {
+    protected async onlyLoadsStoresOnce() {
         const loader = await this.loaderWithCwd()
 
         const { factory: factory1 } = await loader.loadStoresAndErrors()
@@ -147,7 +148,7 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async loadingWithErrorsDoesNotCacheInstance() {
+    protected async loadingWithErrorsDoesNotCacheInstance() {
         const loader = await this.loaderWithCwd()
         //@ts-ignore
         loader.loadStoreClassesWithErrors = async () => {
@@ -164,18 +165,18 @@ export default class LoadingStoresTest extends AbstractSpruceTest {
         assert.isTruthy(factory)
     }
 
-    private static async loaderWithCwd() {
+    private async loaderWithCwd() {
         return await this.Loader(this.resolvePath(this.cwd))
     }
 
-    private static async Loader(storesDir?: string) {
+    private async Loader(storesDir?: string) {
         const fixture = new DatabaseFixture()
         const db = await fixture.connectToDatabase()
 
         return StoreLoader.Loader(storesDir ?? this.cwd, db)
     }
 
-    protected static setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {
+    protected setCwd(suffix = '', goodOrBad: 'good' | 'bad' = 'good') {
         this.cwd =
             this.resolvePath(
                 __dirname,
