@@ -35,7 +35,7 @@ export default class DatabaseFieldMapperPlugin implements DataStorePlugin {
         }
     }
 
-    public async willUpdateOne(
+    public async willUpdate(
         query: Record<string, any>,
         updates: Record<string, any>
     ): Promise<void | DataStorePluginWillUpdateOneResponse> {

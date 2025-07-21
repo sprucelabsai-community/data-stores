@@ -172,6 +172,34 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
         await this.spyStore.createOne(expected)
     }
 
+    @test()
+    protected static async canMapFieldsWhenUpdatingMany() {
+        await this.createOneRandom()
+        await this.createOneRandom()
+
+        const expected = generateId()
+        await this.spyStore.update(
+            {},
+            {
+                firstName: expected,
+            }
+        )
+
+        const [firstMatch, secondMatch] = await this.spyStore.find({})
+
+        assert.isEqual(
+            firstMatch.firstName,
+            expected,
+            'Did not update first match'
+        )
+
+        assert.isEqual(
+            secondMatch.firstName,
+            expected,
+            'Did not update second match'
+        )
+    }
+
     private static async assertFindHonorsLimit(limit: number) {
         const matches = await this.spyStore.find({}, { limit })
         assert.isLength(matches, limit)

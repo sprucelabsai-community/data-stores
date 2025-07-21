@@ -70,7 +70,7 @@ export interface DataStorePlugin {
     didCreateOne?: (
         record: Record<string, any>
     ) => Promise<void | DataStorePluginDidCreateOneResponse>
-    willUpdateOne?: (
+    willUpdate?: (
         query: Record<string, any>,
         updates: Record<string, any>
     ) => Promise<void | DataStorePluginWillUpdateOneResponse>

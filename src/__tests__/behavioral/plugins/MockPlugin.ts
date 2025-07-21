@@ -85,7 +85,7 @@ export default class MockPlugin implements DataStorePlugin {
         this.shouldAllowUpdateOne = shouldAllow
     }
 
-    public async willUpdateOne(
+    public async willUpdate(
         query: Record<string, any>,
         updates: Record<string, any>
     ): Promise<void | DataStorePluginWillUpdateOneResponse> {

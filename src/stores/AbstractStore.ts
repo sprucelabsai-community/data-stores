@@ -620,7 +620,11 @@ export default abstract class AbstractStore<
         query: QueryBuilder<QueryRecord>,
         updates: ValuesWithPaths<UpdateRecord>
     ): Promise<number> {
-        return this.db.update(this.collectionName, query, updates as any)
+        const { updates: qUpdates } = await this.handleWillUpdateOnePlugins(
+            query,
+            updates
+        )
+        return this.db.update(this.collectionName, query, qUpdates as any)
     }
 
     private async findOneAndUpdate<
@@ -742,7 +746,7 @@ export default abstract class AbstractStore<
         let resolvedUpdates = updates
 
         for (const plugin of this.plugins) {
-            const results = await plugin.willUpdateOne?.(query, updates)
+            const results = await plugin.willUpdate?.(query, updates)
 
             if (results?.shouldUpdate === false) {
                 shouldUpdate = false
