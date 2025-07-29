@@ -222,6 +222,26 @@ export default class FieldMapperPluginTest extends AbstractStoreTest {
         assert.isEqual(found?.firstName, firstName, 'Did not update first name')
     }
 
+    @test()
+    protected async canExcludeFieldsOnFind() {
+        const firstName = generateId()
+        const lastName = generateId()
+
+        await this.createOne({
+            firstName,
+            lastName,
+        })
+
+        const matches = await this.spyStore.find(
+            {},
+            { excludeFields: ['lastName'] }
+        )
+
+        assert.isLength(matches, 1)
+        assert.isEqual(matches[0].firstName, firstName)
+        assert.isUndefined(matches[0].lastName, 'lastName should be excluded')
+    }
+
     private async assertFindHonorsLimit(limit: number) {
         const matches = await this.spyStore.find({}, { limit })
         assert.isLength(matches, limit)
