@@ -5,6 +5,7 @@ import {
     generateId,
     errorAssert,
 } from '@sprucelabs/test-utils'
+import dotenv from 'dotenv'
 import { MongoClient } from 'mongodb'
 import MongoDatabase from '../../../databases/MongoDatabase'
 import NeDbDatabase, { FakeQueryHandler } from '../../../databases/NeDbDatabase'
@@ -12,7 +13,7 @@ import DatabaseFactory from '../../../factories/DatabaseFactory'
 import DatabaseFixture from '../../../fixtures/DatabaseFixture'
 import AbstractDatabaseTest from '../../../tests/AbstractDatabaseTest'
 
-require('dotenv').config()
+dotenv.config({ quiet: true })
 
 @suite()
 export default class DatabaseFixtureTest extends AbstractDatabaseTest {

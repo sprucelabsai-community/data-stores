@@ -21,7 +21,7 @@ import {
     normalizeIndex,
     pluckMissingIndexes,
 } from './database.utilities'
-dotenv.config()
+dotenv.config({ quiet: true })
 
 export default class NeDbDatabase extends AbstractMutexer implements Database {
     private collections: Record<string, Datastore> = {}
