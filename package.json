@@ -70,7 +70,7 @@
     "@sprucelabs/spruce-skill-utils": "^32.0.74",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
-    "mongodb": "^6.18.0"
+    "mongodb": "^6.19.0"
   },
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "^7.0.24",
@@ -82,7 +82,7 @@
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.3.0",
     "chokidar-cli": "^3.0.0",
-    "concurrently": "^9.2.0",
+    "concurrently": "^9.2.1",
     "dotenv": "^17.2.1",
     "eslint": "^9.34.0",
     "eslint-config-spruce": "^11.2.26",
