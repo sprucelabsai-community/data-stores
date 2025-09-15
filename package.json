@@ -66,8 +66,8 @@
     "@seald-io/nedb": "^4.1.2",
     "@sprucelabs/error": "^7.1.17",
     "@sprucelabs/globby": "^2.0.506",
-    "@sprucelabs/schema": "^32.1.44",
-    "@sprucelabs/spruce-skill-utils": "^32.0.99",
+    "@sprucelabs/schema": "^32.1.45",
+    "@sprucelabs/spruce-skill-utils": "^32.0.100",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.19.0"
