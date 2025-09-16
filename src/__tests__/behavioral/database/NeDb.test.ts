@@ -87,6 +87,105 @@ export default class NeDbTest extends AbstractDatabaseTest {
         )
     }
 
+    @test()
+    protected async createHonorsUniqueIndexes() {
+        await this.syncUniqueIndexes()
+
+        await this.createPerson({
+            phone: 'phone1',
+            email: undefined,
+        })
+        await this.createPerson({
+            phone: 'phone2',
+            email: undefined,
+        })
+        await this.createPerson({
+            phone: 'phone3',
+        })
+        await this.createPerson({
+            phone: 'phone4',
+            email: undefined,
+        })
+
+        await this.assertThrowsDuplicate({ phone: 'phone1' })
+        await this.assertThrowsDuplicate({ phone: 'phone2' })
+        await this.assertThrowsDuplicate({ phone: 'phone3', email: null })
+        await this.assertThrowsDuplicate({ phone: 'phone4' })
+    }
+
+    @test()
+    protected async upsertHonorsUniqueIndexes() {
+        await this.syncUniqueIndexes()
+
+        await this.client.upsertOne(
+            this.collectionName,
+            { phone: 'phone2', email: null },
+            { phone: 'phone2', email: null, dateScrambled: undefined }
+        )
+
+        await this.client.upsertOne(
+            this.collectionName,
+            { phone: 'phone1', email: null },
+            { phone: 'phone1', email: null }
+        )
+
+        await this.client.upsertOne(
+            this.collectionName,
+            { phone: 'phone2', email: null },
+            { phone: 'phone2', email: null }
+        )
+
+        await this.client.upsertOne(
+            this.collectionName,
+            { phone: 'phone1', email: null },
+            { phone: 'phone1', email: null }
+        )
+
+        await this.client.upsertOne(
+            this.collectionName,
+            { phone: 'phone2', email: null },
+            { phone: 'phone2', email: null }
+        )
+    }
+
+    private async syncUniqueIndexes() {
+        await this.client.syncUniqueIndexes(this.collectionName, [
+            {
+                fields: ['phone', 'dateScrambled'],
+                filter: { phone: { $type: 'string' } },
+            },
+            {
+                fields: ['username', 'dateScrambled'],
+                filter: { username: { $type: 'string' } },
+            },
+            {
+                fields: ['email', 'dateScrambled'],
+                filter: { email: { $type: 'string' } },
+            },
+        ])
+    }
+
+    private async assertThrowsDuplicate(overrides: Person) {
+        await assert.doesThrowAsync(() => this.createPerson(overrides))
+    }
+
+    private async createPerson(overrides: Person) {
+        await this.client.createOne(
+            this.collectionName,
+            this.generatePersonValues(overrides)
+        )
+    }
+
+    private generatePersonValues(overrides?: Person) {
+        return {
+            phone: null,
+            dateScrambled: null,
+            username: null,
+            email: null,
+            ...overrides,
+        }
+    }
+
     private assertQueryFromFilterEquals(
         filter: Record<string, any>,
         expected: Record<string, any>
@@ -95,15 +194,23 @@ export default class NeDbTest extends AbstractDatabaseTest {
         assert.isEqualDeep(actual, expected)
     }
 
-    private async createOne(first?: string) {
+    private async createOne(values?: Record<string, any>) {
         return await this.client.createOne(
             this.collectionName,
             {
-                first: first ?? generateId(),
+                first: generateId(),
+                ...values,
             },
             {
                 primaryFieldNames: ['personid'],
             }
         )
     }
+}
+
+interface Person {
+    phone?: string | null
+    dateScrambled?: string | null
+    username?: string | null
+    email?: string | null
 }
