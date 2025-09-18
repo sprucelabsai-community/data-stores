@@ -70,7 +70,7 @@
     "@sprucelabs/spruce-skill-utils": "^32.0.105",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
-    "mongodb": "^6.19.0"
+    "mongodb": "^6.20.0"
   },
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "^7.0.35",
