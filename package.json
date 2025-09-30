@@ -64,10 +64,10 @@
   },
   "dependencies": {
     "@seald-io/nedb": "^4.1.2",
-    "@sprucelabs/error": "^7.1.23",
+    "@sprucelabs/error": "^7.1.24",
     "@sprucelabs/globby": "^2.0.506",
-    "@sprucelabs/schema": "^32.1.54",
-    "@sprucelabs/spruce-skill-utils": "^32.0.111",
+    "@sprucelabs/schema": "^32.1.55",
+    "@sprucelabs/spruce-skill-utils": "^32.0.112",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.20.0"
@@ -78,7 +78,7 @@
     "@sprucelabs/resolve-path-aliases": "^3.0.26",
     "@sprucelabs/semantic-release": "^5.0.2",
     "@sprucelabs/test": "^10.0.22",
-    "@sprucelabs/test-utils": "^6.0.88",
+    "@sprucelabs/test-utils": "^6.0.89",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.6.0",
     "chokidar-cli": "^3.0.0",
