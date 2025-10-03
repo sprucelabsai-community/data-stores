@@ -1007,6 +1007,28 @@ export default class UsingStoresTest extends AbstractStoreTest {
         )
     }
 
+    @test.only()
+    protected async searchingWithOrWhenIdInOneCaseIsBadStillWorks() {
+        await this.dummyStore.createOne({
+            phoneNumber: DEMO_PHONE_FORMATTED,
+            requiredForCreate: 'required-one',
+        })
+
+        await this.dummyStore.createOne({
+            phoneNumber: DEMO_PHONE2_FORMATTED,
+            requiredForCreate: 'required-two',
+        })
+
+        const match = await this.dummyStore.find({
+            $or: [{ id: 'bad-id' }, { phoneNumber: DEMO_PHONE2_FORMATTED }],
+        })
+
+        assert.isTruthy(
+            match[0],
+            'should have found match with $or even though the id was bad'
+        )
+    }
+
     private async createRandomRecordWithRelatedSchema() {
         return await this.dummyStore.createOne({
             phoneNumber: DEMO_PHONE4_FORMATTED,

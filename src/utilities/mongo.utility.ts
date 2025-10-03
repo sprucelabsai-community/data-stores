@@ -33,9 +33,13 @@ const mongoUtil = {
         if (Array.isArray($or)) {
             normalizedValues.$or = $or.map((o) => this.mapQuery(o, options))
         } else if (typeof id === 'string') {
-            normalizedValues._id = !shouldTransformIdToObjectId
-                ? id
-                : new ObjectId(id)
+            try {
+                normalizedValues._id = !shouldTransformIdToObjectId
+                    ? id
+                    : new ObjectId(id)
+            } catch (err) {
+                normalizedValues._id = id
+            }
         } else if (id) {
             normalizedValues._id = mapNestedIdValues(id, options)
         }

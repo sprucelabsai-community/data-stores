@@ -592,6 +592,12 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     protected async updateReturnsMatchedAndUpdatedCounts(connect: TestConnect) {
         await databaseAssertUtil.assertUpdateReturnsMatchedCounts(connect)
     }
+
+    @test('can find by $or with bad id field (mongo)', mongoConnect)
+    @test('can find by $or with bad id field (neDb)', neDbConnect)
+    protected async canFindOrWithBadIdField(connect: TestConnect) {
+        await databaseAssertUtil.assertCanFindOrWithBadIdField(connect)
+    }
 }
 
 export let dbCount = 0

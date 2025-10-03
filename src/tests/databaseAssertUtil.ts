@@ -55,6 +55,7 @@ const methods = [
     'assertCanSearchByRegex',
     'assertCanFindWithNe',
     'assertCanFindWithIn',
+    'assertCanFindOrWithBadIdField',
 
     //deleting
     'assertCanDeleteRecord',
@@ -1932,6 +1933,29 @@ const databaseAssertUtil = {
         assert.isLength(results, 3)
 
         await this.shutdown(db)
+    },
+
+    async assertCanFindOrWithBadIdField(connect: TestConnect) {
+        const db = await connectToDabatase(connect)
+        const record1 = await db.createOne(this.collectionName, {
+            name: 'bar',
+            otherField: 'world',
+        })
+
+        await db.createOne(this.collectionName, {
+            name: 'bar2',
+            otherField: 'world',
+        })
+
+        const match1 = await db.findOne(this.collectionName, {
+            $or: [{ id: '<not-an-id>' }, { name: 'bar' }],
+        })
+
+        assert.isEqualDeep(
+            match1,
+            record1,
+            'Finding with $or did not return the expected result. First case in $or is a bad id, second should match the record.'
+        )
     },
 
     async assertCanFindWithBooleanField(connect: TestConnect) {
