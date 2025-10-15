@@ -7,8 +7,7 @@
   "files": [
     "build/**/*",
     "!build/__tests__",
-    "!build/esm/__tests__",
-    "tsconfig.json"
+    "!build/esm/__tests__"
   ],
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
