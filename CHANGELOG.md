@@ -1,3 +1,5 @@
+## [30.0.104](https://github.com/sprucelabsai-community/data-stores/compare/v30.0.103...v30.0.104) (2025-10-17)
+
 ## [30.0.103](https://github.com/sprucelabsai-community/data-stores/compare/v30.0.102...v30.0.103) (2025-10-17)
 
 ## [30.0.102](https://github.com/sprucelabsai-community/data-stores/compare/v30.0.101...v30.0.102) (2025-10-17)
