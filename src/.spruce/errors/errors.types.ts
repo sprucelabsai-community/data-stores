@@ -161,7 +161,7 @@ export declare namespace SpruceErrors.DataStores {
 	
 	export interface RecordNotFoundQuery {
 			/** . */
-			[field:string]: any| undefined | null
+			[field:string]: (any)| undefined | null
 	}
 
 	export interface RecordNotFoundQuerySchema extends SpruceSchema.Schema {
@@ -225,7 +225,7 @@ export declare namespace SpruceErrors.DataStores {
 			
 			'query': string
 			
-			'params'?: Record<string, any> | undefined | null
+			'params'?: (Record<string, any>) | undefined | null
 	}
 
 	export interface QueryNotFakedSchema extends SpruceSchema.Schema {
@@ -357,7 +357,7 @@ export declare namespace SpruceErrors.DataStores {
 			
 			'query': string
 			
-			'response': any
+			'response': (any)
 	}
 
 	export interface InvalidFakeQueryResponseSchema extends SpruceSchema.Schema {
@@ -543,7 +543,7 @@ export declare namespace SpruceErrors.DataStores {
 	export interface FailedToLoadStores {
 		
 			
-			'errors': AbstractSpruceError<FailedToLoadStoreErrorOptions>[]
+			'errors': (AbstractSpruceError<FailedToLoadStoreErrorOptions>)[]
 	}
 
 	export interface FailedToLoadStoresSchema extends SpruceSchema.Schema {
