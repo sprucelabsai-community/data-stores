@@ -1,3 +1,8 @@
+## <small>30.0.120 (2025-11-08)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([1af20c6](https://github.com/sprucelabsai-community/data-stores/commit/1af20c6))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([8a41b29](https://github.com/sprucelabsai-community/data-stores/commit/8a41b29))
+
 ## [30.0.119](https://github.com/sprucelabsai-community/data-stores/compare/v30.0.118...v30.0.119) (2025-11-08)
 
 ## [30.0.118](https://github.com/sprucelabsai-community/data-stores/compare/v30.0.117...v30.0.118) (2025-10-31)
