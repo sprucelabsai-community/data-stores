@@ -1007,7 +1007,7 @@ export default class UsingStoresTest extends AbstractStoreTest {
         )
     }
 
-    @test.only()
+    @test()
     protected async searchingWithOrWhenIdInOneCaseIsBadStillWorks() {
         await this.dummyStore.createOne({
             phoneNumber: DEMO_PHONE_FORMATTED,
