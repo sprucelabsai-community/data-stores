@@ -1,3 +1,8 @@
+## 31.0.0 (2025-11-09)
+
+* patch: remove .noly() ([9fa64af](https://github.com/sprucelabsai-community/data-stores/commit/9fa64af))
+* major: upgrade ([309db30](https://github.com/sprucelabsai-community/data-stores/commit/309db30))
+
 ## <small>30.0.120 (2025-11-08)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([1af20c6](https://github.com/sprucelabsai-community/data-stores/commit/1af20c6))
