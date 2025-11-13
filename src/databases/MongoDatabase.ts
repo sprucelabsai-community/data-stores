@@ -362,7 +362,10 @@ export default class MongoDatabase implements Database {
         let found = false
 
         for (const thisIndex of indexes) {
-            if (thisIndex.name === name) {
+            if (
+                this.normalizeIndex(this.mongoIndexToIndexWithFilter(thisIndex))
+                    .name === name
+            ) {
                 await this.assertDbWhileAttempingTo('drop a index.', collection)
                     .collection(collection)
                     .dropIndex(thisIndex.name)

@@ -40,9 +40,12 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
         await this.adapter.close()
     }
 
-    @test('can sync indexes when already has name_1', 'name_1')
     @test(
-        'can sync indexes when already has name_1_filtered',
+        'can sync indexes when name exists and is different than normalize: name_1',
+        'name_1'
+    )
+    @test(
+        'can sync indexes when name exists and is different than normalize: name_1_filtered',
         'name_1_filtered'
     )
     protected async canSyncWithLegacyIndexNamesWhichHaveUnderscores(
@@ -79,6 +82,6 @@ export default class MigratingLegacyMongoIndexNamesTest extends AbstractDatabase
         spec: IndexSpecification,
         options: CreateIndexesOptions
     ) {
-        await this.collection.createIndex(spec, options)
+        return await this.collection.createIndex(spec, options)
     }
 }
