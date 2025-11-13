@@ -18,7 +18,6 @@ import generateId from '../utilities/generateId'
 import mongoUtil from '../utilities/mongo.utility'
 import {
     doesIndexesInclude,
-    generateIndexName,
     normalizeIndex,
     pluckMissingIndexes,
 } from './database.utilities'
@@ -359,7 +358,7 @@ export default class MongoDatabase implements Database {
 
     public async dropIndex(collection: string, index: Index) {
         const indexes = await this.listIndexes(collection)
-        const name = this.generateIndexName(this.normalizeIndex(index))
+        const name = this.normalizeIndex(index).name
         let found = false
 
         for (const thisIndex of indexes) {
@@ -386,10 +385,12 @@ export default class MongoDatabase implements Database {
 
             for (const index of indexes) {
                 if (index.unique) {
-                    uniqueIndexes.push({
-                        fields: Object.keys(index.key),
-                        filter: index.partialFilterExpression,
-                    })
+                    uniqueIndexes.push(
+                        this.normalizeIndex({
+                            fields: Object.keys(index.key),
+                            filter: index.partialFilterExpression,
+                        })
+                    )
                 }
             }
 
@@ -426,11 +427,11 @@ export default class MongoDatabase implements Database {
     }
 
     private mongoIndexToIndexWithFilter(index: MongoIndex): IndexWithFilter {
-        return {
+        return normalizeIndex({
             fields: Object.keys(index.key),
             filter: index.partialFilterExpression,
             name: index.name,
-        }
+        })
     }
 
     public async createIndex(collection: string, index: Index): Promise<void> {
@@ -438,8 +439,9 @@ export default class MongoDatabase implements Database {
         this.assertIndexDoesNotExist(currentIndexes, index, collection)
 
         const indexSpec: Record<string, any> = {}
+        const normalized = this.normalizeIndex(index)
 
-        this.normalizeIndex(index).fields.forEach((name) => {
+        normalized.fields.forEach((name) => {
             indexSpec[name] = 1
         })
 
@@ -447,15 +449,13 @@ export default class MongoDatabase implements Database {
             await this.assertDbWhileAttempingTo('create an index.', collection)
                 .collection(collection)
                 .createIndex(indexSpec, {
-                    name: this.generateIndexName(index),
+                    name: normalized.name,
                 })
         } catch (err: any) {
             if (err?.code === 11000) {
                 throw new SpruceError({
                     code: 'DUPLICATE_KEY',
-                    friendlyMessage: `Could not create index! Index on '${collection}' has duplicate key for "${this.normalizeIndex(
-                        index
-                    ).fields.join(',')}"`,
+                    friendlyMessage: `Could not create index! Index on '${collection}' has duplicate key for "${normalized.fields.join(',')}"`,
                 })
             } else {
                 throw err
@@ -492,12 +492,12 @@ export default class MongoDatabase implements Database {
         collectionName: string,
         indexes: Index[],
         func: CreateIndexFuncName,
-        shouldIncludeUnique = false
+        isSyncingUniqueIndexes = false
     ) {
-        const currentIndexes = await this.getIndexes(
-            collectionName,
-            shouldIncludeUnique
-        )
+        const currentIndexes = isSyncingUniqueIndexes
+            ? await this.getUniqueIndexes(collectionName)
+            : await this.getIndexes(collectionName)
+
         const indexesToDelete = pluckMissingIndexes(currentIndexes, indexes)
 
         for (const extra of indexesToDelete) {
@@ -539,7 +539,7 @@ export default class MongoDatabase implements Database {
         try {
             const options: CreateIndexesOptions = {
                 unique: true,
-                name: this.generateIndexName(indexWithFilter),
+                name: indexWithFilter.name,
             }
 
             if (indexWithFilter.filter) {
@@ -565,10 +565,6 @@ export default class MongoDatabase implements Database {
                 throw err
             }
         }
-    }
-
-    private generateIndexName(indexWithFilter: Index) {
-        return generateIndexName(this.normalizeIndex(indexWithFilter))
     }
 
     private normalizeIndex(index: string[] | IndexWithFilter): IndexWithFilter {

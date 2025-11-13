@@ -218,7 +218,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     protected async syncUniqueIndexesSkipsExistingIndexes(
         connect: TestConnect
     ) {
-        await databaseAssertUtil.assertSyncingUniqueIndexesSkipsExistingIndexes(
+        await databaseAssertUtil.assertSyncingUniqueIndexesSkipsExistingUniqueIndexes(
             connect
         )
     }
@@ -226,7 +226,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     @test('syncUniqueIndexes removes extra indexes (mongo)', mongoConnect)
     @test('syncUniqueIndexes removes extra indexes (neDb)', neDbConnect)
     protected async syncUniqueIndexesRemovesExtraIndexes(connect: TestConnect) {
-        await databaseAssertUtil.assertSyncingUniqueIndexesRemovesExtraIndexes(
+        await databaseAssertUtil.assertSyncingUniqueIndexesRemovesExtraUniqueIndexes(
             connect
         )
     }
@@ -254,7 +254,7 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     protected async syncUniqueIndexesDoesNotRemoveAndAddExistingIndexes(
         connect: TestConnect
     ) {
-        await databaseAssertUtil.assertSyncingIndexesDoesNotAddAndRemove(
+        await databaseAssertUtil.assertSyncUniqueIndexesSkipsOnesThatExist(
             connect
         )
     }
@@ -291,6 +291,22 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
         connect: TestConnect
     ) {
         await databaseAssertUtil.assertSettingUniqueIndexViolationThrowsSpruceError(
+            connect
+        )
+    }
+
+    @test(
+        'syncing Unique Index does not touch non unique indexes (mongo)',
+        mongoConnect
+    )
+    @test(
+        'syncing Unique Index does not touch non unique indexes (neDb)',
+        neDbConnect
+    )
+    protected async syncingUniqueIndexDoesNotTouchNonUniqueIndexes(
+        connect: TestConnect
+    ) {
+        await databaseAssertUtil.syncingUniqueIndexDoesNotTouchNonUniqueIndexes(
             connect
         )
     }

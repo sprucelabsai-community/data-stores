@@ -676,41 +676,42 @@ export default class NeDbDatabase extends AbstractMutexer implements Database {
         }
 
         await this.randomDelay()
-        this.assertIndexDoesNotExist(
-            col._indexes,
-            this.normalizeIndex(fields),
-            collection
-        )
+        const normalized = this.normalizeIndex(fields)
+        this.assertIndexDoesNotExist(col._indexes, normalized, collection)
 
-        col._indexes.push({ fields })
+        col._indexes.push(normalized)
     }
 
     private normalizeIndex(index: string[] | IndexWithFilter): IndexWithFilter {
-        const { fields, filter } = normalizeIndex(index)
-        return { fields, filter }
+        return normalizeIndex(index)
     }
 
     public async syncUniqueIndexes(
         collectionName: string,
         indexes: Index[]
     ): Promise<void> {
+        await this.lock('syncUniqueIndexesMutex')
         const currentIndexes = await this.getUniqueIndexes(collectionName)
         const toDelete: Index[] = pluckMissingIndexes(currentIndexes, indexes)
 
-        for (const index of indexes) {
-            if (!this.doesInclude(currentIndexes, index)) {
-                try {
-                    await this.createUniqueIndex(collectionName, index)
-                } catch (err: any) {
-                    if (err.options?.code !== 'INDEX_EXISTS') {
-                        throw err
+        try {
+            for (const index of indexes) {
+                if (!this.doesInclude(currentIndexes, index)) {
+                    try {
+                        await this.createUniqueIndex(collectionName, index)
+                    } catch (err: any) {
+                        if (err.options?.code !== 'INDEX_EXISTS') {
+                            throw err
+                        }
                     }
                 }
             }
-        }
 
-        for (const extra of toDelete) {
-            await this.dropIndex(collectionName, extra)
+            for (const extra of toDelete) {
+                await this.dropIndex(collectionName, extra)
+            }
+        } finally {
+            this.unlock('syncUniqueIndexesMutex')
         }
     }
 

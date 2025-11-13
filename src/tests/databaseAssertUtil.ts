@@ -72,10 +72,10 @@ const methods = [
     'assertCantDropIndexWhenNoIndexExists',
     'assertCantDropCompoundUniqueIndexThatDoesntExist',
     'assertSyncingUniqueIndexesAddsMissingIndexes',
-    'assertSyncingUniqueIndexesSkipsExistingIndexes',
-    'assertSyncingUniqueIndexesRemovesExtraIndexes',
+    'assertSyncingUniqueIndexesSkipsExistingUniqueIndexes',
+    'assertSyncingUniqueIndexesRemovesExtraUniqueIndexes',
     'assertSyncingUniqueIndexesIsRaceProof',
-    'assertSyncingIndexesDoesNotAddAndRemove',
+    'assertSyncUniqueIndexesSkipsOnesThatExist',
     'assertUniqueIndexBlocksDuplicates',
     'assertDuplicateKeyThrowsOnInsert',
     'assertSettingUniqueIndexViolationThrowsSpruceError',
@@ -1141,7 +1141,7 @@ const databaseAssertUtil = {
         await this.shutdown(db)
     },
 
-    async assertSyncingIndexesDoesNotAddAndRemove(connect: TestConnect) {
+    async assertSyncUniqueIndexesSkipsOnesThatExist(connect: TestConnect) {
         const db = await connectToDabatase(connect)
 
         await db.createUniqueIndex(this.collectionName, ['otherField'])
@@ -1161,7 +1161,9 @@ const databaseAssertUtil = {
         await this.shutdown(db)
     },
 
-    async assertSyncingUniqueIndexesRemovesExtraIndexes(connect: TestConnect) {
+    async assertSyncingUniqueIndexesRemovesExtraUniqueIndexes(
+        connect: TestConnect
+    ) {
         const db = await connectToDabatase(connect)
         await db.syncUniqueIndexes(this.collectionName, [
             ['uniqueField'],
@@ -1209,7 +1211,9 @@ const databaseAssertUtil = {
         await this.shutdown(db)
     },
 
-    async assertSyncingUniqueIndexesSkipsExistingIndexes(connect: TestConnect) {
+    async assertSyncingUniqueIndexesSkipsExistingUniqueIndexes(
+        connect: TestConnect
+    ) {
         const db = await connectToDabatase(connect)
         await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
 
@@ -1381,6 +1385,7 @@ const databaseAssertUtil = {
     },
     async assertSyncingUniqueIndexesIsRaceProof(connect: TestConnect) {
         const db = await connectToDabatase(connect)
+        debugger
         const syncs = [
             db.syncUniqueIndexes(this.collectionName, [
                 ['otherField', 'otherField2'],
@@ -1414,6 +1419,18 @@ const databaseAssertUtil = {
             ]),
         ]
         await Promise.all(syncs)
+
+        const saved = await db.getUniqueIndexes(this.collectionName)
+        assert.isLength(
+            saved,
+            1,
+            'After many simultaneous syncUniqueIndexes() calls, there should only be one unique index created.'
+        )
+        assert.isEqualDeep(
+            saved[0].fields,
+            ['otherField', 'otherField2'],
+            'After many simultaneous syncUniqueIndexes() calls, the unique index created does not have the expected fields.'
+        )
 
         await this.shutdown(db)
     },
@@ -1504,6 +1521,37 @@ const databaseAssertUtil = {
         )) as SpruceError
 
         errorAssert.assertError(err, 'DUPLICATE_RECORD')
+
+        await this.shutdown(db)
+    },
+
+    async syncingUniqueIndexDoesNotTouchNonUniqueIndexes(connect: TestConnect) {
+        const db = await connectToDabatase(connect)
+        await db.createIndex(this.collectionName, ['someField'])
+        await db.syncUniqueIndexes(this.collectionName, [['uniqueField']])
+        const indexes = await db.getIndexes(this.collectionName)
+        const uniqueIndexes = await db.getUniqueIndexes(this.collectionName)
+        assert.isEqualDeep(
+            indexes,
+            [
+                {
+                    fields: ['someField'],
+                    name: 'someField',
+                },
+            ],
+            'index was modified when syncing unique indexes'
+        )
+
+        assert.isEqualDeep(
+            uniqueIndexes,
+            [
+                {
+                    fields: ['uniqueField'],
+                    name: 'uniqueField',
+                },
+            ],
+            'unique indexes are not as expected after syncing unique indexes'
+        )
 
         await this.shutdown(db)
     },
