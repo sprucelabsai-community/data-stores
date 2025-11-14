@@ -1167,11 +1167,11 @@ const databaseAssertUtil = {
     ) {
         const db = await connectToDabatase(connect)
         await db.syncIndexes(this.collectionName, [
-            ['nested.field1'],
-            ['nested.field2'],
+            ['target.field1'],
+            ['target.field2'],
         ])
 
-        await db.syncUniqueIndexes(this.collectionName, [['nested.field1']])
+        await db.syncUniqueIndexes(this.collectionName, [['target.field1']])
     },
 
     async assertSyncingUniqueIndexesRemovesExtraUniqueIndexes(
