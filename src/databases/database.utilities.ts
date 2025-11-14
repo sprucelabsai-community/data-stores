@@ -17,7 +17,10 @@ export function areIndexesEqual(left: Index, right: Index) {
     return name1 === name2
 }
 
-function generateIndexName(indexWithFilter: IndexWithFilter) {
+function generateIndexName(
+    indexWithFilter: IndexWithFilter,
+    isUnique?: boolean
+) {
     if (indexWithFilter.name) {
         return indexWithFilter.name
     }
@@ -25,10 +28,18 @@ function generateIndexName(indexWithFilter: IndexWithFilter) {
     if (indexWithFilter.filter) {
         name += '_filtered'
     }
+
+    if (isUnique) {
+        name += '_unique'
+    }
+
     return name
 }
 
-export function normalizeIndex(index: Index): IndexWithFilter {
+export function normalizeIndex(
+    index: Index,
+    isUnique?: boolean
+): IndexWithFilter {
     const fields = Array.isArray(index) ? index : index.fields
     const filter = Array.isArray(index) ? undefined : index.filter
     fields.sort()
@@ -40,7 +51,7 @@ export function normalizeIndex(index: Index): IndexWithFilter {
         normalized.filter = filter
     }
 
-    normalized.name = generateIndexName(normalized)
+    normalized.name = generateIndexName(normalized, isUnique)
 
     return normalized
 }

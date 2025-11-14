@@ -76,6 +76,7 @@ const methods = [
     'assertSyncingUniqueIndexesRemovesExtraUniqueIndexes',
     'assertSyncingUniqueIndexesIsRaceProof',
     'assertSyncUniqueIndexesSkipsOnesThatExist',
+    'assertCanHaveUniqueIndexOnFieldThatIsAlreadyInIndex',
     'assertUniqueIndexBlocksDuplicates',
     'assertDuplicateKeyThrowsOnInsert',
     'assertSettingUniqueIndexViolationThrowsSpruceError',
@@ -1159,6 +1160,18 @@ const databaseAssertUtil = {
             ['otherField'],
         ])
         await this.shutdown(db)
+    },
+
+    async assertCanHaveUniqueIndexOnFieldThatIsAlreadyInIndex(
+        connect: TestConnect
+    ) {
+        const db = await connectToDabatase(connect)
+        await db.syncIndexes(this.collectionName, [
+            ['nested.field1'],
+            ['nested.field2'],
+        ])
+
+        await db.syncUniqueIndexes(this.collectionName, [['nested.field1']])
     },
 
     async assertSyncingUniqueIndexesRemovesExtraUniqueIndexes(

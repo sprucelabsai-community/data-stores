@@ -508,7 +508,12 @@ export default class MongoDatabase implements Database {
         }
 
         for (const index of indexes) {
-            if (!this.doesInclude(currentIndexes, this.normalizeIndex(index))) {
+            if (
+                !this.doesInclude(
+                    currentIndexes,
+                    this.normalizeIndex(index, isSyncingUniqueIndexes)
+                )
+            ) {
                 try {
                     await this[func](collectionName, index)
                 } catch (err: any) {
@@ -525,7 +530,7 @@ export default class MongoDatabase implements Database {
         index: string[] | IndexWithFilter
     ): Promise<void> {
         const currentIndexes = await this.getUniqueIndexes(collection)
-        const indexWithFilter = this.normalizeIndex(index)
+        const indexWithFilter = this.normalizeIndex(index, true)
 
         this.assertIndexDoesNotExist(
             currentIndexes,
@@ -570,8 +575,11 @@ export default class MongoDatabase implements Database {
         }
     }
 
-    private normalizeIndex(index: string[] | IndexWithFilter): IndexWithFilter {
-        return normalizeIndex(index)
+    private normalizeIndex(
+        index: string[] | IndexWithFilter,
+        isUnique?: boolean
+    ): IndexWithFilter {
+        return normalizeIndex(index, isUnique)
     }
 
     public async syncUniqueIndexes(

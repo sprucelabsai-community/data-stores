@@ -79,6 +79,7 @@ export interface IndexWithFilter {
     fields: string[]
     filter?: Record<string, any>
     name?: string
+    isUnique?: boolean
 }
 
 export type Index = string[] | IndexWithFilter

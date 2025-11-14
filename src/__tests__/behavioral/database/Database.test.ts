@@ -260,6 +260,22 @@ export default class MongoDatabaseTest extends AbstractDatabaseTest {
     }
 
     @test(
+        'syncUniqueIndexes can exist on fields that are already indexed (mongo)',
+        mongoConnect
+    )
+    @test(
+        'syncUniqueIndexes can exist on fields that are already indexed (neDb)',
+        neDbConnect
+    )
+    protected async syncUniqueIndexesCanHandleNestedFields(
+        connect: TestConnect
+    ) {
+        await databaseAssertUtil.assertCanHaveUniqueIndexOnFieldThatIsAlreadyInIndex(
+            connect
+        )
+    }
+
+    @test(
         'can create a unique index that blocks duplicates (mongo)',
         mongoConnect
     )
