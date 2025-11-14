@@ -1,3 +1,8 @@
+## <small>31.0.9 (2025-11-13)</small>
+
+* patch: legacy fix ([4924627](https://github.com/sprucelabsai-community/data-stores/commit/4924627))
+* patch: syncing unique indexes does not touch non-unique indexes ([fd8fdcd](https://github.com/sprucelabsai-community/data-stores/commit/fd8fdcd))
+
 ## <small>31.0.8 (2025-11-13)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([714cd22](https://github.com/sprucelabsai-community/data-stores/commit/714cd22))
