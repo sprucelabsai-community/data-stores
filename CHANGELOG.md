@@ -1,3 +1,8 @@
+## <small>31.0.10 (2025-11-14)</small>
+
+* Merge branch 'master' of github.com:sprucelabsai/data-stores ([3c4e97e](https://github.com/sprucelabsai-community/data-stores/commit/3c4e97e))
+* patch: index + unique index mixing test ([0c72dae](https://github.com/sprucelabsai-community/data-stores/commit/0c72dae))
+
 ## <small>31.0.9 (2025-11-13)</small>
 
 * patch: legacy fix ([4924627](https://github.com/sprucelabsai-community/data-stores/commit/4924627))
