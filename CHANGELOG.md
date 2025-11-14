@@ -1,3 +1,8 @@
+## <small>31.0.12 (2025-11-14)</small>
+
+* Merge branch 'master' of github.com:sprucelabsai/data-stores ([0b43b01](https://github.com/sprucelabsai-community/data-stores/commit/0b43b01))
+* patch: keep field names standardized ([7372ba4](https://github.com/sprucelabsai-community/data-stores/commit/7372ba4))
+
 ## <small>31.0.11 (2025-11-14)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([582167c](https://github.com/sprucelabsai-community/data-stores/commit/582167c))
