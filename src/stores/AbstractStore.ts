@@ -27,17 +27,17 @@ import {
 import errorUtil from '../utilities/error.utility'
 
 export default abstract class AbstractStore<
-        FullSchema extends Schema,
-        CreateSchema extends Schema = FullSchema,
-        UpdateSchema extends Schema = CreateSchema,
-        DatabaseSchema extends Schema = FullSchema,
-        PrimaryFieldName extends SchemaFieldNames<DatabaseSchema> | 'id' = 'id',
-        DatabaseRecord = SchemaValues<DatabaseSchema>,
-        QueryRecord = SchemaPartialValues<FullSchema>,
-        FullRecord = SchemaValues<FullSchema>,
-        CreateRecord = SchemaValues<CreateSchema>,
-        UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations,
-    >
+    FullSchema extends Schema,
+    CreateSchema extends Schema = FullSchema,
+    UpdateSchema extends Schema = CreateSchema,
+    DatabaseSchema extends Schema = FullSchema,
+    PrimaryFieldName extends SchemaFieldNames<DatabaseSchema> | 'id' = 'id',
+    DatabaseRecord = SchemaValues<DatabaseSchema>,
+    QueryRecord = SchemaPartialValues<FullSchema>,
+    FullRecord = SchemaValues<FullSchema>,
+    CreateRecord = SchemaValues<CreateSchema>,
+    UpdateRecord = SchemaValues<UpdateSchema> & SaveOperations,
+>
     extends AbstractMutexer
     implements DataStore
 {
@@ -118,8 +118,8 @@ export default abstract class AbstractStore<
         IncludePrivateFields extends boolean = true,
         CreateEntityInstances extends boolean = false,
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-        PF extends
-            SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
+        PF extends SchemaPublicFieldNames<FullSchema> =
+            SchemaPublicFieldNames<FullSchema>,
     >(
         record: any,
         options: PrepareOptions<IncludePrivateFields, FullSchema, F> = {}
@@ -186,8 +186,8 @@ export default abstract class AbstractStore<
         IncludePrivateFields extends boolean = true,
         CreateEntityInstances extends boolean = false,
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-        PF extends
-            SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
+        PF extends SchemaPublicFieldNames<FullSchema> =
+            SchemaPublicFieldNames<FullSchema>,
     >(
         values: CreateRecord[],
         options?: PrepareOptions<CreateEntityInstances, FullSchema, F>
@@ -520,8 +520,8 @@ export default abstract class AbstractStore<
         IncludePrivateFields extends boolean = true,
         CreateEntityInstances extends boolean = false,
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-        PF extends
-            SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
+        PF extends SchemaPublicFieldNames<FullSchema> =
+            SchemaPublicFieldNames<FullSchema>,
     >(
         query?: QueryBuilder<QueryRecord>,
         options?: FindBatchOptions<IncludePrivateFields, FullSchema, F>
@@ -541,8 +541,8 @@ export default abstract class AbstractStore<
         IncludePrivateFields extends boolean = true,
         CreateEntityInstances extends boolean = false,
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-        PF extends
-            SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
+        PF extends SchemaPublicFieldNames<FullSchema> =
+            SchemaPublicFieldNames<FullSchema>,
     >(
         query: QueryBuilder<QueryRecord>,
         updates: UpdateRecord & CreateRecord & { id?: string },
@@ -596,8 +596,8 @@ export default abstract class AbstractStore<
         IncludePrivateFields extends boolean = false,
         CreateEntityInstances extends boolean = false,
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-        PF extends
-            SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
+        PF extends SchemaPublicFieldNames<FullSchema> =
+            SchemaPublicFieldNames<FullSchema>,
     >(
         query: QueryBuilder<QueryRecord>,
         updates: ValuesWithPaths<UpdateRecord>,
@@ -630,8 +630,8 @@ export default abstract class AbstractStore<
         IncludePrivateFields extends boolean = true,
         CreateEntityInstances extends boolean = false,
         F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-        PF extends
-            SchemaPublicFieldNames<FullSchema> = SchemaPublicFieldNames<FullSchema>,
+        PF extends SchemaPublicFieldNames<FullSchema> =
+            SchemaPublicFieldNames<FullSchema>,
     >(
         query: QueryBuilder<QueryRecord>,
         updates: ValuesWithPaths<UpdateRecord>,
