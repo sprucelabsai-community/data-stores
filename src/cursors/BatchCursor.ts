@@ -3,9 +3,9 @@ import AbstractStore from '../stores/AbstractStore'
 import { QueryOptions } from '../types/query.types'
 import { PrepareOptions } from '../types/stores.types'
 
-export default class BatchCursorImpl<ResponseRecord>
-    implements BatchCursor<ResponseRecord>
-{
+export default class BatchCursorImpl<
+    ResponseRecord,
+> implements BatchCursor<ResponseRecord> {
     public static Class?: new (...args: any[]) => BatchCursor<any>
     private store: AbstractStore<Schema>
     private options?: FindBatchOptions
@@ -110,7 +110,9 @@ export interface FindBatchOptions<
     IncludePrivateFields extends boolean = true,
     FullSchema extends Schema = Schema,
     F extends SchemaFieldNames<FullSchema> = SchemaFieldNames<FullSchema>,
-> extends Omit<QueryOptions, 'includeFields'>,
+>
+    extends
+        Omit<QueryOptions, 'includeFields'>,
         PrepareOptions<IncludePrivateFields, FullSchema, F> {
     batchSize?: number
 }
@@ -119,8 +121,9 @@ export type OnNextResultsHandler<ResponseRecord> = (
     results: ResponseRecord[]
 ) => Record<string, any>[] | Promise<Record<string, any>[]>
 
-export interface BatchCursor<ResponseRecord>
-    extends AsyncIterable<ResponseRecord> {
+export interface BatchCursor<
+    ResponseRecord,
+> extends AsyncIterable<ResponseRecord> {
     getTotalRecords(): Promise<number>
     setOnNextResults(cb: OnNextResultsHandler<ResponseRecord>): void
     next(): Promise<ResponseRecord[] | null>
