@@ -2017,6 +2017,8 @@ const databaseAssertUtil = {
             record1,
             'Finding with $or did not return the expected result. First case in $or is a bad id, second should match the record.'
         )
+
+        await this.shutdown(db)
     },
 
     async assertCanFindWithBooleanField(connect: TestConnect) {
