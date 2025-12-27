@@ -1,3 +1,8 @@
+## <small>31.0.29 (2025-12-27)</small>
+
+* Merge branch 'master' of github.com:sprucelabsai/data-stores ([30ae606](https://github.com/sprucelabsai-community/data-stores/commit/30ae606))
+* patch: missed shutdown ([efcd8b9](https://github.com/sprucelabsai-community/data-stores/commit/efcd8b9))
+
 ## <small>31.0.28 (2025-12-27)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([1f83cd9](https://github.com/sprucelabsai-community/data-stores/commit/1f83cd9))
