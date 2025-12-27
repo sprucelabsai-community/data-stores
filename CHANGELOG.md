@@ -1,3 +1,68 @@
+## <small>31.0.28 (2025-12-27)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([1f83cd9](https://github.com/sprucelabsai-community/data-stores/commit/1f83cd9))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([869fd55](https://github.com/sprucelabsai-community/data-stores/commit/869fd55))
+
+## <small>31.0.27 (2025-12-15)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([e18250e](https://github.com/sprucelabsai-community/data-stores/commit/e18250e))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([653c98c](https://github.com/sprucelabsai-community/data-stores/commit/653c98c))
+
+## <small>31.0.26 (2025-12-12)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([e7d90de](https://github.com/sprucelabsai-community/data-stores/commit/e7d90de))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([c32a083](https://github.com/sprucelabsai-community/data-stores/commit/c32a083))
+
+## <small>31.0.25 (2025-12-08)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([a5019b8](https://github.com/sprucelabsai-community/data-stores/commit/a5019b8))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([a22d8df](https://github.com/sprucelabsai-community/data-stores/commit/a22d8df))
+
+## <small>31.0.24 (2025-12-02)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([106a8fc](https://github.com/sprucelabsai-community/data-stores/commit/106a8fc))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([225a5b9](https://github.com/sprucelabsai-community/data-stores/commit/225a5b9))
+
+## <small>31.0.23 (2025-12-01)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([312a528](https://github.com/sprucelabsai-community/data-stores/commit/312a528))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([3044ef3](https://github.com/sprucelabsai-community/data-stores/commit/3044ef3))
+
+## <small>31.0.22 (2025-11-29)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([89c2ef6](https://github.com/sprucelabsai-community/data-stores/commit/89c2ef6))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([e508a73](https://github.com/sprucelabsai-community/data-stores/commit/e508a73))
+
+## <small>31.0.21 (2025-11-29)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([176b64b](https://github.com/sprucelabsai-community/data-stores/commit/176b64b))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([5ea92b6](https://github.com/sprucelabsai-community/data-stores/commit/5ea92b6))
+
+## <small>31.0.20 (2025-11-29)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([d1bacd3](https://github.com/sprucelabsai-community/data-stores/commit/d1bacd3))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([db0547a](https://github.com/sprucelabsai-community/data-stores/commit/db0547a))
+
+## <small>31.0.19 (2025-11-29)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([c00cbda](https://github.com/sprucelabsai-community/data-stores/commit/c00cbda))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([10b7366](https://github.com/sprucelabsai-community/data-stores/commit/10b7366))
+
+## <small>31.0.18 (2025-11-29)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([604f0a3](https://github.com/sprucelabsai-community/data-stores/commit/604f0a3))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([18cc7c5](https://github.com/sprucelabsai-community/data-stores/commit/18cc7c5))
+
+## <small>31.0.17 (2025-11-27)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([89a2c0a](https://github.com/sprucelabsai-community/data-stores/commit/89a2c0a))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([75b0636](https://github.com/sprucelabsai-community/data-stores/commit/75b0636))
+
+## <small>31.0.16 (2025-11-19)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([20401ef](https://github.com/sprucelabsai-community/data-stores/commit/20401ef))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([8c9ae25](https://github.com/sprucelabsai-community/data-stores/commit/8c9ae25))
+
 ## <small>31.0.15 (2025-11-17)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([3fd20f8](https://github.com/sprucelabsai-community/data-stores/commit/3fd20f8))

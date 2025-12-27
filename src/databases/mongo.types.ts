@@ -156,7 +156,8 @@ export type WithTransactionCallback = (session: ClientSession) => Promise<void>
  * @see https://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html#.connect
  */
 export interface MongoClientOptions
-    extends DbCreateOptions,
+    extends
+        DbCreateOptions,
         ServerOptions,
         MongosOptions,
         ReplSetOptions,
