@@ -1,3 +1,8 @@
+## <small>31.0.30 (2025-12-27)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([a4cf843](https://github.com/sprucelabsai-community/data-stores/commit/a4cf843))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([50904bc](https://github.com/sprucelabsai-community/data-stores/commit/50904bc))
+
 ## <small>31.0.29 (2025-12-27)</small>
 
 * Merge branch 'master' of github.com:sprucelabsai/data-stores ([30ae606](https://github.com/sprucelabsai-community/data-stores/commit/30ae606))
