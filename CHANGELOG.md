@@ -1,3 +1,7 @@
+## 31.1.0 (2026-01-07)
+
+* feat: add exports field for proper ESM support in Node.js ([d9de2bd](https://github.com/sprucelabsai-community/data-stores/commit/d9de2bd))
+
 ## <small>31.0.34 (2026-01-07)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([71f8d2a](https://github.com/sprucelabsai-community/data-stores/commit/71f8d2a))
