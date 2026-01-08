@@ -1,3 +1,7 @@
+## 32.0.0 (2026-01-08)
+
+* major: upgrade dependencies ([51e43a7](https://github.com/sprucelabsai-community/data-stores/commit/51e43a7))
+
 ## <small>31.1.1 (2026-01-07)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([1510a3a](https://github.com/sprucelabsai-community/data-stores/commit/1510a3a))
