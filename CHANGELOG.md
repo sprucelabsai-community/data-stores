@@ -1,3 +1,8 @@
+## <small>32.0.1 (2026-01-08)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([d08e110](https://github.com/sprucelabsai-community/data-stores/commit/d08e110))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([edd1f4c](https://github.com/sprucelabsai-community/data-stores/commit/edd1f4c))
+
 ## 32.0.0 (2026-01-08)
 
 * major: upgrade dependencies ([51e43a7](https://github.com/sprucelabsai-community/data-stores/commit/51e43a7))
