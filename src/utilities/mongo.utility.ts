@@ -37,7 +37,7 @@ const mongoUtil = {
                 normalizedValues._id = !shouldTransformIdToObjectId
                     ? id
                     : new ObjectId(id)
-            } catch (err) {
+            } catch {
                 normalizedValues._id = id
             }
         } else if (id) {
@@ -109,7 +109,7 @@ function mapNestedIdValues(
                         return options.shouldTransformToObjectId === false
                             ? value
                             : new ObjectId(value)
-                    } catch (err) {
+                    } catch {
                         throw new SpruceError({
                             code: 'MONGO_ID_MAPPING_ERROR',
                             friendlyMessage: `Could not map '${value}' to an id.`,

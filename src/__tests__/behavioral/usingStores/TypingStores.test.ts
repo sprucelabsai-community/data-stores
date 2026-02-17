@@ -16,6 +16,7 @@ export default class TypingStoresTest extends AbstractStoreTest {
 
     @test('Types returned store (will always pass, fails lint)')
     protected async typesStore() {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const store = await this.stores.Store('spy', { testOption: true })
         assert.isExactType<SpyStore, typeof store>(true)
     }

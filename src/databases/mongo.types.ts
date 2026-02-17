@@ -1665,25 +1665,19 @@ export interface Collection<
      * @deprecated MongoDB 3.6 or higher no longer supports the group command. We recommend rewriting using the aggregation framework.
      */
     group(
-        // eslint-disable-next-line @typescript-eslint/ban-types
         keys: object | any[] | Function | Code,
         condition: object,
         initial: object,
-        // eslint-disable-next-line @typescript-eslint/ban-types
         reduce: Function | Code,
-        // eslint-disable-next-line @typescript-eslint/ban-types
         finalize: Function | Code,
         command: boolean,
         callback: MongoCallback<any>
     ): void
     group(
-        // eslint-disable-next-line @typescript-eslint/ban-types
         keys: object | any[] | Function | Code,
         condition: object,
         initial: object,
-        // eslint-disable-next-line @typescript-eslint/ban-types
         reduce: Function | Code,
-        // eslint-disable-next-line @typescript-eslint/ban-types
         finalize: Function | Code,
         command: boolean,
         options?: {
@@ -1692,13 +1686,10 @@ export interface Collection<
         }
     ): Promise<any>
     group(
-        // eslint-disable-next-line @typescript-eslint/ban-types
         keys: object | any[] | Function | Code,
         condition: object,
         initial: object,
-        // eslint-disable-next-line @typescript-eslint/ban-types
         reduce: Function | Code,
-        // eslint-disable-next-line @typescript-eslint/ban-types
         finalize: Function | Code,
         command: boolean,
         options: {
@@ -2140,14 +2131,14 @@ type KeysOfOtherType<TSchema, Type> = {
     [key in keyof TSchema]: NonNullable<TSchema[key]> extends Type ? never : key
 }[keyof TSchema]
 
-type AcceptedFields<TSchema, FieldType, AssignableType> = {
-    readonly [key in KeysOfAType<TSchema, FieldType>]?: AssignableType
-}
+type AcceptedFields<TSchema, FieldType, AssignableType> = Readonly<
+    Partial<Record<KeysOfAType<TSchema, FieldType>, AssignableType>>
+>
 
 /** It avoids using fields with not acceptable types */
-type NotAcceptedFields<TSchema, FieldType> = {
-    readonly [key in KeysOfOtherType<TSchema, FieldType>]?: never
-}
+type NotAcceptedFields<TSchema, FieldType> = Readonly<
+    Partial<Record<KeysOfOtherType<TSchema, FieldType>, never>>
+>
 
 type DotAndArrayNotation<AssignableType> = Readonly<
     Record<string, AssignableType>
@@ -2281,7 +2272,7 @@ export interface UpdateQuery<TSchema> {
     $pullAll?: PullAllOperator<TSchema> | undefined
 
     $bit?:
-        | Record<string, { [key in 'and' | 'or' | 'xor']?: number }>
+        | Record<string, Partial<Record<'and' | 'or' | 'xor', number>>>
         | undefined
 }
 
@@ -2468,7 +2459,6 @@ export interface RootQuerySelector<T> {
           }
         | undefined
     /** @see https://docs.mongodb.com/v3.6/reference/operator/query/where/#op._S_where */
-    // eslint-disable-next-line @typescript-eslint/ban-types
     $where?: string | Function | undefined
     /** @see https://docs.mongodb.com/v3.6/reference/operator/query/comment/#op._S_comment */
     $comment?: string | undefined
@@ -3504,7 +3494,6 @@ export interface MapReduceOptions {
     sort?: object | undefined
     limit?: number | undefined
     keeptemp?: boolean | undefined
-    // eslint-disable-next-line @typescript-eslint/ban-types
     finalize?: Function | string | undefined
     scope?: object | undefined
     jsMode?: boolean | undefined

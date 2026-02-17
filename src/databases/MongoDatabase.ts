@@ -129,7 +129,7 @@ export default class MongoDatabase implements Database {
 
         try {
             q = this.toMongoIdAndNull(collection, query || {})
-        } catch (err) {
+        } catch {
             return null
         }
 
@@ -154,7 +154,7 @@ export default class MongoDatabase implements Database {
 
         try {
             q = this.toMongoIdAndNull(collection, query || {})
-        } catch (err) {
+        } catch {
             return []
         }
 
@@ -351,7 +351,7 @@ export default class MongoDatabase implements Database {
                 .toArray()
 
             return indexes.filter((index) => index.name !== '_id_')
-        } catch (err) {
+        } catch {
             return []
         }
     }
@@ -398,7 +398,7 @@ export default class MongoDatabase implements Database {
             }
 
             return uniqueIndexes
-        } catch (err) {
+        } catch {
             return []
         }
     }
@@ -424,7 +424,7 @@ export default class MongoDatabase implements Database {
             }
 
             return nonUniqueIndexes
-        } catch (err) {
+        } catch {
             return []
         }
     }
