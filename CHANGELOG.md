@@ -1,3 +1,7 @@
+## <small>32.0.4 (2026-02-17)</small>
+
+* patch: upgrade dependencies and fix lint errors ([119be53](https://github.com/sprucelabsai-community/data-stores/commit/119be53))
+
 ## <small>32.0.3 (2026-01-27)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([a5d661d](https://github.com/sprucelabsai-community/data-stores/commit/a5d661d))
