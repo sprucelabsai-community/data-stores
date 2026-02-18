@@ -78,7 +78,7 @@
     "@sprucelabs/error": "^8.1.9",
     "@sprucelabs/globby": "^2.0.517",
     "@sprucelabs/schema": "^33.2.6",
-    "@sprucelabs/spruce-skill-utils": "^34.0.13",
+    "@sprucelabs/spruce-skill-utils": "^34.0.14",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.23",
     "mongodb": "^7.1.0"
