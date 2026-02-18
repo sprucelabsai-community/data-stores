@@ -1,3 +1,8 @@
+## <small>32.0.6 (2026-02-18)</small>
+
+* chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([ee58b2f](https://github.com/sprucelabsai-community/data-stores/commit/ee58b2f))
+* chore(auto-upgrade): upgraded packages [upgrade-all] ([97a50f5](https://github.com/sprucelabsai-community/data-stores/commit/97a50f5))
+
 ## <small>32.0.5 (2026-02-18)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([e68840e](https://github.com/sprucelabsai-community/data-stores/commit/e68840e))
