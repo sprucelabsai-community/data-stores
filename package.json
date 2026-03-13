@@ -76,17 +76,17 @@
   "dependencies": {
     "@seald-io/nedb": "^4.1.2",
     "@sprucelabs/error": "^8.1.14",
-    "@sprucelabs/globby": "^2.0.520",
+    "@sprucelabs/globby": "^2.0.521",
     "@sprucelabs/schema": "^34.0.4",
-    "@sprucelabs/spruce-skill-utils": "^34.0.23",
+    "@sprucelabs/spruce-skill-utils": "^34.0.24",
     "just-clone": "^6.2.0",
     "lodash": "^4.17.23",
     "mongodb": "^7.1.0"
   },
   "devDependencies": {
-    "@sprucelabs/esm-postbuild": "^9.0.23",
+    "@sprucelabs/esm-postbuild": "^9.0.24",
     "@sprucelabs/jest-json-reporter": "^10.0.31",
-    "@sprucelabs/resolve-path-aliases": "^4.0.22",
+    "@sprucelabs/resolve-path-aliases": "^4.0.23",
     "@sprucelabs/semantic-release": "^6.0.0",
     "@sprucelabs/test": "^11.1.6",
     "@sprucelabs/test-utils": "^7.2.18",
