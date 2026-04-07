@@ -77,11 +77,11 @@
     "@seald-io/nedb": "^4.1.2",
     "@sprucelabs/error": "^8.1.15",
     "@sprucelabs/globby": "^2.0.522",
-    "@sprucelabs/schema": "^34.0.5",
+    "@sprucelabs/schema": "^34.0.6",
     "@sprucelabs/spruce-skill-utils": "^34.0.25",
     "just-clone": "^6.2.0",
-    "lodash": "^4.17.23",
-    "mongodb": "^7.1.0"
+    "lodash": "^4.18.1",
+    "mongodb": "^7.1.1"
   },
   "devDependencies": {
     "@sprucelabs/esm-postbuild": "^9.0.25",
@@ -91,11 +91,11 @@
     "@sprucelabs/test": "^11.1.6",
     "@sprucelabs/test-utils": "^7.2.19",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.2.1",
-    "dotenv": "^17.3.1",
-    "eslint": "^10.0.3",
+    "dotenv": "^17.4.1",
+    "eslint": "^10.2.0",
     "eslint-config-spruce": "^11.2.35",
     "jest": "^30.3.0",
     "jest-circus": "^30.3.0",
@@ -103,7 +103,7 @@
     "ts-node": "^10.9.2",
     "tsc-watch": "^7.2.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "engines": {
     "node": ">=12",
