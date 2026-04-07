@@ -1,3 +1,7 @@
+## <small>32.0.21 (2026-04-07)</small>
+
+* Upgrade dependencies and fix TypeScript 6.0 tsconfig deprecations ([f0efa34](https://github.com/sprucelabsai-community/data-stores/commit/f0efa34))
+
 ## <small>32.0.20 (2026-03-13)</small>
 
 * chore(auto-upgrade): Upgrade Tests Passed [auto-merge] ([a30cfa3](https://github.com/sprucelabsai-community/data-stores/commit/a30cfa3))
